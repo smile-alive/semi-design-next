@@ -67,7 +67,7 @@ export default function FormInputGroup(props: InputGroupProps) {
     let labelContent = null;
     let labelId: string | undefined;
 
-    const formProps = fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'showValidateIcon', 'wrapperCol', 'labelCol', 'disabled']);
+    const formProps = fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'showValidateIcon', 'wrapperCol', 'labelCol', 'disabled', 'classNames', 'styles']);
     const labelPosition = props.labelPosition || formProps.labelPosition;
     const ids = getFieldIds(generatedId);
 
@@ -99,14 +99,18 @@ export default function FormInputGroup(props: InputGroupProps) {
     const appendCol = labelCol && wrapperCol;
     const labelColCls = labelAlign ? `${prefix}-col-${labelAlign}` : '';
 
-    const extraCls = clsx(`${prefix}-field-extra`, {
-        [`${prefix}-field-extra-string`]: typeof extraText === 'string',
-        [`${prefix}-field-extra-middle`]: extraTextPosition === 'middle',
-        [`${prefix}-field-extra-bottom`]: extraTextPosition === 'bottom',
-    });
+    const extraCls = clsx(
+        `${prefix}-field-extra`,
+        {
+            [`${prefix}-field-extra-string`]: typeof extraText === 'string',
+            [`${prefix}-field-extra-middle`]: extraTextPosition === 'middle',
+            [`${prefix}-field-extra-bottom`]: extraTextPosition === 'bottom',
+        },
+        formProps.classNames?.extra
+    );
 
     const extraContent = extraText ? (
-        <div id={ids.extraText} className={extraCls} x-semi-prop="extraText">
+        <div id={ids.extraText} className={extraCls} style={formProps.styles?.extra} x-semi-prop="extraText">
             {extraText}
         </div>
     ) : null;

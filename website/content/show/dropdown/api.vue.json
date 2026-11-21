@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-vue/src/components/dropdown/dropdown.vue",
         "props": {
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `content`（下拉菜单根元素）、`wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `content` (the dropdown menu root element) and `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `wrapper`（触发元素被 span 包裹时的该 span）、`content`（下拉菜单根元素 `.semi-dropdown`）、`menu`（菜单列表 `ul`）、`item`（每个菜单项的 `li`）、`itemIcon`（每个菜单项的图标容器），与组件自带的类名合并。`menu`、`item`、`itemIcon` 对子菜单同样生效，子菜单 Dropdown 自己的排在其后。",
+                "en-US": "Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed), `content` (the dropdown menu root element `.semi-dropdown`), `menu` (the menu list `ul`), `item` (the `li` of every item) and `itemIcon` (the icon container of every item); merged with the built-in classes. `menu`, `item` and `itemIcon` also apply in submenus, where the submenu Dropdown's own come after."
             },
             "menu": {
                 "zh-CN": "通过数据快速配置菜单，数据项见下方 DropdownMenuItem；提供了 content 插槽时以插槽为准。",
@@ -56,8 +56,8 @@
                 "en-US": "Whether click, mousedown and focus in/out events on the popup stop propagating."
             },
             "styles": {
-                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`content` 写在 `style` 之后。",
-                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `content` is applied after `style`."
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`content` 写在 `style` 之后，`menu`、`item`、`itemIcon` 写在对应元素自己的 `style` 之前。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `content` is applied after `style`, while `menu`, `item` and `itemIcon` come before the `style` of the element itself."
             },
             "wrapperId": {
                 "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",
@@ -190,10 +190,18 @@
                 "zh-CN": "当前项是否处于激活态，激活态时字体加粗、颜色加深；Dropdown 的 showTick 为 true 时左侧还会展示 √。",
                 "en-US": "Whether the item is active: bolder text and a deeper color, plus a tick on its leading side when the Dropdown has showTick."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `icon`（图标容器 `.semi-dropdown-item-icon`），与组件自带的类名及 Dropdown 的 `itemIcon` 合并，排在其后。",
+                "en-US": "Class names of the inner parts, keyed by `icon` (the icon container `.semi-dropdown-item-icon`); merged with the built-in classes and the `itemIcon` of the Dropdown, coming after them."
+            },
             "disabled": { "zh-CN": "是否禁用该项。", "en-US": "Whether the item is disabled." },
             "showTick": {
                 "zh-CN": "仅在 Dropdown 之外使用时生效；在 Dropdown 内以 Dropdown 的 showTick 为准。",
                 "en-US": "Takes effect only outside a Dropdown. Inside one, the showTick of the Dropdown applies."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，写在 Dropdown 的 `itemIcon` 之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; applied after the `itemIcon` of the Dropdown."
             },
             "type": {
                 "zh-CN": "文本颜色类型，可选 primary、secondary、tertiary、warning、danger。",

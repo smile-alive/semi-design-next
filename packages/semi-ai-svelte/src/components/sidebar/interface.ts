@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 import type { Extensions } from '@tiptap/core';
+import type { SidebarCodeContentPart, SidebarFileContentPart, SidebarFileItemPart, SidebarPart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import type { CodeHighlightProps } from '@fibrae/semi-ui-svelte/code-highlight/interface';
 import type { JsonViewerCustomRenderArgs, JsonViewerProps, JsonViewerSearchButtonArgs } from '@fibrae/semi-ui-svelte/json-viewer/interface';
 import type { UploadProps } from '@fibrae/semi-ui-svelte/upload/interface';
@@ -37,7 +38,9 @@ export interface SideBarDetailBodySnippetProps {
 }
 
 // `header` is the detail header here, and `children` has no meaning: the content follows `mode`
-export interface SideBarProps extends Omit<ContainerProps, 'header' | 'children'>, CodeItemSnippets {
+export interface SideBarProps extends Omit<ContainerProps, 'header' | 'children' | 'classNames' | 'styles'>, CodeItemSnippets {
+    classNames?: Partial<Record<SidebarPart, ClassValue>>;
+    styles?: Partial<Record<SidebarPart, string>>;
     /** `main`, `code`, `file` or a custom mode rendered through `detailBody` */
     mode?: string;
     /** Bindable; the selected option in main mode */
@@ -102,6 +105,8 @@ interface FileItemOwnProps {
 }
 
 export interface FileItemProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'>, FileItemOwnProps {
+    classNames?: Partial<Record<SidebarFileItemPart, ClassValue>>;
+    styles?: Partial<Record<SidebarFileItemPart, string>>;
     onContentChange?: (content: string) => void;
 }
 
@@ -117,10 +122,14 @@ interface CollapseListProps<T> {
 }
 
 export interface CodeContentProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange' | 'children'>, CollapseListProps<CodeItemData>, CodeItemSnippets {
+    classNames?: Partial<Record<SidebarCodeContentPart, ClassValue>>;
+    styles?: Partial<Record<SidebarCodeContentPart, string>>;
     codes?: CodeItemData[];
 }
 
 export interface FileContentProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange' | 'children'>, CollapseListProps<FileItemData> {
+    classNames?: Partial<Record<SidebarFileContentPart, ClassValue>>;
+    styles?: Partial<Record<SidebarFileContentPart, string>>;
     /** Rendered read-only: each entry's extensions and imgUploadProps reach its preview */
     files?: FileItemData[];
 }

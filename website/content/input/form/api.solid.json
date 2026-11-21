@@ -62,6 +62,10 @@
                 "zh-CN": "统一应用在每个字段上的 label 宽度，数字单位为 px。",
                 "en-US": "Label width of every field. A number is in px."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `label`、`labelText`、`labelExtra`、`labelTooltip`、`content`、`help`、`extra`，作用到表单内全部字段的标签、内容区、帮助文字与附加说明，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `label`, `labelText`, `labelExtra`, `labelTooltip`, `content`, `help` and `extra`; they apply to the labels, content areas, help texts and extra texts of every field in the form and are merged with the built-in classes."
+            },
             "layout": {
                 "zh-CN": "字段的排列方向，可选 vertical 或 horizontal。",
                 "en-US": "Direction in which the fields are arranged: vertical or horizontal."
@@ -114,6 +118,10 @@
                 "zh-CN": "使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。",
                 "en-US": "Whether to skip the remaining rules after the first rule fails. The same property on a field takes precedence."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "trigger": {
                 "zh-CN": "统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。",
                 "en-US": "When every field validates: change, blur, mount, custom, or an array of them. The same property on a field takes precedence."
@@ -160,9 +168,17 @@
     "form-section": {
         "source": "packages/semi-ui-solid/src/components/form/section.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `title`、`extra`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `title` and `extra`; merged with the built-in classes."
+            },
             "extraText": {
                 "zh-CN": "显示在标题下方的说明，同时作为分组的无障碍描述（`aria-describedby`）。",
                 "en-US": "A description below the title, also the accessible description of the group (`aria-describedby`)."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "text": {
                 "zh-CN": "分组标题，没有内容时不渲染标题。",
@@ -176,6 +192,10 @@
             "align": {
                 "zh-CN": "Label 文本的对齐方式，可选 left 或 right。",
                 "en-US": "Text alignment of the label: left or right."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `text`、`extra`、`tooltip`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `text`, `extra` and `tooltip`; merged with the built-in classes."
             },
             "disabled": {
                 "zh-CN": "是否为禁用样式。",
@@ -196,6 +216,10 @@
             "required": {
                 "zh-CN": "是否显示必填的 * 号。",
                 "en-US": "Whether to display the required * symbol."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "text": {
                 "zh-CN": "Label 文本；不传时使用 children。",
@@ -370,6 +394,10 @@
                 "zh-CN": "统一应用在每个字段上的 label 宽度，数字单位为 px。",
                 "en-US": "Label width of every field. A number is in px."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `label`、`labelText`、`labelExtra`、`labelTooltip`、`content`、`help`、`extra`，作用到表单内全部字段的标签、内容区、帮助文字与附加说明，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `label`, `labelText`, `labelExtra`, `labelTooltip`, `content`, `help` and `extra`; they apply to the labels, content areas, help texts and extra texts of every field in the form and are merged with the built-in classes."
+            },
             "layout": {
                 "zh-CN": "字段的排列方向，可选 vertical 或 horizontal。",
                 "en-US": "Direction in which the fields are arranged: vertical or horizontal."
@@ -425,6 +453,10 @@
             "stopValidateWithError": {
                 "zh-CN": "使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。",
                 "en-US": "Whether to skip the remaining rules after the first rule fails. The same property on a field takes precedence."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "trigger": {
                 "zh-CN": "统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。",

@@ -22,6 +22,7 @@
     let {
         autoPlay = defaults('autoPlay', false),
         captionsSrc = defaults('captionsSrc'),
+        classNames = defaults('classNames'),
         clickToPlay = defaults('clickToPlay', true),
         controlsList = defaults('controlsList', DEFAULT_CONTROLS_LIST),
         crossOrigin = defaults('crossOrigin'),
@@ -45,6 +46,7 @@
         routeList = defaults('routeList'),
         seekTime = defaults('seekTime', numbers.DEFAULT_SEEK_TIME),
         src = defaults('src'),
+        styles = defaults('styles'),
         theme = defaults('theme', strings.DARK),
         volume = defaults('volume', numbers.DEFAULT_VOLUME),
         width = defaults('width'),
@@ -139,10 +141,12 @@
         <video
             autoplay={autoPlay}
             bind:this={video}
+            class={[`${prefix}-video`, classNames?.video]}
             controls={false}
             crossorigin={crossOrigin}
             {loop}
             src={videoSrc}
+            style={styles?.video}
             oncanplay={foundation.handleCanPlay}
             onclick={onVideoClick}
             ondurationchange={foundation.handleDurationChange}
@@ -164,15 +168,15 @@
         {/if}
     </div>
     {#if !states().isPlaying && poster}
-        <img alt={texts.poster} class={[`${prefix}-poster`, { [`${prefix}-poster-hide`]: states().currentTime > 0 && states().currentTime < states().totalTime }]} src={poster} />
+        <img alt={texts.poster} class={[`${prefix}-poster`, { [`${prefix}-poster-hide`]: states().currentTime > 0 && states().currentTime < states().totalTime }, classNames?.poster]} src={poster} style={styles?.poster} />
     {/if}
     {#if !states().isPlaying && !states().isError}
-        <div class={`${prefix}-pause`}>
+        <div class={[`${prefix}-pause`, classNames?.playIcon]} style={styles?.playIcon}>
             <IconPlayCircle />
         </div>
     {/if}
     {#if states().isError}
-        <div class={[`${prefix}-error`, theme && `${prefix}-error-${theme}`]} role="alert">
+        <div class={[`${prefix}-error`, theme && `${prefix}-error-${theme}`, classNames?.error]} role="alert" style={styles?.error}>
             <div class={`${prefix}-error-svg`}>
                 <svg fill="none" height="30" viewBox="0 0 41 30" width="41" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -189,13 +193,13 @@
     {/if}
     <div role="status">
         {#if states().showNotification && states().notificationContent}
-            <div class={`${prefix}-notification`}>
+            <div class={[`${prefix}-notification`, classNames?.notification]} style={styles?.notification}>
                 {states().notificationContent}
             </div>
         {/if}
     </div>
-    <div class={[controlsCls, { [`${controlsCls}-hide`]: !states().showControls }]}>
-        <VideoProgress bufferedValue={states().bufferedValue} {markers} max={states().totalTime} onChange={foundation.handleTimeChange} step={seekTime} value={states().currentTime} />
+    <div class={[controlsCls, { [`${controlsCls}-hide`]: !states().showControls }, classNames?.controls]} style={styles?.controls}>
+        <VideoProgress bufferedValue={states().bufferedValue} {classNames} {markers} max={states().totalTime} onChange={foundation.handleTimeChange} step={seekTime} {styles} value={states().currentTime} />
         <div class={`${controlsCls}-menu`}>
             <div class={`${controlsCls}-menu-left`}>
                 {#if shows('play')}
@@ -217,10 +221,10 @@
                     </Button>
                 {/if}
                 {#if shows('time')}
-                    <div class={`${controlsCls}-time`}>{formatTime(states().currentTime)} / {formatTime(states().totalTime)}</div>
+                    <div class={[`${controlsCls}-time`, classNames?.time]} style={styles?.time}>{formatTime(states().currentTime)} / {formatTime(states().totalTime)}</div>
                 {/if}
                 {#if shows('volume')}
-                    <Popover aria-label={texts.volume} autoAdjustOverflow class={`${controlsCls}-popover`} position="top" role="dialog">
+                    <Popover aria-label={texts.volume} autoAdjustOverflow class={[`${controlsCls}-popover`, classNames?.volumeDropdown]} position="top" role="dialog" style={styles?.volumeDropdown}>
                         {#snippet child({ props })}
                             <Button {...props} aria-label={texts.volume} class={menuButtonClass} theme="borderless" onclick={foundation.handleVolumeSilent}>
                                 {#snippet icon()}
@@ -243,15 +247,15 @@
                     </Popover>
                 {/if}
                 {#if shows('playbackRate')}
-                    <ControlsMenu current={states().playbackRate} label={texts.playbackRate} list={playbackRateList} onSelect={(option) => foundation.handleRateChange(option, texts)} />
+                    <ControlsMenu {classNames} current={states().playbackRate} label={texts.playbackRate} list={playbackRateList} onSelect={(option) => foundation.handleRateChange(option, texts)} {styles} />
                 {/if}
             </div>
             <div class={`${controlsCls}-menu-right`}>
                 {#if qualityList?.length && shows('quality')}
-                    <ControlsMenu current={states().currentQuality} label={texts.quality} list={qualityList} onSelect={(option) => foundation.handleQualityChange(option, texts)} />
+                    <ControlsMenu {classNames} current={states().currentQuality} label={texts.quality} list={qualityList} onSelect={(option) => foundation.handleQualityChange(option, texts)} {styles} />
                 {/if}
                 {#if routeList?.length && shows('route')}
-                    <ControlsMenu current={states().currentRoute} label={texts.route} list={routeList} onSelect={(option) => foundation.handleRouteChange(option, texts)} />
+                    <ControlsMenu {classNames} current={states().currentRoute} label={texts.route} list={routeList} onSelect={(option) => foundation.handleRouteChange(option, texts)} {styles} />
                 {/if}
                 {#if shows('mirror')}
                     <Button aria-label={states().isMirror ? texts.cancelMirror : texts.mirror} class={menuButtonClass} theme="borderless" onclick={() => foundation.handleMirror(texts)}>

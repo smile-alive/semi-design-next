@@ -9,6 +9,7 @@ import { getElement } from '@test/utils/dom/common';
 import CheckboxGroup from '../checkbox-group.svelte';
 import type { CheckboxGroupProps, CheckboxValue } from '../interface';
 import GroupModes from './group-modes.svelte';
+import GroupParts from './group-parts.svelte';
 import Scenes from './scenes.svelte';
 
 type GroupChange = (value: CheckboxValue[]) => void;
@@ -247,5 +248,44 @@ describe('Svelte CheckboxGroup', () => {
         renderOptions({ options: ['a'], direction: 'vertical', type: 'default' });
         expect(screen.getByRole('group')).toHaveClass(`${groupCls}-vertical`);
         expect(getWrappers()[0]).not.toHaveClass(`${prefixCls}-cardType`);
+    });
+
+    it('classNames 与 styles 按部位落到组内每个 Checkbox 的对应元素', () => {
+        const parts = ['item', 'itemIcon', 'itemLabel', 'itemExtra'] as const;
+        const selectors = { item: '', itemIcon: '-inner-display', itemLabel: '-addon', itemExtra: '-extra' };
+        renderOptions({
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            options: [
+                { label: 'A', value: 'a', extra: 'ea' },
+                { label: 'B', value: 'b', extra: 'eb' },
+            ],
+        });
+        for (const part of parts) {
+            const els = document.querySelectorAll(`.${prefixCls}${selectors[part]}`);
+            expect(els).toHaveLength(2);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
+
+    it('组的 item* 先于 Checkbox 自己的 classNames 与 styles，自己的后写', () => {
+        render(GroupParts);
+        const classes = (selector: string) => getElement(selector).className.split(' ');
+        const root = classes(`.${prefixCls}`);
+        expect(root.indexOf('g-item')).toBeGreaterThan(-1);
+        expect(root.indexOf('g-item')).toBeLessThan(root.indexOf('own'));
+        for (const [selector, group, own] of [
+            ['-inner-display', 'g-icon', 'c-icon'],
+            ['-addon', 'g-label', 'c-label'],
+            ['-extra', 'g-extra', 'c-extra'],
+        ]) {
+            const list = classes(`.${prefixCls}${selector}`);
+            expect(list.indexOf(group)).toBeGreaterThan(-1);
+            expect(list.indexOf(group)).toBeLessThan(list.indexOf(own));
+        }
+        expect(getElement(`.${prefixCls}-inner-display`)).toHaveStyle({ order: '2', color: 'rgb(255, 0, 0)' });
     });
 });

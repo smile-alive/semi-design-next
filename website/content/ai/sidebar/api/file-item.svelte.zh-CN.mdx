@@ -2,11 +2,13 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性            | 说明                                                                                                | 类型                                                         | 默认值 |
-| --------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------ |
-| content         | 富文本 HTML。挂载后变化会同步到编辑器，与编辑器当前内容相同时不会重置，同步不调用 onContentChange。 | `string`                                                     | -      |
-| editable        | 是否可编辑，挂载后变化会同步到编辑器。                                                              | `boolean`                                                    | `true` |
-| extensions      | 追加到内置扩展之后的 tiptap 扩展，编辑器创建时读取，之后变化不生效。                                | `Extensions`                                                 | `[]`   |
-| imgUploadProps  | 图片上传配置，编辑器创建时读取，之后变化不生效。                                                    | `ImageUploadNodeOptions`                                     | -      |
-| name            | 文件名称，作为编辑区域的可访问名称，挂载后变化会同步到编辑器。                                      | `string`                                                     | -      |
-| onContentChange | 编辑后调用，参数为 HTML 字符串。                                                                    | <ApiType detail={"(content: string) => void"}>Type</ApiType> | -      |
+| 属性            | 说明                                                                                                                             | 类型                                                                                          | 默认值 |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------ |
+| classNames      | 内部各部位的类名，键为 menuBar、editor，与组件自带的类名合并，值的写法同 class（字符串、数组或对象）。menuBar 仅在可编辑时渲染。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarFileItemPart, ClassValue>>"}>Type</ApiType> | -      |
+| content         | 富文本 HTML。挂载后变化会同步到编辑器，与编辑器当前内容相同时不会重置，同步不调用 onContentChange。                              | `string`                                                                                      | -      |
+| editable        | 是否可编辑，挂载后变化会同步到编辑器。                                                                                           | `boolean`                                                                                     | `true` |
+| extensions      | 追加到内置扩展之后的 tiptap 扩展，编辑器创建时读取，之后变化不生效。                                                             | `Extensions`                                                                                  | `[]`   |
+| imgUploadProps  | 图片上传配置，编辑器创建时读取，之后变化不生效。                                                                                 | `ImageUploadNodeOptions`                                                                      | -      |
+| name            | 文件名称，作为编辑区域的可访问名称，挂载后变化会同步到编辑器。                                                                   | `string`                                                                                      | -      |
+| onContentChange | 编辑后调用，参数为 HTML 字符串。                                                                                                 | <ApiType detail={"(content: string) => void"}>Type</ApiType>                                  | -      |
+| styles          | 内部各部位的样式字符串，键同 classNames。                                                                                        | <ApiType detail={"Partial\u003cRecord\u003cSidebarFileItemPart, string>>"}>Type</ApiType>     | -      |

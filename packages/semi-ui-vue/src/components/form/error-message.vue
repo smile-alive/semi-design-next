@@ -5,6 +5,7 @@
     import { IconAlertCircle, IconAlertTriangle } from '@fibrae/semi-icons-vue';
     import type { ElementProps } from '../../base/index';
     import { hasSlotContent } from '../../utils/index';
+    import { useFormContext } from './context';
     import type { FormErrorMessageProps, FormErrorMessageSlots } from './interface';
 
     const props = withDefaults(defineProps<FormErrorMessageProps & /* @vue-ignore */ ElementProps<'div', keyof FormErrorMessageProps>>(), {
@@ -15,6 +16,8 @@
     });
 
     const slots = defineSlots<FormErrorMessageSlots>();
+
+    const form = useFormContext();
 
     const prefix = cssClasses.PREFIX;
     const iconClass = `${prefix}-field-validate-status-icon`;
@@ -28,7 +31,7 @@
 </script>
 
 <template>
-    <div v-if="rendered()" :class="{ [`${prefix}-field-error-message`]: hasError(), [`${prefix}-field-help-text`]: hasHelpText() }">
+    <div v-if="rendered()" :class="[{ [`${prefix}-field-error-message`]: hasError(), [`${prefix}-field-help-text`]: hasHelpText() }, form?.formProps.value.classNames?.help]" :style="form?.formProps.value.styles?.help">
         <template v-if="props.showValidateIcon">
             <IconAlertCircle v-if="props.isInInputGroup || props.validateStatus === 'error'" :class="iconClass" />
             <IconAlertTriangle v-else-if="props.validateStatus === 'warning'" :class="iconClass" />

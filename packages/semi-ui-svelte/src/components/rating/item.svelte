@@ -6,7 +6,7 @@
     import useLocale from '../locale/use-locale.svelte.js';
     import type { RatingItemProps } from './interface.js';
 
-    let { value, displayValue, index, prefixCls, allowHalf, disabled, count, size, unit, preventScroll, firstTabStop = false, character, trigger, onPreview, onPick, onSelect, onRadioFocus }: RatingItemProps = $props();
+    let { value, displayValue, index, itemClass, itemStyle, prefixCls, allowHalf, disabled, count, size, unit, preventScroll, firstTabStop = false, character, trigger, onPreview, onPick, onSelect, onRadioFocus }: RatingItemProps = $props();
 
     const locale = useLocale('Rating');
 
@@ -98,9 +98,10 @@
             [`${prefixCls}-full`]: model.isFull,
             [`${prefixCls}-${size}`]: !isCustomSize,
         },
+        itemClass,
     ]}
     role="none"
-    style={sizeStyle}
+    style={[sizeStyle, itemStyle].filter(Boolean).join(';') || undefined}
 >
     <div class={[`${prefixCls}-wrapper`, { [`${prefixCls}-disabled`]: disabled }]} role="presentation" onclick={handleClick} onkeydown={handleKeydown} onmousemove={handleMousemove}>
         {#if allowHalf && !isEmpty}

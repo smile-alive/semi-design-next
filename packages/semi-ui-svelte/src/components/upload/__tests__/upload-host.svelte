@@ -49,6 +49,9 @@
 {#snippet fileItemCard(props: UploadFileItemSlotProps)}
     {#if props.file.uid !== '2'}<FileCard {...props} class="via-slot" />{/if}
 {/snippet}
+{#snippet fileItemParts(props: UploadFileItemSlotProps)}
+    <FileCard {...props} class="own-item" classNames={{ name: 'own-name' }} style="order: 2" styles={{ name: 'order: 2' }} />
+{/snippet}
 {#snippet fileItemReplace(props: UploadFileItemSlotProps)}
     <button type="button" onclick={props.onReplace}>{`replace ${props.file.name}`}</button>
 {/snippet}
@@ -80,7 +83,7 @@
     dragIcon={has('dragIcon') ? dragIcon : undefined}
     dragMainText={has('dragMainText') ? dragMainText : undefined}
     dragSubText={has('dragSubText') ? dragSubText : undefined}
-    fileItem={has('fileItem') ? fileItemPlain : has('fileItemCard') ? fileItemCard : has('fileItemReplace') ? fileItemReplace : has('fileItemPreview') ? fileItemPreview : undefined}
+    fileItem={has('fileItem') ? fileItemPlain : has('fileItemCard') ? fileItemCard : has('fileItemParts') ? fileItemParts : has('fileItemReplace') ? fileItemReplace : has('fileItemPreview') ? fileItemPreview : undefined}
     fileListHeader={has('fileListHeader') ? fileListHeader : undefined}
     fileListTitle={has('fileListTitle') ? fileListTitle : undefined}
     fileOperation={has('fileOperation') ? fileOperation : has('recordedFileOperation') ? recordedFileOperation : undefined}

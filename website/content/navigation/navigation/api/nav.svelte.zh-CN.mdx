@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | children | `NavItem` 与 `SubNav`，放在 items 生成的导航项之后。 | `Snippet` | - |
-| classNames | 内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `body`、`list`、`item`、`itemIcon`、`itemText`、`itemToggleIcon`、`subNav`、`subNavTitle`、`subNavList`、`subNavDropdown`，与组件自带的类名合并。`item*` 作用到全部导航项，其中 `itemIcon`、`itemText`、`itemToggleIcon` 同时作用到子导航的标题；`subNav*` 作用到全部子导航。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, ClassValue>>"}>Type</ApiType> | - |
 | expandIcon | items 生成的子导航的展开收起箭头，参数含 item、level、size 与要放在图标元素上的 class。 | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavExpandIconArgs]>"}>Type</ApiType> | - |
 | footer | 底部区域：配置对象（collapseButton、class、style，以及 `data-*` 与 `aria-*` 属性），或放有 `NavFooter` 的 snippet。 | `NavFooterConfig \| Snippet` | - |
 | header | 头部区域：配置对象（text、link、linkOptions、logo、class、style，以及 `data-*` 与 `aria-*` 属性），或放有 `NavHeader` 的 snippet。 | `NavHeaderConfig \| Snippet` | - |

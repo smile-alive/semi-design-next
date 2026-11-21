@@ -222,7 +222,9 @@
                         [`${prefix}-prepend-text`]: k.addonBefore === 'text',
                         [`${prefix}-prepend-icon`]: k.addonBefore === 'icon',
                     },
+                    props.classNames?.addonBefore,
                 ]"
+                :style="props.styles?.addonBefore"
                 x-semi-prop="addonBefore"
             >
                 <slot name="addonBefore" />
@@ -237,7 +239,9 @@
                         [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text',
                         [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon',
                     },
+                    props.classNames?.prefix,
                 ]"
+                :style="props.styles?.prefix"
                 x-semi-prop="prefix,insetLabel"
                 @click="foundation.handleClickPrefixOrSuffix"
                 @mousedown.prevent
@@ -280,7 +284,7 @@
         />
         <!-- .stop: a host key handler (AutoComplete picks an option on Enter) must not take the keys that press the button;
              mousedown clears (issue 1203) without moving focus -->
-        <button v-if="allowClear" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="foundation.handleClearClick" @keydown.enter.space.stop @mousedown="foundation.handleClearMouseDown">
+        <button v-if="allowClear" ref="clearButton" :aria-label="locale.locale.clear" :class="[`${prefix}-clearbtn`, props.classNames?.clear]" :style="props.styles?.clear" type="button" @click="foundation.handleClearClick" @keydown.enter.space.stop @mousedown="foundation.handleClearMouseDown">
             <slot name="clearIcon">
                 <IconClear />
             </slot>
@@ -295,14 +299,25 @@
                         [`${prefix}-suffix-icon`]: k.suffix === 'icon',
                         [`${prefix}-suffix-hidden`]: allowClear && props.hideSuffix,
                     },
+                    props.classNames?.suffix,
                 ]"
+                :style="props.styles?.suffix"
                 x-semi-prop="suffix"
                 @click="foundation.handleClickPrefixOrSuffix"
                 @mousedown.prevent
             >
                 <slot name="suffix" />
             </div>
-            <button v-if="props.mode === 'password' && !looks.disabled" :aria-label="state.eyeClosed ? locale.locale.showPassword : locale.locale.hidePassword" :class="`${prefix}-modebtn`" type="button" @click="foundation.handleClickEye" @keydown.enter.space.stop @mousedown.prevent>
+            <button
+                v-if="props.mode === 'password' && !looks.disabled"
+                :aria-label="state.eyeClosed ? locale.locale.showPassword : locale.locale.hidePassword"
+                :class="[`${prefix}-modebtn`, props.classNames?.visibilityToggle]"
+                :style="props.styles?.visibilityToggle"
+                type="button"
+                @click="foundation.handleClickEye"
+                @keydown.enter.space.stop
+                @mousedown.prevent
+            >
                 <IconEyeClosedSolid v-if="state.eyeClosed" />
                 <IconEyeOpened v-else />
             </button>
@@ -314,7 +329,9 @@
                         [`${prefix}-append-text`]: k.addonAfter === 'text',
                         [`${prefix}-append-icon`]: k.addonAfter === 'icon',
                     },
+                    props.classNames?.addonAfter,
                 ]"
+                :style="props.styles?.addonAfter"
                 x-semi-prop="addonAfter"
             >
                 <slot name="addonAfter" />

@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { type CSSProperties, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/video-player/constants';
+import { cssClasses, type VideoPlayerPart } from '@fibrae/semi-foundation/components/video-player/constants';
 import VideoProgressFoundation, { type Marker, type MarkerListItem, type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
 import '@fibrae/semi-foundation/components/video-player/video-player.scss';
@@ -19,12 +19,14 @@ export interface VideoProgressProps {
     showTooltip?: boolean;
     markers?: Marker[];
     bufferedValue: number;
+    classNames?: Partial<Record<VideoPlayerPart, string>>;
+    styles?: Partial<Record<VideoPlayerPart, CSSProperties>>;
 }
 
 const prefixCls = cssClasses.PREFIX_PROGRESS;
 
 export default function VideoProgress(props: VideoProgressProps) {
-    const { showTooltip = true, max, value: currentValue, markers, bufferedValue } = props;
+    const { showTooltip = true, max, value: currentValue, markers, bufferedValue, classNames, styles } = props;
 
     const { locale } = useLocale('VideoPlayer');
 
@@ -46,7 +48,8 @@ export default function VideoProgress(props: VideoProgressProps) {
     const sliderContent = (
         <div
             ref={sliderRef}
-            className={clsx(prefixCls, { [`${prefixCls}-dragging`]: isDragging })}
+            className={clsx(prefixCls, { [`${prefixCls}-dragging`]: isDragging }, classNames?.progress)}
+            style={styles?.progress}
             aria-label={locale.progress}
             aria-valuemax={max}
             aria-valuemin={0}
@@ -71,12 +74,12 @@ export default function VideoProgress(props: VideoProgressProps) {
                         style={{ left: marker.left, width: marker.width }}
                     >
                         <div className={`${prefixCls}-slider-list`} />
-                        <div className={`${prefixCls}-slider-buffered`} style={{ width: VideoProgressFoundation.getValueWidth(marker, bufferedValue) }} />
-                        <div className={`${prefixCls}-slider-played`} style={{ width: VideoProgressFoundation.getValueWidth(marker, currentValue) }} />
+                        <div className={clsx(`${prefixCls}-slider-buffered`, classNames?.progressBuffered)} style={{ width: VideoProgressFoundation.getValueWidth(marker, bufferedValue), ...styles?.progressBuffered }} />
+                        <div className={clsx(`${prefixCls}-slider-played`, classNames?.progressPlayed)} style={{ width: VideoProgressFoundation.getValueWidth(marker, currentValue), ...styles?.progressPlayed }} />
                     </div>
                 ))}
             </div>
-            <div className={`${prefixCls}-handle`} style={{ left: VideoProgressFoundation.getHandleLeft(currentValue, max) }} />
+            <div className={clsx(`${prefixCls}-handle`, classNames?.progressHandle)} style={{ left: VideoProgressFoundation.getHandleLeft(currentValue, max), ...styles?.progressHandle }} />
         </div>
     );
 

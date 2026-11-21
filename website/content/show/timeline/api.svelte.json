@@ -6,6 +6,14 @@
                 "zh-CN": "dataSource 每一项内容的 snippet，参数 `{ item, index }`，缺省渲染 item.content。",
                 "en-US": "Snippet for the content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.content."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`itemRail`、`itemIcon`、`itemContent`、`itemExtra`、`itemTime`，与组件自带的类名合并；`item` 落在每个 `li` 上，`itemRail` 是连接线，`itemIcon` 是圆点或自定义 dot 的容器；`item*` 键作用到全部节点。`dataSource` 的每一项也可设置 `classNames`，键为 `rail`、`icon`、`content`、`extra`、`time`，在 `item*` 类名之后生效。",
+                "en-US": "Class names of the inner parts, keyed by `item`, `itemRail`, `itemIcon`, `itemContent`, `itemExtra` and `itemTime`; merged with the built-in classes. `item` lands on every `li`, `itemRail` is the connecting line and `itemIcon` holds the dot or the custom dot; the `item*` keys apply to every node. Each `dataSource` entry can also set `classNames`, keyed by `rail`, `icon`, `content`, `extra` and `time`, applied after the `item*` class names."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，值为 CSS 文本；`dataSource` 的每一项也可设置 `styles`，后于 `item*` 样式写入。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; the values are CSS text. Each `dataSource` entry can also set `styles`, applied after the `item*` styles."
+            },
             "dataSource": {
                 "zh-CN": "数据数组，按数据渲染各节点；项的字段见下表，其中 `dot` 为该节点自定义圆点的 snippet，未设置时画默认圆点。",
                 "en-US": "Data array the items are rendered from. See the item fields below; `dot` is the snippet of a custom dot for that item, and the default circle is drawn when unset."

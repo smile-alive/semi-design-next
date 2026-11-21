@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | arrowProps | Data for the previous and next arrow buttons: `leftArrow.props` and `rightArrow.props` hold the button attributes. `onclick` and `class` are merged with the built-in handler and classes. Use the `leftArrow` and `rightArrow` snippets for the icons. | `ArrowProps` | - |
 | arrowType | When the arrows are shown: always or hover. | `'always' \| 'hover'` | `"always"` |
 | autoPlay | Whether to play automatically, or an object with interval (milliseconds between slides, default 2000) and hoverToPause (pause while hovered, default true). | `CarouselAutoPlay` | `true` |
+| classNames | Class names of the inner parts, keyed by `content`, `indicators`, `indicator`, `arrows`, `prevArrow` and `nextArrow`; merged with the built-in classes. `indicators` is the tablist holding the indicator dots, `indicator` is a single dot and `arrows` is the container of the two arrow buttons. | <ApiType detail={"Partial\u003cRecord\u003cCarouselPart, ClassValue>>"}>Type</ApiType> | - |
 | indicatorPosition | Indicator position: left, center or right. | `'center' \| 'left' \| 'right'` | `"center"` |
 | indicatorSize | Indicator size: small or medium. | `'medium' \| 'small'` | `"small"` |
 | indicatorType | Indicator type: dot, line or columnar. | `'columnar' \| 'dot' \| 'line'` | `"dot"` |
@@ -25,6 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | slide | Snippet for the content of one slide, with the parameter `{ item, index }`; the carousel wraps each slide in an element carrying the classes, role and `inert`. | <ApiType detail={"Snippet\u003c[CarouselSlideContext\u003cT>]>"}>Type</ApiType> | - |
 | slideDirection | Slide direction when the animation is slide: left or right. | `'left' \| 'right'` | `"left"` |
 | speed | Transition duration in milliseconds. | `number` | `300` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cCarouselPart, string>>"}>Type</ApiType> | - |
 | theme | Theme of the indicator and arrows: primary, light or dark. | `'dark' \| 'light' \| 'primary'` | `"light"` |
 | trigger | How the indicator switches slides: click or hover. | `'click' \| 'hover'` | `"click"` |
 

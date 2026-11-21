@@ -1,9 +1,12 @@
+import type { JSX } from 'solid-js';
+import clsx from 'clsx';
 import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/components/color-picker/color-slider-foundation';
-import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import { cssClasses, type ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import type { HsvaColor } from '@fibrae/semi-foundation/components/color-picker/interface';
 import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
 import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
 import { useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import { useLocale } from '../locale';
 
 export interface AlphaSliderProps {
@@ -11,6 +14,8 @@ export interface AlphaSliderProps {
     width: number;
     height: number;
     handleSize: number;
+    classNames?: Partial<Record<ColorPickerPart, string>>;
+    styles?: Partial<Record<ColorPickerPart, JSX.CSSProperties | string>>;
     onChange: (alpha: number) => void;
 }
 
@@ -48,18 +53,28 @@ export default function AlphaSlider(props: AlphaSliderProps) {
     const percent = () => round(props.hsva.a * 100);
 
     return (
-        <div ref={(node) => (dom = node)} class={`${cssClasses.PREFIX}-alphaSlider`} style={{ width: `${props.width}px`, height: `${props.height}px` }} onLostPointerCapture={foundation.handleLostPointerCapture} onPointerDown={foundation.handlePointerDown} onPointerMove={foundation.handlePointerMove}>
+        <div
+            ref={(node) => (dom = node)}
+            class={clsx(`${cssClasses.PREFIX}-alphaSlider`, props.classNames?.alpha)}
+            style={mergeStyles({ width: `${props.width}px`, height: `${props.height}px` }, props.styles?.alpha)}
+            onLostPointerCapture={foundation.handleLostPointerCapture}
+            onPointerDown={foundation.handlePointerDown}
+            onPointerMove={foundation.handlePointerMove}
+        >
             <div class={`${cssClasses.PREFIX}-alphaSliderInner`} style={{ background: `linear-gradient(90deg, ${hsvaToHslaString({ ...props.hsva, a: 0 })}, ${hsvaToHslaString({ ...props.hsva, a: 1 })})` }}>
                 <div
-                    class={`${cssClasses.PREFIX}-alphaHandle`}
-                    style={{
-                        width: `${props.handleSize}px`,
-                        height: `${props.handleSize}px`,
-                        left: `${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`,
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        'background-color': hsvaToRgbaString(props.hsva),
-                    }}
+                    class={clsx(`${cssClasses.PREFIX}-alphaHandle`, props.classNames?.handle)}
+                    style={mergeStyles(
+                        {
+                            width: `${props.handleSize}px`,
+                            height: `${props.handleSize}px`,
+                            left: `${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            'background-color': hsvaToRgbaString(props.hsva),
+                        },
+                        props.styles?.handle
+                    )}
                 >
                     <input
                         type="range"

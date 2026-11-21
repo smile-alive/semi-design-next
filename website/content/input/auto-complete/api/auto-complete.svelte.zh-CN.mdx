@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | autoAdjustOverflow | 下拉面板被遮挡时是否自动调整方向。 | `boolean` | - |
 | autofocus | 是否在挂载后自动聚焦输入框。 | `boolean` | `false` |
-| classNames | 内部各部位的类名，键为 dropdown（下拉列表，即 role="listbox" 元素），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cAutoCompletePart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 input（原生输入框）、prefix、suffix、clear、dropdown（下拉列表，即 role="listbox" 元素）、item（单个候选项），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。input、prefix、suffix、clear 转发给内部 Input 的同名部位。 | <ApiType detail={"Partial\u003cRecord\u003cAutoCompletePart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除图标的 snippet，showClear 为 true 时有效。 | `Snippet` | - |
 | data | 候选项的数据源，可以是字符串、数字或对象的数组。对象项用 value 作选中值，label 作展示文本（缺省显示 value），disabled、class、style 与 data-\* 字段落在对应的候选行上，class 接受字符串、数组或对象，style 是字符串；节点内容用 item snippet。 | `T[]` | `[]` |
 | defaultActiveFirstOption | 面板打开后是否默认高亮第一个候选项，此时按 Enter 可直接选中。 | `boolean` | `false` |

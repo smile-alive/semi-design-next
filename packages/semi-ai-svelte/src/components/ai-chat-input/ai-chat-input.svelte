@@ -115,7 +115,7 @@
     const editorId = `${prefix}-editor-${uid}`;
     const skillListId = `${prefix}-skill-${uid}`;
     const suggestionListId = `${prefix}-suggestion-${uid}`;
-    const actionCls = `${prefix}-footer-action`;
+    const actionCls = $derived([`${prefix}-footer-action`, classNames?.actions]);
 
     // $bindable-free, but the foundation reads the props through getters all the same: it needs the current values
     const foundationProps: AIChatInputBaseProps = {
@@ -206,7 +206,7 @@
         };
     });
 
-    const uploadButtonProps = $derived({ uploadProps, attachments, tipProps: uploadTipProps, hidden: !showUploadButton });
+    const uploadButtonProps = $derived({ uploadProps, attachments, tipProps: uploadTipProps, hidden: !showUploadButton, buttonClass: classNames?.upload, buttonStyle: styles?.upload });
 
     const register = (handle: { insert: (files: File[]) => void }) => {
         uploads.add(handle);
@@ -221,7 +221,7 @@
         const active = kind === 'skill' ? states().activeSkillIndex === index : states().activeSuggestionIndex === index;
         return {
             id: getOptionId(kind === 'skill' ? skillListId : suggestionListId, index),
-            class: [`${prefix}-${kind}-item`, { [`${prefix}-${kind}-item-active`]: active }],
+            class: [`${prefix}-${kind}-item`, { [`${prefix}-${kind}-item-active`]: active }, classNames?.[`${kind}Item` as const]],
             role: 'option' as const,
             'aria-selected': active,
             onclick: select,
@@ -305,7 +305,7 @@
 {/snippet}
 
 {#snippet sendNode()}
-    <SendButton canSend={sendEnabled} {generating} onClick={onSendClick} />
+    <SendButton canSend={sendEnabled} class={classNames?.send} {generating} onClick={onSendClick} style={styles?.send} />
 {/snippet}
 
 {#snippet topSlotNode()}
@@ -334,13 +334,13 @@
             {@render topSlotNode()}
         {/if}
         {#if showReference && references?.length}
-            <div class={`${prefix}-references`}>
+            <div class={[`${prefix}-references`, classNames?.references]} style={styles?.references}>
                 {#each references as item, index (item.id)}
                     {#if reference}
                         {@render reference({ item, index })}
                     {:else}
                         {@const Icon = fileIcon(iconType(item))}
-                        <div class={`${prefix}-reference`}>
+                        <div class={[`${prefix}-reference`, classNames?.reference]} style={styles?.reference}>
                             <IconSendMsgStroked />
                             <button class={`${prefix}-reference-content`} type="button" onclick={() => foundation.handleReferenceClick(item)}>
                                 {#if item.type !== 'text'}
@@ -377,10 +377,10 @@
             {@render topSlotNode()}
         {/if}
         {#if showUploadFile && attachments.length}
-            <HorizontalScroller>
+            <HorizontalScroller class={[`${prefix}-attachments`, classNames?.attachments]} style={styles?.attachments}>
                 {#each attachments as item (item.uid)}
                     {@const Icon = fileIcon(iconType(item))}
-                    <div class={`${prefix}-attachment`}>
+                    <div class={[`${prefix}-attachment`, classNames?.attachment]} style={styles?.attachment}>
                         {#if isImageFile(item.name, item.fileInstance?.type)}
                             <img alt="" class={`${prefix}-attachment-img`} src={item.url} />
                         {:else}
@@ -409,6 +409,7 @@
         {/if}
         <RichTextInput
             activeDescendant={listbox?.activeId}
+            class={classNames?.editor}
             controls={listbox?.id}
             {defaultContent}
             {extensions}
@@ -425,9 +426,10 @@
             onPasteFiles={foundation.handlePaste}
             {placeholder}
             {showPlaceholderWhenSkillOnly}
+            style={styles?.editor}
         />
-        <div class={[`${prefix}-footer`, { [`${prefix}-footer-round`]: round }]}>
-            <div class={cssClasses.FOOTER_CONFIGURE}>
+        <div class={[`${prefix}-footer`, { [`${prefix}-footer-round`]: round }, classNames?.footer]} style={styles?.footer}>
+            <div class={[cssClasses.FOOTER_CONFIGURE, classNames?.configure]} style={styles?.configure}>
                 <Configure bind:this={configure} onChange={foundation.onConfigureChange}>
                     {@render configureArea?.()}
                 </Configure>
@@ -444,7 +446,7 @@
             {#if actionArea}
                 {@render actionArea({ upload: uploadNode, send: sendNode, class: actionCls })}
             {:else}
-                <div class={actionCls}>
+                <div class={actionCls} style={styles?.actions}>
                     {@render uploadNode()}
                     {@render sendNode()}
                 </div>
@@ -459,12 +461,12 @@
             {@render template?.({ onTemplateClick: setContent, skill: states().skill })}
         </div>
     {:else if states().skillVisible}
-        <div aria-labelledby={editorId} bind:this={skillPanel} class={`${prefix}-skill`} id={skillListId} role="listbox" style={`max-height: ${numbers.SKILL_MAX_HEIGHT}px`}>
+        <div aria-labelledby={editorId} bind:this={skillPanel} class={[`${prefix}-skill`, classNames?.skills]} id={skillListId} role="listbox" style={[`max-height: ${numbers.SKILL_MAX_HEIGHT}px`, styles?.skills].filter(Boolean).join('; ')}>
             {#each skills ?? [] as item, index (`${index}-${item.value}`)}
                 {#if skillItem}
                     {@render skillItem(skillOption(item, index))}
                 {:else}
-                    <div {...optionProps('skill', index, () => foundation.handleSkillSelect(item))}>
+                    <div {...optionProps('skill', index, () => foundation.handleSkillSelect(item))} style={styles?.skillItem}>
                         {@render skillIcon?.(skillIconProps(item, index))}
                         <div class={`${prefix}-skill-item-content`}>{item.label}</div>
                     </div>
@@ -472,13 +474,13 @@
             {/each}
         </div>
     {:else if states().suggestionVisible}
-        <div aria-labelledby={editorId} bind:this={suggestionPanel} class={`${prefix}-suggestion`} id={suggestionListId} role="listbox" style={`max-height: ${numbers.SUGGESTION_MAX_HEIGHT}px`}>
+        <div aria-labelledby={editorId} bind:this={suggestionPanel} class={[`${prefix}-suggestion`, classNames?.suggestions]} id={suggestionListId} role="listbox" style={[`max-height: ${numbers.SUGGESTION_MAX_HEIGHT}px`, styles?.suggestions].filter(Boolean).join('; ')}>
             <!-- the index is part of the key: the same text may appear twice -->
             {#each suggestions ?? [] as item, index (`${index}-${typeof item === 'string' ? item : item.content}`)}
                 {#if suggestionItem}
                     {@render suggestionItem(suggestionOption(item, index))}
                 {:else}
-                    <div {...optionProps('suggestion', index, () => foundation.handleSuggestionSelect(item))}>
+                    <div {...optionProps('suggestion', index, () => foundation.handleSuggestionSelect(item))} style={styles?.suggestionItem}>
                         {typeof item === 'string' ? item : item.content}
                     </div>
                 {/if}

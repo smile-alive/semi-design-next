@@ -8,7 +8,7 @@
     import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-vue';
-    import { type ElementProps, semiDefault, useFoundation } from '../../base/index';
+    import { type ElementProps, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import Button from '../button';
     import Dropdown, { DropdownItem, DropdownMenu } from '../dropdown';
     import Image from '../image';
@@ -23,8 +23,10 @@
 
     const props = withDefaults(defineProps<AudioPlayerProps & /* @vue-ignore */ ElementProps<'div', keyof AudioPlayerProps>>(), {
         autoPlay: () => semiDefault('AudioPlayer', 'autoPlay', false),
+        classNames: semiGlobalDefault('AudioPlayer', 'classNames'),
         showToolbar: () => semiDefault('AudioPlayer', 'showToolbar', true),
         skipDuration: () => semiDefault('AudioPlayer', 'skipDuration', 10),
+        styles: semiGlobalDefault('AudioPlayer', 'styles'),
         theme: () => semiDefault('AudioPlayer', 'theme', 'dark'),
     });
 
@@ -64,7 +66,7 @@
         <audio ref="audio" :autoplay="props.autoPlay" :src="info?.src" @pause="foundation.handleAudioPause" @play="foundation.handleAudioPlay" @timeupdate="foundation.handleTimeUpdate">
             <track kind="captions" />
         </audio>
-        <div :class="`${prefix}-control`">
+        <div :class="[`${prefix}-control`, props.classNames?.controls]" :style="props.styles?.controls">
             <Tooltip v-if="isList" autoAdjustOverflow :showArrow="false">
                 <Button :aria-label="locale.prev" size="large" :style="[circleStyle, transparentStyle]" @click="foundation.handleTrackChange('prev')">
                     <template #icon>
@@ -73,7 +75,14 @@
                 </Button>
                 <template #content>{{ locale.prev }}</template>
             </Tooltip>
-            <Button :aria-label="state.isPlaying ? locale.pause : locale.play" :class="[`${prefix}-control-button-play`, { [`${prefix}-control-button-play-disabled`]: state.error }]" :disabled="state.error" size="large" :style="circleStyle" @click="foundation.handleStatusClick">
+            <Button
+                :aria-label="state.isPlaying ? locale.pause : locale.play"
+                :class="[`${prefix}-control-button-play`, { [`${prefix}-control-button-play-disabled`]: state.error }, props.classNames?.playButton]"
+                :disabled="state.error"
+                size="large"
+                :style="[circleStyle, props.styles?.playButton]"
+                @click="foundation.handleStatusClick"
+            >
                 <template #icon>
                     <IconPause v-if="state.isPlaying" size="large" />
                     <IconPlay v-else size="large" :style="{ marginLeft: '1px' }" />
@@ -90,12 +99,12 @@
         </div>
         <div :class="`${prefix}-info-container`">
             <!-- decorative: the title beside it names the track, so it is no preview button either -->
-            <Image v-if="info?.cover" alt="" :height="50" :preview="false" :src="info.cover" :width="50" />
+            <Image v-if="info?.cover" alt="" :class="[`${prefix}-cover`, props.classNames?.cover]" :height="50" :preview="false" :src="info.cover" :style="props.styles?.cover" :width="50" />
             <div :class="`${prefix}-info`">
                 <!-- the error hides the time row, so a track without a title still needs this row for the error -->
-                <div v-if="info?.title || state.error" :class="`${prefix}-info-title`">
+                <div v-if="info?.title || state.error" :class="[`${prefix}-info-title`, props.classNames?.title]" :style="props.styles?.title">
                     {{ info?.title }}
-                    <div v-if="state.error" :class="`${prefix}-error`" role="alert">
+                    <div v-if="state.error" :class="[`${prefix}-error`, props.classNames?.error]" role="alert" :style="props.styles?.error">
                         <IconAlertCircle size="large" />
                         {{ locale.mediaError }}
                     </div>
@@ -103,13 +112,13 @@
                 <div v-if="!state.error" :class="`${prefix}-info-time`">
                     <span style="width: 38px">{{ formatTime(state.currentTime) }}</span>
                     <div :class="`${prefix}-slider-container`">
-                        <AudioSlider :getValueText="progressText" :label="locale.progress" :max="state.totalTime" :theme="props.theme" :value="state.currentTime" @change="foundation.handleTimeChange" />
+                        <AudioSlider :classNames="props.classNames" :getValueText="progressText" :label="locale.progress" :max="state.totalTime" :styles="props.styles" :theme="props.theme" :value="state.currentTime" @change="foundation.handleTimeChange" />
                     </div>
                     <span style="width: 38px">{{ formatTime(state.totalTime) }}</span>
                 </div>
             </div>
         </div>
-        <div v-if="props.showToolbar" :class="`${prefix}-control`">
+        <div v-if="props.showToolbar" :class="[`${prefix}-control`, `${prefix}-toolbar`, props.classNames?.toolbar]" :style="props.styles?.toolbar">
             <template v-if="!state.error">
                 <Popover :ariaLabel="locale.volume" autoAdjustOverflow role="dialog">
                     <Button :aria-label="locale.volume" :style="transparentStyle" @click="foundation.handleVolumeSilent">
@@ -119,9 +128,9 @@
                         </template>
                     </Button>
                     <template #content>
-                        <div :class="[`${prefix}-control-volume`, `${prefix}-control-volume-${props.theme}`]">
+                        <div :class="[`${prefix}-control-volume`, `${prefix}-control-volume-${props.theme}`, props.classNames?.volumeDropdown]" :style="props.styles?.volumeDropdown">
                             <div :class="`${prefix}-control-volume-title`">{{ state.volume }}%</div>
-                            <AudioSlider :getValueText="volumeText" :height="120" :label="locale.volume" :max="100" :showTooltip="false" :theme="props.theme" :value="state.volume" vertical @change="foundation.handleVolumeChange" />
+                            <AudioSlider :classNames="props.classNames" :getValueText="volumeText" :height="120" :label="locale.volume" :max="100" :showTooltip="false" :styles="props.styles" :theme="props.theme" :value="state.volume" vertical @change="foundation.handleVolumeChange" />
                         </div>
                     </template>
                 </Popover>
@@ -141,8 +150,8 @@
                     </Button>
                     <template #content>{{ forwardLabel }}</template>
                 </Tooltip>
-                <Dropdown :class="[`${prefix}-control-speed-menu`, `${prefix}-control-speed-menu-${props.theme}`]" selectionMode="single">
-                    <button :aria-label="speedLabel" :class="`${prefix}-control-speed`" type="button">
+                <Dropdown :class="[`${prefix}-control-speed-menu`, `${prefix}-control-speed-menu-${props.theme}`]" :classNames="{ content: props.classNames?.speedDropdown }" selectionMode="single" :styles="{ content: props.styles?.speedDropdown }">
+                    <button :aria-label="speedLabel" :class="[`${prefix}-control-speed`, props.classNames?.speed]" :style="props.styles?.speed" type="button">
                         <span>{{ state.currentRate.label }}</span>
                     </button>
                     <template #content>

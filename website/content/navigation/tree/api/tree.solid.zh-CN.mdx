@@ -9,7 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoMergeValue | 父节点被选中时，值不再包含它的子孙节点；leafOnly 为 false 时生效。 | `boolean` | `true` |
 | blockNode | 节点显示为整行，悬浮和选中高亮整行；关闭时只高亮节点的 label。 | `boolean` | `true` |
 | checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `"related"` |
-| classNames | 内部各部位的类名，键为 `search`（搜索框容器），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTreePart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `search`、`list`、`empty`、`item`、`itemSwitcher`、`itemCheckbox`、`itemIcon`、`itemTitle`，与组件自带的类名合并。`item*` 作用到每个节点：`item` 是节点行（`role="treeitem"`），`itemSwitcher` 是展开箭头位；`itemIcon` 只作用于 `directory` 的内置图标，自定义图标不带它，自定义 `expandIcon` 只带 `itemSwitcher` 的类名、不带样式。 | <ApiType detail={"Partial\u003cRecord\u003cTreePart, string>>"}>Type</ApiType> | - |
 | defaultExpandAll | 初始化时展开所有节点。之后 treeData 或 treeDataSimpleJson 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `false` |
 | defaultExpandedKeys | 默认展开的节点，显示其直接子级。 | `string[]` | - |
 | defaultValue | 指定默认选中的条目，只在挂载时读取。 | `Value` | - |

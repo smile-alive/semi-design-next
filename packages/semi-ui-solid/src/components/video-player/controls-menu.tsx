@@ -2,17 +2,9 @@ import { For } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/video-player/constants';
 import Dropdown from '../dropdown';
-import type { VideoPlayerOption } from './interface';
+import type { ControlsMenuProps } from './interface';
 
 const controlsCls = cssClasses.PREFIX_CONTROLS;
-
-interface ControlsMenuProps<T> {
-    current: T;
-    /** What the menu sets, read before the current option in the button's name */
-    label: string;
-    list: VideoPlayerOption<T>[];
-    onSelect: (option: VideoPlayerOption<T>) => void;
-}
 
 export default function ControlsMenu<T extends string | number>(props: ControlsMenuProps<T>) {
     const currentLabel = () => props.list.find((option) => option.value === props.current)?.label ?? String(props.current);
@@ -20,6 +12,8 @@ export default function ControlsMenu<T extends string | number>(props: ControlsM
     return (
         <Dropdown
             class={`${controlsCls}-popup-menu`}
+            classNames={{ content: props.classNames?.dropdown }}
+            styles={{ content: props.styles?.dropdown }}
             position="top"
             render={
                 <Dropdown.Menu>

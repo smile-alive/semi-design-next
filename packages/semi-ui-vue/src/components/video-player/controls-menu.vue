@@ -13,7 +13,7 @@
 </script>
 
 <template>
-    <Dropdown :class="`${controlsCls}-popup-menu`" position="top" selectionMode="single">
+    <Dropdown :class="`${controlsCls}-popup-menu`" :classNames="{ content: props.classNames?.dropdown }" position="top" selectionMode="single" :styles="{ content: props.styles?.dropdown }">
         <button :aria-label="buttonName" :class="[`${controlsCls}-menu-item`, `${controlsCls}-popup`]" type="button">
             {{ currentLabel }}
         </button>

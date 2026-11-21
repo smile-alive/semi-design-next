@@ -20,6 +20,8 @@
     const {
         children,
         icon,
+        classNames,
+        styles,
         copyIcon,
         copyTip,
         copySuccessTip,
@@ -334,7 +336,7 @@
         <svelte:element this={tag.tag} {...tag.attrs} aria-describedby={tag.attrs['aria-describedby'] ?? (tag.tag === 'a' ? description : undefined)}>{@render decorate(index + 1, description)}</svelte:element>
     {:else}
         <!-- Adjacent blocks share a line: whitespace between them would become a visible space inside the text -->
-        {#if icon}<span {@attach sizeIcons} bind:this={iconBox} class={`${prefix}-icon`} x-semi-prop="icon">{@render icon()}</span>{/if}{#if linkClass}<span class={linkClass}>{@render body()}</span>{:else}{@render body()}{/if}
+        {#if icon}<span {@attach sizeIcons} bind:this={iconBox} class={[`${prefix}-icon`, classNames?.icon]} style={styles?.icon} x-semi-prop="icon">{@render icon()}</span>{/if}{#if linkClass}<span class={linkClass}>{@render body()}</span>{:else}{@render body()}{/if}
     {/if}
 {/snippet}
 
@@ -361,15 +363,8 @@
         style={rootStyle}
         tabindex={trigger ? triggerTabindex : (rest.tabindex ?? (focusTarget ? -1 : undefined))}
     >
-        {@render decorate(0, describedByLink ? trigger?.['aria-describedby'] : undefined)}{#if expandAction}<button aria-expanded={expandAction.expanded} bind:this={expandButton} class={`${prefix}-ellipsis-expand`} type="button" onclick={toggle}>{expandAction.text}</button>{/if}{#if copyConfig}<Copyable
-                bind:this={copyElement}
-                {...copyConfig}
-                {copyAction}
-                {copyIcon}
-                {copySuccessTip}
-                {copyTip}
-                onCopiedChange={() => hasEllipsis && runtime.schedule()}
-            />{/if}
+        {@render decorate(0, describedByLink ? trigger?.['aria-describedby'] : undefined)}{#if expandAction}<button aria-expanded={expandAction.expanded} bind:this={expandButton} class={[`${prefix}-ellipsis-expand`, classNames?.expand]} style={styles?.expand} type="button" onclick={toggle}>{expandAction.text}</button
+            >{/if}{#if copyConfig}<Copyable bind:this={copyElement} {...copyConfig} buttonClass={classNames?.copy} buttonStyle={styles?.copy} {copyAction} {copyIcon} {copySuccessTip} {copyTip} onCopiedChange={() => hasEllipsis && runtime.schedule()} />{/if}
     </svelte:element>
 {/snippet}
 

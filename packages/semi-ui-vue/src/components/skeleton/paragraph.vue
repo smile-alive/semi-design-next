@@ -14,6 +14,6 @@
 
 <template>
     <ul aria-hidden="true" :class="`${cssClasses.PREFIX}-paragraph`">
-        <li v-for="row in rows" :key="row" />
+        <li v-for="row in rows" :key="row" :class="props.classNames?.row" :style="props.styles?.row" />
     </ul>
 </template>

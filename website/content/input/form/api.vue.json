@@ -50,6 +50,10 @@
                 "zh-CN": "统一应用在每个字段上的 label 宽度，数字单位为 px。",
                 "en-US": "Label width of every field. A number is in px."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `label`、`labelText`、`labelExtra`、`labelTooltip`、`content`、`help`、`extra`，作用到表单内全部字段的标签、内容区、帮助文字与附加说明，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `label`, `labelText`, `labelExtra`, `labelTooltip`, `content`, `help` and `extra`; they apply to the labels, content areas, help texts and extra texts of every field in the form and are merged with the built-in classes."
+            },
             "layout": {
                 "zh-CN": "字段的排列方向，可选 vertical 或 horizontal。",
                 "en-US": "Direction in which the fields are arranged: vertical or horizontal."
@@ -65,6 +69,10 @@
             "stopValidateWithError": {
                 "zh-CN": "使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。",
                 "en-US": "Whether validation by rules stops at the first failing rule. The same property on a field takes precedence."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "trigger": {
                 "zh-CN": "统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。",
@@ -166,6 +174,10 @@
                 "zh-CN": "Label 文本的对齐方式。",
                 "en-US": "Text alignment of the label."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `text`、`extra`、`tooltip`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `text`, `extra` and `tooltip`; merged with the built-in classes."
+            },
             "disabled": {
                 "zh-CN": "是否为禁用样式。",
                 "en-US": "Whether the label looks disabled."
@@ -185,6 +197,10 @@
             "required": {
                 "zh-CN": "是否显示必填的 * 号。",
                 "en-US": "Whether to display the required * symbol."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "text": {
                 "zh-CN": "Label 文本，默认插槽优先。",
@@ -259,7 +275,16 @@
     },
     "form-section": {
         "source": "packages/semi-ui-vue/src/components/form/section.vue",
-        "props": {},
+        "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `title`、`extra`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `title` and `extra`; merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            }
+        },
         "events": {},
         "slots": {
             "default": {
@@ -397,6 +422,7 @@
                 "zh-CN": "要渲染的 JSON Schema，优先于从 `schema` 导出的 JSON Schema。Form 的事件原样传给内部的 Form。",
                 "en-US": "The JSON Schema to render. It takes precedence over the JSON Schema exported from `schema`. The events of Form pass through to the inner Form."
             },
+            "classNames": { "zh-CN": "同 Form 的 classNames。", "en-US": "The classNames of Form." },
             "keepState": { "zh-CN": "同 Form 的 keepState。", "en-US": "The keepState of Form." },
             "labelAlign": { "zh-CN": "同 Form 的 labelAlign。", "en-US": "The labelAlign of Form." },
             "labelCol": { "zh-CN": "同 Form 的 labelCol。", "en-US": "The labelCol of Form." },
@@ -419,6 +445,7 @@
             "showValidateIcon": { "zh-CN": "同 Form 的 showValidateIcon。", "en-US": "The showValidateIcon of Form." },
             "stopPropagation": { "zh-CN": "同 Form 的 stopPropagation。", "en-US": "The stopPropagation of Form." },
             "stopValidateWithError": { "zh-CN": "同 Form 的 stopValidateWithError。", "en-US": "The stopValidateWithError of Form." },
+            "styles": { "zh-CN": "同 Form 的 styles。", "en-US": "The styles of Form." },
             "trigger": { "zh-CN": "同 Form 的 trigger。", "en-US": "The trigger of Form." },
             "validator": {
                 "zh-CN": "Form 级别的校验函数，与 `schema` 互斥，用法同 Form 的 validator。",

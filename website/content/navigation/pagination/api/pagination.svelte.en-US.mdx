@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by list, total, prev, next, item, ellipsis, sizeChanger, sizeChangerDropdown, quickJumper and dropdown; values take anything class takes (string, array or object) and merge with the built-in classes. item also reaches the ellipsis button, and dropdown is the popup listing pages that opens from the ellipsis and the small size. | <ApiType detail={"Partial\u003cRecord\u003cPaginationPart, ClassValue>>"}>Type</ApiType> | - |
 | currentPage | Current page, bound with `bind:currentPage`. When omitted the component manages the page itself; `bind:currentPage={get, set}` makes it fully controlled. | `number` | - |
 | disabled | Whether disabled. | `boolean` | `false` |
 | hideOnSinglePage | Whether to hide the pagination when there are fewer than 2 pages; has no effect while the size changer is shown. | `boolean` | `false` |
@@ -21,4 +22,5 @@ import ApiType from '#/components/ApiType.astro';
 | showSizeChanger | Whether to show the size changer; not rendered when size is small. | `boolean` | `false` |
 | showTotal | Whether to show the total number of pages; not shown when size is small. | `boolean` | `false` |
 | size | Size: default or small. | `'default' \| 'small'` | `"default"` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cPaginationPart, string>>"}>Type</ApiType> | - |
 | total | Total number of items. | `number` | `1` |

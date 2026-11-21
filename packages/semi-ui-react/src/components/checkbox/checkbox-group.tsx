@@ -2,7 +2,7 @@ import type React from 'react';
 import { useId } from 'react';
 import clsx from 'clsx';
 import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState, type CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
-import { checkboxGroupClasses as css, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
+import { checkboxGroupClasses as css, type CheckboxGroupPart, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { hasContent } from '../../utils/index';
@@ -38,6 +38,8 @@ export interface CheckboxGroupProps extends ElementProps<'div', 'onChange' | 'de
     direction?: CheckboxDirection;
     style?: React.CSSProperties;
     className?: string;
+    classNames?: Partial<Record<CheckboxGroupPart, string>>;
+    styles?: Partial<Record<CheckboxGroupPart, React.CSSProperties>>;
     type?: CheckboxType;
     id?: string;
     /** Attached to the root div */
@@ -62,6 +64,8 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         options,
         direction,
         className,
+        classNames,
+        styles,
         type,
         disabled,
         name,
@@ -150,6 +154,8 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
                         ariaInvalid,
                         ariaErrormessage,
                     },
+                    classNames,
+                    styles,
                 }}
             >
                 {inner}

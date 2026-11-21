@@ -9,7 +9,7 @@ export const numbers = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type ImagePart = 'img';
+export type ImagePart = 'img' | 'overlay';
 
-/** Keys of `classNames` and `styles` of an image preview; the group root takes `className` and `style` */
-export type ImagePreviewPart = 'preview';
+/** Keys of `classNames` and `styles` of an image preview; the group root takes `className` and `style`. `img` is the enlarged image, `action` every button of the footer toolbar */
+export type ImagePreviewPart = 'preview' | 'header' | 'title' | 'close' | 'img' | 'prev' | 'next' | 'footer' | 'page' | 'action';

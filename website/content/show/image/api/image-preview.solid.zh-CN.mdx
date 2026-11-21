@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | adaptiveTip | 适应页面操作按钮的提示。 | `string` | - |
 | children | 要预览的 Image 组件。 | `JSX.Element` | - |
-| classNames | 内部各部位的类名，键为 `preview`（预览层，即 `role="dialog"` 元素），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `preview`（预览层，即 `role="dialog"` 元素）、`header`、`title`、`close`、`img`（预览中放大显示的图片）、`prev`、`next`、`footer`、`page`、`action`（底部工具栏里的全部操作按钮），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
 | closable | 是否显示关闭按钮。 | `boolean` | `true` |
 | closeOnEsc | 按下 Esc 键时是否关闭预览。 | `boolean` | - |
 | crossOrigin | 透传给预览图片的原生 img 标签的 crossorigin。 | `'anonymous' \| 'use-credentials'` | - |

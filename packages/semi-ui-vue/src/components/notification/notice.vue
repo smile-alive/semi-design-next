@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { computed, isVNode, onBeforeUnmount, onMounted, useId, useTemplateRef, type Component } from 'vue';
+    import { computed, isVNode, onBeforeUnmount, onMounted, useId, useTemplateRef, type ClassValue, type Component, type StyleValue } from 'vue';
     import { isAlertType, isStackHidden } from '@fibrae/semi-foundation/base';
-    import { cssClasses, getStackItemTransform, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+    import { cssClasses, getStackItemTransform, numbers, type NotificationPart } from '@fibrae/semi-foundation/components/notification/constants';
     import NotificationFoundation, { type NoticeProps as FoundationNoticeProps, type NoticeAdapter, type NoticePosition, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
     import { semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
@@ -18,6 +18,8 @@
         title?: NotificationNode;
         content?: NotificationNode;
         icon?: NotificationNode;
+        classNames?: Partial<Record<NotificationPart, ClassValue>>;
+        styles?: Partial<Record<NotificationPart, StyleValue>>;
         placement: NoticePosition;
         stack?: boolean;
         stackExpanded?: boolean;
@@ -35,6 +37,8 @@
 
     const props = withDefaults(defineProps<NoticeItemProps>(), {
         id: '',
+        classNames: semiGlobalDefault('Notification', 'classNames'),
+        styles: semiGlobalDefault('Notification', 'styles'),
         title: undefined,
         content: undefined,
         icon: undefined,
@@ -142,7 +146,7 @@
             :role="role"
         >
             <div>
-                <div v-if="icon || typeIcon" :class="[`${prefix}-icon`, `${prefix}-${props.type}`]" x-semi-prop="icon">
+                <div v-if="icon || typeIcon" :class="[`${prefix}-icon`, `${prefix}-${props.type}`, props.classNames?.icon]" :style="props.styles?.icon" x-semi-prop="icon">
                     <component :is="typeIcon" v-if="!icon" size="large" />
                     <template v-else-if="typeof icon === 'string'">{{ icon }}</template>
                     <component :is="icon" v-else-if="elementType(icon) === 'Icon'" :size="iconSize(icon)" />
@@ -151,16 +155,16 @@
             </div>
             <div :class="`${prefix}-inner`">
                 <div :class="`${prefix}-content-wrapper`">
-                    <div v-if="title" :id="titleId" :class="`${prefix}-title`" x-semi-prop="title">
+                    <div v-if="title" :id="titleId" :class="[`${prefix}-title`, props.classNames?.title]" :style="props.styles?.title" x-semi-prop="title">
                         <template v-if="typeof title === 'string'">{{ title }}</template>
                         <component :is="title" v-else />
                     </div>
-                    <div v-if="content" :class="`${prefix}-content`" x-semi-prop="content">
+                    <div v-if="content" :class="[`${prefix}-content`, props.classNames?.content]" :style="props.styles?.content" x-semi-prop="content">
                         <template v-if="typeof content === 'string'">{{ content }}</template>
                         <component :is="content" v-else />
                     </div>
                 </div>
-                <IconButton v-if="props.showClose" :aria-label="locale.locale.close" :class="`${prefix}-icon-close`" size="small" theme="borderless" type="tertiary" @click="close">
+                <IconButton v-if="props.showClose" :aria-label="locale.locale.close" :class="[`${prefix}-icon-close`, props.classNames?.close]" size="small" :style="props.styles?.close" theme="borderless" type="tertiary" @click="close">
                     <template #icon>
                         <IconClose />
                     </template>

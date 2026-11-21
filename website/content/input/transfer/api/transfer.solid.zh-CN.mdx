@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 `source`、`selected`、`filter`、`header`、`title`、`action`、`list`、`groupTitle`、`item`、`itemDragHandle`、`itemRemove`、`empty`，与组件自带的类名合并。`source`、`selected` 是左右两个面板，`item` 同时作用于两侧的选项行。 | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, string>>"}>Type</ApiType> | - |
 | dataSource | 数据源。type 为 `list` 时是数据项数组，`groupList` 时是分组数组，`treeList` 时是带 `children` 的树形数据。数据按数组引用计算，原地修改数组不会生效，需要传入新数组。 | `DataSource` | `[]` |
 | defaultValue | 默认已选中的 value 数组，只在创建时读取。 | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | `[]` |
 | disabled | 是否禁用。 | `boolean` | - |
@@ -27,6 +28,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSourceItem | 自定义左侧单个候选项的渲染，每个选项调用一次。参数为数据项，另含 `onChange` 与 `checked`；`checked` 是 getter，需在返回的 JSX 中读取。 | <ApiType detail={"(item: RenderSourceItemProps) => JSX.Element"}>Type</ApiType> | - |
 | renderSourcePanel | 完全自定义左侧候选面板，参数为实时对象（SourcePanelProps），只调用一次。读取其字段需写在 JSX 中，解构只取首次渲染时的值。 | <ApiType detail={"(sourcePanelProps: SourcePanelProps) => JSX.Element"}>Type</ApiType> | - |
 | showPath | 仅 `treeList` 有效，控制右侧已选项是否显示从根节点到自身的选择路径。 | `boolean` | `false` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | tabIndex | 设置在搜索框上，包括外层 Tooltip 注入的值；根元素本身不是焦点目标。 | `number \| string` | - |
 | treeProps | 仅 `treeList` 有效，传给左侧 Tree 的属性，会覆盖默认的 `multiple`、`disableStrictly`、`leafOnly`、`filterTreeNode`、`defaultExpandAll` 与 `searchRender`（为 `false`）。`value`、`treeData`、`keyMaps`、`treeDataSimpleJson`、`onChangeWithObject`、`onChange` 与 `ref` 由 Transfer 决定，传入会被忽略。 | <ApiType detail={"Omit\u003cTreeProps, 'keyMaps' \u007c 'onChange' \u007c 'onChangeWithObject' \u007c 'ref' \u007c 'treeData' \u007c 'treeDataSimpleJson' \u007c 'value'>"}>Type</ApiType> | - |
 | type | 穿梭框类型，可选 `list`、`groupList`、`treeList`。 | `Type` | `"list"` |

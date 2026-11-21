@@ -46,8 +46,8 @@
                 "en-US": "Hides the suffix while the clear button is shown; by default the two sit side by side."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `input`（原生 input 元素），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `input` (the native input element); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `input`（原生 input 元素）、`prefix`（前缀与 `insetLabel`）、`suffix`、`clear`（清除按钮）、`visibilityToggle`（密码可见性切换按钮）、`addonBefore`、`addonAfter`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `input` (the native input element), `prefix` (also holds `insetLabel`), `suffix`, `clear` (the clear button), `visibilityToggle` (the password visibility button), `addonBefore` and `addonAfter`; merged with the built-in classes."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
@@ -167,8 +167,8 @@
                 "en-US": "Custom string length calculation, used with `maxLength`, `minLength` and `maxCount`."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `textarea`（原生 textarea 元素）、`lineNumber`（行号区域），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `textarea` (the native textarea element) and `lineNumber` (the line number area); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `textarea`（原生 textarea 元素）、`lineNumber`（行号区域）、`clear`（清除按钮）、`counter`（字数统计），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `textarea` (the native textarea element), `lineNumber` (the line number area), `clear` (the clear button) and `counter` (the character counter); merged with the built-in classes."
             },
             "lineNumberStart": { "zh-CN": "行号起始值。", "en-US": "Starting line number." },
             "styles": {

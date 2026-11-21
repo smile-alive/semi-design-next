@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | adaptiveTip | Tip of the fit-to-page button. | `string` | - |
 | alts | Alternative texts of the preview images, one per entry of src. | `(string \| undefined)[]` | - |
 | children | Snippet for the Image components to preview. | `Snippet` | - |
-| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element), `header`, `title`, `close`, `img` (the enlarged image), `prev`, `next`, `footer`, `page` and `action` (every button of the footer toolbar); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, ClassValue>>"}>Type</ApiType> | - |
 | closable | Whether to show the close button. | `boolean` | `true` |
 | closeIcon | Snippet for the custom close icon. | `Snippet` | - |
 | closeOnEsc | Whether Esc closes the preview. | `boolean` | `true` |

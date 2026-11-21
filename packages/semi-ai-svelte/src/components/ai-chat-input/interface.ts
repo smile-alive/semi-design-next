@@ -65,7 +65,7 @@ export interface AIChatInputActionAreaSnippetProps {
     /** The upload trigger, which stays mounted (hidden when `showUploadButton` is off): paste upload goes through it */
     upload: Snippet;
     send: Snippet;
-    class: string;
+    class: ClassValue;
 }
 
 interface OptionSnippetProps {

@@ -179,18 +179,23 @@ describe('Svelte Radio', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        fixture({ classNames: { addon: 'my-addon' }, styles: { addon: 'order: 4' } }, 'A');
-        const addon = getElement(`.${prefix}-addon`);
-        expect(addon).toHaveClass('my-addon');
-        expect(addon).toHaveStyle({ order: '4' });
-        expect(getLabel()).not.toHaveClass('my-addon');
+        const parts = ['icon', 'label', 'extra'] as const;
+        const selectors = { icon: 'inner-display', label: 'addon', extra: 'extra' };
+        fixture({ classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) }, 'A', 'more');
+        for (const part of parts) {
+            const el = getElement(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+        expect(getLabel()).not.toHaveClass('my-label');
     });
 
-    it('button 类型隐藏 extra，应用 classNames.addon 与 styles.addon，选中后带选中类名', async () => {
-        fixture({ type: 'button', classNames: { addon: 'ac' }, styles: { addon: 'color: red' } }, 'A', 'more');
+    it('button 类型下 label 落在按钮面，没有 icon 与 extra，选中后带选中类名', async () => {
+        fixture({ type: 'button', classNames: { icon: 'ic', label: 'ac' }, styles: { label: 'color: red' } }, 'A', 'more');
         const addon = getElement(`.${prefix}-addon-buttonRadio`);
         expect(addon).toHaveClass('ac');
         expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(document.querySelector('.ic')).toBeNull();
         expect(document.querySelector(`.${prefix}-extra`)).toBeNull();
         expect(getRadio()).not.toHaveAttribute('aria-describedby');
         await click(getRadio());

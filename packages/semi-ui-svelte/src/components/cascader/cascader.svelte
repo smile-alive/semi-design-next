@@ -490,7 +490,7 @@
         {#if tag}
             {@render tag(tagSnippetProps(key, index))}
         {:else}
-            <Tag class={[`${cls}-selection-tag`, { [`${cls}-selection-tag-disabled`]: isTagDisabled(key) }]} closable={!isTagDisabled(key)} color="white" onClose={(event) => removeTag(key, event)} size={tagSize} tagKey={key}>
+            <Tag class={[`${cls}-selection-tag`, { [`${cls}-selection-tag-disabled`]: isTagDisabled(key) }, classNames?.tag]} closable={!isTagDisabled(key)} color="white" onClose={(event) => removeTag(key, event)} size={tagSize} style={styles?.tag} tagKey={key}>
                 {entity.data[displayProp]}
             </Tag>
         {/if}
@@ -515,12 +515,16 @@
 
 {#snippet selectionText(emptyText?: string, id?: string)}
     <span
-        class={{
-            [`${cls}-selection-placeholder`]: !selection,
-            [`${cls}-selection-text-hide`]: view.showInput && view.inputValue,
-            [`${cls}-selection-text-inactive`]: view.showInput && !view.inputValue,
-        }}
+        class={[
+            {
+                [`${cls}-selection-placeholder`]: !selection,
+                [`${cls}-selection-text-hide`]: view.showInput && view.inputValue,
+                [`${cls}-selection-text-inactive`]: view.showInput && !view.inputValue,
+            },
+            !selection && classNames?.placeholder,
+        ]}
         {id}
+        style={selection ? undefined : styles?.placeholder}
     >
         {#if !selection}
             {emptyText}
@@ -543,8 +547,10 @@
                     [`${cls}-prefix-text`]: prefixKind === 'text',
                     [`${cls}-prefix-icon`]: prefixKind === 'icon',
                 },
+                classNames?.prefix,
             ]}
             id={prefixId}
+            style={styles?.prefix}
             x-semi-prop="prefix,insetLabel"
         >
             {#if prefix}
@@ -554,12 +560,12 @@
             {/if}
         </div>
     {/if}
-    <div class={[`${cls}-selection`, { [`${cls}-selection-multiple`]: multiple && view.checkedKeys.size > 0 }]}>
+    <div class={[`${cls}-selection`, { [`${cls}-selection-multiple`]: multiple && view.checkedKeys.size > 0 }, classNames?.content]} style={styles?.content}>
         {#if triggerSearch && !multiple}
             <div class={[`${cls}-search-wrapper`, { [`${cls}-search-wrapper-${size}`]: size !== 'default' }]}>
                 {@render selectionText(inputPlaceholder, selectionTextId)}
                 {#if view.showInput}
-                    <Input bind:this={searchInput} bind:value={() => view.inputValue, () => {}} {...searchInputAttrs} class={`${cls}-input`} {disabled} onChange={foundation.handleInputChange} {size} />
+                    <Input bind:this={searchInput} bind:value={() => view.inputValue, () => {}} {...searchInputAttrs} class={[`${cls}-input`, classNames?.input]} {disabled} onChange={foundation.handleInputChange} {size} style={styles?.input} />
                 {/if}
             </div>
         {:else if triggerSearch}
@@ -571,7 +577,7 @@
                 {...comboboxAttrs}
                 addOnBlur={false}
                 aria-autocomplete="list"
-                class={`${cls}-tagInput-wrapper`}
+                class={[`${cls}-tagInput-wrapper`, classNames?.input]}
                 {disabled}
                 draggable={false}
                 expandRestTagsOnClick={false}
@@ -584,11 +590,12 @@
                 showClear={false}
                 {showRestTagsPopover}
                 {size}
+                style={styles?.input}
                 tag={tagInputTag}
             />
         {:else if multiple}
             {#if view.checkedKeys.size === 0}
-                <span class={`${cls}-selection-placeholder`}>{placeholder}</span>
+                <span class={[`${cls}-selection-placeholder`, classNames?.placeholder]} style={styles?.placeholder}>{placeholder}</span>
             {:else}
                 {#each [...realKeys] as key, index (`tag-${key}-${index}`)}
                     {#if isShownTag(index)}
@@ -618,7 +625,9 @@
                     [`${cls}-suffix-text`]: suffixKind === 'text',
                     [`${cls}-suffix-icon`]: suffixKind === 'icon',
                 },
+                classNames?.suffix,
             ]}
+            style={styles?.suffix}
             x-semi-prop="suffix"
         >
             {@render suffix()}
@@ -627,7 +636,7 @@
     <!-- the stylesheet shows it in the arrow's place on hover, while open and while focus is inside; its Enter and Space
          stay from the owner's keydown listeners, which listen to the combobox -->
     {#if clearable}
-        <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${cls}-clearbtn`} type="button" onclick={handleClearClick} onkeydown={stopOwnKeys}>
+        <button aria-label={locale().locale.clear} bind:this={clearButton} class={[`${cls}-clearbtn`, classNames?.clear]} style={styles?.clear} type="button" onclick={handleClearClick} onkeydown={stopOwnKeys}>
             {#if clearIcon}
                 {@render clearIcon()}
             {:else}
@@ -636,7 +645,7 @@
         </button>
     {/if}
     {#if arrowIcon !== null}
-        <div class={`${cls}-arrow`} x-semi-prop="arrowIcon">
+        <div class={[`${cls}-arrow`, classNames?.arrow]} style={styles?.arrow} x-semi-prop="arrowIcon">
             {#if arrowIcon}
                 {@render arrowIcon()}
             {:else}
@@ -694,6 +703,7 @@
             ariaLabelledby={nameAttrs['aria-labelledby']}
             bind:this={item}
             checkedKeys={view.checkedKeys}
+            {classNames}
             data={renderData}
             {emptyContent}
             {expandIcon}
@@ -716,6 +726,7 @@
             selectedKeys={view.selectedKeys}
             {separator}
             {showNext}
+            {styles}
             virtualize={virtualizeInSearch}
         />
         {@render bottomSlot?.()}

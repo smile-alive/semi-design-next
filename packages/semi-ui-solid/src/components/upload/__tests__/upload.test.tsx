@@ -1072,13 +1072,95 @@ describe('Upload', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        renderUpload({ defaultFileList, classNames: { item: 'my-item' }, styles: { item: { 'background-color': 'red' } } });
-        const cards = screen.getAllByRole('listitem');
-        expect(cards).toHaveLength(2);
-        cards.forEach((card) => {
-            expect(card).toHaveClass('my-item');
-            expect(card).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' });
+        const parts = ['trigger', 'prompt', 'validateMessage', 'dragIcon', 'dragMainText', 'dragSubText', 'list', 'listTitle', 'clear', 'item', 'itemThumbnail', 'itemName', 'itemProgress', 'itemValidateMessage', 'itemRetry', 'itemReplace', 'itemClose'] as const;
+        const selectors = {
+            trigger: 'drag-area',
+            prompt: 'prompt',
+            validateMessage: 'validate-message',
+            dragIcon: 'drag-area-icon',
+            dragMainText: 'drag-area-main-text',
+            dragSubText: 'drag-area-sub-text',
+            list: 'file-list',
+            listTitle: 'file-list-title',
+            clear: 'file-list-title-clear',
+            item: 'file-card',
+            itemThumbnail: 'file-card-preview',
+            itemName: 'file-card-info-name',
+            itemProgress: '[role="progressbar"]',
+            itemValidateMessage: 'file-card-info-validate-message',
+            itemRetry: 'file-card-info-retry',
+            itemReplace: 'file-card-replace',
+            itemClose: 'file-card-close',
+        };
+        const { container } = renderUpload({
+            draggable: true,
+            children: null,
+            dragSubText: 'sub',
+            prompt: 'prompt',
+            validateMessage: 'message',
+            showReplace: true,
+            defaultFileList: [...defaultFileList, { uid: '3', name: 'busy.png', status: 'uploading', percent: 50, size: '1KB', preview: false, url: '' }],
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
         });
+        for (const part of parts) {
+            const selector = selectors[part].startsWith('[') ? selectors[part] : `.${prefixCls}-${selectors[part]}`;
+            const elements = Array.from(container.querySelectorAll(selector));
+            expect(elements.length).toBeGreaterThan(0);
+            for (const el of elements) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
+
+    it('classNames 与 styles 的部位在 picture 类型下落到对应元素', () => {
+        const parts = ['trigger', 'list', 'item', 'itemThumbnail', 'itemProgress', 'itemValidateMessage', 'itemRetry', 'itemReplace', 'itemClose'] as const;
+        const selectors = {
+            trigger: 'add',
+            list: 'file-list',
+            item: 'picture-file-card',
+            itemThumbnail: 'picture-file-card img',
+            itemProgress: '[role="progressbar"]',
+            itemValidateMessage: 'picture-file-card-icon-error',
+            itemRetry: 'picture-file-card-retry',
+            itemReplace: 'picture-file-card-replace',
+            itemClose: 'picture-file-card-close',
+        };
+        const { container } = renderUpload({
+            listType: 'picture',
+            showReplace: true,
+            defaultFileList: [
+                { ...defaultFileList[0], validateMessage: 'bad' },
+                { ...defaultFileList[1], validateMessage: 'bad' },
+                { uid: '3', name: 'busy.png', status: 'uploading', percent: 50, size: '1KB', preview: false, url: 'https://example.com/busy.png' },
+            ],
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+        });
+        fireEvent.error(defined(container.querySelector(`.${prefixCls}-picture-file-card img`)));
+        for (const part of parts) {
+            const selector = selectors[part].startsWith('[') ? selectors[part] : `.${prefixCls}-${selectors[part]}`;
+            const elements = Array.from(container.querySelectorAll(selector));
+            expect(elements.length).toBeGreaterThan(0);
+            for (const el of elements) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
+
+    it('Upload 的 item* 与 Upload.FileCard 自己的 classNames 都生效，父级在前、自己在后', () => {
+        const { container } = renderUpload({
+            defaultFileList: [defaultFileList[0]],
+            classNames: { item: 'parent-item', itemName: 'parent-name' },
+            styles: { item: { order: 1, opacity: 0.5 }, itemName: { order: 1, opacity: 0.5 } },
+            renderFileItem: (item: RenderFileItemProps) => <FileCard {...item} class="own-item" classNames={{ name: 'own-name' }} style={{ order: 2 }} styles={{ name: { order: 2 } }} />,
+        });
+        for (const el of [query(container, `.${prefixCls}-file-card`), query(container, `.${prefixCls}-file-card-info-name`)]) {
+            expect(el.className).toMatch(/parent-(item|name).*own-(item|name)/);
+            expect(el).toHaveStyle({ order: '2', opacity: '0.5' });
+        }
     });
 
     it('picHeight 与 picWidth 属性', () => {

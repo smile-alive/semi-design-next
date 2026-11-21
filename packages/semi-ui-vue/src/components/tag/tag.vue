@@ -15,6 +15,8 @@
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<TagProps & /* @vue-ignore */ ElementProps<'div', keyof TagProps | EmitHandlers<TagEmits>>>(), {
+        classNames: semiGlobalDefault('Tag', 'classNames'),
+        styles: semiGlobalDefault('Tag', 'styles'),
         tabindex: semiGlobalDefault('Tag', 'tabindex'),
         tagKey: semiGlobalDefault('Tag', 'tagKey'),
         size: () => semiDefault('Tag', 'size', 'default'),
@@ -94,17 +96,17 @@
         :tabindex="interactive() ? (props.tabindex ?? 0) : props.tabindex"
         @keydown="handleKeyDown"
     >
-        <div v-if="$slots.prefixIcon" :class="`${prefix}-prefix-icon`" x-semi-prop="prefixIcon">
+        <div v-if="$slots.prefixIcon" :class="[`${prefix}-prefix-icon`, props.classNames?.prefix]" :style="props.styles?.prefix" x-semi-prop="prefixIcon">
             <slot name="prefixIcon" />
         </div>
-        <Avatar v-if="props.avatarSrc" alt="" :shape="props.avatarShape" :src="props.avatarSrc" />
-        <div :class="[`${prefix}-content`, `${prefix}-content-${stringContent() !== undefined ? 'ellipsis' : 'center'}`]">
+        <Avatar v-if="props.avatarSrc" alt="" :class="props.classNames?.avatar" :shape="props.avatarShape" :src="props.avatarSrc" :style="props.styles?.avatar" />
+        <div :class="[`${prefix}-content`, `${prefix}-content-${stringContent() !== undefined ? 'ellipsis' : 'center'}`, props.classNames?.content]" :style="props.styles?.content">
             <slot />
         </div>
-        <div v-if="$slots.suffixIcon" :class="`${prefix}-suffix-icon`" x-semi-prop="suffixIcon">
+        <div v-if="$slots.suffixIcon" :class="[`${prefix}-suffix-icon`, props.classNames?.suffix]" :style="props.styles?.suffix" x-semi-prop="suffixIcon">
             <slot name="suffixIcon" />
         </div>
-        <div v-if="props.closable" aria-hidden="true" :class="`${prefix}-close`" @click="close">
+        <div v-if="props.closable" aria-hidden="true" :class="[`${prefix}-close`, props.classNames?.close]" :style="props.styles?.close" @click="close">
             <IconClose size="small" />
         </div>
     </div>

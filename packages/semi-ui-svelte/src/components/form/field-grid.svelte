@@ -10,6 +10,7 @@
         label?: Snippet;
         children?: Snippet;
         mainClass?: ClassValue;
+        mainStyle?: string;
         labelAlign?: string;
         labelCol?: ColProps;
         wrapperCol?: ColProps;
@@ -17,7 +18,7 @@
         row?: boolean;
     }
 
-    let { label, children, mainClass, labelAlign, labelCol, wrapperCol, labelPosition, row }: FieldGridProps = $props();
+    let { label, children, mainClass, mainStyle, labelAlign, labelCol, wrapperCol, labelPosition, row }: FieldGridProps = $props();
 
     const prefix = cssClasses.PREFIX;
 </script>
@@ -34,13 +35,13 @@
         {@render labelColumn()}
     {/if}
     <Col {...wrapperCol}>
-        <div class={mainClass}>{@render children?.()}</div>
+        <div class={mainClass} style={mainStyle}>{@render children?.()}</div>
     </Col>
 {/snippet}
 
 {#if !(labelCol && wrapperCol)}
     {@render label?.()}
-    <div class={mainClass}>{@render children?.()}</div>
+    <div class={mainClass} style={mainStyle}>{@render children?.()}</div>
 {:else if row}
     <Row>{@render columns()}</Row>
 {:else}

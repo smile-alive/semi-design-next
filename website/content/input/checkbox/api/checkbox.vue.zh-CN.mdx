@@ -2,17 +2,19 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性           | 说明                                                                          | 类型            | 默认值                                           |
-| -------------- | ----------------------------------------------------------------------------- | --------------- | ------------------------------------------------ |
-| addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。              | `string`        | `undefined`                                      |
-| defaultChecked | 初始是否选中，非受控使用；在 CheckboxGroup 中使用时无效。                     | `boolean`       | `false`                                          |
-| disabled       | 是否禁用。                                                                    | `boolean`       | `semiGlobalDefault("Checkbox", "disabled")`      |
-| extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。             | `string`        | `undefined`                                      |
-| indeterminate  | 半选状态，只影响外观与原生 input 的 indeterminate，不改变选中值。             | `boolean`       | `false`                                          |
-| modelValue     | 是否选中，配合 v-model 受控使用；在 CheckboxGroup 中使用时无效。              | `boolean`       | `undefined`                                      |
-| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                         | `boolean`       | `semiGlobalDefault("Checkbox", "preventScroll")` |
-| type           | 样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。 | `CheckboxType`  | `"default"`                                      |
-| value          | 该 Checkbox 在 CheckboxGroup 中代表的值；不设置时它不属于任何分组。           | `CheckboxValue` | `undefined`                                      |
+| 属性           | 说明                                                                                                                      | 类型                                                                                   | 默认值                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。                                                          | `string`                                                                               | `undefined`                                      |
+| classNames     | 内部各部位的类名，键为 icon（勾选框本体）、label（标签文字）、extra（补充说明），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cCheckboxPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Checkbox", "classNames")`    |
+| defaultChecked | 初始是否选中，非受控使用；在 CheckboxGroup 中使用时无效。                                                                 | `boolean`                                                                              | `false`                                          |
+| disabled       | 是否禁用。                                                                                                                | `boolean`                                                                              | `semiGlobalDefault("Checkbox", "disabled")`      |
+| extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。                                                         | `string`                                                                               | `undefined`                                      |
+| indeterminate  | 半选状态，只影响外观与原生 input 的 indeterminate，不改变选中值。                                                         | `boolean`                                                                              | `false`                                          |
+| modelValue     | 是否选中，配合 v-model 受控使用；在 CheckboxGroup 中使用时无效。                                                          | `boolean`                                                                              | `undefined`                                      |
+| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                                                                     | `boolean`                                                                              | `semiGlobalDefault("Checkbox", "preventScroll")` |
+| styles         | 内部各部位的内联样式，键同 classNames。                                                                                   | <ApiType detail={"Partial\u003cRecord\u003cCheckboxPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Checkbox", "styles")`        |
+| type           | 样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。                                             | `CheckboxType`                                                                         | `"default"`                                      |
+| value          | 该 Checkbox 在 CheckboxGroup 中代表的值；不设置时它不属于任何分组。                                                       | `CheckboxValue`                                                                        | `undefined`                                      |
 
 **Events**
 

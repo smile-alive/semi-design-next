@@ -6,7 +6,7 @@
     import ExpandButton from './expand-button.svelte';
     import type { CodeContentProps, CodeItemData } from './interface.js';
 
-    let { activeKey = $bindable(), codes = [], onChange, onExpand, customRender, searchButton, ...rest }: CodeContentProps = $props();
+    let { activeKey = $bindable(), classNames, styles, codes = [], onChange, onExpand, customRender, searchButton, ...rest }: CodeContentProps = $props();
 
     const collapseCls = cssClasses.COLLAPSE;
 
@@ -16,12 +16,12 @@
 <Collapse {...rest} bind:activeKey class={[collapseCls, `${collapseCls}-code`, rest.class]} clickHeaderToExpand={false} onChange={(next) => onChange?.(next)}>
     {#each codes as code (code.key)}
         {#snippet expand()}
-            <ExpandButton onClick={(event) => onExpand?.(event, code, 'code')} />
+            <ExpandButton class={classNames?.itemExpand} onClick={(event) => onExpand?.(event, code, 'code')} style={styles?.itemExpand} />
         {/snippet}
         <!-- the panel's extra sits beside the toggle button, not inside it -->
         <CollapsePanel extra={onExpand ? expand : undefined} itemKey={code.key ?? ''}>
             {#snippet header()}
-                <CollapseHeader mode="code" name={code.name} />
+                <CollapseHeader class={classNames?.itemHeader} mode="code" name={code.name} style={styles?.itemHeader} />
             {/snippet}
             <CodeItem {...itemProps(code)} {customRender} {searchButton} />
         </CollapsePanel>

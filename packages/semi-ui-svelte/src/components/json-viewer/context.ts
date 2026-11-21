@@ -1,7 +1,9 @@
 import { createContext } from '../../base/index.js';
-import type { JsonViewerSearchOptions } from './interface.js';
+import type { JsonViewerProps, JsonViewerSearchOptions } from './interface.js';
 
 export interface JsonViewerContext {
+    readonly classNames: JsonViewerProps['classNames'];
+    readonly styles: JsonViewerProps['styles'];
     readonly showSearchBar: boolean;
     readonly searchOptions: JsonViewerSearchOptions;
     readonly readOnly: boolean;

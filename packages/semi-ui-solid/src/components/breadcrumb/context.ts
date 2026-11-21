@@ -1,6 +1,6 @@
 import type { Accessor, JSX } from 'solid-js';
 import { createContext } from '../../base/index';
-import type { BreadcrumbItemInfo, ShowTooltipProps } from './interface';
+import type { BreadcrumbItemInfo, BreadcrumbProps, ShowTooltipProps } from './interface';
 
 /** Live values: every field is a getter, so a reader only re-runs when the field it reads changes */
 export interface BreadcrumbView {
@@ -8,6 +8,8 @@ export interface BreadcrumbView {
     // onClick below always routes through the Breadcrumb; only a handler the user gave makes plain-text items keyboard stops
     hasOnClick: boolean;
     showTooltip?: boolean | ShowTooltipProps;
+    classNames?: BreadcrumbProps['classNames'];
+    styles?: BreadcrumbProps['styles'];
 }
 
 export interface BreadContextValue {

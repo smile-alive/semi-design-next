@@ -12,7 +12,7 @@ export const strings = {
 export const numbers = {};
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type InputPart = 'input';
+export type InputPart = 'input' | 'prefix' | 'suffix' | 'clear' | 'visibilityToggle' | 'addonBefore' | 'addonAfter';
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type TextAreaPart = 'textarea' | 'lineNumber';
+export type TextAreaPart = 'textarea' | 'lineNumber' | 'clear' | 'counter';

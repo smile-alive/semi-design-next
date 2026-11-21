@@ -81,11 +81,12 @@ describe('modal', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        const parts = ['mask', 'content', 'header', 'body', 'footer'] as const;
-        const selectors = { mask: 'mask', content: 'content', header: 'header', body: 'body', footer: 'footer' };
+        const parts = ['mask', 'content', 'header', 'title', 'icon', 'close', 'body', 'footer'] as const;
+        const selectors = { mask: 'mask', content: 'content', header: 'header', title: 'title', icon: 'icon-wrapper', close: 'close', body: 'body', footer: 'footer' };
         renderModal({
             visible: true,
             title: 'T',
+            icon: <span>i</span>,
             classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
             styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
         });

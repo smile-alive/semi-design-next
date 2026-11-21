@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | avatarSrc | Avatar image URL. Setting it makes an avatar tag. | `string` | - |
 | children | Tag content. Plain text or numbers are truncated with an ellipsis; other nodes are centered. | `React.ReactNode` | - |
 | className | Class name of the root element. | `string` | `""` |
+| classNames | Class names of the inner parts, keyed by `prefix`, `avatar`, `content`, `suffix` and `close`; merged with the built-in classes. `avatar` lands on the root element of the avatar. | <ApiType detail={"Partial\u003cRecord\u003cTagPart, string>>"}>Type</ApiType> | - |
 | closable | Whether the tag can be closed. A closable tag can also be closed with the Backspace or Delete key. | `boolean` | `false` |
 | color | Tag color: one of the 16 palette colors or `white`. | `TagColor` | `"grey"` |
 | colorful | Whether the tag is colorful. | `boolean` | `false` |
@@ -19,6 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | shape | Tag shape: `square` or `circle`. | `TagShape` | `"square"` |
 | size | Tag size: `default`, `small` or `large`. | `TagSize` | `"default"` |
 | style | Style of the root element. | `React.CSSProperties` | `{}` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTagPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | suffixIcon | Icon after the content. | `React.ReactNode` | `null` |
 | tabIndex | `tabIndex` of the root element. `TagInput` uses it so that arrow keys, not Tab, move focus between tags. | `number` | - |
 | tagKey | Unique identifier of the tag, passed as the third argument of `onClose`. Must not repeat. | `string \| number` | - |

@@ -38,22 +38,25 @@
 <template>
     <div :class="`${cssClasses.PREFIX}-dataPart`" :style="{ width: `${props.width}px` }">
         <div
-            :class="`${cssClasses.PREFIX}-colorDemoBlock`"
-            :style="{
-                minWidth: '20px',
-                minHeight: '20px',
-                backgroundColor: `rgba(${props.currentColor.rgba.r},${props.currentColor.rgba.g},${props.currentColor.rgba.b},${props.currentColor.rgba.a})`,
-            }"
+            :class="[`${cssClasses.PREFIX}-colorDemoBlock`, props.classNames?.preview]"
+            :style="[
+                {
+                    minWidth: '20px',
+                    minHeight: '20px',
+                    backgroundColor: `rgba(${props.currentColor.rgba.r},${props.currentColor.rgba.g},${props.currentColor.rgba.b},${props.currentColor.rgba.a})`,
+                },
+                props.styles?.preview,
+            ]"
         />
         <InputGroup :class="`${cssClasses.PREFIX}-inputGroup`" size="small">
-            <Input :aria-label="i18n.locale.color" :class="`${cssClasses.PREFIX}-colorPickerInput`" :modelValue="state.inputValue" :showClear="false" @change="foundation.handleInputValueChange" />
+            <Input :aria-label="i18n.locale.color" :class="[`${cssClasses.PREFIX}-colorPickerInput`, props.classNames?.input]" :modelValue="state.inputValue" :showClear="false" :style="props.styles?.input" @change="foundation.handleInputValueChange" />
             <InputNumber v-if="props.alpha" :aria-label="i18n.locale.alpha" :class="`${cssClasses.PREFIX}-colorPickerInputNumber`" hideButtons :max="100" :min="0" :modelValue="Math.round(props.currentColor.rgba.a * 100)" :showClear="false" @numberChange="foundation.handleAlphaInputChange">
                 <template #suffix>
                     <span :class="`${cssClasses.PREFIX}-inputNumberSuffix`">%</span>
                 </template>
             </InputNumber>
             <!-- a fixed list of three formats: global Select defaults must not make it search or create, nor add a clear button -->
-            <Select :allowCreate="false" :aria-label="i18n.locale.format" :class="`${cssClasses.PREFIX}-formatSelect`" :filter="false" :modelValue="state.format" :optionList="FORMAT_OPTIONS" :showClear="false" size="small" @select="onSelectFormat" />
+            <Select :allowCreate="false" :aria-label="i18n.locale.format" :class="[`${cssClasses.PREFIX}-formatSelect`, props.classNames?.format]" :filter="false" :modelValue="state.format" :optionList="FORMAT_OPTIONS" :showClear="false" size="small" :style="props.styles?.format" @select="onSelectFormat" />
         </InputGroup>
         <Button v-if="props.eyeDropper" :aria-label="i18n.locale.eyeDropper" size="small" theme="light" type="tertiary" @click="foundation.handlePickValueWithStraw">
             <template #icon>

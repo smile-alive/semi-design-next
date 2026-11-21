@@ -10,6 +10,10 @@
                 "zh-CN": "自定义徽章内容的 snippet，代替 badge.count。",
                 "en-US": "Snippet for custom badge content, in place of badge.count."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `body`，与组件自带的类名合并；`body` 是按钮的可见主体，图标放在其中。",
+                "en-US": "Class names of the inner parts, keyed by `body`; merged with the built-in classes. `body` is the visible body of the button, holding the icon."
+            },
             "colorful": { "zh-CN": "多彩悬浮按钮。", "en-US": "Colorful float button." },
             "disabled": { "zh-CN": "禁用状态。", "en-US": "Disabled state." },
             "href": {
@@ -23,6 +27,7 @@
             },
             "shape": { "zh-CN": "形状，可选 round、square。", "en-US": "Shape: round or square." },
             "size": { "zh-CN": "尺寸，可选 default、small、large。", "en-US": "Size: default, small or large." },
+            "styles": { "zh-CN": "内部各部位的内联样式（字符串），键同 `classNames`。", "en-US": "Inline styles (strings) of the inner parts, keyed like `classNames`." },
             "target": {
                 "zh-CN": "指定在何处显示链接的 URL，仅在设置 href 时生效。",
                 "en-US": "Where to display the linked URL. Only takes effect with href."
@@ -35,6 +40,10 @@
             "badgeCount": {
                 "zh-CN": "自定义子项徽章内容的 snippet，参数为 `{ item, index }`。",
                 "en-US": "Snippet for custom badge content of an item, with the argument `{ item, index }`."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`，与组件自带的类名合并；`item` 是每个按钮，单个子项自己的类名排在其后。",
+                "en-US": "Class names of the inner parts, keyed by `item`; merged with the built-in classes. `item` is each button; an item's own class name comes after it."
             },
             "content": {
                 "zh-CN": "自定义子项文本内容的 snippet，参数为 `{ item, index }`；缺省渲染 item.content。",
@@ -49,7 +58,8 @@
             "onClick": {
                 "zh-CN": "点击未禁用子项时触发，参数为子项的 value（未设置时为 undefined）与原生 click 事件；子项自己的 onClick 先于它调用，点击落在子项之外时不触发。",
                 "en-US": "Called when an enabled item is clicked, with the item's value (undefined if unset) and the native click event. The item's own onClick runs first. Not called for clicks outside an item."
-            }
+            },
+            "styles": { "zh-CN": "内部各部位的内联样式（字符串），键同 `classNames`；单个子项自己的样式后写。", "en-US": "Inline styles (strings) of the inner parts, keyed like `classNames`; an item's own style is applied after it." }
         }
     }
 }

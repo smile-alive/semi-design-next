@@ -160,7 +160,7 @@
 
 {#snippet overflowBox()}
     {#if overflow && view.overflow.length}
-        <div {@attach observeResize(onOverflowResize)} class={`${prefix}-overflow`}>
+        <div {@attach observeResize(onOverflowResize)} class={[`${prefix}-overflow`, classNames?.overflow]} style={styles?.overflow}>
             {@render overflow({ items: view.overflow as T[], position: collapseFrom })}
         </div>
     {/if}
@@ -194,7 +194,7 @@
         {/if}
         {#each collapseItems as entry (entry.key ?? entry.index)}
             {@const key = entry.key}
-            <div {@attach observeResize((entries) => onItemResize(entries, key))} class={`${prefix}-item`}>
+            <div {@attach observeResize((entries) => onItemResize(entries, key))} class={[`${prefix}-item`, classNames?.item]} style={styles?.item}>
                 {@render item?.({ item: entry.item, index: entry.index })}
             </div>
         {/each}

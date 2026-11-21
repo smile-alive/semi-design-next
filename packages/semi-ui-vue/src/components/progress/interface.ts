@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { ProgressPart } from '@fibrae/semi-foundation/components/progress/constants';
 import type { StrokeArr } from '@fibrae/semi-foundation/components/progress/generates';
 import type { Size } from '@fibrae/semi-foundation/utils';
 
@@ -8,6 +9,7 @@ export type ProgressType = 'line' | 'circle';
 export type ProgressDirection = 'horizontal' | 'vertical';
 
 export interface ProgressProps {
+    classNames?: Partial<Record<ProgressPart, ClassValue>>;
     direction?: ProgressDirection;
     indeterminate?: boolean;
     motion?: boolean;
@@ -19,6 +21,7 @@ export interface ProgressProps {
     strokeGradient?: boolean;
     strokeLinecap?: 'round' | 'square';
     strokeWidth?: number;
+    styles?: Partial<Record<ProgressPart, StyleValue>>;
     type?: ProgressType;
     width?: number;
 }

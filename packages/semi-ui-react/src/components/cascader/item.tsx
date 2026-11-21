@@ -1,6 +1,6 @@
 import React, { cloneElement, isValidElement, memo, type ReactNode } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+import { cssClasses, numbers, strings, type CascaderPart } from '@fibrae/semi-foundation/components/cascader/constants';
 import CascaderFoundation, { type BasicCascaderData, type BasicEntity, type ShowNextType, type BasicData, type Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
 import { IconChevronRight, IconTick } from '@fibrae/semi-icons-react';
@@ -74,6 +74,8 @@ export interface CascaderItemProps {
     keyboardKey: string | null;
     optionId: (key: string) => string;
     virtualListRef: React.Ref<VirtualListHandle>;
+    classNames?: Partial<Record<CascaderPart, string>>;
+    styles?: Partial<Record<CascaderPart, React.CSSProperties>>;
 }
 
 const prefixcls = cssClasses.PREFIX_OPTION;
@@ -94,13 +96,18 @@ function highlight(searchText: React.ReactNode[], keyword: string, separator: st
     );
 }
 
-function renderIcon(type: 'child' | 'tick' | 'loading' | 'empty', expandIcon?: ReactNode, haveMarginLeft = false) {
-    const finalCls = (style: string) => style + (haveMarginLeft ? ` ${prefixcls}-icon-left` : '');
+interface IconPart {
+    className?: string;
+    style?: React.CSSProperties;
+}
+
+function renderIcon(type: 'child' | 'tick' | 'loading' | 'empty', part: IconPart, expandIcon?: ReactNode, haveMarginLeft = false) {
+    const finalCls = (cls: string, custom?: string) => clsx(cls, haveMarginLeft && `${prefixcls}-icon-left`, custom);
     switch (type) {
         case 'child':
-            return expandIcon || <IconChevronRight className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-expand`)} />;
+            return expandIcon || <IconChevronRight className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-expand`, part.className)} style={part.style} />;
         case 'tick':
-            return <IconTick className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-active`)} />;
+            return <IconTick className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-active`, part.className)} style={part.style} />;
         case 'loading':
             // the option carries the state as aria-busy; the spinner's own name would join the option's name
             return (
@@ -109,7 +116,7 @@ function renderIcon(type: 'child' | 'tick' | 'loading' | 'empty', expandIcon?: R
                 </span>
             );
         default:
-            return <span className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-empty`)} aria-hidden />;
+            return <span className={finalCls(`${prefixcls}-icon ${prefixcls}-icon-empty`, part.className)} style={part.style} aria-hidden />;
     }
 }
 
@@ -128,7 +135,7 @@ function checkItem(e: CheckboxEvent, item: Entity | Data, onItemCheckboxClick: C
 
 type TreeItemAria = ReturnType<typeof CascaderFoundation.getTreeItemState>['aria'];
 
-interface TreeOptionProps extends TreeItemAria, Pick<CascaderItemProps, 'multiple' | 'showNext' | 'expandIcon' | 'onItemClick' | 'onItemHover' | 'onItemCheckboxClick'> {
+interface TreeOptionProps extends TreeItemAria, Pick<CascaderItemProps, 'multiple' | 'showNext' | 'expandIcon' | 'onItemClick' | 'onItemHover' | 'onItemCheckboxClick' | 'classNames' | 'styles'> {
     id: string;
     item: Entity;
     level: number;
@@ -145,18 +152,24 @@ interface TreeOptionProps extends TreeItemAria, Pick<CascaderItemProps, 'multipl
 }
 
 // Every prop is a primitive, the entity or a stable handler: hover and arrow keys re-render only the rows they change
-const TreeOption = memo(function TreeOption({ id, item, level, posinset, setsize, expandable, selected, loading, showActive, showSelected, focused, checked, halfChecked, multiple, showNext, expandIcon, onItemClick, onItemHover, onItemCheckboxClick, ...aria }: TreeOptionProps) {
+const TreeOption = memo(function TreeOption({ id, item, level, posinset, setsize, expandable, selected, loading, showActive, showSelected, focused, checked, halfChecked, multiple, showNext, expandIcon, onItemClick, onItemHover, onItemCheckboxClick, classNames, styles, ...aria }: TreeOptionProps) {
     const { label, disabled } = item.data;
-    const className = clsx(prefixcls, {
-        [`${prefixcls}-active`]: showActive,
-        [`${prefixcls}-select`]: showSelected,
-        [`${prefixcls}-disabled`]: disabled,
-        [`${prefixcls}-focused`]: focused,
-    });
+    const className = clsx(
+        prefixcls,
+        {
+            [`${prefixcls}-active`]: showActive,
+            [`${prefixcls}-select`]: showSelected,
+            [`${prefixcls}-disabled`]: disabled,
+            [`${prefixcls}-focused`]: focused,
+        },
+        classNames?.item
+    );
+    const iconPart = { className: classNames?.itemIcon, style: styles?.itemIcon };
     return (
         <li
             id={id}
             className={className}
+            style={styles?.item}
             {...aria}
             aria-disabled={disabled || undefined}
             aria-level={level}
@@ -170,13 +183,13 @@ const TreeOption = memo(function TreeOption({ id, item, level, posinset, setsize
                 }
             }}
         >
-            <span className={`${prefixcls}-label`}>
-                {selected && !multiple && renderIcon('tick')}
-                {!selected && !multiple && renderIcon('empty')}
+            <span className={clsx(`${prefixcls}-label`, classNames?.itemContent)} style={styles?.itemContent}>
+                {selected && !multiple && renderIcon('tick', iconPart)}
+                {!selected && !multiple && renderIcon('empty', iconPart)}
                 {multiple && <Checkbox className={`${prefixcls}-label-checkbox`} aria-hidden tabIndex={-1} checked={checked} disabled={disabled} indeterminate={halfChecked} onChange={(e: CheckboxEvent) => checkItem(e, item, onItemCheckboxClick)} />}
                 <span>{label}</span>
             </span>
-            {expandable && renderIcon(loading ? 'loading' : 'child', expandIcon, true)}
+            {expandable && renderIcon(loading ? 'loading' : 'child', iconPart, expandIcon, true)}
         </li>
     );
 });
@@ -208,6 +221,8 @@ export default function Item({
     keyboardKey,
     optionId,
     virtualListRef,
+    classNames,
+    styles,
 }: CascaderItemProps) {
     const { direction } = useConfigContext();
     const { locale } = useLocale('Cascader');
@@ -222,12 +237,18 @@ export default function Item({
     const renderFlattenOptionItem = (item: Data, _index?: number, style?: React.CSSProperties) => {
         const { searchText, key, disabled, pathData } = item;
         const selected = selectedKeys.has(key);
-        const className = clsx(prefixcls, {
-            [`${prefixcls}-flatten`]: !filterRender,
-            [`${prefixcls}-disabled`]: disabled,
-            [`${prefixcls}-select`]: selected && !multiple,
-            [`${prefixcls}-focused`]: key === keyboardKey,
-        });
+        const className = clsx(
+            prefixcls,
+            {
+                [`${prefixcls}-flatten`]: !filterRender,
+                [`${prefixcls}-disabled`]: disabled,
+                [`${prefixcls}-select`]: selected && !multiple,
+                [`${prefixcls}-focused`]: key === keyboardKey,
+            },
+            classNames?.item
+        );
+        // the virtual row's position must win over the caller's style
+        const rowStyle = { ...styles?.item, ...style };
         const onItemClickInList = (e: React.MouseEvent) => clickItem(e, item, onItemClick);
         const onCheck = (e: CheckboxEvent) => checkItem(e, item, onItemCheckboxClick);
         const optionAria = {
@@ -254,26 +275,18 @@ export default function Item({
             if (!isValidElement<{ style?: React.CSSProperties }>(rendered)) {
                 // text, null or an array has no element to carry the option props, so an li carries them
                 return (
-                    <li key={key} id={optionAria.id} className={className} style={style} aria-disabled={optionAria['aria-disabled']} aria-selected={optionAria['aria-selected']} role="option" onClick={onItemClickInList}>
+                    <li key={key} id={optionAria.id} className={className} style={rowStyle} aria-disabled={optionAria['aria-disabled']} aria-selected={optionAria['aria-selected']} role="option" onClick={onItemClickInList}>
                         {rendered}
                     </li>
                 );
             }
-            const otherProps = virtualize
-                ? {
-                      key,
-                      style: {
-                          ...rendered.props.style,
-                          ...style,
-                      },
-                  }
-                : { key };
+            const otherProps = virtualize ? { key, style: { ...rendered.props.style, ...style } } : { key };
             return cloneElement(rendered, { ...otherProps, ...optionAria });
         }
         return (
-            <li key={key} id={optionAria.id} className={className} style={style} aria-disabled={optionAria['aria-disabled']} aria-selected={optionAria['aria-selected']} role="option" onClick={onItemClickInList}>
-                <span className={`${prefixcls}-label`}>
-                    {!multiple && renderIcon('empty')}
+            <li key={key} id={optionAria.id} className={className} style={rowStyle} aria-disabled={optionAria['aria-disabled']} aria-selected={optionAria['aria-selected']} role="option" onClick={onItemClickInList}>
+                <span className={clsx(`${prefixcls}-label`, classNames?.itemContent)} style={styles?.itemContent}>
+                    {!multiple && renderIcon('empty', { className: classNames?.itemIcon, style: styles?.itemIcon })}
                     {multiple && <Checkbox className={`${prefixcls}-label-checkbox`} aria-hidden tabIndex={-1} checked={checkedKeys.has(item.key)} disabled={disabled} indeterminate={halfCheckedKeys.has(item.key)} onChange={onCheck} />}
                     {highlight(searchText, keyword, separator)}
                 </span>
@@ -299,7 +312,7 @@ export default function Item({
                 {VirtualRow}
             </VirtualList>
         ) : (
-            <ul key="flatten-list" className={`${prefixcls}-list`} role="none">
+            <ul key="flatten-list" className={clsx(`${prefixcls}-list`, classNames?.list)} style={styles?.list} role="none">
                 {options.map((option) => renderFlattenOptionItem(option))}
             </ul>
         );
@@ -310,7 +323,7 @@ export default function Item({
      */
     const renderTree = (topLevel: Entity[]) =>
         getColumns(topLevel, activeKeys).map(({ items, level }) => (
-            <ul key={items[0].key} className={`${prefixcls}-list`} role="none" onScroll={(e) => onListScroll(e, level)}>
+            <ul key={items[0].key} className={clsx(`${prefixcls}-list`, classNames?.list)} style={styles?.list} role="none" onScroll={(e) => onListScroll(e, level)}>
                 {items.map((item, index) => {
                     const { key } = item;
                     const expandable = CascaderFoundation.isBranch(item.data, loadData);
@@ -320,6 +333,8 @@ export default function Item({
                             key={key}
                             id={optionId(key)}
                             {...aria}
+                            classNames={classNames}
+                            styles={styles}
                             checked={checkedKeys.has(key)}
                             multiple={multiple}
                             expandable={expandable}
@@ -349,7 +364,7 @@ export default function Item({
             return null;
         }
         return (
-            <div className={`${prefixcls} ${prefixcls}-empty`}>
+            <div className={clsx(prefixcls, `${prefixcls}-empty`, classNames?.empty)} style={styles?.empty}>
                 <span className={`${prefixcls}-label`} x-semi-prop="emptyContent">
                     {emptyContent || locale.emptyText}
                 </span>

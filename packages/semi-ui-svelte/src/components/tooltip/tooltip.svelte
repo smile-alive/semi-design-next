@@ -224,6 +224,7 @@
     const portalTarget = $derived(states().isInsert ? states().portalTarget : null);
     const vertical = $derived(position.startsWith('left') || position.startsWith('right'));
     const arrowColor = $derived(/(?:^|;)\s*background-color\s*:\s*([^;]+)/.exec(style ?? '')?.[1]?.trim());
+    const arrowStyle = $derived([arrowColor && `color: ${arrowColor}`, styles?.arrow].filter(Boolean).join('; ') || undefined);
     const describedBy = $derived(role === 'tooltip' && states().isInsert ? popupId : undefined);
 
     // ARIA forbids popup state on generic elements; unknown until the element mounts, so the server leaves it out
@@ -535,7 +536,7 @@
             {#if arrow}
                 {@render arrow()}
             {:else}
-                <TriangleArrow class={`${prefixCls}-icon-arrow`} style={arrowColor ? `color: ${arrowColor}` : undefined} {vertical} />
+                <TriangleArrow class={[`${prefixCls}-icon-arrow`, classNames?.arrow]} style={arrowStyle} {vertical} />
             {/if}
         {/if}
     </div>

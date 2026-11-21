@@ -1,15 +1,17 @@
 import { createEffect, createMemo, createSignal, For, type JSX, on, onCleanup, Show, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
+import { type ProgressPart, cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
 import { type StrokeArr, generateColor } from '@fibrae/semi-foundation/components/progress/generates';
 import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/components/progress/utils';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/progress/progress.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 
 const prefixCls = cssClasses.PREFIX;
 
 export interface ProgressProps extends ElementProps<'div', 'children'> {
+    classNames?: Partial<Record<ProgressPart, string>>;
     direction?: 'horizontal' | 'vertical';
     format?: (percent: number) => JSX.Element;
     indeterminate?: boolean;
@@ -22,6 +24,7 @@ export interface ProgressProps extends ElementProps<'div', 'children'> {
     strokeGradient?: boolean;
     strokeLinecap?: 'round' | 'square';
     strokeWidth?: number;
+    styles?: Partial<Record<ProgressPart, JSX.CSSProperties | string>>;
     type?: 'line' | 'circle';
     width?: number;
 }
@@ -42,7 +45,7 @@ const defaultProps = {
 
 export default function Progress(rawProps: ProgressProps) {
     const props = useDefaultProps('Progress', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['class', 'direction', 'format', 'indeterminate', 'motion', 'orbitStroke', 'percent', 'showInfo', 'size', 'stroke', 'strokeGradient', 'strokeLinecap', 'strokeWidth', 'type', 'width']);
+    const [local, rest] = splitProps(props, ['class', 'classNames', 'direction', 'format', 'indeterminate', 'motion', 'orbitStroke', 'percent', 'showInfo', 'size', 'stroke', 'strokeGradient', 'strokeLinecap', 'strokeWidth', 'styles', 'type', 'width']);
 
     // only the initial value: later changes reach it through the animation below
     const [shown, setShown] = createSignal(untrack(() => local.percent));
@@ -84,8 +87,8 @@ export default function Progress(rawProps: ProgressProps) {
                         {() => (
                             <svg class={`${prefixCls}-circle-ring`} aria-hidden="true" height={diameter()} width={diameter()}>
                                 <circle
-                                    class={`${prefixCls}-circle-ring-track`}
-                                    style={{ stroke: local.orbitStroke }}
+                                    class={clsx(`${prefixCls}-circle-ring-track`, local.classNames?.rail)}
+                                    style={mergeStyles({ stroke: local.orbitStroke }, local.styles?.rail)}
                                     aria-hidden="true"
                                     cx={geometry().center}
                                     cy={geometry().center}
@@ -97,8 +100,8 @@ export default function Progress(rawProps: ProgressProps) {
                                     stroke-width={local.strokeWidth}
                                 />
                                 <circle
-                                    class={clsx(`${prefixCls}-circle-ring-inner`, { [`${prefixCls}-circle-ring-inner-indeterminate`]: local.indeterminate })}
-                                    style={{ stroke: strokeColor() }}
+                                    class={clsx(`${prefixCls}-circle-ring-inner`, local.classNames?.track, { [`${prefixCls}-circle-ring-inner-indeterminate`]: local.indeterminate })}
+                                    style={mergeStyles({ stroke: strokeColor() }, local.styles?.track)}
                                     aria-hidden="true"
                                     cx={geometry().center}
                                     cy={geometry().center}
@@ -113,7 +116,9 @@ export default function Progress(rawProps: ProgressProps) {
                         )}
                     </For>
                     <Show when={local.showInfo && local.size !== 'small' && !local.indeterminate}>
-                        <span class={`${prefixCls}-circle-text`}>{text()}</span>
+                        <span class={clsx(`${prefixCls}-circle-text`, local.classNames?.text)} style={local.styles?.text}>
+                            {text()}
+                        </span>
                     </Show>
                 </div>
             }
@@ -131,11 +136,17 @@ export default function Progress(rawProps: ProgressProps) {
                 aria-valuenow={valueNow()}
                 role="progressbar"
             >
-                <div class={`${prefixCls}-track`} style={local.orbitStroke ? { 'background-color': local.orbitStroke } : {}} aria-hidden="true">
-                    <div class={clsx(`${prefixCls}-track-inner`, { [`${prefixCls}-track-inner-indeterminate`]: local.indeterminate })} style={{ background: strokeColor(), ...(local.indeterminate ? {} : horizontal() ? { width: `${percent()}%` } : { height: `${percent()}%` }) }} aria-hidden="true" />
+                <div class={clsx(`${prefixCls}-track`, local.classNames?.rail)} style={mergeStyles(local.orbitStroke ? { 'background-color': local.orbitStroke } : {}, local.styles?.rail)} aria-hidden="true">
+                    <div
+                        class={clsx(`${prefixCls}-track-inner`, local.classNames?.track, { [`${prefixCls}-track-inner-indeterminate`]: local.indeterminate })}
+                        style={mergeStyles({ background: strokeColor(), ...(local.indeterminate ? {} : horizontal() ? { width: `${percent()}%` } : { height: `${percent()}%` }) }, local.styles?.track)}
+                        aria-hidden="true"
+                    />
                 </div>
                 <Show when={local.showInfo && !local.indeterminate}>
-                    <div class={`${prefixCls}-line-text`}>{text()}</div>
+                    <div class={clsx(`${prefixCls}-line-text`, local.classNames?.text)} style={local.styles?.text}>
+                        {text()}
+                    </div>
                 </Show>
             </div>
         </Show>

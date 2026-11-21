@@ -3,12 +3,12 @@
         "source": "packages/semi-ui-solid/src/components/spin/spin.tsx",
         "props": {
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 child（包裹 children 的元素），追加在自带类名之后。",
-                "en-US": "Class names of the inner parts, keyed by child (the element wrapping the children), appended after the built-in class names."
+                "zh-CN": "内部各部位的类名，键为 child（包裹 children 的元素）、indicator（加载指示器，传入 indicator 时为其外层包裹元素）、tip（提示文字），追加在自带类名之后。",
+                "en-US": "Class names of the inner parts, keyed by child (the element wrapping the children), indicator (the loading indicator, or the element wrapping a given indicator) and tip (the tip text), appended after the built-in class names."
             },
             "styles": {
-                "zh-CN": "内部各部位的样式，键为 child（包裹 children 的元素），值可以是对象（键使用 kebab-case）或字符串。",
-                "en-US": "Styles of the inner parts, keyed by child (the element wrapping the children), each an object (kebab-case keys) or a string."
+                "zh-CN": "内部各部位的样式，键同 classNames，值可以是对象（键使用 kebab-case）或字符串。",
+                "en-US": "Styles of the inner parts, keyed like classNames, each an object (kebab-case keys) or a string."
             },
             "delay": {
                 "zh-CN": "延迟显示加载效果的时间，单位毫秒。",

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import TextArea from '@fibrae/semi-ui-svelte/input/textarea.svelte';
@@ -11,13 +12,15 @@
         attachment: FileItem[];
         placeholder?: string;
         sendHotKey: SendHotKey;
+        textareaClass?: ClassValue;
+        textareaStyle?: string;
         onChange: (value: string) => void;
         onEnterPress: (event: KeyboardEvent) => void;
         onPaste: (event: ClipboardEvent) => void;
         onClear: (item: FileItem) => void;
     }
 
-    let { content, attachment, placeholder, sendHotKey, onChange, onEnterPress, onPaste, onClear }: InputBoxInputProps = $props();
+    let { content, attachment, placeholder, sendHotKey, textareaClass, textareaStyle, onChange, onEnterPress, onPaste, onClear }: InputBoxInputProps = $props();
 
     const locale = useLocale('Chat');
 
@@ -41,7 +44,7 @@
         aria-label={locale().locale.input}
         autosize={AUTOSIZE}
         bind:this={textarea}
-        class="{PREFIX_INPUT_BOX}-textarea"
+        class={[`${PREFIX_INPUT_BOX}-textarea`, textareaClass]}
         disabledEnterStartNewLine={sendHotKey === strings.SEND_HOT_KEY.ENTER}
         maxCount={0}
         {onChange}
@@ -50,6 +53,7 @@
         showClear={false}
         showCounter={false}
         showLineNumber={false}
+        style={textareaStyle}
         value={content}
         onpaste={onPaste}
     />

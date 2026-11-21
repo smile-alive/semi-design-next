@@ -481,13 +481,15 @@ describe('Feedback', () => {
         expect($(`.${BASE_CLASS_PREFIX}-modal`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('classNames 与 styles 按部位转发给当前模式的 SideSheet 或 Modal', () => {
-        const parts = ['mask', 'header', 'body'] as const;
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['mask', 'content', 'header', 'title', 'close', 'body', 'footer', 'emoji'] as const;
         const classNames = Object.fromEntries(parts.map((part) => [part, `my-${part}`]));
         const styles = Object.fromEntries(parts.map((part) => [part, { order: parts.indexOf(part) + 1 }]));
         const check = (component: string) => {
+            const contentCls = component === 'modal' ? 'modal-content' : 'sidesheet-inner';
             for (const part of parts) {
-                const el = $(`.${BASE_CLASS_PREFIX}-${component}-${part}`);
+                const selector = part === 'emoji' ? `.${prefix}-emoji-item` : part === 'content' ? `.${BASE_CLASS_PREFIX}-${contentCls}` : `.${BASE_CLASS_PREFIX}-${component}-${part}`;
+                const el = $(selector);
                 expect(el).toHaveClass(`my-${part}`);
                 expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
             }

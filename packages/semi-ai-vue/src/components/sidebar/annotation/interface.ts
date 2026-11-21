@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { AnnotationPart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import type { ContainerEmits, ContainerProps } from '../container/interface';
 
 export interface AnnotationItem {
@@ -22,6 +23,8 @@ export interface AnnotationInfo {
 }
 
 export interface AnnotationContentProps {
+    classNames?: Partial<Record<AnnotationPart, ClassValue>>;
+    styles?: Partial<Record<AnnotationPart, StyleValue>>;
     activeKey?: string | string[];
     info?: AnnotationInfo[];
 }
@@ -49,7 +52,7 @@ export interface AnnotationContentSlots {
     item?: (props: AnnotationItemSlotProps) => VNode[];
 }
 
-export interface AnnotationProps extends ContainerProps, AnnotationContentProps {}
+export interface AnnotationProps extends Omit<ContainerProps, 'classNames' | 'styles'>, AnnotationContentProps {}
 
 export interface AnnotationEmits extends ContainerEmits, AnnotationContentEmits {}
 

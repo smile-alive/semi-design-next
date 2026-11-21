@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { watch, type StyleValue } from 'vue';
+    import { watch, type ClassValue, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { IconCopy, IconTick } from '@fibrae/semi-icons-vue';
     import { useCopied } from '../../composables/index';
@@ -9,7 +9,9 @@
     import type { TypographyCopySlots, TypographyNumeralEmits } from './interface';
 
     defineOptions({ inheritAttrs: false });
-    const props = defineProps<{ content: string; duration: number }>();
+
+    // buttonClass and buttonStyle are the `copy` part: the button, while class and style stay on the wrapping span
+    const props = defineProps<{ content: string; duration: number; buttonClass?: ClassValue; buttonStyle?: StyleValue }>();
 
     // copiedChange: the copy action swapped to or from the copied tip, whose width differs, so the text beside it is measured again
     const emit = defineEmits<TypographyNumeralEmits & { copiedChange: [] }>();
@@ -63,7 +65,7 @@
     </span>
     <span v-else :class="[$attrs.class, copied ? `${prefix}-action-copied` : `${prefix}-action-copy`]" :style="$attrs.style as StyleValue">
         <Tooltip :condition="!copied">
-            <button :aria-label="copied ? copiedName() : copyName()" :class="[`${prefix}-action-btn`, { [`${prefix}-action-copy-icon`]: !copied && !$slots.copyIcon }]" type="button" @click="handleClick">
+            <button :aria-label="copied ? copiedName() : copyName()" :class="[`${prefix}-action-btn`, { [`${prefix}-action-copy-icon`]: !copied && !$slots.copyIcon }, props.buttonClass]" :style="props.buttonStyle" type="button" @click="handleClick">
                 <slot v-if="copied" name="copySuccessTip">
                     <span><IconTick />{{ locale.locale.copied }}</span>
                 </slot>

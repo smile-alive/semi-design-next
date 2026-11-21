@@ -37,8 +37,8 @@
                 "en-US": "Whether the time selection is disabled; for dateTime and dateTimeRange only."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 dropdown（浮层）、input（输入框的根元素，范围选择的两个输入框都带），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by dropdown (the panel) and input (the root element of the input, on both inputs of a range); values take anything class takes (string, array or object) and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 dropdown、input、suffix、clear、separator、header、body、item、presets、switch、footer，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。dropdown 是弹出的日期面板，input 是输入框的根元素（范围选择的两个输入框都带），header 是面板顶部导航栏，body 是日期网格（范围选择有左右两个），item 是单个日期格子，switch 是带时间的类型下切换日期与时间的按钮组，separator 仅范围选择有。",
+                "en-US": "Class names of the inner parts, keyed by dropdown, input, suffix, clear, separator, header, body, item, presets, switch and footer; values take anything class takes (string, array or object) and merge with the built-in classes. dropdown is the popup panel, input is the root element of the input (on both inputs of a range), header is the navigation bar at the top of the panel, body is the date grid (two for a range), item is a single day cell, switch is the button group that switches between date and time for types with time, and separator exists only for a range."
             },
             "endDateOffset": {
                 "zh-CN": "type 为 dateRange 时，单击选择范围的结束日期。",

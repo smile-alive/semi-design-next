@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | 挂载时自动获取焦点。 | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
 | autosize | 高度是否随内容自适应，可传 `{ minRows, maxRows }` 限制行数。 | `boolean \| AutosizeRow` | `false` |
 | borderless | 无边框模式。 | `boolean` | `false` |
-| classNames | 内部各部位的类名，键为 textarea（原生 textarea 元素）、lineNumber（行号区域），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTextAreaPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TextArea", "classNames")` |
+| classNames | 内部各部位的类名，键为 textarea（原生 textarea 元素）、lineNumber（行号区域）、clear（清除按钮）、counter（字数统计），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTextAreaPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TextArea", "classNames")` |
 | cols | 默认列数。 | `number` | `20` |
 | composition | 是否开启输入法模式，开启后输入法组合期间不触发 change，组合结束后触发一次。 | `boolean` | `false` |
 | defaultValue | 非受控时的初始内容。 | `string` | `semiGlobalDefault("TextArea", "defaultValue")` |

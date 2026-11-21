@@ -1,7 +1,10 @@
 import type { Accessor, JSX } from 'solid-js';
+import type { CollapsePart } from '@fibrae/semi-foundation/components/collapse/constants';
 import { createContext } from '../../base/index';
 
 export interface CollapseView {
+    classNames?: Partial<Record<CollapsePart, string>>;
+    styles?: Partial<Record<CollapsePart, JSX.CSSProperties | string>>;
     activeSet: Set<string>;
     clickHeaderToExpand: boolean;
     /** undefined defers to the global Collapsible default */

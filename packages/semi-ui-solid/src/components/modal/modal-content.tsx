@@ -156,13 +156,13 @@ export default function ModalContent(props: ModalContentProps) {
 
     const closer = () => (
         <Show when={local.closable}>
-            <IconButton type="tertiary" class={`${prefix}-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={hasContent(closeIcon()) ? closeIcon() : <IconClose x-semi-prop="closeIcon" />} onClick={foundation.close} />
+            <IconButton type="tertiary" class={clsx(`${prefix}-close`, local.classNames?.close)} style={local.styles?.close} aria-label={locale().locale.close} size="small" theme="borderless" icon={hasContent(closeIcon()) ? closeIcon() : <IconClose x-semi-prop="closeIcon" />} onClick={foundation.close} />
         </Show>
     );
 
     const iconNode = () => (
         <Show when={hasIcon()}>
-            <span class={`${prefix}-icon-wrapper`} x-semi-prop="icon">
+            <span class={clsx(`${prefix}-icon-wrapper`, local.classNames?.icon)} style={local.styles?.icon} x-semi-prop="icon">
                 {icon()}
             </span>
         </Show>
@@ -199,7 +199,7 @@ export default function ModalContent(props: ModalContentProps) {
                     <div class={clsx(`${prefix}-header`, local.classNames?.header)} style={local.styles?.header}>
                         {iconNode()}
                         {/* h5 look, h2 outline: the sheet's title is level 2 as well */}
-                        <Typography.Title id={`${dialogId}-title`} component="h2" class={`${prefix}-title`} heading={5} x-semi-prop="title">
+                        <Typography.Title id={`${dialogId}-title`} component="h2" class={clsx(`${prefix}-title`, local.classNames?.title)} style={local.styles?.title} heading={5} x-semi-prop="title">
                             {title()}
                         </Typography.Title>
                         {closer()}

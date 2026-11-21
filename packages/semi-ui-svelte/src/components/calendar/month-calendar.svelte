@@ -38,7 +38,7 @@
     type Foundation = CalendarMonthFoundation<object>;
     type Adapter = CalendarMonthAdapter<object>;
 
-    let { displayValue, events, markWeekend, weekStartsOn, today, width, height, header, event, dateDisplay, dateGrid, onClick, onClose, onMoreClick, ...rest }: Props = $props();
+    let { displayValue, events, markWeekend, weekStartsOn, today, width, height, header, event, dateDisplay, dateGrid, classNames, styles, onClick, onClose, onMoreClick, ...rest }: Props = $props();
 
     const calendar = getCalendarContext();
     const locale = useLocale('Calendar');
@@ -158,12 +158,16 @@
         {...popup}
         aria-current={day.isToday ? 'date' : undefined}
         aria-label={format(day.date, 'PPP', { locale: dateFnsLocale })}
-        class={{
-            [`${cssClasses.PREFIX}-today`]: day.isToday,
-            [`${cssClasses.PREFIX}-weekend`]: markWeekend && day.isWeekend,
-            [`${prefixCls}-same`]: day.isSameMonth,
-        }}
+        class={[
+            {
+                [`${cssClasses.PREFIX}-today`]: day.isToday,
+                [`${cssClasses.PREFIX}-weekend`]: markWeekend && day.isWeekend,
+                [`${prefixCls}-same`]: day.isSameMonth,
+            },
+            classNames?.day,
+        ]}
         role="cell"
+        style={styles?.day}
         tabindex={day.hidden > 0 ? -1 : undefined}
         onclick={(clickEvent) => onClick?.(clickEvent, CalendarFoundation.formatCbValue([day.date]))}
     >
@@ -179,7 +183,7 @@
             </span>
         {/if}
         {#if day.hidden > 0}
-            <button {@attach track(moreButtons, day.key)} aria-expanded={isOpen(day.key)} aria-haspopup="dialog" class={`${cardCls}-wrapper`} style="bottom: 0" type="button" onclick={(clickEvent) => handleMoreClick(clickEvent, day.key, day.date, day.hidden)}>
+            <button {@attach track(moreButtons, day.key)} aria-expanded={isOpen(day.key)} aria-haspopup="dialog" class={[`${cardCls}-wrapper`, classNames?.more]} style={`bottom: 0;${styles?.more ?? ''}`} type="button" onclick={(clickEvent) => handleMoreClick(clickEvent, day.key, day.date, day.hidden)}>
                 {remaining(day.hidden)}
             </button>
         {/if}
@@ -197,11 +201,11 @@
                 </div>
             </div>
         {/if}
-        <div class={`${prefixCls}-header`}>
+        <div class={[`${prefixCls}-header`, classNames?.header]} style={styles?.header}>
             <div class={`${prefixCls}-grid`}>
                 <div class={`${prefixCls}-grid-row`} role="row">
                     {#each monthlyData[0] as day (day.weekday)}
-                        <div aria-label={day.weekday} class={{ [`${cssClasses.PREFIX}-weekend`]: markWeekend && day.isWeekend }} role="columnheader">
+                        <div aria-label={day.weekday} class={[{ [`${cssClasses.PREFIX}-weekend`]: markWeekend && day.isWeekend }, classNames?.headerCell]} role="columnheader" style={styles?.headerCell}>
                             <span>{day.weekday}</span>
                         </div>
                     {/each}
@@ -222,7 +226,7 @@
                                             {@render cell(day, props)}
                                         {/snippet}
                                         {#snippet content({ initialFocusRef })}
-                                            <div {@attach track(cards, day.key)} class={cardCls}>
+                                            <div {@attach track(cards, day.key)} class={[cardCls, classNames?.dropdown]} style={styles?.dropdown}>
                                                 <div class={`${cardCls}-content`}>
                                                     <div class={`${cardCls}-header`}>
                                                         <div class={`${cardCls}-header-info`} id={day.titleId}>
@@ -264,7 +268,7 @@
                         <!-- the overlay sits beside the row, where a list is not a valid child of the table -->
                         <div class={`${cssClasses.PREFIX}-event-items`}>
                             {#each withKeys(week.display, 'month') as { id, item } (id)}
-                                <div class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-month`]} style:inset-inline-start={toPercent(item.leftPos ?? 0)} style:top={`${item.topInd ?? 0}em`} style:width={toPercent(item.width ?? 0)}>
+                                <div class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-month`, classNames?.event]} style={`inset-inline-start: ${toPercent(item.leftPos ?? 0)}; top: ${item.topInd ?? 0}em; width: ${toPercent(item.width ?? 0)};${styles?.event ?? ''}`}>
                                     {#if event}
                                         {@render event({ event: calendar.eventOf(item) })}
                                     {:else}

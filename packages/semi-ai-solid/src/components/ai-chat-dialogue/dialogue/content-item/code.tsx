@@ -1,14 +1,17 @@
 import { type ComponentProps, Show, children } from 'solid-js';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-solid';
 import { code as MarkdownCode } from '@fibrae/semi-ui-solid/markdown-render/components/index';
 import { useCopied, useLocale } from '@fibrae/semi-ui-solid/primitives';
+import { useCodePartContext } from '../../context';
 
 const { PREFIX_CODE } = cssClasses;
 
 export default function Code(props: ComponentProps<typeof MarkdownCode>) {
     const locale = useLocale('AIChatDialogue');
+    const part = useCodePartContext();
 
     const [copied, copy] = useCopied(() => 2000);
 
@@ -26,7 +29,7 @@ export default function Code(props: ComponentProps<typeof MarkdownCode>) {
 
     return (
         <Show when={language() && source() !== undefined} fallback={code()}>
-            <div class={PREFIX_CODE}>
+            <div class={clsx(PREFIX_CODE, part?.().class)} style={part?.().style}>
                 <div class={`${PREFIX_CODE}-topSlot`}>
                     <span class={`${PREFIX_CODE}-topSlot-type`}>{language()}</span>
                     <span class={`${PREFIX_CODE}-topSlot-copy`}>

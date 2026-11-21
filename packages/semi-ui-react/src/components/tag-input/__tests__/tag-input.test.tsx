@@ -46,6 +46,17 @@ afterEach(() => {
 });
 
 describe('TagInput', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['prefix', 'suffix', 'content', 'tag', 'input', 'clear'] as const;
+        const selectors = { prefix: 'prefix', suffix: 'suffix', content: 'wrapper', tag: 'wrapper-tag', input: 'wrapper-input', clear: 'clearBtn' };
+        render(<TagInput classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} value={['a']} showClear prefix="p" suffix="s" />);
+        for (const part of parts) {
+            const el = document.querySelector(`.${tagInputCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
     it('TagInput 带 prefix / suffix', () => {
         render(
             <>

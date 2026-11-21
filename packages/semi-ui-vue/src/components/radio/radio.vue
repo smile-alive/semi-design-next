@@ -66,6 +66,8 @@
     );
 
     const prefix = radioClasses.PREFIX;
+    const groupClassNames = computed(() => group?.classNames.value);
+    const groupStyles = computed(() => group?.styles.value);
     const addonId = computed(() => props.addonId || `addon-${uid}`);
     const extraId = computed(() => props.extraId || `extra-${uid}`);
 
@@ -156,8 +158,8 @@
 </script>
 
 <template>
+    <!-- v-bind comes last so the owner's class and style follow the group's item class and style -->
     <label
-        v-bind="rootAttrs()"
         :class="[
             prefix,
             {
@@ -172,7 +174,10 @@
                 [`${prefix}-cardRadioGroup_checked`]: view.isCardRadio && view.checked && !view.disabled,
                 [`${prefix}-cardRadioGroup_checked_disabled`]: view.isCardRadio && view.checked && view.disabled,
             },
+            groupClassNames?.item,
         ]"
+        :style="groupStyles?.item"
+        v-bind="rootAttrs()"
     >
         <span
             :class="[
@@ -199,7 +204,8 @@
                 @click="handleClick"
                 @keyup="handleKeyUp"
             />
-            <span :class="{ [`${prefix}-inner-display`]: !view.isButtonRadio }">
+            <!-- a button radio has no icon, so the icon part has nowhere to land -->
+            <span :class="[{ [`${prefix}-inner-display`]: !view.isButtonRadio }, !view.isButtonRadio && [groupClassNames?.itemIcon, props.classNames?.icon]]" :style="view.isButtonRadio ? undefined : [groupStyles?.itemIcon, props.styles?.icon]">
                 <IconRadio v-if="view.checked" />
             </span>
         </span>
@@ -215,14 +221,15 @@
                         [`${prefix}-addon-buttonRadio-disabled`]: view.isButtonRadio && view.disabled,
                         [`${prefix}-addon-buttonRadio-${view.buttonSize}`]: view.isButtonRadio && view.buttonSize,
                     },
-                    props.classNames?.addon,
+                    groupClassNames?.itemLabel,
+                    props.classNames?.label,
                 ]"
-                :style="props.styles?.addon"
+                :style="[groupStyles?.itemLabel, props.styles?.label]"
                 x-semi-prop="children"
             >
                 <slot />
             </span>
-            <div v-if="$slots.extra && !view.isButtonRadio" :id="extraId" :class="`${prefix}-extra`" x-semi-prop="extra">
+            <div v-if="$slots.extra && !view.isButtonRadio" :id="extraId" :class="[`${prefix}-extra`, groupClassNames?.itemExtra, props.classNames?.extra]" :style="[groupStyles?.itemExtra, props.styles?.extra]" x-semi-prop="extra">
                 <slot name="extra" />
             </div>
         </div>

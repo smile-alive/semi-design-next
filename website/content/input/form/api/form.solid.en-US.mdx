@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | allowEmpty | Whether a field whose value becomes empty keeps its key in values. Setting it to true on either the Form or the field takes effect. | `boolean` | `false` |
 | autoScrollToError | Whether to scroll to the first invalid field when submit or formApi.validate fails. An object is passed to scroll-into-view-if-needed as its options. | `boolean \| ScrollOptions` | `false` |
 | children | The content of the form. A function is called once, like render, with `{ formState, values, formApi }`; read them in the returned JSX to follow the form. | <ApiType detail={"JSX.Element \u007c ((props: FormRenderProps\u003cValues, Output>) => JSX.Element)"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `label`, `labelText`, `labelExtra`, `labelTooltip`, `content`, `help` and `extra`; they apply to the labels, content areas, help texts and extra texts of every field in the form and are merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cFormPart, string>>"}>Type</ApiType> | - |
 | component | A component that declares the fields, rendered with formState, values and formApi as its props. Do not use it together with render or children. | <ApiType detail={"(props: FormRenderProps\u003cValues, Output>) => JSX.Element"}>Type</ApiType> | - |
 | disabled | The disabled state applied to every field. A field's own disabled takes precedence. | `boolean` | - |
 | extraTextPosition | Position of the extra text of every field: middle puts it between the label and the control, bottom after the control. The same property on a field takes precedence. | `'bottom' \| 'middle'` | - |
@@ -34,6 +35,7 @@ import ApiType from '#/components/ApiType.astro';
 | showValidateIcon | Whether the validation message is preceded by an icon of its status. | `boolean` | `true` |
 | stopPropagation | Whether to stop the submit and reset events from bubbling, so that a nested Form does not trigger the events of the outer one. | `{ submit?: boolean; reset?: boolean; }` | - |
 | stopValidateWithError | Whether to skip the remaining rules after the first rule fails. The same property on a field takes precedence. | `boolean` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cFormPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | trigger | When every field validates: change, blur, mount, custom, or an array of them. The same property on a field takes precedence. | `FieldValidateTriggerType` | - |
 | validator | Form-level validation, called on submit and formApi.validate and allowed to return a Promise. It excludes `schema`. When set, the validator and rules of the fields no longer apply. An empty value or object means valid; on failure return an error object shaped like the values, each error a string or a string array. | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | - |
 | wrapperCol | Grid layout of the control of every field, with the properties of Col such as span and offset. Set it together with labelCol. | `ColProps` | - |

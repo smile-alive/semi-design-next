@@ -2,7 +2,7 @@ import type React from 'react';
 import { Fragment, lazy, Suspense, useCallback, useId, useImperativeHandle, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { type strings, cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
+import { type strings, cssClasses, type TagInputPart } from '@fibrae/semi-foundation/components/tag-input/constants';
 import TagInputFoundation, { type TagInputAdapter, type TagInputBaseState, type TagInputValidateStatus } from '@fibrae/semi-foundation/components/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
@@ -45,6 +45,7 @@ export interface TagInputHandle {
 
 export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
     className?: string;
+    classNames?: Partial<Record<TagInputPart, string>>;
     clearIcon?: React.ReactNode;
     defaultValue?: string[];
     disabled?: boolean;
@@ -79,6 +80,7 @@ export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultVa
     size?: Size;
     split?: (originString: string, separators: string | string[] | null) => string[];
     style?: React.CSSProperties;
+    styles?: Partial<Record<TagInputPart, React.CSSProperties>>;
     suffix?: React.ReactNode;
     validateStatus?: TagInputValidateStatus;
     value?: string[] | null;
@@ -176,6 +178,7 @@ export default function TagInput(rawProps: TagInputProps) {
     const {
         ref,
         className,
+        classNames,
         clearIcon,
         defaultValue,
         disabled,
@@ -209,6 +212,7 @@ export default function TagInput(rawProps: TagInputProps) {
         size,
         split,
         style,
+        styles,
         suffix: rawSuffix,
         validateStatus,
         value,
@@ -301,11 +305,15 @@ export default function TagInput(rawProps: TagInputProps) {
     const renderTag = (tagValue: any, index: number, sortableHandle?: SortableHandle, sortableId?: React.Key) => {
         const showIconHandler = active && draggable;
         const hasHandle = showIconHandler && sortableHandle;
-        const tagCls = clsx(`${prefixCls}-wrapper-tag`, {
-            [`${prefixCls}-wrapper-tag-size-${size}`]: size,
-            // the handle's wrapper carries the start padding; without a handle (the Sortable still loading) the tag does
-            [`${prefixCls}-wrapper-tag-icon`]: showIconHandler && !sortableHandle,
-        });
+        const tagCls = clsx(
+            `${prefixCls}-wrapper-tag`,
+            {
+                [`${prefixCls}-wrapper-tag-size-${size}`]: size,
+                // the handle's wrapper carries the start padding; without a handle (the Sortable still loading) the tag does
+                [`${prefixCls}-wrapper-tag-icon`]: showIconHandler && !sortableHandle,
+            },
+            classNames?.tag
+        );
         const typoCls = clsx(`${prefixCls}-wrapper-typo`, {
             [`${prefixCls}-wrapper-typo-disabled`]: disabled,
         });
@@ -345,6 +353,7 @@ export default function TagInput(rawProps: TagInputProps) {
                 key={hasHandle ? undefined : elementKey}
                 type="light"
                 className={tagCls}
+                style={styles?.tag}
                 // only the closable tag is a button that takes a name; a disabled one is static text
                 aria-label={disabled ? undefined : formatLocale(tagLocale.closableTag, { tag: String(tagValue) })}
                 closable={!disabled}
@@ -446,11 +455,16 @@ export default function TagInput(rawProps: TagInputProps) {
     const prefixNode = hasContent(labelNode) ? (
         <div
             id={prefixId}
-            className={clsx(`${prefixCls}-prefix`, {
-                [`${prefixCls}-inset-label`]: hasContent(insetLabel),
-                [`${prefixCls}-prefix-text`]: isText(labelNode),
-                [`${prefixCls}-prefix-icon`]: isSemiIcon(labelNode),
-            })}
+            className={clsx(
+                `${prefixCls}-prefix`,
+                {
+                    [`${prefixCls}-inset-label`]: hasContent(insetLabel),
+                    [`${prefixCls}-prefix-text`]: isText(labelNode),
+                    [`${prefixCls}-prefix-icon`]: isSemiIcon(labelNode),
+                },
+                classNames?.prefix
+            )}
+            style={styles?.prefix}
             x-semi-prop="prefix"
             onClick={foundation.handleClickPrefixOrSuffix}
             onMouseDown={(e) => e.preventDefault()}
@@ -461,10 +475,15 @@ export default function TagInput(rawProps: TagInputProps) {
 
     const suffixNode = hasContent(suffix) ? (
         <div
-            className={clsx(`${prefixCls}-suffix`, {
-                [`${prefixCls}-suffix-text`]: isText(suffix),
-                [`${prefixCls}-suffix-icon`]: isSemiIcon(suffix),
-            })}
+            className={clsx(
+                `${prefixCls}-suffix`,
+                {
+                    [`${prefixCls}-suffix-text`]: isText(suffix),
+                    [`${prefixCls}-suffix-icon`]: isSemiIcon(suffix),
+                },
+                classNames?.suffix
+            )}
+            style={styles?.suffix}
             x-semi-prop="suffix"
             onClick={foundation.handleClickPrefixOrSuffix}
             onMouseDown={(e) => e.preventDefault()}
@@ -480,7 +499,8 @@ export default function TagInput(rawProps: TagInputProps) {
             <button
                 ref={setClearButton}
                 type="button"
-                className={`${prefixCls}-clearBtn`}
+                className={clsx(`${prefixCls}-clearBtn`, classNames?.clear)}
+                style={styles?.clear}
                 aria-label={locale.clear}
                 onClick={(e) => {
                     foundation.handleClearBtn(e);
@@ -540,13 +560,14 @@ export default function TagInput(rawProps: TagInputProps) {
                 }}
             >
                 {prefixNode}
-                <div ref={setWrapper} className={`${prefixCls}-wrapper`}>
+                <div ref={setWrapper} className={clsx(`${prefixCls}-wrapper`, classNames?.content)} style={styles?.content}>
                     {tagsNode}
                     <Input
                         ref={setInput}
                         id={id}
                         name={name}
-                        className={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`)}
+                        className={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`, classNames?.input)}
+                        style={styles?.input}
                         aria-activedescendant={ariaActivedescendant}
                         aria-autocomplete={ariaAutocomplete}
                         aria-controls={ariaControls}

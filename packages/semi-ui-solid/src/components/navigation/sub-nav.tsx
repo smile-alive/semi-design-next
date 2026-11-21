@@ -10,7 +10,7 @@ import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-solid';
 import { createToken, isToken, useFoundation } from '../../base/index';
 import { useFocusHandover } from '../../primitives/index';
-import { splitControlAttrs, forwardFocus, hasContent, createIconSlot, isMarkup, serverHtml, mergeRefs } from '../../utils/index';
+import { splitControlAttrs, forwardFocus, hasContent, createIconSlot, isMarkup, serverHtml, mergeRefs, mergeStyles } from '../../utils/index';
 import Collapsible from '../collapsible';
 import Dropdown, { type DropdownProps, type GetDropdownTriggerProps } from '../dropdown';
 import Tooltip, { type GetTriggerProps } from '../tooltip';
@@ -145,19 +145,35 @@ export function SubView(props: SubNavProps) {
 
     const showIcon = () => hasContent(icon()) || Boolean(local.indent) || (nested() && !horizontal());
 
-    // a span: a button takes phrasing content only
+    const iconClass = () => clsx(iconSlotClass(false, view().toggleIconPosition), view().classNames?.itemIcon, local.classNames?.icon);
+
+    const iconStyle = () => mergeStyles(view().styles?.itemIcon, local.styles?.icon);
+
+    const toggleClass = () => clsx(iconSlotClass(true, view().toggleIconPosition), view().classNames?.itemToggleIcon, local.classNames?.toggleIcon);
+
+    const toggleStyle = () => mergeStyles(view().styles?.itemToggleIcon, local.styles?.toggleIcon);
+
+    // a span: a button takes phrasing content only; the blank indent slots are not the icon, so they take no icon part
     const titleInner = () => (
         <span class={`${prefix}-item-inner`}>
             <Index each={placeholders()}>{() => <i class={iconSlotClass(false, view().toggleIconPosition)} />}</Index>
             <Show when={view().toggleIconPosition === strings.TOGGLE_ICON_LEFT}>
-                <i class={iconSlotClass(true, view().toggleIconPosition)}>{toggleIcon()}</i>
+                <i class={toggleClass()} style={toggleStyle()}>
+                    {toggleIcon()}
+                </i>
             </Show>
             <Show when={showIcon()}>
-                <i class={iconSlotClass(false, view().toggleIconPosition)}>{icon()}</i>
+                <i class={iconClass()} style={iconStyle()}>
+                    {icon()}
+                </i>
             </Show>
-            <span class={`${prefix}-item-text`}>{local.text}</span>
+            <span class={clsx(`${prefix}-item-text`, view().classNames?.itemText, local.classNames?.text)} style={mergeStyles(view().styles?.itemText, local.styles?.text)}>
+                {local.text}
+            </span>
             <Show when={view().toggleIconPosition === strings.TOGGLE_ICON_RIGHT}>
-                <i class={iconSlotClass(true, view().toggleIconPosition)}>{toggleIcon()}</i>
+                <i class={toggleClass()} style={toggleStyle()}>
+                    {toggleIcon()}
+                </i>
             </Show>
         </span>
     );
@@ -165,10 +181,17 @@ export function SubView(props: SubNavProps) {
     const handleTitleClick = (event: MouseEvent) => (isPopup() ? foundation.handlePopupClick(event) : foundation.handleClick(event));
 
     const titleClass = () =>
-        clsx(`${prefix}-sub-title`, {
-            [`${prefix}-sub-title-selected`]: isSelected(),
-            [`${prefix}-sub-title-disabled`]: local.disabled,
-        });
+        clsx(
+            `${prefix}-sub-title`,
+            {
+                [`${prefix}-sub-title-selected`]: isSelected(),
+                [`${prefix}-sub-title-disabled`]: local.disabled,
+            },
+            view().classNames?.subNavTitle,
+            local.classNames?.title
+        );
+
+    const titleStyle = () => mergeStyles(view().styles?.subNavTitle, local.styles?.title);
 
     const renderTitle = (trigger: GetTriggerProps) => (
         <Show
@@ -182,6 +205,9 @@ export function SubView(props: SubNavProps) {
                             ref: handoverFocus,
                             get class() {
                                 return titleClass();
+                            },
+                            get style() {
+                                return titleStyle();
                             },
                             // the list is unmounted while closed, so an id reference to it only exists when it is open
                             get 'aria-controls'() {
@@ -210,6 +236,9 @@ export function SubView(props: SubNavProps) {
                         tabIndex: -1,
                         get class() {
                             return titleClass();
+                        },
+                        get style() {
+                            return titleStyle();
                         },
                         get 'aria-disabled'() {
                             return Boolean(local.disabled);
@@ -241,10 +270,10 @@ export function SubView(props: SubNavProps) {
                         </Dropdown.Menu>
                     }
                     {...dropdownOptions()}
-                    style={local.styles?.dropdown ?? dropdownOptions().style}
+                    style={mergeStyles(dropdownOptions().style, view().styles?.subNavDropdown, local.styles?.dropdown)}
                     // the user's class adds to the built-in popover class, which carries the collapsed popup's styling
                     class={clsx({ [`${prefix}-popover`]: view().isCollapsed }, dropdownOptions().class)}
-                    classNames={local.classNames?.dropdown ? { ...dropdownOptions().classNames, content: clsx(dropdownOptions().classNames?.content, local.classNames.dropdown) } : dropdownOptions().classNames}
+                    classNames={view().classNames?.subNavDropdown || local.classNames?.dropdown ? { ...dropdownOptions().classNames, content: clsx(dropdownOptions().classNames?.content, view().classNames?.subNavDropdown, local.classNames?.dropdown) } : dropdownOptions().classNames}
                     onVisibleChange={(visible) => {
                         foundation.handleDropdownVisibleChange(visible);
                         dropdownOptions().onVisibleChange?.(visible);
@@ -259,10 +288,16 @@ export function SubView(props: SubNavProps) {
     const subUl = () => (
         <ul
             id={subListId}
-            class={clsx(`${prefix}-sub`, {
-                [`${prefix}-sub-open`]: isOpen(),
-                [`${prefix}-sub-popover`]: isPopup(),
-            })}
+            class={clsx(
+                `${prefix}-sub`,
+                {
+                    [`${prefix}-sub-open`]: isOpen(),
+                    [`${prefix}-sub-popover`]: isPopup(),
+                },
+                view().classNames?.subNavList,
+                local.classNames?.list
+            )}
+            style={mergeStyles(view().styles?.subNavList, local.styles?.list)}
         >
             <NavNodes nodes={content()} />
         </ul>
@@ -294,13 +329,13 @@ export function SubView(props: SubNavProps) {
         <li
             {...rest}
             ref={untrack(() => mergeRefs(setWrapper, local.ref))}
-            class={clsx(`${prefix}-sub-wrap`, local.class, {
+            class={clsx(`${prefix}-sub-wrap`, view().classNames?.subNav, local.class, {
                 [itemPrefix]: true,
                 [`${itemPrefix}-sub`]: true,
                 [`${itemPrefix}-collapsed`]: view().isCollapsed,
                 [`${itemPrefix}-disabled`]: local.disabled,
             })}
-            style={local.style}
+            style={mergeStyles(view().styles?.subNav, local.style)}
         >
             {body()}
         </li>
@@ -313,7 +348,7 @@ export function SubView(props: SubNavProps) {
             {...rest}
             ref={untrack(() => mergeRefs(setWrapper, local.ref))}
             role="none"
-            class={clsx(`${prefix}-sub-wrap`, local.class, dropdownItemPrefix, {
+            class={clsx(`${prefix}-sub-wrap`, view().classNames?.subNav, local.class, dropdownItemPrefix, {
                 [itemPrefix]: true,
                 [`${itemPrefix}-sub`]: true,
                 [`${itemPrefix}-selected`]: isSelected(),
@@ -322,7 +357,7 @@ export function SubView(props: SubNavProps) {
                 [`${dropdownItemPrefix}-disabled`]: local.disabled,
                 [`${dropdownItemPrefix}-active`]: isSelected(),
             })}
-            style={local.style}
+            style={mergeStyles(view().styles?.subNav, local.style)}
         >
             {body()}
         </li>

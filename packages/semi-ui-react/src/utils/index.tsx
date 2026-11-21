@@ -59,29 +59,35 @@ export function isText(node: React.ReactNode): node is string | number {
 }
 
 /** `id` lets the combobox name itself by the inset label */
-export function renderTriggerPrefix(prefixcls: string, prefix: React.ReactNode, insetLabel: React.ReactNode, id?: string) {
+export function renderTriggerPrefix(prefixcls: string, prefix: React.ReactNode, insetLabel: React.ReactNode, id?: string, partClassName?: string, partStyle?: React.CSSProperties) {
     const labelNode = hasContent(prefix) ? prefix : insetLabel;
-    const cls = clsx({
-        [`${prefixcls}-prefix`]: true,
-        [`${prefixcls}-inset-label`]: hasContent(insetLabel),
-        [`${prefixcls}-prefix-text`]: isText(labelNode),
-        [`${prefixcls}-prefix-icon`]: isSemiIcon(labelNode),
-    });
+    const cls = clsx(
+        {
+            [`${prefixcls}-prefix`]: true,
+            [`${prefixcls}-inset-label`]: hasContent(insetLabel),
+            [`${prefixcls}-prefix-text`]: isText(labelNode),
+            [`${prefixcls}-prefix-icon`]: isSemiIcon(labelNode),
+        },
+        partClassName
+    );
     return (
-        <div id={id} className={cls} x-semi-prop="prefix,insetLabel">
+        <div id={id} className={cls} style={partStyle} x-semi-prop="prefix,insetLabel">
             {labelNode}
         </div>
     );
 }
 
-export function renderTriggerSuffix(prefixcls: string, suffix: React.ReactNode) {
-    const cls = clsx({
-        [`${prefixcls}-suffix`]: true,
-        [`${prefixcls}-suffix-text`]: isText(suffix),
-        [`${prefixcls}-suffix-icon`]: isSemiIcon(suffix),
-    });
+export function renderTriggerSuffix(prefixcls: string, suffix: React.ReactNode, partClassName?: string, partStyle?: React.CSSProperties) {
+    const cls = clsx(
+        {
+            [`${prefixcls}-suffix`]: true,
+            [`${prefixcls}-suffix-text`]: isText(suffix),
+            [`${prefixcls}-suffix-icon`]: isSemiIcon(suffix),
+        },
+        partClassName
+    );
     return (
-        <div className={cls} x-semi-prop="suffix">
+        <div className={cls} style={partStyle} x-semi-prop="suffix">
             {suffix}
         </div>
     );

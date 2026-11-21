@@ -8,6 +8,8 @@ const { PREFIX_HINT } = cssClasses;
 interface HintProps {
     class?: string;
     style?: JSX.CSSProperties | string;
+    itemClass?: string;
+    itemStyle?: JSX.CSSProperties | string;
     hints: string[];
     selecting?: boolean;
     onHintClick: (hint: string) => void;
@@ -25,7 +27,8 @@ export default function Hint(props: HintProps) {
                         keyed
                         fallback={
                             <div
-                                class={`${PREFIX_HINT}-item`}
+                                class={clsx(`${PREFIX_HINT}-item`, props.itemClass)}
+                                style={props.itemStyle}
                                 role="button"
                                 tabIndex={0}
                                 onClick={() => props.onHintClick(hint())}

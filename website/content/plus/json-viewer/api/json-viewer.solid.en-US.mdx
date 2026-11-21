@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `editor`, `searchTrigger`, `searchBox`, `searchInput`, `searchOptions` and `replaceInput`, merged with the built-in classes. `editor` is the element the editor mounts in; the search panel parts exist only while the panel is open. | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, string>>"}>Type</ApiType> | - |
 | height | Height. A number is taken as px; a string is used as is. | `number \| string` | `400` |
 | limitSearchButtonBounds | Whether to limit the drag range of the search button to the component container. | `boolean` | - |
 | onChange | Called with the editor's current text when the content changes. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
@@ -11,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | ref | The root element, typed `JsonViewerElement`, which carries the JsonViewerHandle methods. | <ApiType detail={"Ref\u003cJsonViewerElement>"}>Type</ApiType> | - |
 | renderSearchButton | Custom render for the search button. The first argument creates the default button: call it where the button is inserted. The second is `controls`, holding the search state and methods. `controls.showSearchBar` is a getter and must be read inside the returned JSX. | <ApiType detail={"(defaultSearchButton: () => JSX.Element, searchControls: JsonViewerSearchControls) => JSX.Element"}>Type</ApiType> | - |
 | showSearch | Whether to show the search button. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | value | JSON text to show and edit; the editor starts empty when omitted. The editor is re-created only when value becomes different from its current content, so writing the onChange value back keeps the caret. | `string` | `""` |
 | width | Width. A number is taken as px; a string is used as is. | `number \| string` | `400` |
 

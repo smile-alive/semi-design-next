@@ -83,12 +83,12 @@
                 "en-US": "Fires when the pointer (mouse, touch or pen) that dragged the handle is released or cancelled, and when a value key is released."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 rail，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by rail; merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `rail`、`track`、`handle`、`dot`、`mark`、`dropdown`，与组件自带的类名合并；`dropdown` 是悬停、拖动或聚焦手柄时显示当前值的提示弹出层。",
+                "en-US": "Class names of the inner parts, keyed by `rail`, `track`, `handle`, `dot`, `mark` and `dropdown`; merged with the built-in classes. `dropdown` is the tip popup that shows the current value on hover, drag or focus."
             },
             "styles": {
-                "zh-CN": "内部各部位的样式，键为 rail，值可传对象（键为 CSS 属性名）或字符串。",
-                "en-US": "Styles of the inner parts, keyed by rail, each an object keyed by CSS property names or a string."
+                "zh-CN": "内部各部位的样式，键同 `classNames`，值可传对象（键为 CSS 属性名）或字符串。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`, each an object keyed by CSS property names or a string."
             },
             "range": {
                 "zh-CN": "是否支持两端同时可滑动。",

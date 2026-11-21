@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { type CSSProperties, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
+import { type AudioPlayerPart, cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
 import SeekFoundation, { type SeekAdapter, type SeekBaseProps, type SeekBaseState } from '@fibrae/semi-foundation/components/video-player/seek-foundation';
 import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils';
@@ -25,6 +25,8 @@ interface AudioSliderProps {
     showTooltip?: boolean;
     theme?: AudioPlayerTheme;
     label: string;
+    classNames?: Partial<Record<AudioPlayerPart, string>>;
+    styles?: Partial<Record<AudioPlayerPart, CSSProperties>>;
     /** Spoken form of a value, announced instead of the bare number */
     getValueText: (value: number) => string;
 }
@@ -33,7 +35,7 @@ const prefixCls = cssClasses.PREFIX;
 // $size-audio-player-slider-dot
 const dotSize = 16;
 
-export default function AudioSlider({ value = 0, onChange, max = 100, vertical = false, height = 4, showTooltip = true, theme = 'dark', label, getValueText }: AudioSliderProps) {
+export default function AudioSlider({ value = 0, onChange, max = 100, vertical = false, height = 4, showTooltip = true, theme = 'dark', label, classNames, styles, getValueText }: AudioSliderProps) {
     const sliderRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -86,24 +88,34 @@ export default function AudioSlider({ value = 0, onChange, max = 100, vertical =
             />
             <div
                 ref={sliderRef}
-                className={clsx(`${prefixCls}-slider`, `${prefixCls}-slider-${theme}`, {
-                    [`${prefixCls}-slider-vertical`]: vertical,
-                    [`${prefixCls}-slider-horizontal`]: !vertical,
-                })}
-                style={vertical ? { height } : undefined}
+                className={clsx(
+                    `${prefixCls}-slider`,
+                    `${prefixCls}-slider-${theme}`,
+                    {
+                        [`${prefixCls}-slider-vertical`]: vertical,
+                        [`${prefixCls}-slider-horizontal`]: !vertical,
+                    },
+                    classNames?.sliderTrack
+                )}
+                style={{ ...(vertical ? { height } : undefined), ...styles?.sliderTrack }}
             >
                 <div
-                    className={clsx(`${prefixCls}-slider-progress`, {
-                        [`${prefixCls}-slider-progress-vertical`]: vertical,
-                        [`${prefixCls}-slider-progress-horizontal`]: !vertical,
-                    })}
+                    className={clsx(
+                        `${prefixCls}-slider-progress`,
+                        {
+                            [`${prefixCls}-slider-progress-vertical`]: vertical,
+                            [`${prefixCls}-slider-progress-horizontal`]: !vertical,
+                        },
+                        classNames?.sliderProgress
+                    )}
                     style={{
                         height: vertical ? `${percent}%` : '100%',
                         width: vertical ? '100%' : `${percent}%`,
+                        ...styles?.sliderProgress,
                     }}
                 />
                 <div
-                    className={clsx(`${prefixCls}-slider-dot`)}
+                    className={clsx(`${prefixCls}-slider-dot`, classNames?.sliderThumb)}
                     style={{
                         // centered on the end of the progress, as in VideoPlayer: at either end it covers the track's round cap
                         left: vertical ? '50%' : `calc(${percent}% - ${dotSize / 2}px)`,
@@ -111,6 +123,7 @@ export default function AudioSlider({ value = 0, onChange, max = 100, vertical =
                         top: vertical ? undefined : '50%',
                         transform: vertical ? 'translateX(-50%)' : 'translateY(-50%)',
                         pointerEvents: 'none',
+                        ...styles?.sliderThumb,
                     }}
                 />
             </div>

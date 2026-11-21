@@ -12,6 +12,8 @@
     defineOptions({ name: 'Annotation' });
 
     const props = withDefaults(defineProps<AnnotationProps & /* @vue-ignore */ ElementProps<'div', keyof AnnotationProps | EmitHandlers<AnnotationEmits>>>(), {
+        classNames: semiGlobalDefault('Annotation', 'classNames'),
+        styles: semiGlobalDefault('Annotation', 'styles'),
         visible: semiGlobalDefault('Annotation', 'visible'),
         title: semiGlobalDefault('Annotation', 'title'),
         motion: semiGlobalDefault('Annotation', 'motion'),
@@ -55,7 +57,7 @@
         <template v-if="$slots.header" #header>
             <slot name="header" />
         </template>
-        <AnnotationContent :activeKey="props.activeKey" :info="props.info" @change="(...args) => emit('change', ...args)" @click="(...args) => emit('click', ...args)" @update:activeKey="(...args) => emit('update:activeKey', ...args)">
+        <AnnotationContent :activeKey="props.activeKey" :classNames="props.classNames" :info="props.info" :styles="props.styles" @change="(...args) => emit('change', ...args)" @click="(...args) => emit('click', ...args)" @update:activeKey="(...args) => emit('update:activeKey', ...args)">
             <template v-if="$slots.infoHeader" #header="scope">
                 <slot name="infoHeader" v-bind="scope" />
             </template>

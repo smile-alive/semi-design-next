@@ -9,7 +9,7 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type AIChatInputPart = 'templates';
+export type AIChatInputPart = 'references' | 'reference' | 'attachments' | 'attachment' | 'editor' | 'footer' | 'configure' | 'actions' | 'upload' | 'send' | 'templates' | 'skills' | 'skillItem' | 'suggestions' | 'suggestionItem';
 
 export const strings = {
     // Key of the status extension's editor storage, read by the foundation

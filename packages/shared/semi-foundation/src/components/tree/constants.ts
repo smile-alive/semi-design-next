@@ -6,7 +6,10 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type TreePart = 'search';
+export type TreePart = 'search' | 'list' | TreeNodePart;
+
+/** The parts rendered by a tree row, which Tree and TreeSelect share */
+export type TreeNodePart = 'empty' | 'item' | 'itemSwitcher' | 'itemCheckbox' | 'itemIcon' | 'itemTitle';
 
 export const strings = {
     JSON_KEY_SPLIT: '_SEMI_TREE_SPLIT_',

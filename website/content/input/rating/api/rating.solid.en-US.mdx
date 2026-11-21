@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | allowHalf | Whether half stars can be selected. | `boolean` | `false` |
 | autofocus | Whether to focus on mount. | `boolean` | - |
 | character | Character drawn in every star, a JSX element such as `<IconLikeHeart />`; the star icon when not set. When it is a plain text string, that text is the unit in each star's accessible name and the group summary. | `JSX.Element` | - |
+| classNames | Class names of the inner parts, keyed by `item` and `dropdown`; merged with the built-in classes. `item` is a single star; `dropdown` is the tip popup shown when `tooltips` is set. | <ApiType detail={"Partial\u003cRecord\u003cRatingPart, string>>"}>Type</ApiType> | - |
 | count | Total number of stars. | `number` | `5` |
 | defaultValue | Initial value when uncontrolled. | `number` | `0` |
 | disabled | Read-only: no interaction and no focus. | `boolean` | - |
@@ -20,5 +21,6 @@ import ApiType from '#/components/ApiType.astro';
 | onKeyDown | Called only for an arrow key that moved the value. | <ApiType detail={"(event: KeyboardEvent & { currentTarget: HTMLElement }) => void"}>Type</ApiType> | - |
 | preventScroll | Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component. | `boolean` | - |
 | size | Size: default or small, or a number for a custom size. | `'default' \| 'small' \| number` | `"default"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cRatingPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | tooltips | Prompt text for each item. | `string[]` | - |
 | value | Controlled value. When given, this value decides what is shown; back to undefined it returns to defaultValue and becomes uncontrolled. | `number` | - |

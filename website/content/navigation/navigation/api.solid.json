@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-solid/src/components/navigation/nav.tsx",
         "props": {
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `body`、`list`、`item`、`itemIcon`、`itemText`、`itemToggleIcon`、`subNav`、`subNavTitle`、`subNavList`、`subNavDropdown`，与组件自带的类名合并。`item*` 作用到全部导航项，其中 `itemIcon`、`itemText`、`itemToggleIcon` 同时作用到子导航的标题；`subNav*` 作用到全部子导航。",
+                "en-US": "Class names of the inner parts, keyed by `body`, `list`, `item`, `itemIcon`, `itemText`, `itemToggleIcon`, `subNav`, `subNavTitle`, `subNavList` and `subNavDropdown`; merged with the built-in classes. The `item*` keys apply to every item, and `itemIcon`, `itemText` and `itemToggleIcon` also to the title of a sub nav; the `subNav*` keys apply to every sub nav."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。",
@@ -127,6 +127,14 @@
     "nav-item": {
         "source": "packages/semi-ui-solid/src/components/navigation/item.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `icon`、`text`、`toggleIcon`，与组件自带的类名合并，排在 `Nav` 的 `itemIcon`、`itemText`、`itemToggleIcon` 之后。",
+                "en-US": "Class names of the inner parts, keyed by `icon`, `text` and `toggleIcon`; merged with the built-in classes, after the `itemIcon`, `itemText` and `itemToggleIcon` of `Nav`."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as style objects or strings."
+            },
             "disabled": {
                 "zh-CN": "是否禁用。禁用项仍可聚焦，但激活无效。",
                 "en-US": "Whether the item is disabled. A disabled item can still take focus, but activating it has no effect."
@@ -201,8 +209,8 @@
                 "en-US": "Props of the popup Dropdown, used in horizontal mode and when collapsed. Takes precedence over `subDropdownProps`."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `dropdown`（弹层内容 `.semi-dropdown`），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `dropdown` (the popup content `.semi-dropdown`); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `title`、`icon`、`text`、`toggleIcon`、`list`、`dropdown`（弹层内容 `.semi-dropdown`），与组件自带的类名合并，排在 `Nav` 的同类键之后。",
+                "en-US": "Class names of the inner parts, keyed by `title`, `icon`, `text`, `toggleIcon`, `list` and `dropdown` (the popup content `.semi-dropdown`); merged with the built-in classes, after the matching keys of `Nav`."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串；`dropdown` 优先于 `dropdownProps` 中的 `style`。",
@@ -241,6 +249,14 @@
     "nav-header": {
         "source": "packages/semi-ui-solid/src/components/navigation/header.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `logo`、`text`、`link`（设置 `link` 后包住头部内容的链接），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `logo`, `text` and `link` (the link that wraps the header content when `link` is set); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as style objects or strings."
+            },
             "link": {
                 "zh-CN": "头部的 `href`，传入时头部内容包裹在链接中。",
                 "en-US": "`href` of the header. When given, the header content sits inside a link."
@@ -262,6 +278,14 @@
     "nav-footer": {
         "source": "packages/semi-ui-solid/src/components/navigation/footer.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `collapseButton`（内置折叠按钮的外层容器，`collapseButton` 为 `true` 时渲染），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `collapseButton` (the container of the built-in collapse button, rendered when `collapseButton` is `true`); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as style objects or strings."
+            },
             "collapseButton": {
                 "zh-CN": "是否展示收起侧边栏按钮，`true` 时展示内置按钮，也可以传入节点替换它。仅 `mode` 为 `vertical` 且底部没有子元素时生效。",
                 "en-US": "Whether to show the collapse button. `true` shows the built-in button; a node replaces it. Applies only when `mode` is `vertical` and the footer has no children."

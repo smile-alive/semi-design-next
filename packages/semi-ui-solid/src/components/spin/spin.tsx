@@ -75,13 +75,15 @@ export default function Spin(rawProps: SpinProps) {
             <Show when={loading()}>
                 {/* <output> is a live status region; absolutely positioned, it blockifies like a div */}
                 <output class={`${prefixCls}-wrapper`} aria-label={locale().locale.loading}>
-                    <Show when={hasContent(indicator())} fallback={<SpinIcon />}>
-                        <div class={`${prefixCls}-animate`} x-semi-prop="indicator">
+                    <Show when={hasContent(indicator())} fallback={<SpinIcon class={local.classNames?.indicator} style={local.styles?.indicator} />}>
+                        <div class={clsx(`${prefixCls}-animate`, local.classNames?.indicator)} style={local.styles?.indicator} x-semi-prop="indicator">
                             {indicator()}
                         </div>
                     </Show>
                     <Show when={hasContent(tip())}>
-                        <div x-semi-prop="tip">{tip()}</div>
+                        <div class={local.classNames?.tip} style={local.styles?.tip} x-semi-prop="tip">
+                            {tip()}
+                        </div>
                     </Show>
                 </output>
             </Show>

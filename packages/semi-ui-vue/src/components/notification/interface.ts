@@ -1,5 +1,6 @@
-import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { HookApi } from '@fibrae/semi-foundation/base';
+import type { NotificationPart } from '@fibrae/semi-foundation/components/notification/constants';
 import type { NoticeProps as FoundationNoticeProps } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import type { ElementProps } from '../../base/index';
@@ -15,6 +16,8 @@ export interface NoticeProps extends Omit<FoundationNoticeProps, 'title' | 'cont
     title?: NotificationNode;
     content?: NotificationNode;
     icon?: NotificationNode;
+    classNames?: Partial<Record<NotificationPart, ClassValue>>;
+    styles?: Partial<Record<NotificationPart, StyleValue>>;
     class?: HTMLAttributes['class'];
     style?: StyleValue;
     onClick?: (e: MouseEvent) => void;

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-    import { useAttrs, useTemplateRef } from 'vue';
+    import { computed, useAttrs, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
     import '@fibrae/semi-foundation/components/timeline/timeline.scss';
     import type { ElementProps } from '../../base/index';
     import { hasClickListener, splitControlAttrs, hasSlotContent } from '../../utils/index';
+    import { useTimelineContext } from './context';
     import type { TimelineItemProps, TimelineItemSlots } from './interface';
 
     defineOptions({ inheritAttrs: false });
@@ -11,8 +12,12 @@
     defineSlots<TimelineItemSlots>();
     const attrs = useAttrs();
 
+    const timeline = useTimelineContext();
+
     const extra = useTemplateRef<HTMLElement>('extra');
 
+    const parentClassNames = computed(() => timeline?.value.classNames);
+    const parentStyles = computed(() => timeline?.value.styles);
     const prefixCls = cssClasses.ITEM;
 
     // shortcut: listeners with .once, .capture or .passive stay on the li, so a click inside extra also triggers them;
@@ -30,20 +35,24 @@
 </script>
 
 <template>
-    <li v-bind="splitControlAttrs($attrs, isClickKey).root" :class="prefixCls" @click="handleClick">
-        <div aria-hidden="true" :class="`${prefixCls}-tail`" />
-        <div aria-hidden="true" :class="[`${prefixCls}-head`, { [`${prefixCls}-head-custom`]: hasSlotContent($slots.dot), [`${prefixCls}-head-${props.type}`]: props.type }]" :style="props.color ? { backgroundColor: props.color } : undefined">
+    <li :class="[prefixCls, parentClassNames?.item]" :style="parentStyles?.item" v-bind="splitControlAttrs($attrs, isClickKey).root" @click="handleClick">
+        <div aria-hidden="true" :class="[`${prefixCls}-tail`, parentClassNames?.itemRail, props.classNames?.rail]" :style="[parentStyles?.itemRail, props.styles?.rail]" />
+        <div
+            aria-hidden="true"
+            :class="[`${prefixCls}-head`, { [`${prefixCls}-head-custom`]: hasSlotContent($slots.dot), [`${prefixCls}-head-${props.type}`]: props.type }, parentClassNames?.itemIcon, props.classNames?.icon]"
+            :style="[props.color ? { backgroundColor: props.color } : undefined, parentStyles?.itemIcon, props.styles?.icon]"
+        >
             <slot name="dot" />
         </div>
-        <div :class="`${prefixCls}-content`">
+        <div :class="[`${prefixCls}-content`, parentClassNames?.itemContent, props.classNames?.content]" :style="[parentStyles?.itemContent, props.styles?.content]">
             <div v-if="clickable()" :class="`${prefixCls}-content-main`" role="button" tabindex="0" @keydown.self.enter.space.prevent="($event.currentTarget as HTMLElement).click()">
                 <slot />
             </div>
             <slot v-else />
-            <div v-if="hasSlotContent($slots.extra)" ref="extra" :class="`${prefixCls}-content-extra`">
+            <div v-if="hasSlotContent($slots.extra)" ref="extra" :class="[`${prefixCls}-content-extra`, parentClassNames?.itemExtra, props.classNames?.extra]" :style="[parentStyles?.itemExtra, props.styles?.extra]">
                 <slot name="extra" />
             </div>
-            <div v-if="hasSlotContent($slots.time)" :class="`${prefixCls}-content-time`">
+            <div v-if="hasSlotContent($slots.time)" :class="[`${prefixCls}-content-time`, parentClassNames?.itemTime, props.classNames?.time]" :style="[parentStyles?.itemTime, props.styles?.time]">
                 <slot name="time" />
             </div>
         </div>

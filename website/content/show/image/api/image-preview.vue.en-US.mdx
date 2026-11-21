@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | adaptiveTip | Tip of the fit-to-page button. | `string` | `semiGlobalDefault("ImagePreview", "adaptiveTip")` |
-| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"preview\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("ImagePreview", "classNames")` |
+| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element), `header`, `title`, `close`, `img` (the enlarged image), `prev`, `next`, `footer`, `page` and `action` (every button of the footer toolbar); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("ImagePreview", "classNames")` |
 | closable | Whether to show the close button. | `boolean` | `previewDefaults.closable` |
 | closeOnEsc | Whether Esc closes the preview. | `boolean` | `previewDefaults.closeOnEsc` |
 | crossOrigin | The crossorigin attribute passed to the preview img element. | `"anonymous" \| "use-credentials"` | `semiGlobalDefault("ImagePreview", "crossOrigin")` |
@@ -32,7 +32,7 @@ import ApiType from '#/components/ApiType.astro';
 | setDownloadName | Sets the download file name of an image. | <ApiType detail={"((src: string) => string)"}>Type</ApiType> | `undefined` |
 | showTooltip | Whether to show tooltips on the bottom controls. | `boolean` | `previewDefaults.showTooltip` |
 | src | Image URLs to preview. When wrapping Image components, it is merged with the preview images they register, with the src entries first. | `string \| string[]` | `[]` |
-| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003c\"preview\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("ImagePreview", "styles")` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("ImagePreview", "styles")` |
 | viewerVisibleDelay | Idle time in milliseconds before the preview controls hide. | `number` | `previewDefaults.viewerVisibleDelay` |
 | visible | Controlled visibility of the preview. | `boolean` | `semiGlobalDefault("ImagePreview", "visible")` |
 | zIndex | z-index of the preview layer. | `number` | `previewDefaults.zIndex` |

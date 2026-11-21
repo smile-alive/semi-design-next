@@ -15,6 +15,8 @@
     defineOptions({ name: 'Calendar' });
 
     const props = withDefaults(defineProps<CalendarProps & /* @vue-ignore */ ElementProps<'div', keyof CalendarProps | EmitHandlers<CalendarEmits>>>(), {
+        classNames: semiGlobalDefault('Calendar', 'classNames'),
+        styles: semiGlobalDefault('Calendar', 'styles'),
         displayValue: semiGlobalDefault('Calendar', 'displayValue'),
         range: semiGlobalDefault('Calendar', 'range'),
         events: () => semiDefault('Calendar', 'events', []),
@@ -55,17 +57,32 @@
 </script>
 
 <template>
-    <DayCalendar v-if="props.mode === 'day'" :displayValue="displayValue" :events="props.events" :markWeekend="props.markWeekend" :minEventHeight="props.minEventHeight" :scrollTop="props.scrollTop" :showCurrTime="props.showCurrTime" :style="rootStyle" :today="today" @click="(...args) => emit('click', ...args)">
+    <DayCalendar
+        v-if="props.mode === 'day'"
+        :classNames="props.classNames"
+        :displayValue="displayValue"
+        :events="props.events"
+        :markWeekend="props.markWeekend"
+        :minEventHeight="props.minEventHeight"
+        :scrollTop="props.scrollTop"
+        :showCurrTime="props.showCurrTime"
+        :style="rootStyle"
+        :styles="props.styles"
+        :today="today"
+        @click="(...args) => emit('click', ...args)"
+    >
         <template v-for="(_, name) in $slots" #[name]="scope">
             <slot :name="name as keyof CalendarSlots" v-bind="scope" />
         </template>
     </DayCalendar>
     <MonthCalendar
         v-else-if="props.mode === 'month'"
+        :classNames="props.classNames"
         :displayValue="displayValue"
         :events="props.events"
         :markWeekend="props.markWeekend"
         :style="rootStyle"
+        :styles="props.styles"
         :today="today"
         :weekStartsOn="props.weekStartsOn"
         @click="(...args) => emit('click', ...args)"
@@ -78,6 +95,7 @@
     </MonthCalendar>
     <TimeGrid
         v-else
+        :classNames="props.classNames"
         :events="props.events"
         :labelDate="props.mode === 'week' ? displayValue : undefined"
         :markWeekend="props.markWeekend"
@@ -86,6 +104,7 @@
         :scrollTop="props.scrollTop"
         :showCurrTime="props.showCurrTime"
         :style="rootStyle"
+        :styles="props.styles"
         :today="today"
         :weekStartsOn="props.weekStartsOn"
         @click="(...args) => emit('click', ...args)"

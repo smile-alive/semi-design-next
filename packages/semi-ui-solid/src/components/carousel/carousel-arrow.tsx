@@ -42,14 +42,36 @@ export default function CarouselArrow(props: CarouselArrowProps) {
 
     return (
         <div
-            class={clsx(cssClasses.CAROUSEL_ARROW, themeCls(), {
-                [`${cssClasses.CAROUSEL_ARROW}-hover`]: props.type === 'hover',
-            })}
+            class={clsx(
+                cssClasses.CAROUSEL_ARROW,
+                themeCls(),
+                {
+                    [`${cssClasses.CAROUSEL_ARROW}-hover`]: props.type === 'hover',
+                },
+                props.classNames?.arrows
+            )}
+            style={props.styles?.arrows}
         >
-            <button type="button" class={clsx(`${cssClasses.CAROUSEL_ARROW}-prev`, themeCls())} aria-label={hasReadableText(left()) ? undefined : locale().locale.prev} onClick={() => props.prev()} {...props.arrowProps?.leftArrow?.props} x-semi-prop="leftArrow">
+            <button
+                type="button"
+                class={clsx(`${cssClasses.CAROUSEL_ARROW}-prev`, themeCls(), props.classNames?.prevArrow)}
+                style={props.styles?.prevArrow}
+                aria-label={hasReadableText(left()) ? undefined : locale().locale.prev}
+                onClick={() => props.prev()}
+                {...props.arrowProps?.leftArrow?.props}
+                x-semi-prop="leftArrow"
+            >
                 {left() === undefined ? <IconChevronLeft size="inherit" /> : left()}
             </button>
-            <button type="button" class={clsx(`${cssClasses.CAROUSEL_ARROW}-next`, themeCls())} aria-label={hasReadableText(right()) ? undefined : locale().locale.next} onClick={() => props.next()} {...props.arrowProps?.rightArrow?.props} x-semi-prop="rightArrow">
+            <button
+                type="button"
+                class={clsx(`${cssClasses.CAROUSEL_ARROW}-next`, themeCls(), props.classNames?.nextArrow)}
+                style={props.styles?.nextArrow}
+                aria-label={hasReadableText(right()) ? undefined : locale().locale.next}
+                onClick={() => props.next()}
+                {...props.arrowProps?.rightArrow?.props}
+                x-semi-prop="rightArrow"
+            >
                 {right() === undefined ? <IconChevronRight size="inherit" /> : right()}
             </button>
         </div>

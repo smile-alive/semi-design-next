@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | align | Conversation layout: `leftRight` (both sides) or `leftAlign` (left-aligned). | `'leftAlign' \| 'leftRight'` | `"leftRight"` |
 | chats | Controlled list of conversation messages, used together with onChatsChange. | `Message[]` | - |
 | className | Class name of the root element. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `hint` (the outermost hint area); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `messages`, `item`, `itemCheckbox`, `itemAvatar`, `itemTitle`, `itemContent`, `itemActions`, `reasoning`, `references`, `annotation`, `file`, `image`, `loading`, `code`, `hint`, `hintItem` and `backBottom`; merged with the built-in classes. Keys starting with `item` apply to every message, `hint` is the hint list container and `hintItem` is a single hint. | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, string>>"}>Type</ApiType> | - |
 | dialogueRenderConfig | Custom rendering of the dialogue parts: avatar, title, content, action bar or the whole dialogue. | `DialogueRenderConfig` | - |
 | disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `false` |
 | escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `true` |

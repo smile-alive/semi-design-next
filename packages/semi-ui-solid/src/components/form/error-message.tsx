@@ -5,7 +5,8 @@ import { errorMessages, isErrorLeaf } from '@fibrae/semi-foundation/components/f
 import '@fibrae/semi-foundation/components/form/form.scss';
 import { IconAlertCircle, IconAlertTriangle } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/index';
-import { hasContent } from '../../utils/index';
+import { hasContent, mergeStyles } from '../../utils/index';
+import { useFormContext } from './context';
 import type { FieldError } from './interface';
 
 const prefix = cssClasses.PREFIX;
@@ -28,7 +29,9 @@ export interface ErrorMessageInternalProps extends ErrorMessageProps {
 }
 
 export default function ErrorMessage(props: ErrorMessageProps) {
-    const [local, rest] = splitProps(props as ErrorMessageInternalProps, ['class', 'error', 'errorMessageId', 'helpText', 'helpTextId', 'isInInputGroup', 'showValidateIcon', 'validateStatus']);
+    const [local, rest] = splitProps(props as ErrorMessageInternalProps, ['class', 'error', 'errorMessageId', 'helpText', 'helpTextId', 'isInInputGroup', 'showValidateIcon', 'style', 'validateStatus']);
+
+    const form = useFormContext()?.formProps;
 
     // An error replaces the help text, and so does `['']` ("failed, hide the text": helpText would look like success).
     // The help text is not created then: nodes that are not inserted cannot be hydrated.
@@ -49,8 +52,10 @@ export default function ErrorMessage(props: ErrorMessageProps) {
                         [`${prefix}-field-error-message`]: failed(),
                         [`${prefix}-field-help-text`]: hasContent(helpText()),
                     },
+                    form?.classNames?.help,
                     local.class
                 )}
+                style={mergeStyles(form?.styles?.help, local.style)}
             >
                 <Show when={local.showValidateIcon}>
                     <Switch>

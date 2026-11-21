@@ -16,7 +16,7 @@
     type Adapter = BannerAdapter<object, MouseEvent>;
 
     const defaults = useDefaultProps('Banner');
-    const { bordered = defaults('bordered', false), fullMode = defaults('fullMode', true), title = defaults('title'), type = defaults('type', 'info'), onClose, description, icon, closeIcon, children, ...rest }: BannerProps = $props();
+    const { bordered = defaults('bordered', false), classNames = defaults('classNames'), fullMode = defaults('fullMode', true), styles = defaults('styles'), title = defaults('title'), type = defaults('type', 'info'), onClose, description, icon, closeIcon, children, ...rest }: BannerProps = $props();
 
     const locale = useLocale('Banner');
 
@@ -59,7 +59,7 @@
         <div class={`${prefix}-content-wrapper`}>
             <div class={`${prefix}-content`}>
                 {#if icon !== null}
-                    <div class={`${prefix}-icon`} x-semi-prop="icon">
+                    <div class={[`${prefix}-icon`, classNames?.icon]} style={styles?.icon} x-semi-prop="icon">
                         {#if icon}
                             {@render icon()}
                         {:else}
@@ -69,12 +69,12 @@
                 {/if}
                 <div class={`${prefix}-content-body`}>
                     {#if title}
-                        <TypographyTitle class={`${prefix}-title`} component="div" heading={5} x-semi-prop="title">
+                        <TypographyTitle class={[`${prefix}-title`, classNames?.title]} component="div" heading={5} style={styles?.title} x-semi-prop="title">
                             {#if typeof title === 'function'}{@render title()}{:else}{title}{/if}
                         </TypographyTitle>
                     {/if}
                     {#if description}
-                        <TypographyParagraph class={`${prefix}-description`} component="div" x-semi-prop="description">{@render description()}</TypographyParagraph>
+                        <TypographyParagraph class={[`${prefix}-description`, classNames?.description]} component="div" style={styles?.description} x-semi-prop="description">{@render description()}</TypographyParagraph>
                     {/if}
                 </div>
             </div>
@@ -86,11 +86,11 @@
                         <IconClose x-semi-prop="closeIcon" />
                     {/if}
                 {/snippet}
-                <IconButton aria-label={locale().locale.close} class={`${prefix}-close`} icon={closeButtonIcon} size="small" theme="borderless" type="tertiary" onclick={remove} />
+                <IconButton aria-label={locale().locale.close} class={[`${prefix}-close`, classNames?.close]} icon={closeButtonIcon} size="small" style={styles?.close} theme="borderless" type="tertiary" onclick={remove} />
             {/if}
         </div>
         {#if children}
-            <div class={`${prefix}-extra`} x-semi-prop="children">{@render children()}</div>
+            <div class={[`${prefix}-extra`, classNames?.extra]} style={styles?.extra} x-semi-prop="children">{@render children()}</div>
         {/if}
     </div>
 {/if}

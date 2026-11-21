@@ -1,7 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property    | Description                                       | Type          | Default |
-| ----------- | ------------------------------------------------- | ------------- | ------- |
-| avatar      | Avatar, to the left of the title and description. | `JSX.Element` | -       |
-| description | Description, below the title.                     | `JSX.Element` | -       |
-| title       | Title content.                                    | `JSX.Element` | -       |
+| Property    | Description                                                                                                                                                                    | Type                                                                                                        | Default |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- | ------- |
+| avatar      | Avatar, to the left of the title and description.                                                                                                                              | `JSX.Element`                                                                                               | -       |
+| classNames  | Class names of the inner parts, keyed by avatar, section, title and description; merged with the built-in classes. section is the text area holding the title and description. | <ApiType detail={"Partial\u003cRecord\u003cCardMetaPart, string>>"}>Type</ApiType>                          | -       |
+| description | Description, below the title.                                                                                                                                                  | `JSX.Element`                                                                                               | -       |
+| styles      | Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too.                                          | <ApiType detail={"Partial\u003cRecord\u003cCardMetaPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -       |
+| title       | Title content.                                                                                                                                                                 | `JSX.Element`                                                                                               | -       |

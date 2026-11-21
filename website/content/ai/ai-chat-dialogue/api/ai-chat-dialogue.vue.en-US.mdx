@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | align | Conversation layout: leftRight or leftAlign. | `"leftAlign" \| "leftRight"` | `"leftRight"` |
 | chats | Controlled list of conversation messages; bind it with v-model:chats. | `Message[]` | `semiGlobalDefault("AIChatDialogue", "chats")` |
-| classNames | Class names of the inner parts, keyed by hint (the outermost hint area); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"hint\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatDialogue", "classNames")` |
+| classNames | Class names of the inner parts, keyed by messages, item, itemCheckbox, itemAvatar, itemTitle, itemContent, itemActions, reasoning, references, annotation, file, image, loading, code, hint, hintItem and backBottom; values take any class binding and merge with the built-in classes. Keys starting with item apply to every message, hint is the hint list container and hintItem is a single hint. | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatDialogue", "classNames")` |
 | disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `false` |
 | escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `true` |
 | hints | Hint texts. Clicking a hint turns it into a new user message and emits hintClick. | `string[]` | `semiGlobalDefault("AIChatDialogue", "hints")` |
@@ -16,7 +16,7 @@ import ApiType from '#/components/ApiType.astro';
 | selecting | Whether multi-select mode is on. | `boolean` | `false` |
 | showReference | Whether to show the reference icon on text or file messages. Only user messages are affected. | `boolean` | `false` |
 | showReset | Whether to show the reset action. | `boolean` | `true` |
-| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003c\"hint\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatDialogue", "styles")` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatDialogue", "styles")` |
 
 **Events**
 

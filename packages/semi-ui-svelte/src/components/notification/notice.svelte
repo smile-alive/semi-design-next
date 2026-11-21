@@ -21,6 +21,7 @@
 
     // `class`, `style` and the other native attributes stay in `rest` and land on the notice element (F2)
     let {
+        classNames = defaults('classNames'),
         close,
         content = defaults('content', ''),
         depth = 0,
@@ -34,6 +35,7 @@
         showClose = defaults('showClose', true),
         stack = false,
         stackExpanded = false,
+        styles = defaults('styles'),
         theme = defaults('theme', 'normal'),
         title = defaults('title', ''),
         type = defaults('type'),
@@ -139,7 +141,7 @@
     <div bind:this={noticeEl} {...rest} aria-labelledby={title ? titleId : undefined} aria-live={isAlert ? undefined : 'off'} class={[prefix, rest.class, type && `${prefix}-${type}`, theme === 'light' && `${prefix}-light`]} {...dirAttr} role={isAlert ? 'alert' : 'status'} onclick={onClick}>
         <div>
             {#if customIcon || TypeIcon}
-                <div class={[`${prefix}-icon`, type && `${prefix}-${type}`]} x-semi-prop="icon">
+                <div class={[`${prefix}-icon`, type && `${prefix}-${type}`, classNames?.icon]} style={styles?.icon} x-semi-prop="icon">
                     {#if !customIcon}
                         {#if TypeIcon}
                             <TypeIcon size="large" />
@@ -155,7 +157,7 @@
         <div class={`${prefix}-inner`}>
             <div class={`${prefix}-content-wrapper`}>
                 {#if title}
-                    <div class={`${prefix}-title`} id={titleId} x-semi-prop="title">
+                    <div class={[`${prefix}-title`, classNames?.title]} id={titleId} style={styles?.title} x-semi-prop="title">
                         {#if typeof title === 'string'}
                             {title}
                         {:else}
@@ -164,7 +166,7 @@
                     </div>
                 {/if}
                 {#if content}
-                    <div class={`${prefix}-content`} x-semi-prop="content">
+                    <div class={[`${prefix}-content`, classNames?.content]} style={styles?.content} x-semi-prop="content">
                         {#if typeof content === 'string'}
                             {content}
                         {:else}
@@ -174,7 +176,7 @@
                 {/if}
             </div>
             {#if showClose}
-                <IconButton aria-label={locale().locale.close} class={`${prefix}-icon-close`} size="small" theme="borderless" type="tertiary" onclick={foundation.clickClose}>
+                <IconButton aria-label={locale().locale.close} class={[`${prefix}-icon-close`, classNames?.close]} size="small" style={styles?.close} theme="borderless" type="tertiary" onclick={foundation.clickClose}>
                     {#snippet icon()}
                         <IconClose />
                     {/snippet}

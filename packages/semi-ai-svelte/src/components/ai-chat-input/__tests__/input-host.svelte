@@ -55,7 +55,7 @@
 
 {#snippet actionArea({ upload, send, class: className }: AIChatInputActionAreaSnippetProps)}
     {record('actionArea', { class: className })}
-    <div class="{className} mine">
+    <div class={[className, 'mine']}>
         {@render upload()}
         {@render send()}
         {#if store.slots.actionArea === 'twice'}

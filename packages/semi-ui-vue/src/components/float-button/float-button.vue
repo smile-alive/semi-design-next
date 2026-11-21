@@ -9,12 +9,14 @@
 
     const props = withDefaults(defineProps<FloatButtonProps & /* @vue-ignore */ ElementProps<'button', keyof FloatButtonProps | EmitHandlers<FloatButtonEmits> | 'type' | 'form' | 'formAction' | 'formEncType' | 'formMethod' | 'formNoValidate' | 'formTarget'>>(), {
         badge: semiGlobalDefault('FloatButton', 'badge'),
+        classNames: semiGlobalDefault('FloatButton', 'classNames'),
         colorful: () => semiDefault('FloatButton', 'colorful', false),
         disabled: () => semiDefault('FloatButton', 'disabled', false),
         href: semiGlobalDefault('FloatButton', 'href'),
         rel: semiGlobalDefault('FloatButton', 'rel'),
         shape: () => semiDefault('FloatButton', 'shape', 'round'),
         size: () => semiDefault('FloatButton', 'size', 'default'),
+        styles: semiGlobalDefault('FloatButton', 'styles'),
         target: semiGlobalDefault('FloatButton', 'target'),
     });
 
@@ -31,11 +33,11 @@
             <template v-if="$slots.badgeCount" #count>
                 <slot name="badgeCount" />
             </template>
-            <FloatButtonBody :colorful="props.colorful" :disabled="props.disabled" :shape="props.shape" :size="props.size">
+            <FloatButtonBody :class="props.classNames?.body" :colorful="props.colorful" :disabled="props.disabled" :shape="props.shape" :size="props.size" :style="props.styles?.body">
                 <slot name="icon" />
             </FloatButtonBody>
         </Badge>
-        <FloatButtonBody v-else :colorful="props.colorful" :disabled="props.disabled" :shape="props.shape" :size="props.size">
+        <FloatButtonBody v-else :class="props.classNames?.body" :colorful="props.colorful" :disabled="props.disabled" :shape="props.shape" :size="props.size" :style="props.styles?.body">
             <slot name="icon" />
         </FloatButtonBody>
     </FloatButtonAction>

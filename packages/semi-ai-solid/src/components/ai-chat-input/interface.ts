@@ -78,7 +78,7 @@ export interface AIChatInputProps extends ElementProps<'div', 'onFocus' | 'onBlu
     skills?: Skill[];
     skillHotKey?: string;
     classNames?: Partial<Record<AIChatInputPart, string>>;
-    /** `templates` is merged over the default max height, so only an object */
+    /** `templates`, `skills` and `suggestions` are merged over the default max height, so only an object */
     styles?: Partial<Record<AIChatInputPart, JSX.CSSProperties>>;
     /** `skill` is undefined when the skill is removed */
     onSkillChange?: (skill?: Skill) => void;

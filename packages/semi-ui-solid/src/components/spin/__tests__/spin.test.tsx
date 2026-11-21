@@ -252,6 +252,31 @@ describe('Spin', () => {
         expect(getSpin(container)).not.toHaveFocus();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['child', 'indicator', 'tip'] as const;
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]));
+        const { container } = render(() => (
+            <Spin classNames={classNames} styles={styles} tip="t">
+                body
+            </Spin>
+        ));
+        const elements = {
+            child: container.querySelector(`.${prefixCls}-children`),
+            indicator: container.querySelector('[data-icon="spin"]'),
+            tip: container.querySelector('[x-semi-prop="tip"]'),
+        };
+        for (const part of parts) {
+            expect(elements[part]).toHaveClass(`my-${part}`);
+            expect(elements[part]).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+
+        const custom = render(() => <Spin classNames={classNames} styles={styles} indicator={<i />} />);
+        const animate = custom.container.querySelector(`.${prefixCls}-animate`);
+        expect(animate).toHaveClass('my-indicator');
+        expect(animate).toHaveStyle({ order: '2' });
+    });
+
     it('父组件挂载时就关了带 delay 的 spinning，加载状态随之隐藏', () => {
         function Demo() {
             const [spinning, setSpinning] = createSignal(true);

@@ -107,6 +107,7 @@ export default function InputNumber(rawProps: InputNumberProps) {
         'addonAfter',
         'addonBefore',
         'class',
+        'classNames',
         'currency',
         'currencyDisplay',
         'defaultCurrency',
@@ -143,6 +144,7 @@ export default function InputNumber(rawProps: InputNumberProps) {
         'size',
         'step',
         'style',
+        'styles',
         'suffix',
         'value',
     ]);
@@ -177,16 +179,27 @@ export default function InputNumber(rawProps: InputNumberProps) {
     // a factory: the inner and the outer placement never render at once, and each gets nodes of its own
     const buttons = () => (
         <div
-            class={clsx(`${prefixCls}-number-suffix-btns`, {
-                [`${prefixCls}-number-suffix-btns-inner`]: local.innerButtons,
-                [`${prefixCls}-number-suffix-btns-inner-hover`]: local.innerButtons && state().hovering && !state().focusing,
-            })}
+            class={clsx(
+                `${prefixCls}-number-suffix-btns`,
+                {
+                    [`${prefixCls}-number-suffix-btns-inner`]: local.innerButtons,
+                    [`${prefixCls}-number-suffix-btns-inner-hover`]: local.innerButtons && state().hovering && !state().focusing,
+                },
+                local.classNames?.actions
+            )}
+            style={local.styles?.actions}
         >
             <span
-                class={clsx(`${prefixCls}-number-button`, `${prefixCls}-number-button-up`, {
-                    [`${prefixCls}-number-button-up-disabled`]: local.disabled,
-                    [`${prefixCls}-number-button-up-not-allowed`]: notAllowedUp(),
-                })}
+                class={clsx(
+                    `${prefixCls}-number-button`,
+                    `${prefixCls}-number-button-up`,
+                    {
+                        [`${prefixCls}-number-button-up-disabled`]: local.disabled,
+                        [`${prefixCls}-number-button-up-not-allowed`]: notAllowedUp(),
+                    },
+                    local.classNames?.upButton
+                )}
+                style={local.styles?.upButton}
                 onLostPointerCapture={foundation.handlePressEnd}
                 onMouseDown={foundation.handleStepMouseDown}
                 onPointerDown={foundation.handleUpPress}
@@ -194,10 +207,16 @@ export default function InputNumber(rawProps: InputNumberProps) {
                 <IconChevronUp size="extra-small" />
             </span>
             <span
-                class={clsx(`${prefixCls}-number-button`, `${prefixCls}-number-button-down`, {
-                    [`${prefixCls}-number-button-down-disabled`]: local.disabled,
-                    [`${prefixCls}-number-button-down-not-allowed`]: notAllowedDown(),
-                })}
+                class={clsx(
+                    `${prefixCls}-number-button`,
+                    `${prefixCls}-number-button-down`,
+                    {
+                        [`${prefixCls}-number-button-down-disabled`]: local.disabled,
+                        [`${prefixCls}-number-button-down-not-allowed`]: notAllowedDown(),
+                    },
+                    local.classNames?.downButton
+                )}
+                style={local.styles?.downButton}
                 onLostPointerCapture={foundation.handlePressEnd}
                 onMouseDown={foundation.handleStepMouseDown}
                 onPointerDown={foundation.handleDownPress}
@@ -238,8 +257,8 @@ export default function InputNumber(rawProps: InputNumberProps) {
                     disabled={local.disabled}
                     value={state().value}
                     // InputNumber's own global defaults apply to the parts, adornments and showClear; the global Input ones must not
-                    classNames={rest.classNames ?? {}}
-                    styles={rest.styles ?? {}}
+                    classNames={local.classNames ?? {}}
+                    styles={local.styles ?? {}}
                     addonAfter={local.addonAfter ?? null}
                     addonBefore={local.addonBefore ?? null}
                     insetLabel={local.insetLabel ?? null}

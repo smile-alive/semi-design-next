@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { computed, useTemplateRef, type StyleValue } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import { computed, useTemplateRef, type ClassValue, type StyleValue } from 'vue';
+    import { cssClasses, type ImagePreviewPart } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageState } from '@fibrae/semi-foundation/components/image/preview-image-foundation';
     import { useFoundation } from '../../../base/index';
     import { useEventListener, getWindow } from '../../../composables/index';
@@ -20,6 +20,8 @@
         initialZoom?: number;
         /** The wheel event that set `zoom`, which the zoom centers on */
         zoomEvent?: WheelEvent;
+        classNames?: Partial<Record<ImagePreviewPart, ClassValue>>;
+        styles?: Partial<Record<ImagePreviewPart, StyleValue>>;
     }
 
     type Foundation = PreviewImageFoundation<PreviewImageBaseProps>;
@@ -72,10 +74,10 @@
             :key="props.src"
             ref="image"
             :alt="props.alt"
-            :class="`${cls}-img`"
+            :class="[`${cls}-img`, props.classNames?.img]"
             :crossorigin="props.crossOrigin"
             :src="props.src"
-            :style="imgStyle"
+            :style="[imgStyle, props.styles?.img]"
             @contextmenu="foundation.handleRightClickImage"
             @dragstart.prevent
             @error="foundation.handleError"

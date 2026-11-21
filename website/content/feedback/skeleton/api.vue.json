@@ -83,9 +83,17 @@
     "skeleton-paragraph": {
         "source": "packages/semi-ui-vue/src/components/skeleton/paragraph.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `row`，与组件自带的类名合并；`row` 是段落的每一行 `li`。",
+                "en-US": "Class names of the inner parts, keyed by `row`; merged with the built-in classes. `row` is each `li` of the paragraph."
+            },
             "rows": {
                 "zh-CN": "占位段落的行数。",
                 "en-US": "Number of rows in the placeholder paragraph."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             }
         },
         "events": {},

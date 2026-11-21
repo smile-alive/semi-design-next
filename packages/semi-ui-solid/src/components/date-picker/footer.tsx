@@ -1,7 +1,11 @@
+import type { JSX } from 'solid-js';
+import clsx from 'clsx';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import Button from '../button';
 
 interface FooterProps {
+    class?: string;
+    style?: JSX.CSSProperties | string;
     prefixCls: string;
     locale: Locale['DatePicker'];
     disabledConfirm?: boolean;
@@ -11,7 +15,7 @@ interface FooterProps {
 
 export default function Footer(props: FooterProps) {
     return (
-        <div class={`${props.prefixCls}-footer`}>
+        <div class={clsx(`${props.prefixCls}-footer`, props.class)} style={props.style}>
             <Button theme="borderless" onClick={() => props.onCancelClick?.()}>
                 {props.locale.footer.cancel}
             </Button>

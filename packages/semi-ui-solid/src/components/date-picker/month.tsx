@@ -1,7 +1,7 @@
 import { type Accessor, type JSX, Index, Show, createEffect, createMemo, createUniqueId, on } from 'solid-js';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { cssClasses, strings, type DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { DayStatusType } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
@@ -15,6 +15,8 @@ export interface MonthProps extends Omit<MonthFoundationProps, 'renderDate' | 'r
     renderDate?: (dayNumber?: number, fullDate?: string) => JSX.Element;
     renderFullDate?: (dayNumber?: number, fullDate?: string, dayStatus?: DayStatusType) => JSX.Element;
     locale: Locale['DatePicker'];
+    classNames?: Partial<Record<DatePickerPart, string>>;
+    styles?: Partial<Record<DatePickerPart, JSX.CSSProperties | string>>;
     /** The id of the month title that names the grid; a range shows two grids */
     labelledby?: string;
 }
@@ -74,14 +76,15 @@ export default function Month(props: MonthProps) {
             <Show
                 when={day().fullDate}
                 fallback={
-                    <div class={cssClasses.DAY} role="gridcell">
+                    <div class={clsx(cssClasses.DAY, props.classNames?.item)} style={props.styles?.item} role="gridcell">
                         <span />
                     </div>
                 }
             >
                 <div
                     id={dayId(day().fullDate)}
-                    class={customRender() ? clsx(cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: isActive() }) : dayCls()}
+                    class={clsx(customRender() ? clsx(cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: isActive() }) : dayCls(), props.classNames?.item)}
+                    style={props.styles?.item}
                     aria-disabled={Boolean(status().isDisabled)}
                     aria-label={day().fullDate}
                     // a range keeps its value in rangeStart and rangeEnd, not in `selected`
@@ -118,7 +121,7 @@ export default function Month(props: MonthProps) {
     );
 
     return (
-        <div class={cssClasses.MONTH} aria-activedescendant={dayId(activeDate())} aria-labelledby={props.labelledby} aria-multiselectable={props.multiple} role="grid" tabIndex={0} onKeyDown={(event) => foundation.handleKeyDown(event, todayText())}>
+        <div class={clsx(cssClasses.MONTH, props.classNames?.body)} style={props.styles?.body} aria-activedescendant={dayId(activeDate())} aria-labelledby={props.labelledby} aria-multiselectable={props.multiple} role="grid" tabIndex={0} onKeyDown={(event) => foundation.handleKeyDown(event, todayText())}>
             <div class={cssClasses.WEEKDAY} role="row">
                 <Index each={weekdaysText()}>
                     {(text) => (

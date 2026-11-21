@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | canVerticalSetWidth | Whether width applies when placement is top or bottom. By default those sheets span the full width. | `boolean` | `semiGlobalDefault("SideSheet", "canVerticalSetWidth")` |
-| classNames | Class names of the inner parts, keyed by mask, content, header, body and footer; values take anything class takes and merge with the built-in classes. content lands on the dialog element (.semi-sidesheet-inner). | <ApiType detail={"Partial\u003cRecord\u003cSideSheetPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("SideSheet", "classNames")` |
+| classNames | Class names of the inner parts, keyed by mask, content, header, title, close, body and footer; values take anything class takes and merge with the built-in classes. content lands on the dialog element (.semi-sidesheet-inner). | <ApiType detail={"Partial\u003cRecord\u003cSideSheetPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("SideSheet", "classNames")` |
 | closable | Whether the close button in the corner is shown. | `boolean` | `true` |
 | closeOnEsc | Whether Esc closes the sheet. | `boolean` | `false` |
 | disableScroll | Whether body scrolling is locked (overflow: hidden on body) while a masked sheet is rendered in document.body. | `boolean` | `true` |

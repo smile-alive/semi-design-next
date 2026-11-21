@@ -59,21 +59,24 @@
 <template>
     <div
         ref="dom"
-        :class="`${cssClasses.PREFIX}-colorChooseArea`"
-        :style="{ backgroundColor: hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 }), width: `${props.width}px`, height: `${props.height}px`, cursor: state.isHandleGrabbing ? 'grabbing' : 'pointer' }"
+        :class="[`${cssClasses.PREFIX}-colorChooseArea`, props.classNames?.area]"
+        :style="[{ backgroundColor: hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 }), width: `${props.width}px`, height: `${props.height}px`, cursor: state.isHandleGrabbing ? 'grabbing' : 'pointer' }, props.styles?.area]"
         @lostpointercapture="foundation.handleLostPointerCapture"
         @pointerdown="foundation.handlePointerDown(toDragEvent($event))"
         @pointermove="foundation.handlePointerMove(toDragEvent($event))"
     >
         <div
-            :class="`${cssClasses.PREFIX}-handle`"
-            :style="{
-                width: `${props.handleSize}px`,
-                height: `${props.handleSize}px`,
-                left: `${handlePosition.x}px`,
-                top: `${handlePosition.y}px`,
-                backgroundColor: handleColor,
-            }"
+            :class="[`${cssClasses.PREFIX}-handle`, props.classNames?.handle]"
+            :style="[
+                {
+                    width: `${props.handleSize}px`,
+                    height: `${props.handleSize}px`,
+                    left: `${handlePosition.x}px`,
+                    top: `${handlePosition.y}px`,
+                    backgroundColor: handleColor,
+                },
+                props.styles?.handle,
+            ]"
         >
             <input
                 v-for="slider in sliders"

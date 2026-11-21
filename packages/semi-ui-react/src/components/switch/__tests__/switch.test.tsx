@@ -98,6 +98,24 @@ describe('Switch', () => {
         expect(screen.queryByText('OFF')).toBeNull();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const classNames = { indicator: 'my-indicator', content: 'my-content' };
+        const styles = { indicator: { order: 1 }, content: { order: 2 } };
+        const { rerender } = render(<Switch classNames={classNames} styles={styles} checkedText="ON" uncheckedText="OFF" />);
+        const indicator = query(`${prefixCls}-knob`);
+        expect(indicator).toHaveClass('my-indicator');
+        expect(indicator).toHaveStyle({ order: '1' });
+        const unchecked = query(`${prefixCls}-unchecked-text`);
+        expect(unchecked).toHaveClass('my-content');
+        expect(unchecked).toHaveStyle({ order: '2' });
+        rerender(<Switch classNames={classNames} styles={styles} checked checkedText="ON" uncheckedText="OFF" />);
+        expect(query(`${prefixCls}-checked-text`)).toHaveClass('my-content');
+        expect(query(`${prefixCls}-checked-text`)).toHaveStyle({ order: '2' });
+        rerender(<Switch classNames={classNames} styles={styles} loading />);
+        expect(query(`${prefixCls}-loading-spin`)).toHaveClass('my-indicator');
+        expect(query(`${prefixCls}-loading-spin`)).toHaveStyle({ order: '1' });
+    });
+
     it('switch 非 loading 时显示滑块', () => {
         render(<Switch />);
         expect(query(`${prefixCls}-knob`)).not.toBeNull();

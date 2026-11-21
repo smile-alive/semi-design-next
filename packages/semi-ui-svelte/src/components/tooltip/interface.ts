@@ -39,7 +39,7 @@ export interface TooltipProps extends TooltipBaseProps {
     child?: Snippet<[{ props: TooltipTriggerProps }]>;
     content?: Snippet<[RenderContentProps]>;
     arrow?: Snippet;
-    class?: string;
+    class?: ClassValue;
     /** On the popup, before the positioning declarations; its `background-color` also colors the arrow */
     style?: string;
     motion?: boolean;

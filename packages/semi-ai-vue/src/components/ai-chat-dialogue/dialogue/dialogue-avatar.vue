@@ -3,9 +3,9 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import Avatar from '@fibrae/semi-ui-vue/avatar/index';
-    import type { AIChatDialogueSlots, Metadata } from '../interface';
+    import type { AIChatDialogueProps, AIChatDialogueSlots, Metadata } from '../interface';
 
-    const props = withDefaults(defineProps<{ message: Message; role?: Metadata; continueSend?: boolean }>(), {
+    const props = withDefaults(defineProps<{ message: Message; role?: Metadata; continueSend?: boolean; partClass?: NonNullable<AIChatDialogueProps['classNames']>['itemAvatar']; partStyle?: NonNullable<AIChatDialogueProps['styles']>['itemAvatar'] }>(), {
         continueSend: false,
     });
 
@@ -14,7 +14,8 @@
     const prefix = cssClasses.PREFIX;
 
     const avatarProps = computed(() => ({
-        class: [`${prefix}-avatar`, { [`${prefix}-avatar-hidden`]: props.continueSend }],
+        class: [`${prefix}-avatar`, { [`${prefix}-avatar-hidden`]: props.continueSend }, props.partClass],
+        style: props.partStyle,
         // alt names the sender only in a continued run, where the title beside it is not shown
         alt: props.continueSend ? (props.role?.name ?? '') : '',
         color: props.role?.color,

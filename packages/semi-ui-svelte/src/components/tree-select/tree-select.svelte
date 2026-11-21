@@ -372,7 +372,7 @@
     // own; the text is exposed as the description
     const triggerSearchProps = $derived<TreeSelectSearchSnippetProps>({
         ...(comboboxAttrs as Partial<TreeSelectSearchSnippetProps>),
-        class: `${cls}-inputTrigger`,
+        class: [`${cls}-inputTrigger`, classNames?.input],
         value: view.inputValue,
         placeholder: '',
         showClear: false,
@@ -415,6 +415,12 @@
         },
         dragOverNodeKey: null,
         dropPosition: null,
+        get classNames() {
+            return { empty: classNames?.empty, item: classNames?.item, itemTitle: classNames?.itemTitle, itemSwitcher: classNames?.itemSwitcher };
+        },
+        get styles() {
+            return { empty: styles?.empty, item: styles?.item, itemTitle: styles?.itemTitle, itemSwitcher: styles?.itemSwitcher };
+        },
         onNodeExpand: foundation.handleNodeExpand,
         onNodeSelect: foundation.handleNodeSelect,
         onNodeCheck: foundation.handleNodeSelect,
@@ -609,7 +615,7 @@
     {:else if withIcon}
         <Input {...props} prefix={searchIcon} />
     {:else}
-        <Input {...props} />
+        <Input {...props} style={styles?.input} />
     {/if}
 {/snippet}
 
@@ -617,7 +623,7 @@
     {#if tag}
         {@render tag(entry.props)}
     {:else}
-        <Tag class={inInput ? [`${cls}-selection-tag`, { [`${cls}-selection-tag-disabled`]: disabled }] : undefined} closable={!entry.props.disabled} color="white" onClose={(event) => entry.props.onClose(event)} size={tagSize} tagKey={entry.key}>
+        <Tag class={[inInput && [`${cls}-selection-tag`, { [`${cls}-selection-tag-disabled`]: disabled }], classNames?.tag]} closable={!entry.props.disabled} color="white" onClose={(event) => entry.props.onClose(event)} size={tagSize} style={styles?.tag} tagKey={entry.key}>
             {#if selectedItem}
                 {@render selectedItem(entry.props)}
             {:else}
@@ -663,8 +669,10 @@
                     [`${cls}-prefix-text`]: prefixKind === 'text',
                     [`${cls}-prefix-icon`]: prefixKind === 'icon',
                 },
+                classNames?.prefix,
             ]}
             id={prefixId}
+            style={styles?.prefix}
             x-semi-prop="prefix,insetLabel"
         >
             {#if prefix}
@@ -674,7 +682,7 @@
             {/if}
         </div>
     {/if}
-    <div class={`${cls}-selection`}>
+    <div class={[`${cls}-selection`, classNames?.content]} style={styles?.content}>
         {#if triggerSearch && multiple}
             <!-- the trigger draws its own clear button and its search text only becomes a search: global TagInput defaults must not add a clear button, drag handles or add-on-blur tags -->
             <TagInput
@@ -685,6 +693,7 @@
                 addOnBlur={false}
                 aria-autocomplete="list"
                 autofocus={searchAutoFocus}
+                class={classNames?.input}
                 {disabled}
                 draggable={false}
                 expandRestTagsOnClick={false}
@@ -697,6 +706,7 @@
                 showClear={false}
                 {showRestTagsPopover}
                 {size}
+                style={styles?.input}
                 tag={tagInputTag}
             />
         {:else if triggerSearch}
@@ -713,15 +723,17 @@
                             [`${cls}-selection-TriggerSearchItem-placeholder`]: (view.inputTriggerFocus || !singleShown) && !disabled,
                             [`${cls}-selection-TriggerSearchItem-disabled`]: disabled,
                         },
+                        !singleShown && classNames?.placeholder,
                     ]}
                     id={singleSearchTextId}
+                    style={singleShown ? undefined : styles?.placeholder}
                     onclick={foundation.onClickSingleTriggerSearchItem}
                 >
                     {@render singleText_()}
                 </span>
             {/if}
         {:else if !multiple || !hasValue}
-            <span class={[`${cls}-selection-content`, { [`${cls}-selection-placeholder`]: !singleShown }]}>
+            <span class={[`${cls}-selection-content`, { [`${cls}-selection-placeholder`]: !singleShown }, !singleShown && classNames?.placeholder]} style={singleShown ? undefined : styles?.placeholder}>
                 {@render singleText_()}
             </span>
         {:else}
@@ -737,14 +749,16 @@
                     [`${cls}-suffix-text`]: suffixKind === 'text',
                     [`${cls}-suffix-icon`]: suffixKind === 'icon',
                 },
+                classNames?.suffix,
             ]}
+            style={styles?.suffix}
             x-semi-prop="suffix"
         >
             {@render suffix()}
         </div>
     {/if}
     {#if clearable}
-        <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${cls}-clearbtn`} type="button" onclick={handleClearClick} onkeydown={stopOwnKeys}>
+        <button aria-label={locale().locale.clear} bind:this={clearButton} class={[`${cls}-clearbtn`, classNames?.clear]} style={styles?.clear} type="button" onclick={handleClearClick} onkeydown={stopOwnKeys}>
             {#if clearIcon}
                 {@render clearIcon()}
             {:else}
@@ -753,7 +767,7 @@
         </button>
     {/if}
     {#if arrowIcon !== null}
-        <div class={`${cls}-arrow`} x-semi-prop="arrowIcon">
+        <div class={[`${cls}-arrow`, classNames?.arrow]} style={styles?.arrow} x-semi-prop="arrowIcon">
             {#if arrowIcon}
                 {@render arrowIcon()}
             {:else}
@@ -812,15 +826,15 @@
             {#if outerTopSlot}
                 {@render outerTopSlot()}
             {:else if filterTreeNode && !triggerSearch && searchBox !== false}
-                <div bind:this={searchWrapper} class={`${treeCls}-search-wrapper`}>
+                <div bind:this={searchWrapper} class={[`${treeCls}-search-wrapper`, classNames?.search]} style={styles?.search}>
                     {@render searchBoxContent(dropdownSearchProps, true)}
                 </div>
             {/if}
             {#if noData}
                 <!-- the combobox's aria-controls needs an element while there is no tree -->
-                <div class={[listClass, classNames?.optionList]} id={treeId} role="none" style={styles?.optionList}>
+                <div class={[listClass, classNames?.list]} id={treeId} role="none" style={styles?.list}>
                     {#if !emptyHidden}
-                        <ul class={[`${treeCls}-option`, `${treeCls}-option-empty`]}>
+                        <ul class={[`${treeCls}-option`, `${treeCls}-option-empty`, classNames?.empty]} style={styles?.empty}>
                             <li class={[`${treeCls}-option-label`, `${treeCls}-option-label-empty`]} x-semi-prop="emptyContent">
                                 {#if emptyContent}
                                     {@render emptyContent()}
@@ -832,7 +846,7 @@
                     {/if}
                 </div>
             {:else}
-                <ul id={treeId} {...nameAttrs} aria-multiselectable={multiple} class={[listClass, classNames?.optionList]} role="tree" style={styles?.optionList}>
+                <ul id={treeId} {...nameAttrs} aria-multiselectable={multiple} class={[listClass, classNames?.list]} role="tree" style={styles?.list}>
                     <NodeList bind:this={nodeList} flattenList={view.cachedFlattenNodes as FlattenNode[] | undefined} flattenNodes={view.flattenNodes as FlattenNode[]} motion={motionExpand} motionKeys={view.motionKeys} motionType={view.motionType} {searchTargetIsDeep} {virtualize}>
                         {#snippet children({ node, style })}
                             {@const row = rowProps(node)}

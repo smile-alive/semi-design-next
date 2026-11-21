@@ -203,10 +203,10 @@
                     <div v-show="props.visible" ref="dialog" v-bind="dialogAttrs(inBody)" :class="[`${prefix}-inner`, `${prefix}-inner-wrap`, `${prefix}-size-${props.size}`, props.classNames?.content]" role="dialog" :style="[$attrs.style as StyleValue, props.styles?.content, dialogStyle()]" tabindex="-1">
                         <div :class="`${prefix}-content`">
                             <div :class="[`${prefix}-header`, props.classNames?.header]" :style="props.styles?.header">
-                                <div v-if="hasTitle()" :id="titleId" aria-level="2" :class="`${prefix}-title`" role="heading" x-semi-prop="title">
+                                <div v-if="hasTitle()" :id="titleId" aria-level="2" :class="[`${prefix}-title`, props.classNames?.title]" role="heading" :style="props.styles?.title" x-semi-prop="title">
                                     <slot name="title">{{ props.title }}</slot>
                                 </div>
-                                <IconButton v-if="props.closable" :aria-label="locale.locale.close" :class="`${prefix}-close`" size="small" theme="borderless" type="tertiary" @click="onClose">
+                                <IconButton v-if="props.closable" :aria-label="locale.locale.close" :class="[`${prefix}-close`, props.classNames?.close]" size="small" :style="props.styles?.close" theme="borderless" type="tertiary" @click="onClose">
                                     <template #icon>
                                         <slot name="closeIcon">
                                             <IconClose />

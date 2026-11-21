@@ -690,9 +690,14 @@ describe('Input 行为基线', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        render(<Input classNames={{ input: 'my-input' }} styles={{ input: { order: 2 } }} />);
-        expect(getInput()).toHaveClass(`${prefixCls}`, 'my-input');
-        expect(getInput()).toHaveStyle({ order: '2' });
+        const parts = ['input', 'prefix', 'suffix', 'clear', 'visibilityToggle', 'addonBefore', 'addonAfter'] as const;
+        const selectors = { input: prefixCls, prefix: `${prefixCls}-prefix`, suffix: `${prefixCls}-suffix`, clear: `${prefixCls}-clearbtn`, visibilityToggle: `${prefixCls}-modebtn`, addonBefore: `${prefixCls}-prepend`, addonAfter: `${prefixCls}-append` };
+        render(<Input classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} defaultValue="v" addonAfter="a" addonBefore="b" mode="password" showClear prefix="p" suffix="s" />);
+        for (const part of parts) {
+            const el = query(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
         expect(getWrapper()).not.toHaveClass('my-input');
     });
 

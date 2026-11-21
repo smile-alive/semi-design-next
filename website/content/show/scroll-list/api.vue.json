@@ -3,6 +3,10 @@
         "source": "packages/semi-ui-vue/src/components/scroll-list/scroll-list.vue",
         "props": {
             "bodyHeight": { "zh-CN": "列表主体的高度。", "en-US": "Height of the list body." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `header`、`title`、`body`、`footer`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `header`, `title`, `body` and `footer`; merged with the built-in classes."
+            },
             "footer": {
                 "zh-CN": "底部内容；传入 footer 插槽时以插槽为准。",
                 "en-US": "Footer text. The footer slot takes precedence when given."
@@ -10,6 +14,10 @@
             "header": {
                 "zh-CN": "头部内容；传入 header 插槽时以插槽为准。",
                 "en-US": "Header text. The header slot takes precedence when given."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             }
         },
         "events": {},
@@ -23,6 +31,10 @@
     "scroll-item": {
         "source": "packages/semi-ui-vue/src/components/scroll-list/scroll-item.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `list`、`option`、`selector`（仅 wheel 模式渲染），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `list`, `option` and `selector` (wheel mode only); merged with the built-in classes."
+            },
             "cycled": {
                 "zh-CN": "是否无限循环。wheel 模式下列表首尾相接地无限滚动；两种模式下方向键都在首尾循环。",
                 "en-US": "Whether the column cycles. In wheel mode the list scrolls without end; in both modes the arrow keys wrap around."
@@ -33,6 +45,10 @@
             "selectedIndex": {
                 "zh-CN": "选中项的索引，配合 v-model:selectedIndex 使用；没有非受控模式。",
                 "en-US": "Index of the selected item, used with v-model:selectedIndex. There is no uncontrolled mode."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "transform": {
                 "zh-CN": "对选中项文案的变换，没有 text 的项参数为 undefined；未传时显示 text，没有 text 时显示 value。数据项自带的 transform 优先。",

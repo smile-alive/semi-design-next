@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/pincode/constants';
+import { cssClasses, type PinCodePart } from '@fibrae/semi-foundation/components/pincode/constants';
 import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/pincode/pincode.scss';
@@ -21,7 +21,9 @@ export interface PinCodeHandle {
 
 export interface PinCodeProps extends PinCodeBaseProps, ElementProps<'div', 'defaultValue' | 'onChange'> {
     className?: string;
+    classNames?: Partial<Record<PinCodePart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<PinCodePart, React.CSSProperties>>;
     size?: InputProps['size'];
     ref?: React.Ref<PinCodeHandle>;
     /** Injected by Form; shown on every input */
@@ -42,7 +44,9 @@ export default function PinCode(rawProps: PinCodeProps) {
     const {
         ref,
         className,
+        classNames,
         style,
+        styles,
         size,
         disabled,
         value,
@@ -124,6 +128,8 @@ export default function PinCode(rawProps: PinCodeProps) {
                         inputsRef.current[index] = handle;
                     }}
                     id={index === 0 ? id : undefined}
+                    className={classNames?.input}
+                    style={styles?.input}
                     aria-describedby={ariaDescribedby}
                     aria-errormessage={ariaErrormessage}
                     aria-invalid={ariaInvalid}

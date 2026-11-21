@@ -48,7 +48,7 @@
         const { message } = props;
         const role = roleInfo.value;
         return {
-            avatar: h(DialogueAvatar, { message, role }, slots),
+            avatar: h(DialogueAvatar, { message, role, partClass: view.value.classNames?.itemAvatar, partStyle: view.value.styles?.itemAvatar }, slots),
             title: h(DialogueTitle, { message, role }, slots),
             content: h(DialogueContent, { key: contentKey(), message, role }, slots),
             action: h(DialogueAction, { isLastChat: props.isLastChat, message }, slots),
@@ -63,9 +63,11 @@
             {
                 [`${prefix}-wrapper-selected`]: view.selecting && props.isSelected,
             },
+            view.classNames?.item,
         ]"
+        :style="view.styles?.item"
     >
-        <div v-if="view.selecting" :class="`${prefix}-checkbox`">
+        <div v-if="view.selecting" :class="[`${prefix}-checkbox`, view.classNames?.itemCheckbox]" :style="view.styles?.itemCheckbox">
             <Checkbox :aria-label="locale.locale.selectMessage" :modelValue="props.isSelected" @change="selectChange($event.target.checked, props.message.id)" />
         </div>
         <slot v-if="$slots.fullDialogue" :class="containerCls" :defaultNodes="fullNodes()" :message="props.message" name="fullDialogue" :role="roleInfo" />

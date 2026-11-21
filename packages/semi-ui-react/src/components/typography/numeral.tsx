@@ -1,5 +1,6 @@
 import type React from 'react';
 import { Children, cloneElement, isValidElement, memo } from 'react';
+import type { TypographyNumeralPart } from '@fibrae/semi-foundation/components/typography/constants';
 import FormatNumeral from '@fibrae/semi-foundation/components/typography/format-numeral';
 import Base from './base';
 import type { TypographyBaseSize, TypographyBaseRule, OmitTypographyProps, TypographyBaseTruncate, TypographyCommonProps } from './interface';
@@ -14,6 +15,8 @@ export interface NumeralProps extends Omit<React.HTMLAttributes<HTMLSpanElement>
     children?: React.ReactNode;
     code?: boolean;
     icon?: React.ReactNode | string;
+    classNames?: Partial<Record<TypographyNumeralPart, string>>;
+    styles?: Partial<Record<TypographyNumeralPart, React.CSSProperties>>;
     size?: TypographyBaseSize;
     /** Attached to the root element */
     ref?: React.Ref<HTMLSpanElement>;

@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
-import type { DescriptionsItemPart } from '@fibrae/semi-foundation/components/descriptions/constants';
+import type { DescriptionsItemPart, DescriptionsPart } from '@fibrae/semi-foundation/components/descriptions/constants';
 
 export type DescriptionsAlign = 'center' | 'justify' | 'left' | 'plain';
 export type DescriptionsLayout = 'horizontal' | 'vertical';
@@ -11,6 +11,7 @@ export interface DescriptionsData {
     value?: string | number;
     hidden?: boolean;
     span?: number;
+    /** Applied after the `itemKey` and `itemValue` classNames of the parent Descriptions */
     classNames?: Partial<Record<DescriptionsItemPart, ClassValue>>;
     styles?: Partial<Record<DescriptionsItemPart, string>>;
 }
@@ -23,11 +24,13 @@ export interface DescriptionsSnippetArgs {
 
 export interface DescriptionsProps extends HTMLAttributes<HTMLDivElement> {
     align?: DescriptionsAlign;
+    classNames?: Partial<Record<DescriptionsPart, ClassValue>>;
     row?: boolean;
     size?: DescriptionsSize;
     data?: DescriptionsData[];
     layout?: DescriptionsLayout;
     column?: number;
+    styles?: Partial<Record<DescriptionsPart, string>>;
     /** Key of each data item; defaults to `item.key` */
     itemKey?: Snippet<[DescriptionsSnippetArgs]>;
     /** Value of each data item; defaults to `item.value` */

@@ -271,6 +271,7 @@
             {#snippet footerSnippet()}{@render footer?.({ index })}{/snippet}
             <Combobox
                 {...panelFns(index)}
+                {classNames}
                 defaultIsAM={index === 0}
                 format={validFormat}
                 {hideDisabledOptions}
@@ -282,6 +283,7 @@
                 prefixCls={`${prefixCls}-panel`}
                 {scrollItemProps}
                 {secondStep}
+                {styles}
                 timeStampValue={states().value[index]}
                 {use12Hours}
             />

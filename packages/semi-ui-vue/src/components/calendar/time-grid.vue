@@ -10,10 +10,12 @@
     import useScrollGrid from './composables/use-scroll-grid';
     import { useCalendarContext } from './context';
     import DayCol from './day-col.vue';
-    import type { CalendarSlots, EventObject, WeekStartsOn } from './interface';
+    import type { CalendarProps, CalendarSlots, EventObject, WeekStartsOn } from './interface';
     import TimeCol from './time-col.vue';
 
     const props = defineProps<{
+        classNames?: CalendarProps['classNames'];
+        styles?: CalendarProps['styles'];
         range: Date[];
         labelDate?: Date;
         events: EventObject[];
@@ -60,13 +62,13 @@
                     <slot name="header" />
                 </div>
             </div>
-            <div :class="`${prefixCls}-header`" role="row">
+            <div :class="[`${prefixCls}-header`, props.classNames?.header]" role="row" :style="props.styles?.header">
                 <div :id="monthId" :class="[`${cssClasses.PREFIX}-tag`, `${prefixCls}-tag`, `${prefixCls}-sticky-left`]" role="cell">
                     <span>{{ rangeData.month }}</span>
                 </div>
                 <div :class="`${prefixCls}-grid`">
                     <div :class="`${prefixCls}-grid-row`">
-                        <div v-for="day in rangeData.week" :key="day.date.toString()" :aria-current="day.isToday ? 'date' : undefined" :class="[{ [`${cssClasses.PREFIX}-today`]: day.isToday }, weekendCls(day)]" role="columnheader">
+                        <div v-for="day in rangeData.week" :key="day.date.toString()" :aria-current="day.isToday ? 'date' : undefined" :class="[{ [`${cssClasses.PREFIX}-today`]: day.isToday }, weekendCls(day), props.classNames?.headerCell]" role="columnheader" :style="props.styles?.headerCell">
                             <slot :date="day.date" name="dateDisplay">
                                 <span :class="`${cssClasses.PREFIX}-today-date`">{{ day.dayString }}</span>
                                 <span>{{ day.weekday }}</span>
@@ -75,7 +77,7 @@
                     </div>
                 </div>
             </div>
-            <div :class="allDayCls" role="row" :style="$slots.allDayEvents ? undefined : { height: `${calcRowHeight(allDayEvents)}em` }">
+            <div :class="[allDayCls, props.classNames?.allDay]" role="row" :style="[$slots.allDayEvents ? undefined : { height: `${calcRowHeight(allDayEvents)}em` }, props.styles?.allDay]">
                 <div :class="[`${cssClasses.PREFIX}-tag`, `${allDayCls}-tag`, `${prefixCls}-sticky-left`]" role="rowheader">
                     <span>{{ i18n.locale.allDay }}</span>
                 </div>
@@ -86,7 +88,12 @@
                     <ul :class="`${cssClasses.PREFIX}-event-items`">
                         <slot v-if="$slots.allDayEvents" :events="props.events" name="allDayEvents" />
                         <template v-else>
-                            <li v-for="(item, ind) in allDayEvents" :key="item.key || `allDay-${ind}`" :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`]" :style="{ insetInlineStart: toPercent(item.leftPos ?? 0), width: toPercent(item.width ?? 0), top: `${item.topInd ?? 0}em` }">
+                            <li
+                                v-for="(item, ind) in allDayEvents"
+                                :key="item.key || `allDay-${ind}`"
+                                :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`, props.classNames?.event]"
+                                :style="[{ insetInlineStart: toPercent(item.leftPos ?? 0), width: toPercent(item.width ?? 0), top: `${item.topInd ?? 0}em` }, props.styles?.event]"
+                            >
                                 <slot :event="eventOf(item)" name="event">{{ item.children }}</slot>
                             </li>
                         </template>
@@ -96,7 +103,7 @@
         </div>
         <div :class="`${prefixCls}-scroll-wrapper`" role="rowgroup">
             <div ref="scroll" :class="`${prefixCls}-scroll`" role="row">
-                <TimeCol :class="`${prefixCls}-sticky-left`">
+                <TimeCol :class="`${prefixCls}-sticky-left`" :classNames="props.classNames" :styles="props.styles">
                     <template v-if="$slots.timeDisplay" #timeDisplay="slotProps">
                         <slot name="timeDisplay" v-bind="slotProps" />
                     </template>
@@ -104,12 +111,14 @@
                 <DayCol
                     v-for="day in rangeData.week"
                     :key="day.date.toString()"
+                    :classNames="props.classNames"
                     :displayValue="day.date"
                     :events="dayEvents(day)"
                     :isWeekend="props.markWeekend && day.isWeekend"
                     :minEventHeight="props.minEventHeight"
                     :scrollHeight="scrollHeight"
                     :showCurrTime="props.showCurrTime"
+                    :styles="props.styles"
                     :today="props.today"
                     @slotClick="(event, value) => emit('click', event, value)"
                 >

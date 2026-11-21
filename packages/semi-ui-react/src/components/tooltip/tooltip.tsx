@@ -365,7 +365,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
             return showArrow;
         }
         const ArrowIcon = props.position.includes('left') || props.position.includes('right') ? TriangleArrowVertical : TriangleArrow;
-        return <ArrowIcon className={`${prefixCls}-icon-arrow`} style={{ color: style?.backgroundColor, fill: 'currentColor' }} />;
+        return <ArrowIcon className={clsx(`${prefixCls}-icon-arrow`, classNames?.arrow)} style={{ color: style?.backgroundColor, fill: 'currentColor', ...styles?.arrow }} />;
     };
 
     const renderPortal = () => {

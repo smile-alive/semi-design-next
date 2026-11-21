@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | adaptiveTip | Tip of the fit-to-page button. | `string` | - |
 | children | The Image components to preview. | `JSX.Element` | - |
-| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element), `header`, `title`, `close`, `img` (the enlarged image), `prev`, `next`, `footer`, `page` and `action` (every button of the footer toolbar); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
 | closable | Whether to show the close button. | `boolean` | `true` |
 | closeOnEsc | Whether pressing Esc closes the preview. | `boolean` | - |
 | crossOrigin | The crossorigin attribute passed to the preview img element. | `'anonymous' \| 'use-credentials'` | - |

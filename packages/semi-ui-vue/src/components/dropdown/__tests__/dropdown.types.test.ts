@@ -5,7 +5,7 @@ import type { DropdownMenuItem, DropdownMenuItemDividerType, DropdownMenuItemTit
 describe('Dropdown 类型', () => {
     it('menu 数据项只含数据与菜单项接收的属性，不带全局扩展的 HTML 属性', () => {
         type Named<T> = Exclude<keyof T, `data-${string}` | `aria-${string}`>;
-        expectTypeOf<Named<DropdownMenuItemType>>().toEqualTypeOf<'node' | 'name' | 'active' | 'disabled' | 'showTick' | 'type' | 'class' | 'style' | 'onClick' | 'onContextmenu' | 'onMouseenter' | 'onMouseleave'>();
+        expectTypeOf<Named<DropdownMenuItemType>>().toEqualTypeOf<'node' | 'name' | 'active' | 'disabled' | 'showTick' | 'type' | 'class' | 'style' | 'classNames' | 'styles' | 'onClick' | 'onContextmenu' | 'onMouseenter' | 'onMouseleave'>();
         expectTypeOf<Named<DropdownMenuItemDividerType>>().toEqualTypeOf<'node' | 'class' | 'style'>();
         expectTypeOf<Named<DropdownMenuItemTitleType>>().toEqualTypeOf<'node' | 'name' | 'class' | 'style'>();
     });

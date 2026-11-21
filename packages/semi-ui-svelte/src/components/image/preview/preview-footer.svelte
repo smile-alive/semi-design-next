@@ -22,6 +22,8 @@
         disableDownload: boolean;
         showTooltip: boolean;
         hidden: boolean;
+        classNames?: FooterView['classNames'];
+        styles?: FooterView['styles'];
         prevTip?: string;
         nextTip?: string;
         zoomInTip?: string;
@@ -43,7 +45,38 @@
     type Foundation = PreviewFooterFoundation<PreviewFooterBaseProps>;
     type Adapter = PreviewFooterAdapter<PreviewFooterBaseProps>;
 
-    let { min, max, step, curPage, totalNum, zoom, ratio, disabledPrev, disabledNext, disableDownload, showTooltip, hidden, prevTip, nextTip, zoomInTip, zoomOutTip, rotateTip, downloadTip, adaptiveTip, originTip, previewMenu, onZoomIn, onZoomOut, onAdjustRatio, onRotate, onPrev, onNext, onDownload }: Props = $props();
+    let {
+        min,
+        max,
+        step,
+        curPage,
+        totalNum,
+        zoom,
+        ratio,
+        disabledPrev,
+        disabledNext,
+        disableDownload,
+        showTooltip,
+        hidden,
+        classNames,
+        styles,
+        prevTip,
+        nextTip,
+        zoomInTip,
+        zoomOutTip,
+        rotateTip,
+        downloadTip,
+        adaptiveTip,
+        originTip,
+        previewMenu,
+        onZoomIn,
+        onZoomOut,
+        onAdjustRatio,
+        onRotate,
+        onPrev,
+        onNext,
+        onDownload,
+    }: Props = $props();
 
     const locale = useLocale('Image');
 
@@ -97,6 +130,8 @@
             step,
             ratio,
             zoomLabel: text.zoom,
+            classNames,
+            styles,
             buttons: {
                 prev: { label: prevTip ?? text.prevTip, disabled: disabledPrev, onClick: onPrev },
                 next: { label: nextTip ?? text.nextTip, disabled: disabledNext, onClick: onNext },
@@ -147,7 +182,7 @@
     {/each}
 {/snippet}
 
-<section bind:this={root} class={[cls, `${cls}-wrapper`, { [`${cls}-content`]: !previewMenu, [`${cssClasses.PREFIX}-preview-hide`]: hidden }]}>
+<section bind:this={root} class={[cls, `${cls}-wrapper`, { [`${cls}-content`]: !previewMenu, [`${cssClasses.PREFIX}-preview-hide`]: hidden }, classNames?.footer]} style={styles?.footer}>
     {#if previewMenu}
         {@render previewMenu(menuProps)}
     {:else}

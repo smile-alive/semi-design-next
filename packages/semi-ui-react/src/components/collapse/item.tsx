@@ -1,7 +1,7 @@
 import type React from 'react';
 import { memo, useId, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+import { cssClasses, type CollapsePanelPart } from '@fibrae/semi-foundation/components/collapse/constants';
 import CollapseFoundation from '@fibrae/semi-foundation/components/collapse/foundation';
 import { isEventInside } from '@fibrae/semi-foundation/utils';
 import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-react';
@@ -15,8 +15,10 @@ export interface CollapsePanelProps extends ElementProps<'div'> {
     extra?: React.ReactNode;
     header?: React.ReactNode;
     className?: string;
+    classNames?: Partial<Record<CollapsePanelPart, string>>;
     children?: React.ReactNode;
     style?: React.CSSProperties;
+    styles?: Partial<Record<CollapsePanelPart, React.CSSProperties>>;
     showArrow?: boolean;
     disabled?: boolean;
     onMotionEnd?: () => void;
@@ -26,7 +28,7 @@ export interface CollapsePanelProps extends ElementProps<'div'> {
 
 const prefixCls = cssClasses.PREFIX;
 
-function CollapsePanel({ ref, className, children, itemKey, header, extra, showArrow = true, disabled = false, onMotionEnd, ...rest }: CollapsePanelProps) {
+function CollapsePanel({ ref, className, classNames, style, styles, children, itemKey, header, extra, showArrow = true, disabled = false, onMotionEnd, ...rest }: CollapsePanelProps) {
     const context = useCollapseContext('Collapse.Panel');
 
     // Collapsible fills a keepDOM that Collapse leaves undefined from its own global defaults; resolve it the same way.
@@ -37,7 +39,7 @@ function CollapsePanel({ ref, className, children, itemKey, header, extra, showA
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const { expandIconPosition, activeSet, motion, clickHeaderToExpand, onClick } = context;
-    const { lazyRender } = context;
+    const { lazyRender, classNames: itemClassNames, styles: itemStyles } = context;
 
     // JSX as a destructuring default makes the Compiler skip the component; null still means no icon
     const expandIcon = context.expandIcon === undefined ? <IconChevronDown /> : context.expandIcon;
@@ -59,7 +61,7 @@ function CollapsePanel({ ref, className, children, itemKey, header, extra, showA
     const expandIconEnable = hasBody && !disabled;
 
     const icon = showArrow && (
-        <span ref={iconRef} className={clsx(`${prefixCls}-header-icon`, { [`${prefixCls}-header-iconDisabled`]: !expandIconEnable })} aria-hidden="true">
+        <span ref={iconRef} className={clsx(`${prefixCls}-header-icon`, { [`${prefixCls}-header-iconDisabled`]: !expandIconEnable }, itemClassNames?.itemIcon, classNames?.icon)} style={{ ...itemStyles?.itemIcon, ...styles?.icon }} aria-hidden="true">
             {expandIconEnable && active ? collapseIcon : expandIcon}
         </span>
     );
@@ -67,12 +69,18 @@ function CollapsePanel({ ref, className, children, itemKey, header, extra, showA
     const iconPosLeft = expandIconPosition === 'left';
 
     return (
-        <div {...rest} ref={ref} className={clsx(className, `${prefixCls}-item`, { [`${prefixCls}-item-active`]: active })}>
+        <div {...rest} ref={ref} className={clsx(className, `${prefixCls}-item`, { [`${prefixCls}-item-active`]: active }, itemClassNames?.item)} style={{ ...itemStyles?.item, ...style }}>
             <div
-                className={clsx(`${prefixCls}-header`, {
-                    [`${prefixCls}-header-disabled`]: disabled,
-                    [`${prefixCls}-header-iconLeft`]: iconPosLeft,
-                })}
+                className={clsx(
+                    `${prefixCls}-header`,
+                    {
+                        [`${prefixCls}-header-disabled`]: disabled,
+                        [`${prefixCls}-header-iconLeft`]: iconPosLeft,
+                    },
+                    itemClassNames?.itemHeader,
+                    classNames?.header
+                )}
+                style={{ ...itemStyles?.itemHeader, ...styles?.header }}
                 onClick={(e) => {
                     // the button's click (Enter, Space, assistive tech) bubbles here;
                     // a button handler would toggle twice
@@ -89,7 +97,7 @@ function CollapsePanel({ ref, className, children, itemKey, header, extra, showA
                 {iconPosLeft && icon}
                 {/* APG heading; role="heading" so host h3 styles cannot beat Semi layers;
                     level 3 as in Radix Accordion */}
-                <div className={`${prefixCls}-header-title`} aria-level={3} role="heading">
+                <div className={clsx(`${prefixCls}-header-title`, itemClassNames?.itemTitle, classNames?.title)} style={{ ...itemStyles?.itemTitle, ...styles?.title }} aria-level={3} role="heading">
                     <button ref={buttonRef} id={headerID} type="button" className={`${prefixCls}-header-button`} aria-controls={contentMounted ? ariaID : undefined} aria-expanded={active} disabled={disabled}>
                         {header}
                     </button>
@@ -98,7 +106,9 @@ function CollapsePanel({ ref, className, children, itemKey, header, extra, showA
                     padding */}
                 {typeof header === 'string' || hasContent(extra) ? (
                     <span className={`${prefixCls}-header-right`}>
-                        <span>{extra}</span>
+                        <span className={clsx(`${prefixCls}-header-extra`, itemClassNames?.itemExtra, classNames?.extra)} style={{ ...itemStyles?.itemExtra, ...styles?.extra }}>
+                            {extra}
+                        </span>
                         {!iconPosLeft && icon}
                     </span>
                 ) : (
@@ -107,7 +117,7 @@ function CollapsePanel({ ref, className, children, itemKey, header, extra, showA
             </div>
             {hasBody && (
                 <Collapsible isOpen={active} keepDOM={keepDOM} motion={motion} lazyRender={lazyRender} onMotionEnd={onMotionEnd}>
-                    <div id={ariaID} className={`${prefixCls}-content`} aria-labelledby={headerID} inert={!active} role="region">
+                    <div id={ariaID} className={clsx(`${prefixCls}-content`, itemClassNames?.itemBody, classNames?.body)} style={{ ...itemStyles?.itemBody, ...styles?.body }} aria-labelledby={headerID} inert={!active} role="region">
                         <div className={`${prefixCls}-content-wrapper`}>{children}</div>
                     </div>
                 </Collapsible>

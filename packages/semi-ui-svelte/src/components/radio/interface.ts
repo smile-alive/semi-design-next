@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
-import type { RadioPart } from '@fibrae/semi-foundation/components/radio/constants';
+import type { RadioGroupPart, RadioPart } from '@fibrae/semi-foundation/components/radio/constants';
 
 export type RadioValue = string | number | boolean;
 export type RadioType = 'default' | 'button' | 'card' | 'pureCard';
@@ -68,6 +68,8 @@ export interface RadioGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'o
     mode?: RadioMode;
     type?: RadioType;
     buttonSize?: RadioGroupButtonSize;
+    classNames?: Partial<Record<RadioGroupPart, ClassValue>>;
+    styles?: Partial<Record<RadioGroupPart, string>>;
     /** `target.value` is `undefined` when mode="advanced" unchecks the selected radio. */
     onChange?: (event: RadioChangeEvent) => void;
     onBlur?: (event: FocusEvent) => void;

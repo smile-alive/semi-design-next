@@ -2,7 +2,7 @@ import { children, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, getPanelId, getTabId, getTabKeyAttrs } from '@fibrae/semi-foundation/components/tabs/constants';
 import { IconClose } from '@fibrae/semi-icons-solid';
-import { callHandler, hasContent } from '../../utils/index';
+import { callHandler, hasContent, mergeStyles } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import { useTabsContext } from './context';
 import type { TabItemProps } from './interface';
@@ -62,18 +62,22 @@ export default function TabItem(props: TabItemProps) {
                     [`${cssClasses.TABS_TAB}-small`]: local.size === 'small',
                     [`${cssClasses.TABS_TAB}-medium`]: local.size === 'medium',
                 },
-                local.class
+                local.class,
+                ctx?.view().classNames?.item
             )}
+            style={mergeStyles(rest.style, ctx?.view().styles?.item)}
             tabIndex={local.selected || itemKey() === ctx?.view().tabbableKey ? 0 : -1}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
         >
             <Show when={hasContent(icon())}>
-                <span class={`${cssClasses.TABS_BAR}-icon`}>{icon()}</span>
+                <span class={clsx(`${cssClasses.TABS_BAR}-icon`, ctx?.view().classNames?.itemIcon)} style={ctx?.view().styles?.itemIcon}>
+                    {icon()}
+                </span>
             </Show>
             {local.tab}
             <Show when={local.closable}>
-                <IconClose class={`${cssClasses.TABS_TAB}-icon-close`} role="button" aria-label={locale().locale.close} onClick={handleClose} />
+                <IconClose class={clsx(`${cssClasses.TABS_TAB}-icon-close`, ctx?.view().classNames?.itemClose)} style={ctx?.view().styles?.itemClose} role="button" aria-label={locale().locale.close} onClick={handleClose} />
             </Show>
         </div>
     );

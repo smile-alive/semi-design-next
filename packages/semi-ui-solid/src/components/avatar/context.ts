@@ -40,6 +40,7 @@ export interface AvatarGroupMoreItem {
     size: string;
     shape: AvatarShape;
     class: string;
+    style?: JSX.CSSProperties | string;
 }
 
 export interface AvatarContextType {

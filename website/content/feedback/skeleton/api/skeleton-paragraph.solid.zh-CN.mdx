@@ -1,5 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性 | 说明                           | 类型     | 默认值 |
-| ---- | ------------------------------ | -------- | ------ |
-| rows | 占位段落的行数，未设置时为 4。 | `number` | -      |
+| 属性       | 说明                                                                            | 类型                                                                                                                 | 默认值 |
+| ---------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------ |
+| classNames | 内部各部位的类名，键为 `row`，与组件自带的类名合并；`row` 是段落的每一行 `li`。 | <ApiType detail={"Partial\u003cRecord\u003cSkeletonParagraphPart, string>>"}>Type</ApiType>                          | -      |
+| rows       | 占位段落的行数，未设置时为 4。                                                  | `number`                                                                                                             | -      |
+| styles     | 内部各部位的内联样式，键同 `classNames`。                                       | <ApiType detail={"Partial\u003cRecord\u003cSkeletonParagraphPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |

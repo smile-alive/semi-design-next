@@ -1,8 +1,11 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { PaginationPart } from '@fibrae/semi-foundation/components/pagination/constants';
 import type { Position } from '../tooltip/index.js';
 
 export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+    classNames?: Partial<Record<PaginationPart, ClassValue>>;
+    styles?: Partial<Record<PaginationPart, string>>;
     total?: number;
     showTotal?: boolean;
     /** Bindable; the size changer writes the chosen size back. Leave it out for an uncontrolled size */

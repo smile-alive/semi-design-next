@@ -2,12 +2,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property    | Description                                                                                       | Type                                          | Default |
-| ----------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------- | ------- |
-| children    | Panel content.                                                                                    | `JSX.Element`                                 | -       |
-| disabled    | Whether the panel is disabled.                                                                    | `boolean`                                     | `false` |
-| extra       | Auxiliary content on the right of the panel header, outside the toggle button; may hold controls. | `JSX.Element`                                 | -       |
-| header      | Panel header content, rendered inside the toggle button; must not contain interactive elements.   | `JSX.Element`                                 | -       |
-| itemKey     | Required and unique, matched against activeKey and defaultActiveKey.                              | `string`                                      | -       |
-| onMotionEnd | Called when the expand or collapse animation ends.                                                | <ApiType detail={"() => void"}>Type</ApiType> | -       |
-| showArrow   | Whether to show the arrow icon.                                                                   | `boolean`                                     | `true`  |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Panel content. | `JSX.Element` | - |
+| classNames | Class names of this panel's inner parts, keyed by `header`, `title`, `icon`, `extra` and `body`; merged with the built-in classes and Collapse's `item*` classes, the panel's own last. | <ApiType detail={"Partial\u003cRecord\u003cCollapsePanelPart, string>>"}>Type</ApiType> | - |
+| disabled | Whether the panel is disabled. | `boolean` | `false` |
+| extra | Auxiliary content on the right of the panel header, outside the toggle button; may hold controls. | `JSX.Element` | - |
+| header | Panel header content, rendered inside the toggle button; must not contain interactive elements. | `JSX.Element` | - |
+| itemKey | Required and unique, matched against activeKey and defaultActiveKey. | `string` | - |
+| onMotionEnd | Called when the expand or collapse animation ends. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| showArrow | Whether to show the arrow icon. | `boolean` | `true` |
+| styles | Inline styles of this panel's inner parts, keyed like `classNames`; merged with Collapse's `item*` styles, the panel's own written last. | <ApiType detail={"Partial\u003cRecord\u003cCollapsePanelPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |

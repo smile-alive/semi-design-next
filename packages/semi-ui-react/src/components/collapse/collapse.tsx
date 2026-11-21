@@ -1,6 +1,6 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+import { cssClasses, type CollapsePart } from '@fibrae/semi-foundation/components/collapse/constants';
 import CollapseFoundation, { type CollapseAdapter, type CollapseProps, type CollapseState } from '@fibrae/semi-foundation/components/collapse/foundation';
 import '@fibrae/semi-foundation/components/collapse/collapse.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -17,7 +17,9 @@ export interface CollapseReactProps extends CollapseProps, ElementProps<'div', '
     expandIcon?: React.ReactNode;
     collapseIcon?: React.ReactNode;
     children?: React.ReactNode;
+    classNames?: Partial<Record<CollapsePart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<CollapsePart, React.CSSProperties>>;
     onChange?: (activeKey: string[], e: CollapseClickEvent) => void;
     lazyRender?: boolean;
     /** Attached to the root div */
@@ -35,7 +37,7 @@ const defaultProps = {
 
 function Collapse(rawProps: CollapseReactProps) {
     const props = useDefaultProps('Collapse', rawProps, defaultProps);
-    const { ref, activeKey, defaultActiveKey, accordion, onChange, lazyRender, motion, className, keepDOM, expandIconPosition, expandIcon, collapseIcon, children, clickHeaderToExpand, ...rest } = props;
+    const { ref, activeKey, defaultActiveKey, accordion, onChange, lazyRender, motion, className, classNames, styles, keepDOM, expandIconPosition, expandIcon, collapseIcon, children, clickHeaderToExpand, ...rest } = props;
 
     const [foundation, state] = useFoundation<Foundation, Adapter, CollapseReactProps, CollapseState>(
         CollapseFoundation,
@@ -50,6 +52,8 @@ function Collapse(rawProps: CollapseReactProps) {
         <div {...rest} ref={ref} className={clsx(cssClasses.PREFIX, className)}>
             <CollapseContext
                 value={{
+                    classNames,
+                    styles,
                     activeSet: CollapseFoundation.deriveActiveSet(props, state),
                     expandIcon,
                     collapseIcon,

@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | border | 额外边框，传 `true` 或 `{ color, motion }`；`motion` 为 `true` 时开启边框动效。 | `{ color?: string; motion?: boolean; } \| boolean` | - |
 | bottomSlot | 底部标记配置，包含 `shape`、`text`、`bgColor`、`textColor`、`class` 和 `style`；`text` 为文字，或返回自定义内容的函数（标记显示时才调用）；传入 `render` 时完全由它渲染。 | <ApiType detail={"{ render?: () => JSX.Element; shape?: AvatarShape; text: AvatarSlotText; bgColor?: string; textColor?: string; class?: string; style?: JSX.CSSProperties \u007c string; }"}>Type</ApiType> | - |
 | children | 头像内的文字或自定义内容。 | `JSX.Element` | - |
+| classNames | 内部各部位的类名，键为 image、label、mask、border，与组件自带的类名合并。image 是图片，label 是文字头像的文字，mask 是悬停遮罩，border 是额外边框（开启边框动效时动画圈同样应用）。 | <ApiType detail={"Partial\u003cRecord\u003cAvatarPart, string>>"}>Type</ApiType> | - |
 | color | 头像的预设背景颜色。 | `AvatarColor` | `"grey"` |
 | contentMotion | 启用头像内容区域的动画。 | `boolean` | - |
 | gap | 字符内容与头像左右两侧的间距，单位为像素。 | `number` | `3` |
@@ -18,4 +19,5 @@ import ApiType from '#/components/ApiType.astro';
 | size | 头像尺寸，支持预设名称或合法 CSS 尺寸。 | `string` | `"medium"` |
 | src | 图片头像的资源地址。 | `string` | - |
 | srcSet | 图片头像的响应式资源集合。 | `string` | - |
+| styles | 内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。 | <ApiType detail={"Partial\u003cRecord\u003cAvatarPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | topSlot | 顶部标记配置，包含 `text`、`gradientStart`、`gradientEnd`、`textColor`、`class` 和 `style`；`text` 为文字，或返回自定义内容的函数（标记显示时才调用）；传入 `render` 时完全由它渲染。 | <ApiType detail={"{ render?: () => JSX.Element; gradientStart?: string; gradientEnd?: string; text: AvatarSlotText; textColor?: string; class?: string; style?: JSX.CSSProperties \u007c string; }"}>Type</ApiType> | - |

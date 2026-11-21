@@ -1,8 +1,9 @@
 import { flushSync } from 'svelte';
-import { fireEvent, render } from '@testing-library/svelte';
-import { describe, expect, it } from 'vite-plus/test';
+import { fireEvent, render, waitFor } from '@testing-library/svelte';
+import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { getElement } from '@test/utils/dom/common';
+import PartsFixture from './parts-fixture.svelte';
 import Fixture from './typography-fixture.svelte';
 
 const prefix = 'semi-typography';
@@ -98,5 +99,57 @@ describe('Svelte Typography 基础', () => {
     it('size inherit 读取外层 size', () => {
         const { container } = setup({ text: 'Semi', props: { size: 'inherit' } });
         expect(container.querySelector(`.${prefix}`)).toHaveClass(`${prefix}-normal`);
+    });
+});
+
+describe('Svelte Typography 部位', () => {
+    const selectors = { icon: `${prefix}-icon`, expand: `${prefix}-ellipsis-expand`, copy: `${prefix}-action-btn` };
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    function expectParts(container: Element, parts: readonly (keyof typeof selectors)[]) {
+        for (const [index, part] of parts.entries()) {
+            const el = container.querySelector(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(index + 1) });
+        }
+    }
+
+    const names = (parts: readonly string[]) => Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+    const orders = (parts: readonly string[]) => Object.fromEntries(parts.map((p, i) => [p, `order: ${i + 1}`]));
+
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        // jsdom has no layout: 2px per character with line-height 20px, so a single row holds at most 19 characters
+        vi.spyOn(Element.prototype, 'scrollHeight', 'get').mockImplementation(function (this: Element) {
+            return (this.textContent?.length ?? 0) * 2;
+        });
+        const text = 'abcdefghijklmnopqrstuvwxyz';
+        const base = { copyable: true, ellipsis: { expandable: true }, style: 'line-height: 20px' };
+        const both = ['icon', 'expand', 'copy'] as const;
+        const noIcon = ['expand', 'copy'] as const;
+
+        const textView = render(PartsFixture, { props: { kind: 'text', text, props: { ...base, classNames: names(both), styles: orders(both) } } });
+        await waitFor(() => expect(textView.container.querySelector(`.${selectors.expand}`)).not.toBeNull());
+        expectParts(textView.container, both);
+
+        for (const kind of ['title', 'paragraph'] as const) {
+            const view = render(PartsFixture, { props: { kind, text, props: { ...base, classNames: names(noIcon), styles: orders(noIcon) } } });
+            await waitFor(() => expect(view.container.querySelector(`.${selectors.expand}`)).not.toBeNull());
+            expectParts(view.container, noIcon);
+        }
+
+        const numeral = render(PartsFixture, { props: { kind: 'numeral', text: '1234', props: { classNames: names(['icon']), styles: orders(['icon']) } } });
+        expectParts(numeral.container, ['icon']);
+    });
+
+    it('copy 部位落在按钮上，copyable 的 class 与 style 仍落在外层 span', () => {
+        const { container } = render(PartsFixture, { props: { kind: 'text', text: 'text', props: { copyable: { class: 'wrap', style: 'order: 9' }, classNames: { copy: 'my-copy' }, styles: { copy: 'order: 1' } } } });
+        const button = getElement(`.${selectors.copy}`, container);
+        expect(button).toHaveClass('my-copy');
+        expect(button.parentElement).toHaveClass('wrap');
+        expect(button.parentElement).toHaveStyle({ order: '9' });
+        expect(button).toHaveStyle({ order: '1' });
     });
 });

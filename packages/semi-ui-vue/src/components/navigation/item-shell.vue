@@ -104,6 +104,9 @@
         handleClick(event);
     };
 
+    // a Sub styles its own root (subNav), so only a leaf item takes the item part
+    const itemPart = () => (props.isSubNav ? {} : { class: ctx.view.value.classNames?.item, style: ctx.view.value.styles?.item });
+
     const rootAttrs = (attrs: Record<string, unknown>) => {
         const state = {
             [`${itemPrefix}-sub`]: props.isSubNav,
@@ -113,13 +116,13 @@
         if (popup.value && props.isSubNav) {
             // A nested sub inside a popup is a list item that holds the menuitem (its title), not a menuitem itself:
             // two nested menuitems would both be found by the menu's arrow keys
-            return mergeProps(attrs, {
+            return mergeProps(itemPart(), attrs, {
                 class: [itemPrefix, state, dropdownItemPrefix, { [`${itemPrefix}-selected`]: selected.value, [`${dropdownItemPrefix}-disabled`]: props.disabled, [`${dropdownItemPrefix}-active`]: selected.value }],
                 role: 'none',
             });
         }
         if (popup.value) {
-            return mergeProps(attrs, {
+            return mergeProps(itemPart(), attrs, {
                 active: selected.value,
                 'aria-current': selected.value && !props.isSubNav ? 'page' : undefined,
                 class: [itemPrefix, state, { [`${itemPrefix}-selected`]: selected.value }],
@@ -130,7 +133,9 @@
         const { class: own, ...root } = props.isSubNav ? attrs : splitControlAttrs(attrs, isControlKey).root;
         return {
             ...root,
+            style: [itemPart().style, root.style],
             class: [
+                itemPart().class,
                 own || `${itemPrefix}-normal`,
                 itemPrefix,
                 state,
@@ -168,7 +173,14 @@
 
     const toggleNodes = () => slotNodes(slots.toggleIcon?.() ?? []);
 
-    const iconClass = (toggle: boolean) => [`${itemPrefix}-icon`, toggle ? `${itemPrefix}-icon-toggle-${ctx.view.value.toggleIconPosition}` : `${itemPrefix}-icon-info`];
+    // the blank indent slots are not the icon, so they take no icon part
+    const iconClass = (toggle: boolean, placeholder = false) => [
+        `${itemPrefix}-icon`,
+        toggle ? `${itemPrefix}-icon-toggle-${ctx.view.value.toggleIconPosition}` : `${itemPrefix}-icon-info`,
+        ...(placeholder ? [] : toggle ? [ctx.view.value.classNames?.itemToggleIcon, props.classNames?.toggleIcon] : [ctx.view.value.classNames?.itemIcon, props.classNames?.icon]),
+    ];
+
+    const iconStyle = (toggle: boolean) => (toggle ? [ctx.view.value.styles?.itemToggleIcon, props.styles?.toggleIcon] : [ctx.view.value.styles?.itemIcon, props.styles?.icon]);
 
     const placeholders = () =>
         countPlaceholderIcons({
@@ -194,17 +206,17 @@
             <component :is="controlTag()" v-bind="controlAttrs($attrs)">
                 <slot v-if="$slots.content" name="content" />
                 <template v-else>
-                    <i v-for="n in placeholders()" :key="`placeholder-${n}`" :class="iconClass(false)" />
-                    <i v-if="toggleShown('left')" :class="iconClass(true)">
+                    <i v-for="n in placeholders()" :key="`placeholder-${n}`" :class="iconClass(false, true)" />
+                    <i v-if="toggleShown('left')" :class="iconClass(true)" :style="iconStyle(true)">
                         <component :is="node" v-for="[node, key] in toggleNodes()" :key="key" v-bind="iconAttrs(node, 'default')" />
                     </i>
-                    <i v-if="infoIconShown()" :class="iconClass(false)">
+                    <i v-if="infoIconShown()" :class="iconClass(false)" :style="iconStyle(false)">
                         <component :is="node" v-for="[node, key] in iconNodes()" :key="key" v-bind="iconAttrs(node, 'large')" />
                     </i>
-                    <span v-if="props.text != null || $slots.text" :class="`${prefix}-item-text`">
+                    <span v-if="props.text != null || $slots.text" :class="[`${prefix}-item-text`, ctx.view.value.classNames?.itemText, props.classNames?.text]" :style="[ctx.view.value.styles?.itemText, props.styles?.text]">
                         <slot name="text">{{ props.text }}</slot>
                     </span>
-                    <i v-if="toggleShown('right')" :class="iconClass(true)">
+                    <i v-if="toggleShown('right')" :class="iconClass(true)" :style="iconStyle(true)">
                         <component :is="node" v-for="[node, key] in toggleNodes()" :key="key" v-bind="iconAttrs(node, 'default')" />
                     </i>
                 </template>

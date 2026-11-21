@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/components/float-button/constants';
+import { cssClasses, cssClassesGroup, type FloatButtonGroupPart } from '@fibrae/semi-foundation/components/float-button/constants';
 import '@fibrae/semi-foundation/components/float-button/float-button.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
 import Badge from '../badge';
@@ -11,7 +11,8 @@ import renderAction from './render-action';
 const prefixCls = cssClassesGroup.PREFIX;
 const buttonPrefixCls = cssClasses.PREFIX;
 
-export interface FloatButtonGroupItem extends FloatButtonProps {
+// An item has no body element, so the button's parts do not apply
+export interface FloatButtonGroupItem extends Omit<FloatButtonProps, 'classNames' | 'styles'> {
     value?: string;
     content?: React.ReactNode;
     /** Accessible name, required when the item shows only an icon */
@@ -22,7 +23,9 @@ export interface FloatButtonGroupProps extends ElementProps<'div', 'onClick' | '
     disabled?: boolean;
     items: FloatButtonGroupItem[];
     className?: string;
+    classNames?: Partial<Record<FloatButtonGroupPart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<FloatButtonGroupPart, React.CSSProperties>>;
     /** `value` is the clicked item's, which is optional */
     onClick?: (value: string | undefined, e: React.MouseEvent) => void;
     /** Attached to the root div */
@@ -32,7 +35,7 @@ export interface FloatButtonGroupProps extends ElementProps<'div', 'onClick' | '
 const defaultProps = {} satisfies Partial<FloatButtonGroupProps>;
 
 export default function FloatButtonGroup(rawProps: FloatButtonGroupProps) {
-    const { ref, className, style, disabled, items, onClick, ...rest } = useDefaultProps('FloatButtonGroup', rawProps, defaultProps);
+    const { ref, className, classNames, style, styles, disabled, items, onClick, ...rest } = useDefaultProps('FloatButtonGroup', rawProps, defaultProps);
 
     return (
         <div
@@ -45,18 +48,19 @@ export default function FloatButtonGroup(rawProps: FloatButtonGroupProps) {
             style={style}
         >
             {items.map((item, index) => {
-                const { value, content, icon, badge, shape, size, colorful, className: itemClassName, ...itemRest } = item;
+                const { value, content, icon, badge, shape, size, colorful, className: itemClassName, style: itemStyle, ...itemRest } = item;
                 const itemDisabled = disabled || item.disabled;
                 const node = renderAction({
                     ...itemRest,
                     disabled: itemDisabled,
                     'data-value': value,
-                    className: clsx(`${prefixCls}-item`, itemClassName, {
+                    className: clsx(`${prefixCls}-item`, classNames?.item, itemClassName, {
                         [`${buttonPrefixCls}-${shape}`]: shape,
                         [`${buttonPrefixCls}-${size}`]: size,
                         [`${buttonPrefixCls}-colorful`]: colorful,
                         [`${prefixCls}-item-disabled`]: itemDisabled,
                     }),
+                    style: { ...styles?.item, ...itemStyle },
                     onClick: (e: React.MouseEvent) => {
                         item.onClick?.(e);
                         onClick?.(value, e);

@@ -6,7 +6,7 @@ import ItemFoundation, { type ItemAdapter, copySelectedItem, countPlaceholderIco
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { createToken, useFoundation } from '../../base/index';
-import { callHandler, splitControlAttrs, forwardFocus, hasContent, createIconSlot, mergeRefs } from '../../utils/index';
+import { callHandler, splitControlAttrs, forwardFocus, hasContent, createIconSlot, mergeRefs, mergeStyles } from '../../utils/index';
 import DropdownItem from '../dropdown/dropdown-item';
 import Tooltip, { type GetTriggerProps } from '../tooltip';
 import { useNavContext } from './context';
@@ -48,7 +48,7 @@ export function ItemWrapper(props: { element: JSX.Element; isInSubNav: boolean; 
 export function ItemView(allProps: NavItemProps & { itemConfig?: NavItemType }) {
     // itemConfig: the `items` entry this item was made from, which onSelect reports whole
     const [internal, props] = splitProps(allProps, ['itemConfig']);
-    const [local, rest] = splitProps(props, ['class', 'disabled', 'forwardRef', 'icon', 'indent', 'isCollapsed', 'itemKey', 'level', 'link', 'linkOptions', 'ref', 'style', 'tabIndex', 'text', 'toggleIcon', 'tooltipHideDelay', 'tooltipShowDelay', 'type', 'onClick']);
+    const [local, rest] = splitProps(props, ['class', 'classNames', 'disabled', 'forwardRef', 'icon', 'indent', 'isCollapsed', 'itemKey', 'level', 'link', 'linkOptions', 'ref', 'style', 'styles', 'tabIndex', 'text', 'toggleIcon', 'tooltipHideDelay', 'tooltipShowDelay', 'type', 'onClick']);
     const [aria, liRest] = splitControlAttrs(rest, isAriaKey);
 
     const context = useNavContext('Nav.Item');
@@ -118,20 +118,37 @@ export function ItemView(allProps: NavItemProps & { itemConfig?: NavItemType }) 
 
     const showIcon = () => (hasContent(icon()) || Boolean(local.indent) || view().isInSubNav) && (!horizontal() || hasContent(icon()));
 
+    const iconClass = () => clsx(iconSlotClass(false, view().toggleIconPosition), view().classNames?.itemIcon, local.classNames?.icon);
+
+    const iconStyle = () => mergeStyles(view().styles?.itemIcon, local.styles?.icon);
+
+    const toggleClass = () => clsx(iconSlotClass(true, view().toggleIconPosition), view().classNames?.itemToggleIcon, local.classNames?.toggleIcon);
+
+    const toggleStyle = () => mergeStyles(view().styles?.itemToggleIcon, local.styles?.toggleIcon);
+
+    // the blank indent slots are not the icon, so they take no icon part
     const itemChildren = () => (
         <>
             <Index each={placeholders()}>{() => <i class={iconSlotClass(false, view().toggleIconPosition)} />}</Index>
             <Show when={view().toggleIconPosition === strings.TOGGLE_ICON_LEFT && showToggle()}>
-                <i class={iconSlotClass(true, view().toggleIconPosition)}>{toggleIcon()}</i>
+                <i class={toggleClass()} style={toggleStyle()}>
+                    {toggleIcon()}
+                </i>
             </Show>
             <Show when={showIcon()}>
-                <i class={iconSlotClass(false, view().toggleIconPosition)}>{icon()}</i>
+                <i class={iconClass()} style={iconStyle()}>
+                    {icon()}
+                </i>
             </Show>
             <Show when={text() != null}>
-                <span class={`${prefix}-item-text`}>{text()}</span>
+                <span class={clsx(`${prefix}-item-text`, view().classNames?.itemText, local.classNames?.text)} style={mergeStyles(view().styles?.itemText, local.styles?.text)}>
+                    {text()}
+                </span>
             </Show>
             <Show when={view().toggleIconPosition === strings.TOGGLE_ICON_RIGHT && showToggle()}>
-                <i class={iconSlotClass(true, view().toggleIconPosition)}>{toggleIcon()}</i>
+                <i class={toggleClass()} style={toggleStyle()}>
+                    {toggleIcon()}
+                </i>
             </Show>
         </>
     );
@@ -179,7 +196,7 @@ export function ItemView(allProps: NavItemProps & { itemConfig?: NavItemType }) 
         <li
             {...liRest}
             ref={untrack(() => mergeRefs((node: HTMLLIElement) => forwardFocus(node, () => node.querySelector<HTMLElement>('a, button')), local.forwardRef, local.ref))}
-            class={clsx(local.class || `${itemPrefix}-normal`, {
+            class={clsx(view().classNames?.item, local.class || `${itemPrefix}-normal`, {
                 [itemPrefix]: true,
                 [`${itemPrefix}-selected`]: selected(),
                 [`${itemPrefix}-collapsed`]: isCollapsed(),
@@ -187,7 +204,7 @@ export function ItemView(allProps: NavItemProps & { itemConfig?: NavItemType }) 
                 [`${itemPrefix}-has-link`]: hasLink(),
                 [`${itemPrefix}-has-button`]: !hasLink(),
             })}
-            style={local.style}
+            style={mergeStyles(view().styles?.item, local.style)}
         >
             <Show when={tooltipped()} fallback={control(plainTrigger)}>
                 <Tooltip condition={isCollapsed()} content={local.text} mouseEnterDelay={local.tooltipShowDelay ?? view().tooltipShowDelay} mouseLeaveDelay={local.tooltipHideDelay ?? view().tooltipHideDelay} position="right" trigger="hover" wrapWhenSpecial={false}>
@@ -213,13 +230,13 @@ export function ItemView(allProps: NavItemProps & { itemConfig?: NavItemType }) 
             {...rest}
             ref={mergeRefs(local.ref)}
             forwardRef={local.forwardRef}
-            class={clsx(local.class, {
+            class={clsx(view().classNames?.item, local.class, {
                 [itemPrefix]: true,
                 [`${itemPrefix}-selected`]: selected(),
                 [`${itemPrefix}-collapsed`]: isCollapsed(),
                 [`${itemPrefix}-disabled`]: local.disabled,
             })}
-            style={local.style}
+            style={mergeStyles(view().styles?.item, local.style)}
             aria-current={selected() ? 'page' : undefined}
             disabled={Boolean(local.disabled)}
             active={selected()}

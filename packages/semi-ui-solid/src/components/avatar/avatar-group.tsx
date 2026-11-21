@@ -26,6 +26,8 @@ interface GroupItemsProps {
     locate: (nodes: readonly unknown[]) => void;
     size: Accessor<string>;
     shape: AvatarGroupItem['shape'];
+    classNames: AvatarGroupProps['classNames'];
+    styles: AvatarGroupProps['styles'];
 }
 
 // Rendered inside the provider: Solid context follows the owner a child is created under, so the avatars must be
@@ -57,7 +59,7 @@ function GroupItems(props: GroupItemsProps) {
         return names.length > 0 ? `${label}: ${names}` : label;
     };
 
-    const moreItem = () => ({ size: props.size(), shape: props.shape(), class: props.item.overlapClass(split().visible.length) });
+    const moreItem = () => ({ size: props.size(), shape: props.shape(), class: clsx(props.item.overlapClass(split().visible.length), props.classNames?.more), style: props.styles?.more });
 
     const more = () => {
         const rest = hidden();
@@ -95,7 +97,7 @@ function GroupItems(props: GroupItemsProps) {
 
 export default function AvatarGroup(rawProps: AvatarGroupProps) {
     const props = useDefaultProps('AvatarGroup', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['children', 'maxCount', 'overlapFrom', 'size', 'shape', 'renderMore', 'class']);
+    const [local, rest] = splitProps(props, ['children', 'maxCount', 'overlapFrom', 'size', 'shape', 'renderMore', 'classNames', 'styles', 'class']);
 
     const layer = usePopupLayer();
 
@@ -141,7 +143,7 @@ export default function AvatarGroup(rawProps: AvatarGroupProps) {
     return (
         <div role="list" {...rest} class={clsx(`${prefixCls}-group`, local.class)}>
             <AvatarGroupContext.Provider value={{ inGroup: true, layer, item: groupItem }}>
-                <GroupItems item={groupItem} maxCount={local.maxCount} renderMore={local.renderMore} locate={locate} setOrder={setOrder} shape={shape} size={size}>
+                <GroupItems item={groupItem} maxCount={local.maxCount} renderMore={local.renderMore} classNames={local.classNames} styles={local.styles} locate={locate} setOrder={setOrder} shape={shape} size={size}>
                     {local.children}
                 </GroupItems>
             </AvatarGroupContext.Provider>

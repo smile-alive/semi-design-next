@@ -2,20 +2,22 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性            | 说明                                                                                                  | 类型                                            | 默认值      |
-| --------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ----------- |
-| disabled        | 是否禁用，禁用后不显示移除、重试和替换按钮。                                                          | `boolean`                                       | `undefined` |
-| file            | 要展示的文件，必填。                                                                                  | `FileItem`                                      | `undefined` |
-| index           | 文件在列表中的位置。                                                                                  | `number`                                        | `undefined` |
-| listType        | 卡片的展示类型，可选 list、picture、none；none 不渲染卡片。                                           | `"list" \| "none" \| "picture"`                 | `"list"`    |
-| onPreviewClick  | 监听方式为 @previewClick。传入后卡片可点击，并显示预览按钮；是否传入会改变渲染，因此保留为函数 prop。 | <ApiType detail={"(() => void)"}>Type</ApiType> | `undefined` |
-| picHeight       | 照片墙模式下图片的高度。                                                                              | `string \| number`                              | `undefined` |
-| picWidth        | 照片墙模式下图片的宽度。                                                                              | `string \| number`                              | `undefined` |
-| showPicInfo     | 是否显示图片信息，只在照片墙模式下有效。                                                              | `boolean`                                       | `undefined` |
-| showReplace     | 上传成功后是否展示替换按钮，文件自身的 showReplace 优先。                                             | `boolean`                                       | `undefined` |
-| showRetry       | 上传失败时是否展示重试按钮，文件自身的 showRetry 优先。                                               | `boolean`                                       | `undefined` |
-| showTooltip     | 文件名过长时是否展示提示，或配置提示的类型和透传属性。                                                | `boolean \| ShowTooltip`                        | `true`      |
-| validateMessage | 校验信息，优先于文件自身的 validateMessage。                                                          | `string`                                        | `undefined` |
+| 属性            | 说明                                                                                                                                                              | 类型                                                                                         | 默认值      |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------- |
+| classNames      | 内部各部位的类名，键为 `thumbnail`、`name`、`progress`、`validateMessage`、`retry`、`replace`、`close`，与组件自带的类名合并，排在 Upload 对应的 `item*` 键之后。 | <ApiType detail={"Partial\u003cRecord\u003cUploadFileCardPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| disabled        | 是否禁用，禁用后不显示移除、重试和替换按钮。                                                                                                                      | `boolean`                                                                                    | `undefined` |
+| file            | 要展示的文件，必填。                                                                                                                                              | `FileItem`                                                                                   | `undefined` |
+| index           | 文件在列表中的位置。                                                                                                                                              | `number`                                                                                     | `undefined` |
+| listType        | 卡片的展示类型，可选 list、picture、none；none 不渲染卡片。                                                                                                       | `"list" \| "none" \| "picture"`                                                              | `"list"`    |
+| onPreviewClick  | 监听方式为 @previewClick。传入后卡片可点击，并显示预览按钮；是否传入会改变渲染，因此保留为函数 prop。                                                             | <ApiType detail={"(() => void)"}>Type</ApiType>                                              | `undefined` |
+| picHeight       | 照片墙模式下图片的高度。                                                                                                                                          | `string \| number`                                                                           | `undefined` |
+| picWidth        | 照片墙模式下图片的宽度。                                                                                                                                          | `string \| number`                                                                           | `undefined` |
+| showPicInfo     | 是否显示图片信息，只在照片墙模式下有效。                                                                                                                          | `boolean`                                                                                    | `undefined` |
+| showReplace     | 上传成功后是否展示替换按钮，文件自身的 showReplace 优先。                                                                                                         | `boolean`                                                                                    | `undefined` |
+| showRetry       | 上传失败时是否展示重试按钮，文件自身的 showRetry 优先。                                                                                                           | `boolean`                                                                                    | `undefined` |
+| showTooltip     | 文件名过长时是否展示提示，或配置提示的类型和透传属性。                                                                                                            | `boolean \| ShowTooltip`                                                                     | `true`      |
+| styles          | 内部各部位的内联样式，键同 classNames，与 Upload 对应的 `item*` 键合并，以这里的为准。                                                                            | <ApiType detail={"Partial\u003cRecord\u003cUploadFileCardPart, StyleValue>>"}>Type</ApiType> | `undefined` |
+| validateMessage | 校验信息，优先于文件自身的 validateMessage。                                                                                                                      | `string`                                                                                     | `undefined` |
 
 **Events**
 

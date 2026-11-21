@@ -37,6 +37,7 @@
 
     const nodeClass = $derived(getTreeRowClassMap(row, rowFlags));
     const labelClass = $derived(getTreeLabelClassMap(row, rowFlags));
+    const itemStyle = $derived([rowStyle, context.styles?.item].filter(Boolean).join(';') || undefined);
     const aria = $derived(getTreeRowAria(row, { disabled, isLeaf, multiple: context.multiple }));
     const draggable = $derived(context.draggable && !disabled ? true : undefined);
     const highlighted = $derived(Boolean(row.filtered && row.keyword && row.label !== undefined));
@@ -146,11 +147,12 @@
 {#if fullLabel}
     <li
         {...aria}
+        class={context.classNames?.item}
         data-key={row.eventKey}
         {draggable}
         {id}
         role="treeitem"
-        style={rowStyle}
+        style={itemStyle}
         ondragend={context.draggable ? onDragend : undefined}
         ondragenter={context.draggable ? onDragenter : undefined}
         ondragleave={context.draggable ? onDragleave : undefined}
@@ -163,12 +165,12 @@
 {:else}
     <li
         {...aria}
-        class={nodeClass}
+        class={[nodeClass, context.classNames?.item]}
         data-key={row.eventKey}
         {draggable}
         {id}
         role="treeitem"
-        style={rowStyle}
+        style={itemStyle}
         onclick={onClick}
         oncontextmenu={onContextmenu}
         ondblclick={onDblclick}
@@ -187,7 +189,7 @@
         <NodeArrow {expandIcon} {onExpand} {row} {showLine} />
         <span class={labelClass}>
             {#if context.multiple}
-                <div role="none" onclick={onCheck}>
+                <div class={context.classNames?.itemCheckbox} role="none" style={context.styles?.itemCheckbox} onclick={onCheck}>
                     <Checkbox aria-hidden="true" bind:checked={() => Boolean(row.checked), () => {}} {disabled} indeterminate={Boolean(row.halfChecked)} tabindex={-1} />
                 </div>
             {/if}
@@ -195,14 +197,14 @@
                 {@render icon({ item: row.data, level: row.level, expanded: Boolean(row.expanded), isLeaf, loading: Boolean(row.loading), selected: Boolean(row.selected), checked: Boolean(row.checked), halfChecked: Boolean(row.halfChecked) })}
             {:else if context.directory}
                 {#if isLeaf}
-                    <IconFile class="{prefix}-item-icon" />
+                    <IconFile class={[`${prefix}-item-icon`, context.classNames?.itemIcon]} style={context.styles?.itemIcon} />
                 {:else if row.expanded}
-                    <IconFolderOpen class="{prefix}-item-icon" />
+                    <IconFolderOpen class={[`${prefix}-item-icon`, context.classNames?.itemIcon]} style={context.styles?.itemIcon} />
                 {:else}
-                    <IconFolder class="{prefix}-item-icon" />
+                    <IconFolder class={[`${prefix}-item-icon`, context.classNames?.itemIcon]} style={context.styles?.itemIcon} />
                 {/if}
             {/if}
-            <span class="{prefix}-label-text">
+            <span class={[`${prefix}-label-text`, context.classNames?.itemTitle]} style={context.styles?.itemTitle}>
                 {#if label}
                     {@render label({ item: row.data, label: row.label, searchWord: row.keyword })}
                 {:else if highlighted}

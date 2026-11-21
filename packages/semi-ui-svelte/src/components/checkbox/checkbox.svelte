@@ -16,7 +16,24 @@
     const defaults = useDefaultProps('Checkbox');
 
     // No fallback on `checked`: a bound `undefined` (form reset) would throw with one
-    let { checked = $bindable(), value, disabled = defaults('disabled', false), indeterminate = defaults('indeterminate', false), type = defaults('type', 'default'), addonId, extraId, preventScroll = defaults('preventScroll'), name, onChange, onclick, children, extra, ...rest }: CheckboxProps = $props();
+    let {
+        checked = $bindable(),
+        value,
+        disabled = defaults('disabled', false),
+        indeterminate = defaults('indeterminate', false),
+        type = defaults('type', 'default'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
+        addonId,
+        extraId,
+        preventScroll = defaults('preventScroll'),
+        name,
+        onChange,
+        onclick,
+        children,
+        extra,
+        ...rest
+    }: CheckboxProps = $props();
 
     const group = getCheckboxGroupContext();
 
@@ -113,6 +130,7 @@
     {...attachmentProps(rest)}
     class={[
         prefix,
+        group?.classNames?.item,
         rest.class,
         {
             [`${prefix}-disabled`]: view.disabled,
@@ -126,7 +144,7 @@
             [`${prefix}-cardType_checked_disabled`]: view.isCardType && view.checked && view.disabled,
         },
     ]}
-    style={[rest.style, tooltip?.pointerEventsNone && 'pointer-events: none'].filter(Boolean).join(';') || undefined}
+    style={[group?.styles?.item, rest.style, tooltip?.pointerEventsNone && 'pointer-events: none'].filter(Boolean).join(';') || undefined}
     onclick={handleClick}
 >
     <span class={[`${prefix}-inner`, { [`${prefix}-inner-checked`]: view.checked, [`${prefix}-inner-pureCardType`]: view.isPureCardType }]}>
@@ -146,7 +164,7 @@
             value={value === undefined ? undefined : String(value)}
             onchange={handleInputChange}
         />
-        <span class="{prefix}-inner-display">
+        <span class={[`${prefix}-inner-display`, group?.classNames?.itemIcon, classNames?.icon]} style={[group?.styles?.itemIcon, styles?.icon].filter(Boolean).join(';') || undefined}>
             {#if view.checked}
                 <IconCheckboxTick />
             {:else if indeterminate}
@@ -157,10 +175,11 @@
     {#if children || extra}
         <div class="{prefix}-content">
             {#if children}
-                <span class="{prefix}-addon" id={addonDomId} x-semi-prop="children">{@render children()}</span>
+                <span class={[`${prefix}-addon`, group?.classNames?.itemLabel, classNames?.label]} id={addonDomId} style={[group?.styles?.itemLabel, styles?.label].filter(Boolean).join(';') || undefined} x-semi-prop="children">{@render children()}</span>
             {/if}
             {#if extra}
-                <div class={[`${prefix}-extra`, { [`${prefix}-cardType_extra_noChildren`]: view.isCardType && !children }]} id={extraDomId} x-semi-prop="extra">{@render extra()}</div>
+                <div class={[`${prefix}-extra`, { [`${prefix}-cardType_extra_noChildren`]: view.isCardType && !children }, group?.classNames?.itemExtra, classNames?.extra]} id={extraDomId} style={[group?.styles?.itemExtra, styles?.extra].filter(Boolean).join(';') || undefined} x-semi-prop="extra">{@render extra()}</div
+                >
             {/if}
         </div>
     {/if}

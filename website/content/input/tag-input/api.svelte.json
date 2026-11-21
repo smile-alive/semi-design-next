@@ -116,6 +116,10 @@
                 "zh-CN": "输入框前缀的 snippet，文字或图标会自动带上左右间隔。",
                 "en-US": "Snippet for the prefix of the input; text or an icon gets side spacing automatically."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式（字符串），键同 `classNames`。",
+                "en-US": "Inline styles (strings) of the inner parts, keyed like `classNames`."
+            },
             "suffix": {
                 "zh-CN": "输入框后缀的 snippet，文字或图标会自动带上左右间隔。",
                 "en-US": "Snippet for the suffix of the input; text or an icon gets side spacing automatically."
@@ -123,6 +127,10 @@
             "insetLabel": {
                 "zh-CN": "内嵌标签的 snippet，显示在输入框前；同时提供 prefix 时只显示 prefix。显示时，没有 aria-label、aria-labelledby 的输入框以它命名。",
                 "en-US": "Snippet for the inset label shown before the input; when prefix is also given, only prefix is shown. When shown, it names an input that has no aria-label or aria-labelledby."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `prefix`、`suffix`、`content`、`tag`、`input`、`clear`，与组件自带的类名合并。`input` 落在内嵌输入框的根元素上，不是原生 input；`tag` 只作用于默认标签，`tag` snippet 渲染的节点自行控制样式。",
+                "en-US": "Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `tag`, `input` and `clear`; merged with the built-in classes. `input` lands on the root element of the inner Input, not the native input; `tag` applies to the default tags only, nodes from the `tag` snippet are styled by the caller."
             },
             "clearIcon": {
                 "zh-CN": "替换清除按钮中图标的 snippet；内容为空时使用默认图标。",

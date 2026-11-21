@@ -34,7 +34,7 @@
 {/snippet}
 
 <div {...rest} aria-labelledby={labelledby} class={[`${prefix}-field`, `${prefix}-slot`, rest.class]} role={namedRole({ ...rest, 'aria-labelledby': labelledby }) as 'group' | undefined} {...{ 'x-label-pos': shownLabelPosition }}>
-    <FieldGrid label={labelView} labelAlign={formProps.labelAlign} labelCol={formProps.labelCol} labelPosition={shownLabelPosition} mainClass={[`${prefix}-field-main`, `${prefix}-slot-main`]} wrapperCol={formProps.wrapperCol}>
+    <FieldGrid label={labelView} labelAlign={formProps.labelAlign} labelCol={formProps.labelCol} labelPosition={shownLabelPosition} mainClass={[`${prefix}-field-main`, `${prefix}-slot-main`, formProps.classNames?.content]} mainStyle={formProps.styles?.content} wrapperCol={formProps.wrapperCol}>
         {@render children?.()}
         {#if error !== undefined}
             <ErrorMessage {error} {errorContent} />

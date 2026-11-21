@@ -22,11 +22,11 @@
 
 {#snippet defaultContent()}
     {#if message.references?.length && !editing}
-        <ReferenceWidget references={message.references} />
+        <ReferenceWidget class={view.classNames?.references} references={message.references} style={view.styles?.references} />
     {/if}
     <DialogueContentBody {editing} {message} />
     {#if loading}
-        <span class="{PREFIX_CONTENT}-loading">
+        <span class={[`${PREFIX_CONTENT}-loading`, view.classNames?.loading]} style={view.styles?.loading}>
             <span class="{PREFIX_CONTENT}-loading-item"></span>
             <span class="{PREFIX_CONTENT}-loading-item"></span>
             <span class="{PREFIX_CONTENT}-loading-item"></span>
@@ -38,7 +38,7 @@
 {#if snippets.content}
     {@render snippets.content({ class: DialogueFoundation.getContentClass(message.role, message.status, view.mode), defaultContent, message, role })}
 {:else}
-    <div class={[PREFIX_CONTENT, { [`${PREFIX_CONTENT}-editing`]: editing }]}>
+    <div class={[PREFIX_CONTENT, { [`${PREFIX_CONTENT}-editing`]: editing }, view.classNames?.itemContent]} style={view.styles?.itemContent}>
         {@render defaultContent()}
     </div>
 {/if}

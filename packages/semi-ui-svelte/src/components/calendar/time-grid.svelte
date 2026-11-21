@@ -22,7 +22,7 @@
         weekStartsOn: WeekStartsOn;
     }
 
-    let { range, labelDate, events, markWeekend, minEventHeight, showCurrTime, scrollTop, weekStartsOn, today, width, height, header, event, dateDisplay, dateGrid, timeDisplay, allDayEvents, onClick, ...rest }: Props = $props();
+    let { range, labelDate, events, markWeekend, minEventHeight, showCurrTime, scrollTop, weekStartsOn, today, width, height, header, event, dateDisplay, dateGrid, timeDisplay, allDayEvents, classNames, styles, onClick, ...rest }: Props = $props();
 
     const calendar = getCalendarContext();
     const locale = useLocale('Calendar');
@@ -60,14 +60,14 @@
                 </div>
             </div>
         {/if}
-        <div class={`${prefixCls}-header`} role="row">
+        <div class={[`${prefixCls}-header`, classNames?.header]} role="row" style={styles?.header}>
             <div class={[`${cssClasses.PREFIX}-tag`, `${prefixCls}-tag`, `${prefixCls}-sticky-left`]} id={monthId} role="cell">
                 <span>{rangeData.month}</span>
             </div>
             <div class={`${prefixCls}-grid`}>
                 <div class={`${prefixCls}-grid-row`}>
                     {#each rangeData.week as day (day.date.toString())}
-                        <div aria-current={day.isToday ? 'date' : undefined} class={[{ [`${cssClasses.PREFIX}-today`]: day.isToday }, weekendCls(day)]} role="columnheader">
+                        <div aria-current={day.isToday ? 'date' : undefined} class={[{ [`${cssClasses.PREFIX}-today`]: day.isToday }, weekendCls(day), classNames?.headerCell]} role="columnheader" style={styles?.headerCell}>
                             {#if dateDisplay}
                                 {@render dateDisplay({ date: day.date })}
                             {:else}
@@ -79,7 +79,7 @@
                 </div>
             </div>
         </div>
-        <div class={allDayCls} role="row" style:height={allDayEvents ? undefined : `${calcRowHeight(allDayItems)}em`}>
+        <div class={[allDayCls, classNames?.allDay]} role="row" style={`${allDayEvents ? '' : `height: ${calcRowHeight(allDayItems)}em;`}${styles?.allDay ?? ''}`}>
             <div class={[`${cssClasses.PREFIX}-tag`, `${allDayCls}-tag`, `${prefixCls}-sticky-left`]} role="rowheader">
                 <span>{locale().locale.allDay}</span>
             </div>
@@ -94,7 +94,7 @@
                         {@render allDayEvents({ events })}
                     {:else}
                         {#each withKeys(allDayItems, 'allDay') as { id, item } (id)}
-                            <li class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`]} style:inset-inline-start={toPercent(item.leftPos ?? 0)} style:top={`${item.topInd ?? 0}em`} style:width={toPercent(item.width ?? 0)}>
+                            <li class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`, classNames?.event]} style={`inset-inline-start: ${toPercent(item.leftPos ?? 0)}; top: ${item.topInd ?? 0}em; width: ${toPercent(item.width ?? 0)};${styles?.event ?? ''}`}>
                                 {#if event}
                                     {@render event({ event: calendar.eventOf(item) })}
                                 {:else}
@@ -109,9 +109,9 @@
     </div>
     <div class={`${prefixCls}-scroll-wrapper`} role="rowgroup">
         <div {@attach grid.observe} bind:this={scroll} class={`${prefixCls}-scroll`} role="row">
-            <TimeCol class={`${prefixCls}-sticky-left`} {timeDisplay} />
+            <TimeCol class={`${prefixCls}-sticky-left`} {classNames} {styles} {timeDisplay} />
             {#each rangeData.week as day (day.date.toString())}
-                <DayCol {dateGrid} displayValue={day.date} {event} events={dayEvents(day)} isWeekend={markWeekend && day.isWeekend} {minEventHeight} onSlotClick={(mouseEvent, value) => onClick?.(mouseEvent, value)} scrollHeight={grid.scrollHeight()} {showCurrTime} {today} />
+                <DayCol {classNames} {dateGrid} displayValue={day.date} {event} events={dayEvents(day)} isWeekend={markWeekend && day.isWeekend} {minEventHeight} onSlotClick={(mouseEvent, value) => onClick?.(mouseEvent, value)} scrollHeight={grid.scrollHeight()} {showCurrTime} {styles} {today} />
             {/each}
         </div>
     </div>

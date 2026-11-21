@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { strings } from '@fibrae/semi-foundation/components/anchor/constants';
+import type { AnchorLinkPart, AnchorPart, strings } from '@fibrae/semi-foundation/components/anchor/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { Position } from '../tooltip/interface.js';
 import type { ShowTooltip } from '../typography/interface.js';
@@ -15,6 +15,9 @@ export interface AnchorLinkItem {
     title?: string;
     disabled?: boolean;
     children?: AnchorLinkItem[];
+    /** Applied after the `itemTitle` classNames of the Anchor */
+    classNames?: Partial<Record<AnchorLinkPart, ClassValue>>;
+    styles?: Partial<Record<AnchorLinkPart, string>>;
 }
 
 export interface AnchorTitleContext {
@@ -28,6 +31,8 @@ export interface AnchorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title
     /** The links, nested through `children`; a flat or nested list is known up front, so the first frame is complete */
     links?: AnchorLinkItem[];
     autoCollapse?: boolean;
+    /** `item*` keys apply to every link, before the link's own classNames */
+    classNames?: Partial<Record<AnchorPart, ClassValue>>;
     defaultAnchor?: string;
     getContainer?: () => HTMLElement | Window | null;
     maxHeight?: string | number;
@@ -40,6 +45,7 @@ export interface AnchorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title
     scrollIntoViewOptions?: ScrollIntoViewOptions;
     showTooltip?: boolean | ShowTooltip;
     size?: ArrayElement<typeof strings.SIZE>;
+    styles?: Partial<Record<AnchorPart, string>>;
     targetOffset?: number;
     onChange?: (currentLink: string, previousLink: string) => void;
     /** Only when a link is activated, so a click elsewhere on the root does not reach it */

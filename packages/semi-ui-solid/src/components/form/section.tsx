@@ -1,6 +1,6 @@
 import { type JSX, Show, children, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { cssClasses, type FormSectionPart } from '@fibrae/semi-foundation/components/form/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/form/form.scss';
 import type { ElementProps } from '../../base/index';
@@ -12,10 +12,12 @@ export interface SectionProps extends ElementProps<'fieldset'> {
     text?: JSX.Element;
     /** Shown below the title and describes the fieldset */
     extraText?: JSX.Element;
+    classNames?: Partial<Record<FormSectionPart, string>>;
+    styles?: Partial<Record<FormSectionPart, JSX.CSSProperties | string>>;
 }
 
 export default function Section(props: SectionProps) {
-    const [local, rest] = splitProps(props, ['children', 'class', 'text', 'extraText', 'aria-describedby']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'text', 'extraText', 'styles', 'aria-describedby']);
 
     const extraId = createUniqueId();
 
@@ -26,10 +28,12 @@ export default function Section(props: SectionProps) {
         <fieldset {...rest} aria-describedby={joinIds(local['aria-describedby'], hasContent(extraText()) && extraId)} class={clsx(`${prefix}-section`, local.class)}>
             {/* an empty legend would still draw its divider */}
             <Show when={hasContent(text())}>
-                <legend class={`${prefix}-section-text`}>{text()}</legend>
+                <legend class={clsx(`${prefix}-section-text`, local.classNames?.title)} style={local.styles?.title}>
+                    {text()}
+                </legend>
             </Show>
             <Show when={hasContent(extraText())}>
-                <div class={`${prefix}-section-extra`} id={extraId}>
+                <div class={clsx(`${prefix}-section-extra`, local.classNames?.extra)} style={local.styles?.extra} id={extraId}>
                     {extraText()}
                 </div>
             </Show>

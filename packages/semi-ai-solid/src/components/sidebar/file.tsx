@@ -1,7 +1,7 @@
 import { For, Show, createSignal, getOwner, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { type ChainedCommands, Editor, type Extensions } from '@tiptap/core';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { type SidebarFileContentPart, type SidebarFileItemPart, cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import {
     type FileMenuButtonKey,
     type FileMenuItem,
@@ -58,7 +58,7 @@ import { useWatch } from '@fibrae/semi-ui-solid/primitives/index';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import { CollapseExpandButton, CollapseHeader } from './code';
 import { type ImageUploadNodeOptions, createImageUploadNode } from './image-slot';
-import type { SideBarCollapseProps } from './interface';
+import type { PartStyle, SideBarCollapseProps } from './interface';
 
 const collapseCls = cssClasses.COLLAPSE;
 const prefixCls = cssClasses.FILE;
@@ -66,6 +66,8 @@ const prefixCls = cssClasses.FILE;
 export interface FileItemProps extends ElementProps<'div'> {
     /** Identifies the item's panel; a new key remounts the Sidebar detail */
     key?: string;
+    classNames?: Partial<Record<SidebarFileItemPart, string>>;
+    styles?: Partial<Record<SidebarFileItemPart, PartStyle>>;
     name?: string;
     editable?: boolean;
     /** HTML; a later value replaces the document without calling onContentChange */
@@ -78,6 +80,8 @@ export interface FileItemProps extends ElementProps<'div'> {
 }
 
 export interface FileContentProps extends SideBarCollapseProps {
+    classNames?: Partial<Record<SidebarFileContentPart, string>>;
+    styles?: Partial<Record<SidebarFileContentPart, PartStyle>>;
     files?: FileItemProps[];
     onExpand?: (e: MouseEvent, file: FileItemProps, mode: string) => void;
 }
@@ -114,7 +118,7 @@ function MenuButton(props: MenuButtonProps) {
     return <Button {...rest} type="tertiary" class={clsx(`${prefixCls}-menu-bar-btn`, { [`${prefixCls}-menu-bar-btn-active`]: local.active }, local.class)} theme="borderless" />;
 }
 
-function MenuBar(props: { editor: Editor; canUpload: boolean }) {
+function MenuBar(props: { editor: Editor; canUpload: boolean; class?: string; style?: PartStyle }) {
     const locale = useLocale('Sidebar');
 
     const [linkVisible, setLinkVisible] = createSignal(false);
@@ -235,7 +239,7 @@ function MenuBar(props: { editor: Editor; canUpload: boolean }) {
     onCleanup(() => editor.off('transaction', update));
 
     return (
-        <div class={`${prefixCls}-menu-bar`}>
+        <div class={clsx(`${prefixCls}-menu-bar`, props.class)} style={props.style}>
             <For each={getFileMenuItems(props.canUpload)}>{renderItem}</For>
         </div>
     );
@@ -245,7 +249,7 @@ const fileItemDefaults = { editable: true } satisfies Partial<FileItemProps>;
 
 export function FileItem(rawProps: FileItemProps) {
     const props = mergeProps(fileItemDefaults, rawProps);
-    const [local, rest] = splitProps(props, ['key', 'editable', 'name', 'content', 'onContentChange', 'extensions', 'class', 'imgUploadProps']);
+    const [local, rest] = splitProps(props, ['key', 'editable', 'name', 'content', 'onContentChange', 'extensions', 'class', 'classNames', 'styles', 'imgUploadProps']);
 
     // Created on mount: tiptap parses the content with the DOM, which a server render does not have. The effects
     // below apply later content, editable and name once the editor exists.
@@ -304,21 +308,25 @@ export function FileItem(rawProps: FileItemProps) {
     return (
         <div {...rest} class={clsx(prefixCls, local.class)}>
             <Show when={local.editable ? editor() : undefined} keyed>
-                {(current) => <MenuBar canUpload={canUpload} editor={current} />}
+                {(current) => <MenuBar canUpload={canUpload} class={local.classNames?.menuBar} editor={current} style={local.styles?.menuBar} />}
             </Show>
-            <div ref={(node) => (editorRoot = node)} class={`${prefixCls}-editor`} />
+            <div ref={(node) => (editorRoot = node)} class={clsx(`${prefixCls}-editor`, local.classNames?.editor)} style={local.styles?.editor} />
         </div>
     );
 }
 
 export default function FileContent(props: FileContentProps) {
-    const [local, rest] = splitProps(props, ['activeKey', 'files', 'onExpand', 'class', 'onChange']);
+    const [local, rest] = splitProps(props, ['activeKey', 'files', 'onExpand', 'class', 'classNames', 'styles', 'onChange']);
 
     return (
         <Collapse {...rest} class={clsx(collapseCls, `${collapseCls}-file`, local.class)} activeKey={local.activeKey} clickHeaderToExpand={false} onChange={local.onChange}>
             <For each={local.files}>
                 {(file) => (
-                    <Collapse.Panel header={<CollapseHeader content={file} mode="file" />} itemKey={file.key!} extra={local.onExpand ? <CollapseExpandButton content={file} mode="file" onExpand={local.onExpand} /> : undefined}>
+                    <Collapse.Panel
+                        header={<CollapseHeader class={local.classNames?.itemHeader} content={file} mode="file" style={local.styles?.itemHeader} />}
+                        itemKey={file.key!}
+                        extra={local.onExpand ? <CollapseExpandButton class={local.classNames?.itemExpand} content={file} mode="file" style={local.styles?.itemExpand} onExpand={local.onExpand} /> : undefined}
+                    >
                         <FileItem {...file} editable={false} />
                     </Collapse.Panel>
                 )}

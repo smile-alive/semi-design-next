@@ -1,12 +1,12 @@
 import { type JSX, For, Show, children, createMemo, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
+import { cssClasses, numbers, type PaginationPart } from '@fibrae/semi-foundation/components/pagination/constants';
 import PaginationFoundation, { type PageList, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
 import { formatLocale, type Locale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/pagination/pagination.scss';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { hasContent, mergeRefs } from '../../utils/index';
+import { hasContent, mergeRefs, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import InputNumber from '../input-number';
 import useLocale from '../locale/use-locale';
@@ -22,7 +22,11 @@ export type PaginationLocale = Locale['Pagination'];
 export type PopoverPosition = Position;
 export type { PageList };
 
+type Style = JSX.CSSProperties | string;
+
 export interface PaginationProps extends ElementProps<'nav', 'onChange'> {
+    classNames?: Partial<Record<PaginationPart, string>>;
+    styles?: Partial<Record<PaginationPart, Style>>;
     total?: number;
     showTotal?: boolean;
     pageSize?: number;
@@ -74,6 +78,8 @@ const namesButton = (node: unknown) => (typeof node === 'string' ? node !== '' :
 
 interface StepButtonProps {
     kind: 'prev' | 'next';
+    class?: string;
+    style?: Style;
     text: JSX.Element;
     label: string;
     disabled: boolean;
@@ -85,7 +91,15 @@ function StepButton(props: StepButtonProps) {
 
     return (
         <li>
-            <button type="button" class={clsx(`${prefixCls}-item`, `${prefixCls}-${props.kind}`, { [`${prefixCls}-item-disabled`]: props.disabled })} aria-label={namesButton(resolved()) ? undefined : props.label} disabled={props.disabled} x-semi-prop={`${props.kind}Text`} onClick={() => props.onClick()}>
+            <button
+                type="button"
+                class={clsx(`${prefixCls}-item`, `${prefixCls}-${props.kind}`, { [`${prefixCls}-item-disabled`]: props.disabled }, props.class)}
+                style={props.style}
+                aria-label={namesButton(resolved()) ? undefined : props.label}
+                disabled={props.disabled}
+                x-semi-prop={`${props.kind}Text`}
+                onClick={() => props.onClick()}
+            >
                 <Show when={hasContent(resolved())} fallback={props.kind === 'prev' ? <IconChevronLeft size="large" /> : <IconChevronRight size="large" />}>
                     {resolved()}
                 </Show>
@@ -114,6 +128,8 @@ export default function Pagination(rawProps: PaginationProps) {
         'showQuickJumper',
         'popoverPosition',
         'class',
+        'classNames',
+        'styles',
         'ref',
         'hideOnSinglePage',
         'hoverShowPageSelect',
@@ -159,15 +175,24 @@ export default function Pagination(rawProps: PaginationProps) {
         const isActive = () => state().currentPage === page();
         const range = () => (itemProps.pageKey === 'rest-left' ? pageData().restLeftRange : pageData().restRightRange);
 
+        const isEllipsis = () => typeof itemProps.pageKey === 'string';
+
         const pageButton = (triggerProps?: object) => (
             <button
                 {...triggerProps}
                 type="button"
-                class={clsx(`${prefixCls}-item`, {
-                    [`${prefixCls}-item-active`]: isActive(),
-                    [`${prefixCls}-item-all-disabled`]: local.disabled,
-                    [`${prefixCls}-item-all-disabled-active`]: isActive() && local.disabled,
-                })}
+                class={clsx(
+                    `${prefixCls}-item`,
+                    {
+                        [`${prefixCls}-item-active`]: isActive(),
+                        [`${prefixCls}-item-all-disabled`]: local.disabled,
+                        [`${prefixCls}-item-all-disabled-active`]: isActive() && local.disabled,
+                        [`${prefixCls}-item-ellipsis`]: isEllipsis(),
+                    },
+                    local.classNames?.item,
+                    isEllipsis() && local.classNames?.ellipsis
+                )}
+                style={mergeStyles(local.styles?.item, isEllipsis() ? local.styles?.ellipsis : undefined)}
                 aria-current={isActive() ? 'page' : undefined}
                 aria-label={itemProps.pageKey === 'rest-left' || itemProps.pageKey === 'rest-right' ? text().more : pageLabel(itemProps.pageKey)}
                 disabled={local.disabled}
@@ -181,7 +206,7 @@ export default function Pagination(rawProps: PaginationProps) {
             <li>
                 {/* opens on hover or focus; ArrowDown moves into it */}
                 <Show when={typeof itemProps.pageKey === 'string' && !local.disabled} fallback={pageButton()}>
-                    <Popover content={<RestPages count={range().count} start={range().start} onSelect={foundation.goPage} />} position={local.popoverPosition} trigger="hover">
+                    <Popover classNames={{ content: local.classNames?.dropdown }} content={<RestPages count={range().count} start={range().start} onSelect={foundation.goPage} />} position={local.popoverPosition} styles={{ content: local.styles?.dropdown }} trigger="hover">
                         {(getTriggerProps) => pageButton(getTriggerProps())}
                     </Popover>
                 </Show>
@@ -191,18 +216,30 @@ export default function Pagination(rawProps: PaginationProps) {
 
     const renderSmallCounter = () => {
         const counterClass = () =>
-            clsx(`${prefixCls}-item`, `${prefixCls}-item-small`, {
-                [`${prefixCls}-item-all-disabled`]: local.disabled,
-            });
+            clsx(
+                `${prefixCls}-item`,
+                `${prefixCls}-item-small`,
+                {
+                    [`${prefixCls}-item-all-disabled`]: local.disabled,
+                },
+                local.classNames?.item
+            );
         const counterText = () => `${state().currentPage}/${view().totalPageNum} `;
 
         return (
             <li>
                 {/* opens on hover or focus; ArrowDown moves into it */}
-                <Show when={local.hoverShowPageSelect && !local.disabled} fallback={<div class={counterClass()}>{counterText()}</div>}>
-                    <Popover content={<RestPages count={view().totalPageNum} start={1} onSelect={foundation.goPage} />}>
+                <Show
+                    when={local.hoverShowPageSelect && !local.disabled}
+                    fallback={
+                        <div class={counterClass()} style={local.styles?.item}>
+                            {counterText()}
+                        </div>
+                    }
+                >
+                    <Popover classNames={{ content: local.classNames?.dropdown }} content={<RestPages count={view().totalPageNum} start={1} onSelect={foundation.goPage} />} styles={{ content: local.styles?.dropdown }}>
                         {(getTriggerProps) => (
-                            <button {...getTriggerProps()} type="button" class={counterClass()}>
+                            <button {...getTriggerProps()} type="button" class={counterClass()} style={local.styles?.item}>
                                 {counterText()}
                             </button>
                         )}
@@ -216,19 +253,22 @@ export default function Pagination(rawProps: PaginationProps) {
         <Show when={!view().hidden}>
             {/* Show's children memo tracks the ref read; a spread props signal would recreate the whole list */}
             <nav {...rest} ref={untrack(() => mergeRefs(local.ref, registerTrigger))} aria-label={local['aria-label'] ?? text().label} class={clsx(local.class, `${prefixCls}-wrapper`)}>
-                <ul class={clsx(prefixCls, { [`${prefixCls}-small`]: small(), [`${prefixCls}-disabled`]: local.disabled })}>
+                <ul class={clsx(prefixCls, { [`${prefixCls}-small`]: small(), [`${prefixCls}-disabled`]: local.disabled }, local.classNames?.list)} style={local.styles?.list}>
                     <Show when={local.showTotal && !small()}>
-                        <li class={`${prefixCls}-total`}>{formatLocale(text().total, { total: view().totalPageNum })}</li>
+                        <li class={clsx(`${prefixCls}-total`, local.classNames?.total)} style={local.styles?.total}>
+                            {formatLocale(text().total, { total: view().totalPageNum })}
+                        </li>
                     </Show>
-                    <StepButton disabled={disabledState().prevDisabled || local.disabled} kind="prev" label={text().prev} text={local.prevText} onClick={foundation.goPrev} />
+                    <StepButton class={local.classNames?.prev} disabled={disabledState().prevDisabled || local.disabled} kind="prev" style={local.styles?.prev} label={text().prev} text={local.prevText} onClick={foundation.goPrev} />
                     <Show when={small()} fallback={<For each={pageKeys()}>{(pageKey) => <PageItem pageKey={pageKey} />}</For>}>
                         {renderSmallCounter()}
                     </Show>
-                    <StepButton disabled={disabledState().nextDisabled || local.disabled} kind="next" label={text().next} text={local.nextText} onClick={foundation.goNext} />
+                    <StepButton class={local.classNames?.next} disabled={disabledState().nextDisabled || local.disabled} kind="next" style={local.styles?.next} label={text().next} text={local.nextText} onClick={foundation.goNext} />
                     <Show when={view().sizeChangerShown}>
-                        <li class={`${prefixCls}-switch`}>
+                        <li class={clsx(`${prefixCls}-switch`, local.classNames?.sizeChanger)} style={local.styles?.sizeChanger}>
                             <Select<number, false, false>
-                                classNames={{ dropdown: `${prefixCls}-select-dropdown` }}
+                                classNames={{ dropdown: clsx(`${prefixCls}-select-dropdown`, local.classNames?.sizeChangerDropdown) }}
+                                styles={{ dropdown: local.styles?.sizeChangerDropdown }}
                                 aria-label={text().pageSizeSelector}
                                 disabled={local.disabled}
                                 value={state().pageSize}
@@ -256,7 +296,7 @@ export default function Pagination(rawProps: PaginationProps) {
                         </li>
                     </Show>
                     <Show when={local.showQuickJumper}>
-                        <li class={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: view().quickJumpDisabled })}>
+                        <li class={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: view().quickJumpDisabled }, local.classNames?.quickJumper)} style={local.styles?.quickJumper}>
                             <span>{text().jumpTo}</span>
                             {/* the adornments and showClear are set so global InputNumber defaults cannot add them to the jumper */}
                             <InputNumber

@@ -5,7 +5,7 @@
     import { IconButton } from '../icon-button/index.js';
     import type { NavigationProps } from './internal.js';
 
-    let { locale, monthText = '', density, shouldBimonthSwitch = false, panelType, titleId, onPrevYear, onPrevMonth, onNextMonth, onNextYear, onMonthClick }: NavigationProps = $props();
+    let { class: className, style, locale, monthText = '', density, shouldBimonthSwitch = false, panelType, titleId, onPrevYear, onPrevMonth, onNextMonth, onNextYear, onMonthClick }: NavigationProps = $props();
 
     const prefix = cssClasses.NAVIGATION;
     const iconSize = $derived(density === 'compact' ? 'default' : 'large');
@@ -16,7 +16,7 @@
     };
 </script>
 
-<div class={prefix}>
+<div class={[prefix, className]} {style}>
     <IconButton aria-label={locale.prevYear} noHorizontalPadding size={buttonSize} style={hidden(strings.PANEL_TYPE_RIGHT)} theme="borderless" onclick={() => onPrevYear()}>
         {#snippet icon()}<IconDoubleChevronLeft size={iconSize} />{/snippet}
     </IconButton>

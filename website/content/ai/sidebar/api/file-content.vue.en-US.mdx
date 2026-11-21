@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property  | Description                                                                                         | Type                 | Default     |
-| --------- | --------------------------------------------------------------------------------------------------- | -------------------- | ----------- |
-| activeKey | Keys of the expanded file panels; bind it with v-model:activeKey.                                   | `string \| string[]` | `undefined` |
-| files     | The file entries, rendered read-only: each entry's extensions and imgUploadProps reach its preview. | `FileItemData[]`     | `[]`        |
+| Property   | Description                                                                                                                                                                  | Type                                                                                             | Default     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------- |
+| activeKey  | Keys of the expanded file panels; bind it with v-model:activeKey.                                                                                                            | `string \| string[]`                                                                             | `undefined` |
+| classNames | Class names of the inner parts, keyed by itemHeader and itemExpand; they apply to every file panel and merge with the built-in classes. Values take the same forms as class. | <ApiType detail={"Partial\u003cRecord\u003cSidebarFileContentPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| files      | The file entries, rendered read-only: each entry's extensions and imgUploadProps reach its preview.                                                                          | `FileItemData[]`                                                                                 | `[]`        |
+| styles     | Inline styles of the inner parts, keyed like classNames.                                                                                                                     | <ApiType detail={"Partial\u003cRecord\u003cSidebarFileContentPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

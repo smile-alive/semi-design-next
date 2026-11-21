@@ -1,3 +1,5 @@
+import type { ClassValue } from 'svelte/elements';
+import type { TreeNodePart } from '@fibrae/semi-foundation/components/tree/constants';
 import type { ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import { createContext } from '../../base/index.js';
 import type { TreeRowProps } from './interface.js';
@@ -14,6 +16,8 @@ export interface TreeContextValue {
     readonly labelEllipsis: boolean;
     readonly dragOverNodeKey: string | null;
     readonly dropPosition: number | null;
+    readonly classNames?: Partial<Record<TreeNodePart, ClassValue>>;
+    readonly styles?: Partial<Record<TreeNodePart, string>>;
     onNodeExpand: (event: MouseEvent | KeyboardEvent, row: TreeRowProps) => void;
     onNodeSelect: (event: MouseEvent | KeyboardEvent, row: TreeRowProps) => void;
     onNodeCheck: (event: MouseEvent | KeyboardEvent, row: TreeRowProps) => void;

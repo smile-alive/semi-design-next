@@ -1,9 +1,12 @@
 import { type JSX, Show, createMemo, untrack } from 'solid-js';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import Pagination from '../pagination';
 import type { RenderPagination, TablePaginationProps } from './interface';
 
 export interface TablePaginationPartProps {
+    class?: string;
+    style?: JSX.CSSProperties | string;
     prefixCls?: string;
     pagination: TablePaginationProps;
     info?: JSX.Element;
@@ -26,7 +29,7 @@ export default function TablePagination(props: TablePaginationPartProps) {
     const prefixCls = () => props.prefixCls ?? cssClasses.PREFIX;
 
     return (
-        <div class={`${prefixCls()}-pagination-outer`}>
+        <div class={clsx(`${prefixCls()}-pagination-outer`, props.class)} style={props.style}>
             <Show when={customPagination() == null || typeof customPagination() === 'boolean'} fallback={customPagination()}>
                 <span class={`${prefixCls()}-pagination-info`}>{props.info}</span>
                 <span class={`${prefixCls()}-pagination-wrapper`}>

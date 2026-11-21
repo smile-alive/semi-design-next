@@ -105,9 +105,9 @@
 
     const dayClass = (day: MonthDayInfo) => {
         if (props.fullDate) {
-            return [cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: day.fullDate === activeDate }];
+            return [cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: day.fullDate === activeDate }, props.classNames?.item];
         }
-        return [cssClasses.DAY, MonthFoundation.getDayClasses(statusOf(day), day.fullDate === activeDate)];
+        return [cssClasses.DAY, MonthFoundation.getDayClasses(statusOf(day), day.fullDate === activeDate), props.classNames?.item];
     };
 
     const isSelected = (day: MonthDayInfo) => {
@@ -125,7 +125,7 @@
 </script>
 
 <!-- cells are not focusable (aria-activedescendant) -->
-<div aria-activedescendant={dayId(activeDate)} aria-labelledby={props.labelledby} aria-multiselectable={props.multiple} class={cssClasses.MONTH} role="grid" tabindex="0" onkeydown={(event) => foundation.handleKeyDown(event, todayText)}>
+<div aria-activedescendant={dayId(activeDate)} aria-labelledby={props.labelledby} aria-multiselectable={props.multiple} class={[cssClasses.MONTH, props.classNames?.body]} role="grid" style={props.styles?.body} tabindex="0" onkeydown={(event) => foundation.handleKeyDown(event, todayText)}>
     <div class={cssClasses.WEEKDAY} role="row">
         {#each weekdays as text, index (index)}
             <div class={`${prefix}-weekday-item`} role="columnheader">{text}</div>
@@ -136,7 +136,7 @@
             <div class={cssClasses.WEEK} role="row">
                 {#each week as day, dayIndex (dayIndex)}
                     {#if !day.fullDate}
-                        <div class={cssClasses.DAY} role="gridcell"><span></span></div>
+                        <div class={[cssClasses.DAY, props.classNames?.item]} role="gridcell" style={props.styles?.item}><span></span></div>
                     {:else}
                         <div
                             aria-disabled={statusOf(day).isDisabled}
@@ -145,6 +145,7 @@
                             class={dayClass(day)}
                             id={dayId(day.fullDate)}
                             role="gridcell"
+                            style={props.styles?.item}
                             title={day.fullDate}
                             onclick={() => foundation.selectDay(day)}
                             onmouseenter={() => props.onDayHover(day)}

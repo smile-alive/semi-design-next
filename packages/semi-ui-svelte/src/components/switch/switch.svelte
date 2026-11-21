@@ -15,7 +15,18 @@
     const defaults = useDefaultProps('Switch');
 
     // No fallback on `checked`: a bound `undefined` (form reset) would throw with one
-    let { checked = $bindable(), disabled = defaults('disabled', false), loading = defaults('loading', false), size = defaults('size', 'default'), onChange, checkedText = defaults('checkedText'), uncheckedText = defaults('uncheckedText'), ...rest }: SwitchProps = $props();
+    let {
+        checked = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
+        disabled = defaults('disabled', false),
+        loading = defaults('loading', false),
+        size = defaults('size', 'default'),
+        onChange,
+        checkedText = defaults('checkedText'),
+        uncheckedText = defaults('uncheckedText'),
+        ...rest
+    }: SwitchProps = $props();
 
     let root = $state<HTMLDivElement>();
 
@@ -79,15 +90,15 @@
     style={[rest.style, tooltip?.pointerEventsNone && 'pointer-events: none'].filter(Boolean).join(';') || undefined}
 >
     {#if loading}
-        <Spin class={cssClasses.LOADING_SPIN} size={size === 'default' ? 'middle' : size} />
+        <Spin class={[cssClasses.LOADING_SPIN, classNames?.indicator]} size={size === 'default' ? 'middle' : size} style={styles?.indicator} />
     {:else}
-        <div aria-hidden="true" class={cssClasses.KNOB}></div>
+        <div aria-hidden="true" class={[cssClasses.KNOB, classNames?.indicator]} style={styles?.indicator}></div>
     {/if}
     {#if checkedText && shown && size !== 'small'}
-        <div class={cssClasses.CHECKED_TEXT} x-semi-prop="checkedText">{@render checkedText()}</div>
+        <div class={[cssClasses.CHECKED_TEXT, classNames?.content]} style={styles?.content} x-semi-prop="checkedText">{@render checkedText()}</div>
     {/if}
     {#if uncheckedText && !shown && size !== 'small'}
-        <div class={cssClasses.UNCHECKED_TEXT} x-semi-prop="uncheckedText">{@render uncheckedText()}</div>
+        <div class={[cssClasses.UNCHECKED_TEXT, classNames?.content]} style={styles?.content} x-semi-prop="uncheckedText">{@render uncheckedText()}</div>
     {/if}
     <input {...attrs.control} aria-describedby={joinIds(rest['aria-describedby'], tooltip?.['aria-describedby'])} aria-disabled={loading || undefined} checked={shown} class={cssClasses.NATIVE_CONTROL} {disabled} role="switch" type="checkbox" onchange={handleChange} />
 </div>

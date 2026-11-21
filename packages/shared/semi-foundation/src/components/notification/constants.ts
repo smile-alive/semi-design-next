@@ -6,6 +6,9 @@ export const cssClasses = {
     NOTICE: `${BASE_CLASS_PREFIX}-notification-notice`,
 };
 
+/** Keys of `classNames` and `styles` in the options of one notification; the notice element takes `className` and `style` */
+export type NotificationPart = 'icon' | 'title' | 'content' | 'close';
+
 export const strings = {
     types: ['warning', 'success', 'info', 'error', 'default'],
     directions: ['ltr', 'rtl'] as const,

@@ -244,7 +244,19 @@
 </script>
 
 {#snippet stepButtons(inner: boolean)}
-    <StepButtons disabled={isDisabled} {downNotAllowed} {inner} innerHover={inner && Boolean(states().hovering && !states().focusing)} onMouseDown={foundation.handleStepMouseDown} onPressDown={foundation.handleDownPress} onPressUp={foundation.handleUpPress} onRelease={foundation.handlePressEnd} {upNotAllowed} />
+    <StepButtons
+        {classNames}
+        disabled={isDisabled}
+        {downNotAllowed}
+        {inner}
+        innerHover={inner && Boolean(states().hovering && !states().focusing)}
+        onMouseDown={foundation.handleStepMouseDown}
+        onPressDown={foundation.handleDownPress}
+        onPressUp={foundation.handleUpPress}
+        onRelease={foundation.handlePressEnd}
+        {styles}
+        {upNotAllowed}
+    />
 {/snippet}
 
 {#snippet innerButtonsSuffix()}

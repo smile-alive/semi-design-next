@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | autoPlay | 是否自动播放。 | `boolean` | `false` |
 | captionsSrc | 字幕资源地址，传入后默认显示字幕。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `video`、`poster`、`playIcon`、`error`、`notification`、`controls`、`progress`、`progressBuffered`、`progressPlayed`、`progressHandle`、`time`、`volumeDropdown`、`dropdown`，与组件自带的类名合并。`progressBuffered`、`progressPlayed` 作用到每个标记分段；`dropdown` 落在倍速、清晰度、线路菜单的浮层上。 | <ApiType detail={"Partial\u003cRecord\u003cVideoPlayerPart, ClassValue>>"}>Type</ApiType> | - |
 | clickToPlay | 点击视频画面时是否切换播放与暂停。 | `boolean` | `true` |
 | controlsList | 控制栏展示的控件，默认展示全部。控件还要满足依赖的属性已提供才会显示。 | `VideoControl[]` | <ApiType detail={"[\"play\", \"next\", \"time\", \"volume\", \"playbackRate\", \"quality\", \"route\", \"mirror\", \"fullscreen\", \"pictureInPicture\"]"}>Type</ApiType> |
 | crossOrigin | video 元素的 CORS 设置，允许的值为 anonymous 与 use-credentials，空串等同 anonymous。 | `'' \| 'anonymous' \| 'use-credentials'` | - |
@@ -29,6 +30,7 @@ import ApiType from '#/components/ApiType.astro';
 | routeList | 线路选项列表，非空时才显示线路控件。 | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | - |
 | seekTime | 快进快退一次的秒数。 | `number` | `10` |
 | src | 视频地址。未设置时显示资源缺失提示；移除后 video 元素保留上一个地址。 | `string` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cVideoPlayerPart, string>>"}>Type</ApiType> | - |
 | theme | 主题，仅影响背景色，可选 dark 或 light。 | `VideoPlayerTheme` | `"dark"` |
 | volume | 初始音量，取值 0 到 100，仅在挂载时读取。 | `number` | `100` |
 | width | 播放器宽度，数字按像素处理，字符串原样使用。 | `number \| string` | - |

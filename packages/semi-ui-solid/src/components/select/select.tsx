@@ -733,8 +733,8 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                 addonBefore={null}
                 addonAfter={null}
                 {...own()}
-                class={clsx(`${prefix}-input`, local.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, own()?.class)}
-                style={local.multiple ? { width: state().inputValue ? `${state().inputValue.length * 16}px` : '2px' } : own()?.style}
+                class={clsx(`${prefix}-input`, local.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, own()?.class, local.classNames?.input)}
+                style={mergeStyles(local.multiple ? { width: state().inputValue ? `${state().inputValue.length * 16}px` : '2px' } : own()?.style, local.styles?.input)}
                 inputRef={mergeRefs(setTriggerInput, own()?.inputRef)}
             />
         );
@@ -743,7 +743,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     const renderDropdownInput = () => {
         const own = createMemo(() => local.inputProps);
         return (
-            <div class={`${prefix}-dropdown-search-wrapper`}>
+            <div class={clsx(`${prefix}-dropdown-search-wrapper`, local.classNames?.search)} style={local.styles?.search}>
                 {/* a search field over the trigger's list, not a second combobox (the React Aria Autocomplete pattern) */}
                 <Input
                     aria-activedescendant={activeDescendant()}
@@ -790,7 +790,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             );
         return (
             <Show when={rendered().isRenderInTag} fallback={content()}>
-                <Tag tabIndex={tag.inTagGroup ? -1 : undefined} style={tag.inTagGroup ? undefined : { 'max-width': '100%' }} closable={!tagDisabled()} color="white" size={tagSize()} onClose={onClose}>
+                <Tag class={local.classNames?.tag} tabIndex={tag.inTagGroup ? -1 : undefined} style={mergeStyles(tag.inTagGroup ? undefined : { 'max-width': '100%' }, local.styles?.tag)} closable={!tagDisabled()} color="white" size={tagSize()} onClose={onClose}>
                     {content()}
                 </Tag>
             </Show>
@@ -860,7 +860,9 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                     when={selectedItems().length}
                     fallback={
                         <Show when={hasContent(placeholderNode()) && !state().inputValue}>
-                            <span class={clsx(`${prefix}-selection-text`, `${prefix}-selection-placeholder`)}>{placeholderNode()}</span>
+                            <span class={clsx(`${prefix}-selection-text`, `${prefix}-selection-placeholder`, local.classNames?.placeholder)} style={local.styles?.placeholder}>
+                                {placeholderNode()}
+                            </span>
                         </Show>
                     }
                 >
@@ -902,11 +904,16 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             <div class={`${prefix}-content-wrapper`}>
                 <span
                     id={selectionTextId}
-                    class={clsx(`${prefix}-selection-text`, {
-                        [`${prefix}-selection-placeholder`]: !shown(),
-                        [`${prefix}-selection-text-hide`]: state().inputValue && searching(),
-                        [`${prefix}-selection-text-inactive`]: !state().inputValue && searching(),
-                    })}
+                    class={clsx(
+                        `${prefix}-selection-text`,
+                        {
+                            [`${prefix}-selection-placeholder`]: !shown(),
+                            [`${prefix}-selection-text-hide`]: state().inputValue && searching(),
+                            [`${prefix}-selection-text-inactive`]: !state().inputValue && searching(),
+                        },
+                        !shown() && local.classNames?.placeholder
+                    )}
+                    style={shown() ? undefined : local.styles?.placeholder}
                     x-semi-prop="placeholder"
                 >
                     <Show when={shown()} fallback={placeholderNode()}>
@@ -923,41 +930,51 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             <Show when={labelKind()}>
                 <div
                     id={prefixId()}
-                    class={clsx(`${prefix}-prefix`, {
-                        [`${prefix}-inset-label`]: insetLabelKind(),
-                        [`${prefix}-prefix-text`]: labelKind() === 'text',
-                        [`${prefix}-prefix-icon`]: labelKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefix}-prefix`,
+                        {
+                            [`${prefix}-inset-label`]: insetLabelKind(),
+                            [`${prefix}-prefix-text`]: labelKind() === 'text',
+                            [`${prefix}-prefix-icon`]: labelKind() === 'icon',
+                        },
+                        local.classNames?.prefix
+                    )}
+                    style={local.styles?.prefix}
                     x-semi-prop="prefix,insetLabel"
                 >
                     {prefixKind() ? prefixNode() : insetLabelNode()}
                 </div>
             </Show>
-            <div class={`${prefix}-selection`}>
+            <div class={clsx(`${prefix}-selection`, local.classNames?.content)} style={local.styles?.content}>
                 <Show when={local.multiple} fallback={<SingleSelection />}>
                     <MultipleSelection />
                 </Show>
             </div>
             <Show when={suffixKind()}>
                 <div
-                    class={clsx(`${prefix}-suffix`, {
-                        [`${prefix}-suffix-text`]: suffixKind() === 'text',
-                        [`${prefix}-suffix-icon`]: suffixKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefix}-suffix`,
+                        {
+                            [`${prefix}-suffix-text`]: suffixKind() === 'text',
+                            [`${prefix}-suffix-icon`]: suffixKind() === 'icon',
+                        },
+                        local.classNames?.suffix
+                    )}
+                    style={local.styles?.suffix}
                     x-semi-prop="suffix"
                 >
                     {suffixNode()}
                 </div>
             </Show>
             <Show when={clearable()}>
-                <button ref={setClearButton} type="button" class={`${prefix}-clear`} aria-label={locale().locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys}>
+                <button ref={setClearButton} type="button" class={clsx(`${prefix}-clear`, local.classNames?.clear)} style={local.styles?.clear} aria-label={locale().locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys}>
                     <Show when={hasContent(clearIcon())} fallback={<IconClear />}>
                         {clearIcon()}
                     </Show>
                 </button>
             </Show>
             <Show when={local.showArrow} fallback={<div class={`${prefix}-arrow-empty`} />}>
-                <div class={`${prefix}-arrow`} x-semi-prop="arrowIcon">
+                <div class={clsx(`${prefix}-arrow`, local.classNames?.arrow)} style={local.styles?.arrow} x-semi-prop="arrowIcon">
                     <Show when={arrowIcon() !== undefined} fallback={<IconChevronDown />}>
                         {arrowIcon()}
                     </Show>
@@ -1021,7 +1038,11 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                         showTick={option().showTick ?? true}
                         disabled={option().disabled}
                         class={option().class}
+                        classNames={option().classNames}
                         style={mergeStyles(rowStyle?.(), option().style)}
+                        styles={option().styles}
+                        parentClassNames={local.classNames}
+                        parentStyles={local.styles}
                         focused={focused()}
                         inputValue={record().create ? undefined : state().inputValue}
                         selected={record().selected}
@@ -1081,7 +1102,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                     // OptionGroup renders no title without a label, and a group needs one for its name
                     <Show when={hasTitle(run().group)} fallback={<RunRows run={run} />}>
                         <div class={`${prefix}-group-wrapper`} aria-labelledby={titleId()} role="group">
-                            <div {...titleAttrs(run().group!)} id={titleId()} class={clsx(run().group?.class as string | undefined, cssClasses.PREFIX_GROUP)} style={run().group?.style as JSX.CSSProperties | string | undefined}>
+                            <div {...titleAttrs(run().group!)} id={titleId()} class={clsx(local.classNames?.groupLabel, run().group?.class as string | undefined, cssClasses.PREFIX_GROUP)} style={mergeStyles(local.styles?.groupLabel, run().group?.style as JSX.CSSProperties | string | undefined)}>
                                 {run().group?.label}
                             </div>
                             <RunRows run={run} />
@@ -1125,8 +1146,8 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                 <div
                     ref={setListbox}
                     id={listboxId}
-                    class={clsx(`${prefix}-option-list`, { [`${prefix}-option-list-chosen`]: state().selections.size > 0 })}
-                    style={{ 'max-height': toCssLength(local.maxHeight) }}
+                    class={clsx(`${prefix}-option-list`, { [`${prefix}-option-list-chosen`]: state().selections.size > 0 }, local.classNames?.list)}
+                    style={mergeStyles({ 'max-height': toCssLength(local.maxHeight) }, local.styles?.list)}
                     aria-label={name()['aria-label']}
                     aria-labelledby={name()['aria-labelledby']}
                     aria-multiselectable={Boolean(local.multiple)}
@@ -1158,7 +1179,9 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                         </Match>
                         <Match when={isEmpty()}>
                             <Show when={emptyContent() !== null}>
-                                <OptionView empty>{hasContent(emptyContent()) ? emptyContent() : locale().locale.emptyText}</OptionView>
+                                <OptionView empty class={local.classNames?.empty} style={local.styles?.empty}>
+                                    {hasContent(emptyContent()) ? emptyContent() : locale().locale.emptyText}
+                                </OptionView>
                             </Show>
                         </Match>
                     </Switch>

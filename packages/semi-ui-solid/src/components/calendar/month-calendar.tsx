@@ -11,7 +11,7 @@ import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import { useFoundation } from '../../base/index';
 import { useClickOutside, useResizeObserver } from '../../primitives/index';
-import { hasContent, mergeRefs } from '../../utils/index';
+import { hasContent, mergeRefs, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import IconButton from '../icon-button';
 import useLocale from '../locale/use-locale';
@@ -142,11 +142,14 @@ export default function MonthCalendar(props: DayCalendarProps) {
             return day !== null && isSameDay(cell.day.date, day);
         };
         const cellClass = () =>
-            clsx({
-                [`${cssClasses.PREFIX}-today`]: isToday(),
-                [`${cssClasses.PREFIX}-weekend`]: local.markWeekend && cell.day.isWeekend,
-                [`${prefixCls}-same`]: cell.day.isSameMonth,
-            });
+            clsx(
+                {
+                    [`${cssClasses.PREFIX}-today`]: isToday(),
+                    [`${cssClasses.PREFIX}-weekend`]: local.markWeekend && cell.day.isWeekend,
+                    [`${prefixCls}-same`]: cell.day.isSameMonth,
+                },
+                local.classNames?.day
+            );
         const ariaLabel = () => format(cell.day.date, 'PPP', { locale: dateFnsLocale() });
         const cellProps = {
             role: 'cell' as const,
@@ -160,7 +163,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
         };
 
         const content = ({ initialFocusRef }: RenderContentProps) => (
-            <div ref={(node) => (cardElement = node)} class={cardCls} onMouseDown={markPressInCard}>
+            <div ref={(node) => (cardElement = node)} class={clsx(cardCls, local.classNames?.dropdown)} style={local.styles?.dropdown} onMouseDown={markPressInCard}>
                 <div class={`${cardCls}-content`}>
                     <div class={`${cardCls}-header`}>
                         <div id={titleId} class={`${cardCls}-header-info`}>
@@ -188,7 +191,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
             <Show
                 when={hidden() > 0}
                 fallback={
-                    <div class={cellClass()} {...cellProps}>
+                    <div class={cellClass()} style={local.styles?.day} {...cellProps}>
                         {formatDayString(cell.day.date, cell.day.month, cell.day.dayString)}
                         {dateGridRender()?.(key, cell.day.date)}
                     </div>
@@ -203,6 +206,9 @@ export default function MonthCalendar(props: DayCalendarProps) {
                                 tabIndex: -1,
                                 get class() {
                                     return cellClass();
+                                },
+                                get style() {
+                                    return local.styles?.day;
                                 },
                                 get 'aria-current'() {
                                     return cellProps['aria-current'];
@@ -220,8 +226,8 @@ export default function MonthCalendar(props: DayCalendarProps) {
                                     onCleanup(() => moreButtons.delete(key));
                                 }}
                                 type="button"
-                                class={`${cardCls}-wrapper`}
-                                style={{ bottom: '0' }}
+                                class={clsx(`${cardCls}-wrapper`, local.classNames?.more)}
+                                style={mergeStyles({ bottom: '0' }, local.styles?.more)}
                                 aria-expanded={isOpen()}
                                 aria-haspopup="dialog"
                                 onClick={(e) => handleMoreClick(e, key, cell.day.date, hidden())}
@@ -248,12 +254,12 @@ export default function MonthCalendar(props: DayCalendarProps) {
                         <div role="cell">{header()}</div>
                     </div>
                 </Show>
-                <div class={`${prefixCls}-header`}>
+                <div class={clsx(`${prefixCls}-header`, local.classNames?.header)} style={local.styles?.header}>
                     <div class={`${prefixCls}-grid`}>
                         <div class={`${prefixCls}-grid-row`} role="row">
                             <For each={monthlyData()[0]}>
                                 {({ weekday, isWeekend }) => (
-                                    <div class={clsx({ [`${cssClasses.PREFIX}-weekend`]: local.markWeekend && isWeekend })} aria-label={weekday} role="columnheader">
+                                    <div class={clsx({ [`${cssClasses.PREFIX}-weekend`]: local.markWeekend && isWeekend }, local.classNames?.headerCell)} style={local.styles?.headerCell} aria-label={weekday} role="columnheader">
                                         <span>{weekday}</span>
                                     </div>
                                 )}
@@ -278,12 +284,15 @@ export default function MonthCalendar(props: DayCalendarProps) {
                                             <ByKey each={display()} by={(item, index) => item.key || `${index}-monthevent`}>
                                                 {(item) => (
                                                     <div
-                                                        class={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-month`}
-                                                        style={{
-                                                            width: toPercent(item().width!),
-                                                            'inset-inline-start': toPercent(item().leftPos!),
-                                                            top: `${item().topInd}em`,
-                                                        }}
+                                                        class={clsx(`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-month`, local.classNames?.event)}
+                                                        style={mergeStyles(
+                                                            {
+                                                                width: toPercent(item().width!),
+                                                                'inset-inline-start': toPercent(item().leftPos!),
+                                                                top: `${item().topInd}em`,
+                                                            },
+                                                            local.styles?.event
+                                                        )}
                                                     >
                                                         <EventContent of={item().children} />
                                                     </div>

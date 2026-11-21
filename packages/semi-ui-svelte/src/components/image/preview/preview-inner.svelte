@@ -199,9 +199,10 @@
                 onmouseup={foundation.handleMouseUp}
                 onwheel={foundation.handleWheel}
             >
-                <PreviewHeader bind:this={header} {closable} {closeIcon} hidden={!states().controlsVisible} index={currentIndex} onClose={foundation.handlePreviewClose} {title} titleId={`${uid}-title`} {titleSnippet} />
+                <PreviewHeader bind:this={header} {classNames} {closable} {closeIcon} hidden={!states().controlsVisible} index={currentIndex} onClose={foundation.handlePreviewClose} {styles} {title} titleId={`${uid}-title`} {titleSnippet} />
                 <PreviewImage
                     alt={alts?.[currentIndex] ?? alt}
+                    {classNames}
                     {crossOrigin}
                     {disableDownload}
                     {initialZoom}
@@ -213,11 +214,12 @@
                     {ratio}
                     rotation={states().rotation!}
                     src={srcList[currentIndex]}
+                    {styles}
                     zoom={states().zoom!}
                     zoomEvent={states().zoomEvent}
                 />
                 {#if showPrev}
-                    <button aria-label={prevTip ?? locale().locale.prevTip} bind:this={leftButton} class={[`${cls}-icon`, `${cls}-prev`, { [`${cls}-hide`]: !states().controlsVisible }]} type="button" onclick={handlePrev}>
+                    <button aria-label={prevTip ?? locale().locale.prevTip} bind:this={leftButton} class={[`${cls}-icon`, `${cls}-prev`, { [`${cls}-hide`]: !states().controlsVisible }, classNames?.prev]} style={styles?.prev} type="button" onclick={handlePrev}>
                         {#if leftIcon}
                             {@render leftIcon({ index: currentIndex })}
                         {:else}
@@ -226,7 +228,7 @@
                     </button>
                 {/if}
                 {#if showNext}
-                    <button aria-label={nextTip ?? locale().locale.nextTip} bind:this={rightButton} class={[`${cls}-icon`, `${cls}-next`, { [`${cls}-hide`]: !states().controlsVisible }]} type="button" onclick={handleNext}>
+                    <button aria-label={nextTip ?? locale().locale.nextTip} bind:this={rightButton} class={[`${cls}-icon`, `${cls}-next`, { [`${cls}-hide`]: !states().controlsVisible }, classNames?.next]} style={styles?.next} type="button" onclick={handleNext}>
                         {#if rightIcon}
                             {@render rightIcon({ index: currentIndex })}
                         {:else}
@@ -237,6 +239,7 @@
                 <PreviewFooter
                     {adaptiveTip}
                     bind:this={footer}
+                    {classNames}
                     curPage={currentIndex + 1}
                     {disableDownload}
                     disabledNext={!showNext}
@@ -260,6 +263,7 @@
                     {rotateTip}
                     {showTooltip}
                     step={toPercent(zoomStep)}
+                    {styles}
                     totalNum={total}
                     zoom={toPercent(states().zoom!)}
                     {zoomInTip}

@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | allDayEventsRender | Custom area for events at the top of the day, range and week views. `events` is the whole array that was passed in, so the function filters it itself. | <ApiType detail={"(events: EventObject[]) => React.ReactNode"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `header`, `headerCell`, `allDay`, `timeColumn`, `timeLabel`, `day`, `event`, `currentTimeLine`, `currentTimeDot`, `more` and `dropdown`; merged with the built-in classes. Parts appear per view: the day view has no `header` or `headerCell`, and the month view has no `allDay`, `timeColumn`, `timeLabel`, `currentTimeLine` or `currentTimeDot`. `day` is the time column of one day in the day, week and range views and a date cell in the month view; `dropdown` is the event card that opens from "N more". | <ApiType detail={"Partial\u003cRecord\u003cCalendarPart, string>>"}>Type</ApiType> | - |
 | dateGridRender | Custom content of a date cell or column, with the `dateString` (`date.toString()`) and the date. Use absolute positioning for elements. | <ApiType detail={"(dateString: string, date: Date) => React.ReactNode"}>Type</ApiType> | - |
 | displayValue | Display date. When omitted it is the current date and updates at midnight. | `Date` | - |
 | events | Events to render, see Event Object. | `EventObject[]` | `[]` |
@@ -22,5 +23,6 @@ import ApiType from '#/components/ApiType.astro';
 | renderTimeDisplay | Custom time text in the day, week and range views; `time` is the hour. | <ApiType detail={"(time: number) => React.ReactNode"}>Type</ApiType> | - |
 | scrollTop | Default scroll offset of the content in the day, week and range views. | `number` | `400` |
 | showCurrTime | Shows the red line of the current time in the day, week and range views. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cCalendarPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | weekStartsOn | Day of the week that starts the week, `0` for Sunday, `1` for Monday and so on. Applies to the month and week views. | `WeekStartsOn` | `0` |
 | width | Width of the calendar; a number is in pixels. | `number \| string` | - |

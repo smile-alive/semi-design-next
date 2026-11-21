@@ -12,6 +12,7 @@ import Handle from './fixtures/handle.vue';
 import Model from './fixtures/model.vue';
 import NestedOpen from './fixtures/nested-open.vue';
 import Nested from './fixtures/nested.vue';
+import PartsNested from './fixtures/parts-nested.vue';
 import RoleNested from './fixtures/role-nested.vue';
 import TickNested from './fixtures/tick-nested.vue';
 
@@ -75,16 +76,31 @@ describe('Dropdown', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['wrapper', 'content', 'menu', 'item', 'itemIcon'] as const;
+        const selectors = { wrapper: '.semi-tooltip-trigger-wrapper', content: '.semi-dropdown', menu: '.semi-dropdown-menu', item: '.semi-dropdown-item', itemIcon: '.semi-dropdown-item-icon' };
         render(Dropdown, {
-            props: { motion: false, classNames: { content: ['my-content'], wrapper: 'my-wrapper' }, styles: { content: { order: 2 }, wrapper: { order: 3 } }, trigger: 'custom', visible: true },
-            slots: { default: () => 'text trigger', content: menuOf() },
+            props: { motion: false, classNames: Object.fromEntries(parts.map((p) => [p, [`my-${p}`]])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])), menu: [{ node: 'item', name: 'A' }], trigger: 'custom', visible: true },
+            slots: { default: () => 'text trigger', menuIcon: () => <i /> },
         });
         await screen.findByRole('menu');
-        expect(document.querySelector('.semi-dropdown')).toHaveClass('my-content');
-        expect(document.querySelector('.semi-dropdown')).toHaveStyle({ order: '2' });
-        const wrapper = document.querySelector('.semi-tooltip-trigger-wrapper');
-        expect(wrapper).toHaveClass('my-wrapper');
-        expect(wrapper).toHaveStyle({ order: '3' });
+        for (const part of parts) {
+            const el = document.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('Dropdown 的 item、itemIcon 在子菜单里继续生效，Dropdown.Item 自己的 classNames 排在其后', async () => {
+        render(PartsNested);
+        const inner = await screen.findByText('Inner', { selector: '[role^="menuitem"]' });
+        const custom = (el: Element) => [...el.classList].filter((c) => /^(outer|inner|own)-/.test(c));
+        expect(custom(inner)).toEqual(['outer-item', 'inner-item']);
+        expect(inner).toHaveStyle({ order: '3', opacity: '0.5' });
+        const icon = inner.querySelector('.semi-dropdown-item-icon')!;
+        expect(custom(icon)).toEqual(['outer-icon', 'own-icon']);
+        expect(icon).toHaveStyle({ order: '4' });
+        expect(custom(inner.parentElement!)).toEqual(['outer-menu']);
+        expect(custom(item('Parent'))).toEqual(['outer-item']);
     });
 
     it('Dropdown showTick', async () => {

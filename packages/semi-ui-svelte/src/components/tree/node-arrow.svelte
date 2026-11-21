@@ -19,23 +19,25 @@
     const context = getTreeContext('A tree row');
 
     const prefix = cssClasses.PREFIX_OPTION;
-    const iconClass = `${prefix}-expand-icon`;
     const isLeaf = $derived(isTreeNodeLeaf(row, context.hasLoadData));
+
+    // a custom expand icon takes the part class only: its snippet renders the user's own element
+    const iconClass = $derived([`${prefix}-expand-icon`, context.classNames?.itemSwitcher]);
 </script>
 
 <!-- the row carries aria-busy; the spinner's own name would join the row's name -->
 {#if row.loading}
-    <Spin aria-hidden="true" class="{prefix}-spin-icon" />
+    <Spin aria-hidden="true" class={[`${prefix}-spin-icon`, context.classNames?.itemSwitcher]} style={context.styles?.itemSwitcher} />
 {:else if !isLeaf}
     {#if expandIcon}
         {@render expandIcon({ onClick: onExpand, class: iconClass, expanded: Boolean(row.expanded) })}
     {:else}
-        <IconTreeTriangleDown class={iconClass} size="small" onclick={onExpand} />
+        <IconTreeTriangleDown class={iconClass} size="small" style={context.styles?.itemSwitcher} onclick={onExpand} />
     {/if}
 {:else if showLine}
-    <span class="{prefix}-switcher">
+    <span class={[`${prefix}-switcher`, context.classNames?.itemSwitcher]} style={context.styles?.itemSwitcher}>
         <span class="{prefix}-switcher-leaf-line"></span>
     </span>
 {:else}
-    <span class="{prefix}-empty-icon"></span>
+    <span class={[`${prefix}-empty-icon`, context.classNames?.itemSwitcher]} style={context.styles?.itemSwitcher}></span>
 {/if}

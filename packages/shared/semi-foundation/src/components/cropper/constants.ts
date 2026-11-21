@@ -25,7 +25,7 @@ export const strings = {
 } as const;
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type CropperPart = 'cropperBox';
+export type CropperPart = 'cropperBox' | 'mask' | 'handle';
 
 /** A resize handle of the crop box: t/m/b for the row, l/m/r for the column */
 export type CornerDir = (typeof strings.corner)[number];

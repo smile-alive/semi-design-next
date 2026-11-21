@@ -2,12 +2,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性        | 说明                                                 | 类型                                          | 默认值  |
-| ----------- | ---------------------------------------------------- | --------------------------------------------- | ------- |
-| children    | 面板内容。                                           | `JSX.Element`                                 | -       |
-| disabled    | 面板是否被禁用。                                     | `boolean`                                     | `false` |
-| extra       | 面板头右侧的辅助内容，位于切换按钮之外，可以放控件。 | `JSX.Element`                                 | -       |
-| header      | 面板头内容，渲染在切换按钮内，不能包含交互元素。     | `JSX.Element`                                 | -       |
-| itemKey     | 必填且唯一，用于匹配 activeKey 与 defaultActiveKey。 | `string`                                      | -       |
-| onMotionEnd | 展开或收起动画结束时调用。                           | <ApiType detail={"() => void"}>Type</ApiType> | -       |
-| showArrow   | 是否展示箭头。                                       | `boolean`                                     | `true`  |
+| 属性        | 说明                                                                                                                                         | 类型                                                                                                             | 默认值  |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------- |
+| children    | 面板内容。                                                                                                                                   | `JSX.Element`                                                                                                    | -       |
+| classNames  | 当前面板内部各部位的类名，键为 `header`、`title`、`icon`、`extra`、`body`，与组件自带的类名及 Collapse 的 `item*` 类名合并，面板自己的在后。 | <ApiType detail={"Partial\u003cRecord\u003cCollapsePanelPart, string>>"}>Type</ApiType>                          | -       |
+| disabled    | 面板是否被禁用。                                                                                                                             | `boolean`                                                                                                        | `false` |
+| extra       | 面板头右侧的辅助内容，位于切换按钮之外，可以放控件。                                                                                         | `JSX.Element`                                                                                                    | -       |
+| header      | 面板头内容，渲染在切换按钮内，不能包含交互元素。                                                                                             | `JSX.Element`                                                                                                    | -       |
+| itemKey     | 必填且唯一，用于匹配 activeKey 与 defaultActiveKey。                                                                                         | `string`                                                                                                         | -       |
+| onMotionEnd | 展开或收起动画结束时调用。                                                                                                                   | <ApiType detail={"() => void"}>Type</ApiType>                                                                    | -       |
+| showArrow   | 是否展示箭头。                                                                                                                               | `boolean`                                                                                                        | `true`  |
+| styles      | 当前面板内部各部位的内联样式，键同 `classNames`，与 Collapse 的 `item*` 样式合并，面板自己的后写。                                           | <ApiType detail={"Partial\u003cRecord\u003cCollapsePanelPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -       |

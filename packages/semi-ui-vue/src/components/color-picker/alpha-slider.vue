@@ -39,7 +39,14 @@
 </script>
 
 <template>
-    <div ref="dom" :class="`${cssClasses.PREFIX}-alphaSlider`" :style="{ width: `${props.width}px`, height: `${props.height}px` }" @lostpointercapture="foundation.handleLostPointerCapture" @pointerdown="foundation.handlePointerDown(toDragEvent($event))" @pointermove="foundation.handlePointerMove(toDragEvent($event))">
+    <div
+        ref="dom"
+        :class="[`${cssClasses.PREFIX}-alphaSlider`, props.classNames?.alpha]"
+        :style="[{ width: `${props.width}px`, height: `${props.height}px` }, props.styles?.alpha]"
+        @lostpointercapture="foundation.handleLostPointerCapture"
+        @pointerdown="foundation.handlePointerDown(toDragEvent($event))"
+        @pointermove="foundation.handlePointerMove(toDragEvent($event))"
+    >
         <div
             :class="`${cssClasses.PREFIX}-alphaSliderInner`"
             :style="{
@@ -47,15 +54,18 @@
             }"
         >
             <div
-                :class="`${cssClasses.PREFIX}-alphaHandle`"
-                :style="{
-                    width: `${props.handleSize}px`,
-                    height: `${props.handleSize}px`,
-                    left: `${ColorSliderFoundation.getHandlePosition({ value: props.hsva.a * 100, max: 100, width: props.width }, props.handleSize)}px`,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    backgroundColor: hsvaToRgbaString(props.hsva),
-                }"
+                :class="[`${cssClasses.PREFIX}-alphaHandle`, props.classNames?.handle]"
+                :style="[
+                    {
+                        width: `${props.handleSize}px`,
+                        height: `${props.handleSize}px`,
+                        left: `${ColorSliderFoundation.getHandlePosition({ value: props.hsva.a * 100, max: 100, width: props.width }, props.handleSize)}px`,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        backgroundColor: hsvaToRgbaString(props.hsva),
+                    },
+                    props.styles?.handle,
+                ]"
             >
                 <input :aria-label="i18n.locale.alpha" :aria-valuetext="`${round(props.hsva.a * 100)}%`" :class="`${cssClasses.PREFIX}-handleSlider`" :max="100" :min="0" type="range" :value="round(props.hsva.a * 100)" @input="onInput" @keydown="foundation.handleKeyDown" />
             </div>

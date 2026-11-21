@@ -1,5 +1,5 @@
-import { splitProps } from 'solid-js';
-import { strings } from '@fibrae/semi-foundation/components/typography/constants';
+import { type JSX, splitProps } from 'solid-js';
+import { strings, type TypographyTitlePart } from '@fibrae/semi-foundation/components/typography/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ElementProps } from '../../base/index';
 import Base, { type BaseTypographyProps } from './base';
@@ -8,6 +8,8 @@ import type { OmitTypographyProps, TypographyCommonProps, TypographyEllipsisProp
 export interface TitleProps extends ElementProps<'h1', OmitTypographyProps>, TypographyCommonProps, TypographyEllipsisProps {
     heading?: ArrayElement<typeof strings.HEADING>;
     weight?: ArrayElement<typeof strings.WEIGHT> | number;
+    classNames?: Partial<Record<TypographyTitlePart, string>>;
+    styles?: Partial<Record<TypographyTitlePart, JSX.CSSProperties | string>>;
 }
 
 export default function Title(props: TitleProps) {

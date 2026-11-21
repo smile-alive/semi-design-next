@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | align | 对话布局方式，可选 `leftRight`（左右分布）或 `leftAlign`（左对齐）。 | `'leftAlign' \| 'leftRight'` | `"leftRight"` |
 | chats | 受控对话消息列表，配合 onChatsChange 使用。 | `Message[]` | - |
 | className | 根元素的类名。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `hint`（提示区最外层），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `messages`、`item`、`itemCheckbox`、`itemAvatar`、`itemTitle`、`itemContent`、`itemActions`、`reasoning`、`references`、`annotation`、`file`、`image`、`loading`、`code`、`hint`、`hintItem`、`backBottom`，与组件自带的类名合并。`item` 开头的键作用于每一条消息，`hint` 是提示词列表容器，`hintItem` 是单个提示词。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, string>>"}>Type</ApiType> | - |
 | dialogueRenderConfig | 自定义各区块的渲染，可替换头像、标题、内容、操作栏或整条对话。 | `DialogueRenderConfig` | - |
 | disabledFileItemClick | 是否禁用文件卡片的点击。 | `boolean` | `false` |
 | escapeHtml | 是否转义用户消息中的 HTML 标签，防止被 Markdown 解析器当作 HTML 处理而丢失内容。 | `boolean` | `true` |

@@ -254,3 +254,31 @@ describe('Svelte Annotation', () => {
         expect(document.querySelector('img')).toBeNull();
     });
 });
+
+describe('Svelte Annotation classNames 与 styles', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'close', 'content', 'groupHeader', 'groupContent', 'item', 'itemTitle', 'itemDetail', 'itemFooter'] as const;
+        const selectors = {
+            header: '.semi-sidebar-container-header',
+            title: '.semi-sidebar-container-header-title',
+            close: '.semi-sidebar-container-header-closeBtn',
+            content: '.semi-sidebar-container-content',
+            groupHeader: '.semi-sidebar-collapse-header-content',
+            groupContent: '.semi-sidebar-annotation-content',
+            item: '.semi-sidebar-annotation-item-text',
+            itemTitle: '.semi-sidebar-annotation-item-text .semi-sidebar-annotation-item-title',
+            itemDetail: '.semi-sidebar-annotation-item-text-detail',
+            itemFooter: '.semi-sidebar-annotation-item-text .semi-sidebar-annotation-item-footer',
+        };
+        setup({
+            activeKey: ['g1'],
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+        });
+        for (const part of parts) {
+            const el = $(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+});

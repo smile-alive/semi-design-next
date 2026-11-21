@@ -35,4 +35,22 @@ describe('Card classNames 与 styles', () => {
             expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
         }
     });
+
+    it('Meta 按部位落到对应元素', () => {
+        const parts = ['avatar', 'section', 'title', 'description'] as const;
+        const selectors = { avatar: 'avatar', section: 'wrapper', title: 'wrapper-title', description: 'wrapper-description' };
+        const { container } = render(Card.Meta, {
+            props: {
+                title: 't',
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+            },
+            slots: { avatar: () => 'a', description: () => 'd' },
+        });
+        for (const part of parts) {
+            const el = container.querySelector(`.semi-card-meta-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
 });

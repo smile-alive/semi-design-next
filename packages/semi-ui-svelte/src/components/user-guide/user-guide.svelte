@@ -24,7 +24,9 @@
         visible = $bindable(),
         current = $bindable(),
         class: className,
+        classNames = defaults('classNames'),
         style,
+        styles = defaults('styles'),
         finishText = defaults('finishText'),
         getPopupContainer = defaults('getPopupContainer'),
         mask = defaults('mask', true),
@@ -180,25 +182,25 @@
             {zIndex}
         >
             {#if item.cover}
-                <div class={`${modalPrefix}-cover`} x-semi-prop="cover">{@render item.cover(args)}</div>
-                <div aria-hidden="true" class={`${modalPrefix}-indicator`}>
+                <div class={[`${modalPrefix}-cover`, classNames?.cover]} style={styles?.cover} x-semi-prop="cover">{@render item.cover(args)}</div>
+                <div aria-hidden="true" class={[`${modalPrefix}-indicator`, classNames?.indicators]} style={styles?.indicators}>
                     {#each steps as _, i (i)}
                         <span class={[`${modalPrefix}-indicator-item`, { [`${modalPrefix}-indicator-item-active`]: i === currentIndex }]} data-index={i}></span>
                     {/each}
                 </div>
-                <span class={`${modalPrefix}-progress`}>{currentIndex + 1}/{steps.length}</span>
+                <span class={[`${modalPrefix}-progress`, classNames?.progress]} style={styles?.progress}>{currentIndex + 1}/{steps.length}</span>
             {/if}
             {#if hasTitle || hasDescription}
-                <div class={`${modalPrefix}-body`}>
+                <div class={[`${modalPrefix}-body`, classNames?.body]} style={styles?.body}>
                     {#if hasTitle}
-                        <div class={`${modalPrefix}-body-title`} id={titleId} x-semi-prop="title">{@render text(item.title, args)}</div>
+                        <div class={[`${modalPrefix}-body-title`, classNames?.title]} id={titleId} style={styles?.title} x-semi-prop="title">{@render text(item.title, args)}</div>
                     {/if}
                     {#if hasDescription}
-                        <div class={`${modalPrefix}-body-description`} x-semi-prop="description">{@render text(item.description, args)}</div>
+                        <div class={[`${modalPrefix}-body-description`, classNames?.description]} style={styles?.description} x-semi-prop="description">{@render text(item.description, args)}</div>
                     {/if}
                 </div>
             {/if}
-            <div class={`${modalPrefix}-footer`}>
+            <div class={[`${modalPrefix}-footer`, classNames?.footer]} style={styles?.footer}>
                 {#if showSkipButton && !isLast}
                     <Button type="tertiary" onclick={foundation.handleSkip}>{locale().locale.skip}</Button>
                 {/if}
@@ -226,18 +228,18 @@
         {#snippet card()}
             <div class={[popupPrefix, { [`${popupPrefix}-primary`]: primary }]}>
                 {#if item.cover}
-                    <div class={`${popupPrefix}-cover`} x-semi-prop="cover">{@render item.cover(args)}</div>
+                    <div class={[`${popupPrefix}-cover`, classNames?.cover]} style={styles?.cover} x-semi-prop="cover">{@render item.cover(args)}</div>
                 {/if}
-                <div class={`${popupPrefix}-body`}>
+                <div class={[`${popupPrefix}-body`, classNames?.body]} style={styles?.body}>
                     {#if hasTitle}
-                        <div class={`${popupPrefix}-title`} id={titleId} x-semi-prop="title">{@render text(item.title, args)}</div>
+                        <div class={[`${popupPrefix}-title`, classNames?.title]} id={titleId} style={styles?.title} x-semi-prop="title">{@render text(item.title, args)}</div>
                     {/if}
                     {#if hasDescription}
-                        <div class={`${popupPrefix}-description`} x-semi-prop="description">{@render text(item.description, args)}</div>
+                        <div class={[`${popupPrefix}-description`, classNames?.description]} style={styles?.description} x-semi-prop="description">{@render text(item.description, args)}</div>
                     {/if}
-                    <div class={`${popupPrefix}-footer`}>
+                    <div class={[`${popupPrefix}-footer`, classNames?.footer]} style={styles?.footer}>
                         {#if steps.length > 1}
-                            <div class={`${popupPrefix}-indicator`}>{currentIndex + 1}/{steps.length}</div>
+                            <div class={[`${popupPrefix}-indicator`, classNames?.progress]} style={styles?.progress}>{currentIndex + 1}/{steps.length}</div>
                         {/if}
                         <div class={`${popupPrefix}-buttons`}>
                             {#if showSkipButton && !isLast}

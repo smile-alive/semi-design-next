@@ -1,6 +1,6 @@
 import { type JSX, createMemo, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+import { cssClasses, type CollapsePart } from '@fibrae/semi-foundation/components/collapse/constants';
 import CollapseFoundation, { type CollapseAdapter, type CollapseProps as CollapseFoundationProps, type CollapseState } from '@fibrae/semi-foundation/components/collapse/foundation';
 import '@fibrae/semi-foundation/components/collapse/collapse.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -12,6 +12,8 @@ export interface CollapseProps extends Omit<CollapseFoundationProps, 'onChange' 
     expandIcon?: JSX.Element;
     collapseIcon?: JSX.Element;
     children?: JSX.Element;
+    classNames?: Partial<Record<CollapsePart, string>>;
+    styles?: Partial<Record<CollapsePart, JSX.CSSProperties | string>>;
     onChange?: (activeKey: string[], event: CollapseClickEvent) => void;
     lazyRender?: boolean;
 }
@@ -30,7 +32,7 @@ const defaultProps = {
 
 export default function Collapse(rawProps: CollapseProps) {
     const props = useDefaultProps('Collapse', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['activeKey', 'defaultActiveKey', 'accordion', 'onChange', 'lazyRender', 'motion', 'class', 'keepDOM', 'expandIconPosition', 'expandIcon', 'collapseIcon', 'children', 'clickHeaderToExpand']);
+    const [local, rest] = splitProps(props, ['activeKey', 'defaultActiveKey', 'accordion', 'onChange', 'lazyRender', 'motion', 'class', 'classNames', 'styles', 'keepDOM', 'expandIconPosition', 'expandIcon', 'collapseIcon', 'children', 'clickHeaderToExpand']);
 
     const { foundation, state } = useFoundation<Foundation, Adapter, CollapseFoundationProps, CollapseState>(
         CollapseFoundation,
@@ -42,6 +44,8 @@ export default function Collapse(rawProps: CollapseProps) {
     );
 
     const view = createMemo(() => ({
+        classNames: local.classNames,
+        styles: local.styles,
         activeSet: CollapseFoundation.deriveActiveSet(props, state()),
         clickHeaderToExpand: local.clickHeaderToExpand,
         keepDOM: local.keepDOM,

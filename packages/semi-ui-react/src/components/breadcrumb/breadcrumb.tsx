@@ -1,6 +1,6 @@
 import React, { cloneElement, isValidElement, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+import { DEFAULT_TOOLTIP, cssClasses, type BreadcrumbPart } from '@fibrae/semi-foundation/components/breadcrumb/constants';
 import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/components/breadcrumb/foundation';
 import { getDataAttr, warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/breadcrumb/breadcrumb.scss';
@@ -46,6 +46,9 @@ export interface BreadcrumbProps extends BaseProps, ElementProps<'nav', 'onClick
     moreType?: MoreType;
     'aria-label'?: React.AriaAttributes['aria-label'];
     activeIndex?: number;
+    /** `item*` keys apply to every Breadcrumb.Item, before the item's own classNames */
+    classNames?: Partial<Record<BreadcrumbPart, string>>;
+    styles?: Partial<Record<BreadcrumbPart, React.CSSProperties>>;
     /** Attached to the nav */
     ref?: React.Ref<HTMLElement>;
 }
@@ -62,7 +65,7 @@ const defaultProps = {
 
 function Breadcrumb(rawProps: BreadcrumbProps) {
     const props = useDefaultProps('Breadcrumb', rawProps, defaultProps);
-    const { ref, routes, onClick, separator, compact, renderItem, className, showTooltip, maxItemCount, autoCollapse, renderMore, moreType, activeIndex, children, 'aria-label': ariaLabel, ...rest } = props;
+    const { ref, routes, onClick, separator, compact, renderItem, className, showTooltip, maxItemCount, autoCollapse, renderMore, moreType, activeIndex, children, classNames, styles, 'aria-label': ariaLabel, ...rest } = props;
 
     const { locale } = useLocale('Breadcrumb');
 
@@ -86,8 +89,10 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
             showTooltip,
             compact,
             separator,
+            classNames,
+            styles,
         }),
-        [onClick, showTooltip, compact, separator]
+        [onClick, showTooltip, compact, separator, classNames, styles]
     );
 
     const routeItems = routes?.length > 0 ? BreadcrumbFoundation.genRoutes(routes) : null;
@@ -185,10 +190,10 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
         const spread = (
             <li key={`more-${itemLength}`} ref={handoverFocus} className={`${clsPrefix}-collapse`}>
                 <span className={`${clsPrefix}-item-wrap`}>
-                    <span className={`${clsPrefix}-item ${clsPrefix}-item-more`} aria-label={locale.expand} role="button" tabIndex={0} onClick={foundation.handleExpand} onKeyDown={foundation.handleExpandKeyDown}>
+                    <span className={clsx(`${clsPrefix}-item ${clsPrefix}-item-more`, classNames?.more)} style={styles?.more} aria-label={locale.expand} role="button" tabIndex={0} onClick={foundation.handleExpand} onKeyDown={foundation.handleExpandKeyDown}>
                         {more}
                     </span>
-                    <span className={`${clsPrefix}-separator`} x-semi-prop="separator">
+                    <span className={clsx(`${clsPrefix}-separator`, classNames?.separator)} style={styles?.separator} x-semi-prop="separator">
                         {separator}
                     </span>
                 </span>
@@ -208,7 +213,7 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
                 })}
                 aria-label={ariaLabel ?? locale.label}
             >
-                <ol ref={listRef} className={`${clsPrefix}-list`}>
+                <ol ref={listRef} className={clsx(`${clsPrefix}-list`, classNames?.list)} style={styles?.list}>
                     {template}
                 </ol>
             </nav>

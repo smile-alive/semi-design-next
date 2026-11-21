@@ -1,6 +1,6 @@
 import { children, createMemo, createUniqueId, Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { radioGroupClasses as css, type RadioPart, strings } from '@fibrae/semi-foundation/components/radio/constants';
+import { radioGroupClasses as css, type RadioGroupPart, type RadioPart, strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -36,6 +36,8 @@ export interface RadioGroupProps extends ElementProps<'div', 'onChange' | 'defau
     mode?: RadioMode;
     type?: RadioType;
     buttonSize?: RadioGroupButtonSize;
+    classNames?: Partial<Record<RadioGroupPart, string>>;
+    styles?: Partial<Record<RadioGroupPart, JSX.CSSProperties | string>>;
 }
 
 export type RadioGroupState = RadioGroupBaseState;
@@ -70,6 +72,8 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         'renderExtra',
         'mode',
         'class',
+        'classNames',
+        'styles',
         'direction',
         'type',
         'buttonSize',
@@ -124,6 +128,12 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
     }));
 
     const context: RadioGroupContextValue = {
+        get classNames() {
+            return local.classNames;
+        },
+        get styles() {
+            return local.styles;
+        },
         view,
         onChange: foundation.handleChange,
         register: (sync) => {

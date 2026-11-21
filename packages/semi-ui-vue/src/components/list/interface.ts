@@ -1,4 +1,5 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { ListItemPart, ListPart } from '@fibrae/semi-foundation/components/list/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ColProps, RowProps } from '../grid/interface';
 
@@ -14,12 +15,15 @@ export interface Grid extends Pick<RowProps, 'align' | 'gutter' | 'justify'>, Pi
  */
 export interface ListProps<T> {
     bordered?: boolean;
+    /** `item*` keys apply to every List.Item, before the item's own classNames */
+    classNames?: Partial<Record<ListPart, ClassValue>>;
     dataSource?: T[];
     grid?: Grid;
     layout?: 'vertical' | 'horizontal';
     loading?: boolean;
     size?: Size;
     split?: boolean;
+    styles?: Partial<Record<ListPart, StyleValue>>;
     onClick?: (event: MouseEvent) => void;
     onRightClick?: (event: MouseEvent) => void;
 }
@@ -41,6 +45,9 @@ export interface ListSlots<T> {
 
 export interface ListItemProps {
     align?: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
+    /** Applied after the `item*` classNames of the parent List */
+    classNames?: Partial<Record<ListItemPart, ClassValue>>;
+    styles?: Partial<Record<ListItemPart, StyleValue>>;
     /** Takes precedence over the List's `onClick` */
     onClick?: (event: MouseEvent) => void;
     /** Takes precedence over the List's `onRightClick` */

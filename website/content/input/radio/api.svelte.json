@@ -15,8 +15,8 @@
                 "en-US": "Label content snippet of the radio. The rest of the tag's content is this snippet."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 addon（包裹内容的容器），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by addon (the container wrapping the content); values take anything class takes (string, array or object) and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 icon（圆形单选框本体）、label（标签文字）、extra（补充说明），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。type 为 button 时没有 icon 与 extra，label 是按钮面。",
+                "en-US": "Class names of the inner parts, keyed by icon (the round box), label (the label text) and extra (the supplementary text); values take anything class takes (string, array or object) and merge with the built-in classes. With type set to button there is no icon or extra, and label is the button face."
             },
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the radio is disabled." },
             "displayMode": {
@@ -72,6 +72,10 @@
                 "zh-CN": "组内的 Radio；设置 options 时忽略。",
                 "en-US": "Radio components in the group. Ignored when options is set."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 item（每个 Radio 的根元素）、itemIcon、itemLabel、itemExtra，作用于组内全部 Radio，值的写法同 class（字符串、数组或对象），与 Radio 自己的 classNames 合并，组的类名在前。",
+                "en-US": "Class names of the inner parts, keyed by item (the root of every Radio), itemIcon, itemLabel and itemExtra. They apply to every Radio in the group; values take anything class takes (string, array or object) and merge with each Radio's own classNames, the group's first."
+            },
             "direction": {
                 "zh-CN": "组内 Radio 的排列方向，可选 horizontal 或 vertical；type 为 button 时不支持。",
                 "en-US": "Layout direction of the radios: horizontal or vertical. Not supported when type is button."
@@ -102,8 +106,12 @@
                 "en-US": "Called when the selected value changes. The event's `target.value` is the new value, or undefined when mode is advanced and the selected radio is unchecked."
             },
             "options": {
-                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, classNames, styles, addonId, extraId }`，其中 `style` 为字符串；`classNames`、`styles` 的键为 addon，写法同 Radio 的同名属性。",
-                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, classNames, styles, addonId, extraId }`, where `style` is a string; `classNames` and `styles` are keyed by addon and written like the Radio props of the same name."
+                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, classNames, styles, addonId, extraId }`，其中 `style` 为字符串；`classNames`、`styles` 的键与写法同 Radio 的同名属性。",
+                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, classNames, styles, addonId, extraId }`, where `style` is a string; `classNames` and `styles` are keyed and written like the Radio props of the same name."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames，Radio 自己的 styles 后写。",
+                "en-US": "Style strings of the inner parts, keyed like classNames; each Radio's own styles are applied after them."
             },
             "type": {
                 "zh-CN": "组内所有 Radio 的样式类型，可选 default、button、card、pureCard。",

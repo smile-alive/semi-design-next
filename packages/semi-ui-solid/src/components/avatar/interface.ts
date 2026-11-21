@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
+import type { AvatarGroupPart, AvatarPart, strings } from '@fibrae/semi-foundation/components/avatar/constants';
 import type { ElementProps } from '../../base/index';
 
 export type AvatarShape = 'circle' | 'square';
@@ -47,6 +47,8 @@ export interface AvatarProps extends ElementProps<'span', 'onError'> {
           }
         | boolean;
     contentMotion?: boolean;
+    classNames?: Partial<Record<AvatarPart, string>>;
+    styles?: Partial<Record<AvatarPart, JSX.CSSProperties | string>>;
 }
 
 export type AvatarGroupShape = 'circle' | 'square';
@@ -59,6 +61,8 @@ export interface AvatarGroupProps extends ElementProps<'div'> {
     size?: string;
     overlapFrom?: AvatarGroupOverlapFrom;
     maxCount?: number;
+    classNames?: Partial<Record<AvatarGroupPart, string>>;
+    styles?: Partial<Record<AvatarGroupPart, JSX.CSSProperties | string>>;
     /**
      * `restAvatars` render the hidden avatars where they are called, as standalone avatars; the props passed override
      * the avatar's own (`avatar({ size: 'extra-small' })`)

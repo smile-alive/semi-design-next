@@ -2,15 +2,19 @@
     import { computed, h } from 'vue';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import Avatar from '@fibrae/semi-ui-vue/avatar/index';
+    import { useChatContext } from '../context';
     import type { ChatMessage, ChatMetadata, ChatSlots } from '../interface';
 
     const props = defineProps<{ message: ChatMessage; role: ChatMetadata; continueSend: boolean }>();
     const slots = defineSlots<Pick<ChatSlots, 'avatar' | 'roleAvatar'>>();
 
+    const { view } = useChatContext();
+
     const { PREFIX_CHAT_BOX } = cssClasses;
 
     const avatarProps = computed(() => ({
-        class: [`${PREFIX_CHAT_BOX}-avatar`, { [`${PREFIX_CHAT_BOX}-avatar-hidden`]: props.continueSend }],
+        class: [`${PREFIX_CHAT_BOX}-avatar`, { [`${PREFIX_CHAT_BOX}-avatar-hidden`]: props.continueSend }, view.value.classNames?.itemAvatar],
+        style: view.value.styles?.itemAvatar,
         alt: '',
         color: props.role.color,
         size: 'extra-small' as const,

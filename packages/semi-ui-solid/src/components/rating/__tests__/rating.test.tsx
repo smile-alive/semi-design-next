@@ -566,6 +566,23 @@ describe('Rating tooltips', () => {
         getRadios().forEach((radio, index) => expect(radio).toBe(stars[index]));
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        render(() => <Rating size={20} tooltips={tooltips} classNames={{ item: 'my-item', dropdown: 'my-dropdown' }} styles={{ item: { order: '1' }, dropdown: { order: '2' } }} />);
+        const stars = document.querySelectorAll(`.${prefixCls}-star`);
+        expect(stars.length).toBeGreaterThan(0);
+        stars.forEach((star) => {
+            expect(star).toHaveClass('my-item');
+            expect(star).toHaveStyle({ order: '1' });
+        });
+        // the own inline size survives the part style
+        expect(stars[0]).toHaveStyle({ width: '20px' });
+        fireEvent.mouseMove(getRadios()[1]);
+        await screen.findByText('bad');
+        const dropdown = document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-wrapper`);
+        expect(dropdown).toHaveClass('my-dropdown');
+        expect(dropdown).toHaveStyle({ order: '2' });
+    });
+
     it('tooltips 为空数组时不显示气泡，星距结构不变', () => {
         const onHoverChange = vi.fn<RatingCallback<'onHoverChange'>>();
         render(() => <Rating tooltips={[]} onHoverChange={onHoverChange} />);

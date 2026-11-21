@@ -385,7 +385,7 @@ describe('Svelte Slider', () => {
         expectValues(0.6);
     });
 
-    it('classNames 与 styles 按部位落到对应元素', () => {
+    it('rail 的 classNames 与 styles 不影响 track', () => {
         setup({ value: 30, classNames: { rail: 'my-rail' }, styles: { rail: 'order: 5' } });
         expect(query('rail')).toHaveClass('semi-slider-rail', 'my-rail');
         expect(query('rail')).toHaveStyle({ order: '5' });
@@ -775,6 +775,18 @@ describe('Svelte Slider 输入框与键盘', () => {
         await fireEvent.keyUp(getInput(), { key: 'ArrowRight' });
         expect(afterChange.mock.calls).toEqual([[30]]);
         expect(mouseUp.mock.calls[0]?.[0]).toBeInstanceOf(KeyboardEvent);
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['rail', 'track', 'handle', 'dot', 'mark', 'dropdown'] as const;
+        const selectors = { rail: 'rail', track: 'track', handle: 'handle', dot: 'dot', mark: 'mark', dropdown: 'handle-tooltip' };
+        const { container } = setup({ value: 30, marks: { 20: 'a' }, tooltipVisible: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) }, SIZED);
+        await findTooltip();
+        for (const part of parts) {
+            const el = (part === 'dropdown' ? document : container).querySelector(`.semi-slider-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('键盘聚焦显示格式化后的 tooltip，Tab 离开后隐藏', async () => {

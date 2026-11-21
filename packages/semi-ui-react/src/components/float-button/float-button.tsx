@@ -15,17 +15,22 @@ const defaultProps = {
 } satisfies Partial<FloatButtonProps>;
 
 export default function FloatButton(rawProps: FloatButtonProps) {
-    const { className, colorful, size, icon, badge, shape, disabled, ...rest } = useDefaultProps('FloatButton', rawProps, defaultProps);
+    const { className, classNames, styles, colorful, size, icon, badge, shape, disabled, ...rest } = useDefaultProps('FloatButton', rawProps, defaultProps);
 
     // a span: a native button or link takes phrasing content only
     const body = (
         <span
-            className={clsx(`${prefixCls}-body`, {
-                [`${prefixCls}-${shape}`]: shape,
-                [`${prefixCls}-colorful`]: colorful,
-                [`${prefixCls}-disabled`]: disabled,
-                [`${prefixCls}-${size}`]: size,
-            })}
+            className={clsx(
+                `${prefixCls}-body`,
+                {
+                    [`${prefixCls}-${shape}`]: shape,
+                    [`${prefixCls}-colorful`]: colorful,
+                    [`${prefixCls}-disabled`]: disabled,
+                    [`${prefixCls}-${size}`]: size,
+                },
+                classNames?.body
+            )}
+            style={styles?.body}
         >
             {icon}
         </span>

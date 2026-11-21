@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { DescriptionsItemPart } from '@fibrae/semi-foundation/components/descriptions/constants';
+import type { DescriptionsItemPart, DescriptionsPart } from '@fibrae/semi-foundation/components/descriptions/constants';
 import type { ElementProps } from '../../base/index';
 
 export type DescriptionsAlign = 'center' | 'justify' | 'left' | 'plain';
@@ -17,11 +17,13 @@ export interface Data {
 
 export interface DescriptionsProps extends ElementProps<'div'> {
     align?: DescriptionsAlign;
+    classNames?: Partial<Record<DescriptionsPart, string>>;
     row?: boolean;
     size?: DescriptionsSize;
     data?: Data[];
     layout?: DescriptionsLayout;
     column?: number;
+    styles?: Partial<Record<DescriptionsPart, JSX.CSSProperties | string>>;
     /** Key of each data item, called only for shown items; `index` counts hidden items too. Defaults to `item.key` */
     renderKey?: (item: Data, index: number) => JSX.Element;
     /** Value of each data item, called only for shown items; `index` counts hidden items too. Defaults to `item.value` */
@@ -34,6 +36,7 @@ export interface DescriptionsItemProps extends ElementProps<'tr', 'children'> {
     hidden?: boolean;
     itemKey?: JSX.Element;
     span?: number;
+    /** Applied after the `itemKey` and `itemValue` classNames of the parent Descriptions */
     classNames?: Partial<Record<DescriptionsItemPart, string>>;
     styles?: Partial<Record<DescriptionsItemPart, JSX.CSSProperties | string>>;
 }

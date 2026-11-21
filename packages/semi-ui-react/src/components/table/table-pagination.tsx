@@ -1,16 +1,19 @@
 import { memo } from 'react';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import Pagination from '../pagination';
 import type { RenderPagination, TablePaginationProps } from './interface';
 
 export interface TablePaginationPartProps {
+    className?: string;
+    style?: React.CSSProperties;
     prefixCls?: string;
     pagination?: TablePaginationProps;
     info?: React.ReactNode;
     renderPagination?: RenderPagination;
 }
 
-function TablePagination({ pagination, prefixCls = cssClasses.PREFIX, info, renderPagination }: TablePaginationPartProps) {
+function TablePagination({ className, style, pagination, prefixCls = cssClasses.PREFIX, info, renderPagination }: TablePaginationPartProps) {
     const total = pagination?.total;
 
     // Table-only keys: Pagination puts unknown props on its root element
@@ -18,7 +21,7 @@ function TablePagination({ pagination, prefixCls = cssClasses.PREFIX, info, rend
     const customPagination = typeof renderPagination === 'function' ? renderPagination(pagination) : null;
 
     return (
-        <div className={`${prefixCls}-pagination-outer`}>
+        <div className={clsx(`${prefixCls}-pagination-outer`, className)} style={style}>
             {customPagination != null && typeof customPagination !== 'boolean' ? (
                 customPagination
             ) : (

@@ -27,6 +27,8 @@
         mode: () => semiDefault('RadioGroup', 'mode', ''),
         type: () => semiDefault('RadioGroup', 'type', 'default'),
         buttonSize: () => semiDefault('RadioGroup', 'buttonSize', 'middle'),
+        classNames: semiGlobalDefault('RadioGroup', 'classNames'),
+        styles: semiGlobalDefault('RadioGroup', 'styles'),
     });
 
     const emit = defineEmits<RadioGroupEmits<T>>();
@@ -70,6 +72,8 @@
             buttonSize: props.buttonSize,
             mode: props.mode,
         })),
+        classNames: computed(() => props.classNames),
+        styles: computed(() => props.styles),
         onChange: foundation.handleChange,
         register: (sync) => {
             syncs.add(sync);

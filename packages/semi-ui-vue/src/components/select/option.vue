@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { Text, useAttrs } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
+    import { Text, useAttrs, type ClassValue, type StyleValue } from 'vue';
+    import { cssClasses, type SelectPart } from '@fibrae/semi-foundation/components/select/constants';
     import { getDataAttr } from '@fibrae/semi-foundation/utils';
     import { IconTick } from '@fibrae/semi-icons-vue';
     import { slotNodes } from '../../utils/index';
@@ -20,6 +20,9 @@
         current?: boolean;
         inputValue?: string;
         semiOptionId?: string;
+        /** The `item*` parts of the parent, applied before the option's own */
+        parentClassNames?: Partial<Record<SelectPart, ClassValue>>;
+        parentStyles?: Partial<Record<SelectPart, StyleValue>>;
     }
 
     defineOptions({ inheritAttrs: false, elementType: 'Select.Option' });
@@ -35,6 +38,10 @@
         current: undefined,
         inputValue: undefined,
         semiOptionId: undefined,
+        classNames: undefined,
+        styles: undefined,
+        parentClassNames: undefined,
+        parentStyles: undefined,
     });
 
     const emit = defineEmits<{ select: [option: SelectOptionProps, event: MouseEvent]; mouseenter: [event: MouseEvent] }>();
@@ -64,21 +71,33 @@
             [`${prefixCls}-focused`]: props.focused,
             [`${prefixCls}-empty`]: props.empty,
         },
+        props.parentClassNames?.item,
         attrs.class,
     ];
 </script>
 
 <template>
-    <div v-if="props.empty" :class="rowClass()" x-semi-prop="emptyContent">
+    <div v-if="props.empty" :class="rowClass()" :style="$attrs.style as never" x-semi-prop="emptyContent">
         <slot />
     </div>
     <!-- keyboard selection stays on the combobox through aria-activedescendant, so the option takes no focus -->
-    <div v-else :id="props.semiOptionId" v-bind="getDataAttr($attrs)" :aria-disabled="props.disabled ? 'true' : 'false'" :aria-selected="props.selected || props.current ? 'true' : 'false'" :class="rowClass()" role="option" :style="$attrs.style as never" @click="handleClick" @mouseenter="emit('mouseenter', $event)">
-        <div v-if="props.showTick" :class="`${prefixCls}-icon`">
+    <div
+        v-else
+        :id="props.semiOptionId"
+        v-bind="getDataAttr($attrs)"
+        :aria-disabled="props.disabled ? 'true' : 'false'"
+        :aria-selected="props.selected || props.current ? 'true' : 'false'"
+        :class="rowClass()"
+        role="option"
+        :style="[props.parentStyles?.item, $attrs.style as never]"
+        @click="handleClick"
+        @mouseenter="emit('mouseenter', $event)"
+    >
+        <div v-if="props.showTick" :class="[`${prefixCls}-icon`, props.parentClassNames?.itemIcon, props.classNames?.icon]" :style="[props.parentStyles?.itemIcon, props.styles?.icon]">
             <IconTick />
         </div>
         <template v-for="(text, i) in [plainText()]" :key="i">
-            <div v-if="text !== undefined" :class="`${prefixCls}-text`">
+            <div v-if="text !== undefined" :class="[`${prefixCls}-text`, props.parentClassNames?.itemContent, props.classNames?.content]" :style="[props.parentStyles?.itemContent, props.styles?.content]">
                 <Highlight v-if="props.inputValue" :classNames="{ highlight: `${prefixCls}-keyword` }" :searchWords="[props.inputValue]" :sourceString="text" />
                 <template v-else>{{ text }}</template>
             </div>

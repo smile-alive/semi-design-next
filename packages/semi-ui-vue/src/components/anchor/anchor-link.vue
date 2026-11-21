@@ -88,7 +88,7 @@
 </script>
 
 <template>
-    <div :class="`${prefix}-link`" role="listitem">
+    <div :class="[`${prefix}-link`, view.classNames?.item]" role="listitem" :style="view.styles?.item">
         <div
             :aria-current="active ? 'location' : undefined"
             :aria-disabled="props.disabled"
@@ -98,9 +98,11 @@
                     [cssClasses.LINK_TITLE_ACTIVE]: active,
                     [`${prefix}-link-title-disabled`]: props.disabled,
                 },
+                view.classNames?.itemTitle,
+                props.classNames?.title,
             ]"
             role="link"
-            :style="{ paddingInlineStart: `${8 * level}px` }"
+            :style="[{ paddingInlineStart: `${8 * level}px` }, view.styles?.itemTitle, props.styles?.title]"
             tabindex="0"
             :title="(!view.showTooltip && !$slots.title && props.title) || undefined"
             @click="handleClick"

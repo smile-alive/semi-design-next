@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by icon (icon container); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"icon\", ClassValue>>"}>Type</ApiType> | `undefined` |
 | code | Whether the text is wrapped in a code element. | `boolean` | `false` |
 | component | Element to render: a tag name or a Vue component. Defaults to span; use div when the content has block elements such as p. | `string \| Component` | `undefined` |
 | copyable | Whether the text can be copied; pass an object for the Copyable Config. | `boolean \| TypographyCopyableConfig` | `false` |
@@ -16,6 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | rule | Parsing rule: text only rounds, numbers filters out non-numeric characters, bytes-decimal and bytes-binary convert byte units, percentages converts to percent, exponential converts to scientific notation. | <ApiType detail={"\"bytes-binary\" \u007c \"bytes-decimal\" \u007c \"exponential\" \u007c \"numbers\" \u007c \"percentages\" \u007c \"text\""}>Type</ApiType> | `"text"` |
 | size | Text size; inherit takes the size of the enclosing Text or Paragraph. | `"inherit" \| "normal" \| "small"` | `"normal"` |
 | strong | Whether the text is bold. | `boolean` | `false` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003c\"icon\", StyleValue>>"}>Type</ApiType> | `undefined` |
 | truncate | How the kept decimals are rounded, matching Math.round, Math.ceil and Math.floor. | `"ceil" \| "floor" \| "round"` | `"round"` |
 | type | Text type. | <ApiType detail={"\"danger\" \u007c \"primary\" \u007c \"quaternary\" \u007c \"secondary\" \u007c \"success\" \u007c \"tertiary\" \u007c \"warning\""}>Type</ApiType> | `"primary"` |
 | underline | Adds an underline. | `boolean` | `false` |

@@ -17,7 +17,32 @@ import TimeCol from './time-col';
 
 const prefixCls = `${cssClasses.PREFIX}-day`;
 
-export default function DayCalendar({ ref, className, style, displayValue, range, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest }: DayCalendarProps) {
+export default function DayCalendar({
+    ref,
+    className,
+    classNames,
+    style,
+    styles,
+    displayValue,
+    range,
+    header,
+    events,
+    showCurrTime,
+    weekStartsOn,
+    scrollTop,
+    onClick,
+    onClose,
+    onMoreClick,
+    renderTimeDisplay,
+    markWeekend,
+    minEventHeight,
+    width,
+    height,
+    renderDateDisplay,
+    dateGridRender,
+    allDayEventsRender,
+    ...rest
+}: DayCalendarProps) {
     const { locale, localeCode } = useLocale('Calendar');
     const { dateFnsLocale: contextDateFnsLocale } = useConfigContext();
 
@@ -53,7 +78,7 @@ export default function DayCalendar({ ref, className, style, displayValue, range
                         <div role="cell">{header}</div>
                     </div>
                 )}
-                <div className={allDayCls} role="row">
+                <div className={clsx(allDayCls, classNames?.allDay)} style={styles?.allDay} role="row">
                     <div className={`${cssClasses.PREFIX}-tag ${allDayCls}-tag ${prefixCls}-sticky-left`} role="rowheader">
                         <span>{locale.allDay}</span>
                     </div>
@@ -62,7 +87,7 @@ export default function DayCalendar({ ref, className, style, displayValue, range
                             {allDayEventsRender
                                 ? allDayEventsRender(events)
                                 : parsedEvents.allDay.map(({ children: content, key }, ind) => (
-                                      <li key={key || `allDay-${ind}`} className={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`}>
+                                      <li key={key || `allDay-${ind}`} className={clsx(`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`, classNames?.event)} style={styles?.event}>
                                           {content}
                                       </li>
                                   ))}
@@ -72,8 +97,8 @@ export default function DayCalendar({ ref, className, style, displayValue, range
             </div>
             <div className={`${prefixCls}-scroll-wrapper`} role="rowgroup">
                 <div ref={scrollRef} className={`${prefixCls}-scroll`} role="row">
-                    <TimeCol className={`${prefixCls}-sticky-left`} renderTimeDisplay={renderTimeDisplay} />
-                    <DayCol displayValue={dayStart} events={parsedEvents.day} isWeekend={isWeekend} minEventHeight={minEventHeight} scrollHeight={scrollHeight} showCurrTime={showCurrTime} today={today} dateGridRender={dateGridRender} handleClick={handleClick} />
+                    <TimeCol className={`${prefixCls}-sticky-left`} classNames={classNames} styles={styles} renderTimeDisplay={renderTimeDisplay} />
+                    <DayCol classNames={classNames} styles={styles} displayValue={dayStart} events={parsedEvents.day} isWeekend={isWeekend} minEventHeight={minEventHeight} scrollHeight={scrollHeight} showCurrTime={showCurrTime} today={today} dateGridRender={dateGridRender} handleClick={handleClick} />
                 </div>
             </div>
         </div>

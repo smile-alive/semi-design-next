@@ -76,7 +76,18 @@ describe('Svelte Popconfirm', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        await setupOpen({ classNames: { content: 'my-content', arrow: 'my-arrow' }, styles: { content: 'order: 2', arrow: { backgroundColor: 'red' } }, showArrow: true });
+        const parts = ['header', 'icon', 'title', 'close', 'body', 'footer'] as const;
+        const selectors = { header: 'header', icon: 'header-icon', title: 'header-title', close: 'btn-close', body: 'body', footer: 'footer' };
+        await setupOpen({
+            classNames: { content: 'my-content', arrow: 'my-arrow', ...Object.fromEntries(parts.map((p) => [p, `my-${p}`])) },
+            styles: { content: 'order: 2', arrow: { backgroundColor: 'red' }, ...Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 3}`])) },
+            showArrow: true,
+        });
+        for (const part of parts) {
+            const el = document.querySelector(`.semi-popconfirm-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 3) });
+        }
         const popover = document.querySelector('.semi-popover');
         expect(popover).toHaveClass('my-content');
         expect(popover).toHaveStyle({ order: '2' });

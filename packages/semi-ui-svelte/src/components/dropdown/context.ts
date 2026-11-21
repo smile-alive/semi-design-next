@@ -1,9 +1,16 @@
+import type { ClassValue } from 'svelte/elements';
 import { SvelteMap } from 'svelte/reactivity';
+import type { DropdownMenuPart } from '@fibrae/semi-foundation/components/dropdown/constants';
 import type { DropdownMenuContext, DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { createContext } from '../../base/index.js';
 import type { Trigger } from '../tooltip/index.js';
 
+export const joinStyles = (...styles: (string | null | undefined)[]) => styles.filter(Boolean).join('; ') || undefined;
+
 export interface DropdownContextView {
+    /** Already merged with the enclosing Dropdowns', so a submenu keeps the parts of the menus around it */
+    readonly classNames?: Partial<Record<DropdownMenuPart, ClassValue>>;
+    readonly styles?: Partial<Record<DropdownMenuPart, string | undefined>>;
     readonly menuDepth: number;
     readonly showTick: boolean;
     readonly selectionMode?: DropdownSelectionMode;

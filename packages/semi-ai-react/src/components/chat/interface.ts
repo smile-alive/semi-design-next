@@ -26,6 +26,8 @@ export interface CommonChatsProps {
     customMarkDownComponents?: OriginMarkdownRenderProps['components'];
     renderDivider?: (message?: Message) => ReactNode;
     markdownRenderProps?: MarkdownRenderProps;
+    classNames?: Partial<Record<ChatPart, string>>;
+    styles?: Partial<Record<ChatPart, React.CSSProperties>>;
 }
 
 export interface ChatHandle {
@@ -51,8 +53,6 @@ export interface ChatProps extends CommonChatsProps, ElementProps<'div', 'childr
     onClear?: () => void;
     onInputChange?: (props: { inputValue: string; attachment: FileItem[] }) => void;
     onMessageSend?: (content: string, attachment?: FileItem[]) => void;
-    classNames?: Partial<Record<ChatPart, string>>;
-    styles?: Partial<Record<ChatPart, React.CSSProperties>>;
     renderInputArea?: (props?: RenderInputAreaProps) => ReactNode;
     placeholder?: string;
     topSlot?: ReactNode | ReactNode[];
@@ -170,8 +170,8 @@ export interface InputBoxProps {
     showClearContext?: boolean;
     sendHotKey?: SendHotKey;
     placeholder: string;
-    className?: string;
-    style?: React.CSSProperties;
+    classNames?: Partial<Record<ChatPart, string>>;
+    styles?: Partial<Record<ChatPart, React.CSSProperties>>;
     disableSend?: boolean;
     uploadRef?: React.RefObject<UploadHandle>;
     uploadTipProps?: TooltipProps;

@@ -182,6 +182,8 @@ export default function Tree(rawProps: TreeProps) {
         dropPosition: state().dropPosition,
         renderLabel: local.renderLabel,
         renderFullLabel: local.renderFullLabel,
+        classNames: local.classNames,
+        styles: local.styles,
     }));
 
     const contextValue: TreeContextValue = {
@@ -303,8 +305,8 @@ export default function Tree(rawProps: TreeProps) {
                     when={!noData()}
                     fallback={
                         <Show when={resolvedEmpty() !== null}>
-                            <div class={listClass()} role="none">
-                                <ul class={clsx(`${prefix}-option`, `${prefix}-option-empty`)}>
+                            <div class={clsx(listClass(), local.classNames?.list)} style={local.styles?.list} role="none">
+                                <ul class={clsx(`${prefix}-option`, `${prefix}-option-empty`, local.classNames?.empty)} style={local.styles?.empty}>
                                     <li class={clsx(`${prefix}-option-label`, `${prefix}-option-label-empty`)} x-semi-prop="emptyContent">
                                         {hasContent(resolvedEmpty()) ? resolvedEmpty() : locale().locale.emptyText}
                                     </li>
@@ -318,7 +320,8 @@ export default function Tree(rawProps: TreeProps) {
                         ref={(node) => (treeElement = node)}
                         aria-activedescendant={activeKey() === undefined ? undefined : nodeId(treeId, activeKey()!)}
                         aria-multiselectable={Boolean(local.multiple)}
-                        class={listClass()}
+                        class={clsx(listClass(), local.classNames?.list)}
+                        style={local.styles?.list}
                         role="tree"
                         tabIndex={treeAttrs.tabIndex ?? 0}
                         onFocusIn={handleFocusIn}

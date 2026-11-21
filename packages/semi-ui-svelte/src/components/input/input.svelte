@@ -271,7 +271,9 @@
                     [`${prefixCls}-prepend-text`]: addonBeforeKind === 'text',
                     [`${prefixCls}-prepend-icon`]: addonBeforeKind === 'icon',
                 },
+                classNames?.addonBefore,
             ]}
+            style={styles?.addonBefore}
             x-semi-prop="addonBefore"
         >
             {@render addonBefore()}
@@ -287,8 +289,10 @@
                     [`${prefixCls}-prefix-text`]: prefixKind === 'text',
                     [`${prefixCls}-prefix-icon`]: prefixKind === 'icon',
                 },
+                classNames?.prefix,
             ]}
             id={labelA11y.labelId}
+            style={styles?.prefix}
             x-semi-prop="prefix,insetLabel"
             onclick={foundation.handleClickPrefixOrSuffix}
             onmousedown={keepFocus}
@@ -331,7 +335,7 @@
         onkeyup={foundation.handleKeyUp}
     />
     {#if allowClear}
-        <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${prefixCls}-clearbtn`} type="button" onclick={foundation.handleClearClick} onkeydown={stopActivationKeys} onmousedown={foundation.handleClearMouseDown}>
+        <button aria-label={locale().locale.clear} bind:this={clearButton} class={[`${prefixCls}-clearbtn`, classNames?.clear]} style={styles?.clear} type="button" onclick={foundation.handleClearClick} onkeydown={stopActivationKeys} onmousedown={foundation.handleClearMouseDown}>
             {#if clearIcon}
                 {@render clearIcon()}
             {:else}
@@ -349,7 +353,9 @@
                     [`${prefixCls}-suffix-icon`]: suffixKind === 'icon',
                     [`${prefixCls}-suffix-hidden`]: allowClear && hideSuffix,
                 },
+                classNames?.suffix,
             ]}
+            style={styles?.suffix}
             x-semi-prop="suffix"
             onclick={foundation.handleClickPrefixOrSuffix}
             onmousedown={keepFocus}
@@ -358,7 +364,7 @@
         </div>
     {/if}
     {#if mode === 'password' && !isDisabled}
-        <button aria-label={states().eyeClosed ? locale().locale.showPassword : locale().locale.hidePassword} class={`${prefixCls}-modebtn`} type="button" onclick={foundation.handleClickEye} onkeydown={stopActivationKeys} onmousedown={keepFocus}>
+        <button aria-label={states().eyeClosed ? locale().locale.showPassword : locale().locale.hidePassword} class={[`${prefixCls}-modebtn`, classNames?.visibilityToggle]} style={styles?.visibilityToggle} type="button" onclick={foundation.handleClickEye} onkeydown={stopActivationKeys} onmousedown={keepFocus}>
             {#if states().eyeClosed}
                 <IconEyeClosedSolid />
             {:else}
@@ -375,7 +381,9 @@
                     [`${prefixCls}-append-text`]: addonAfterKind === 'text',
                     [`${prefixCls}-append-icon`]: addonAfterKind === 'icon',
                 },
+                classNames?.addonAfter,
             ]}
+            style={styles?.addonAfter}
             x-semi-prop="addonAfter"
         >
             {@render addonAfter()}

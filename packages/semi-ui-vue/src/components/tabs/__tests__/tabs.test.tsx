@@ -148,14 +148,65 @@ describe('Tabs', () => {
 
     it('classNames 与 styles 按部位落到对应元素', () => {
         stubIntersectionObserver();
-        const parts = ['tabBar', 'content', 'visibleTabs'] as const;
-        const selectors = { tabBar: `${prefix}-bar`, content: `${prefix}-content`, visibleTabs: `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper` };
-        mountTabs({ collapsible: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) }, threePanes);
+        const parts = ['tabBar', 'content', 'visibleTabs', 'item', 'itemIcon', 'itemClose', 'pane', 'extra', 'arrow'] as const;
+        const selectors = {
+            tabBar: `${prefix}-bar`,
+            content: `${prefix}-content`,
+            visibleTabs: `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`,
+            item: `${prefix}-tab`,
+            itemIcon: `${prefix}-bar-icon`,
+            itemClose: `${prefix}-tab-icon-close`,
+            pane: `${prefix}-pane`,
+            extra: `${prefix}-bar-extra`,
+            arrow: `${prefix}-bar-arrow`,
+        };
+        render(
+            defineComponent(() => () => (
+                <Tabs collapsible classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))}>
+                    {{
+                        default: () =>
+                            threePanes.map(({ itemKey, tab: title, content }) => (
+                                <TabPane key={itemKey} closable itemKey={itemKey}>
+                                    {{ default: () => content, tab: () => title, icon: () => <i /> }}
+                                </TabPane>
+                            )),
+                        tabBarExtraContent: () => <span>extra</span>,
+                    }}
+                </Tabs>
+            ))
+        );
         for (const part of parts) {
             const el = getElement(`.${selectors[part]}`);
             expect(el).toHaveClass(`my-${part}`);
             expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
         }
+        expect(document.querySelectorAll(`.${prefix}-bar-arrow.my-arrow`)).toHaveLength(2);
+        expect(document.querySelectorAll(`.${prefix}-tab.my-item`)).toHaveLength(3);
+        expect(document.querySelectorAll(`.${prefix}-pane.my-pane`)).toHaveLength(3);
+    });
+
+    it('classNames.more 与 classNames.dropdown 落到更多按钮和下拉浮层', async () => {
+        mountTabs({ more: { count: 1, dropdownProps: { trigger: 'click' } }, classNames: { more: 'my-more', dropdown: 'my-dropdown' }, styles: { more: { order: 1 }, dropdown: { order: 2 } } });
+        expect(screen.getByRole('button', { name: '更多' })).toHaveClass('my-more');
+        expect(screen.getByRole('button', { name: '更多' })).toHaveStyle({ order: '1' });
+        await userEvent.click(screen.getByText('更多'));
+        await screen.findAllByRole('menuitemcheckbox');
+        const dropdown = getElement(`.${prefix}-bar-more-dropdown-line`);
+        expect(dropdown).toHaveClass('my-dropdown');
+        // Dropdown puts `style` on the menu container inside the popup wrapper that takes the class
+        expect(getElement(`.${BASE_CLASS_PREFIX}-dropdown`, dropdown)).toHaveStyle({ order: '2' });
+    });
+
+    it('classNames.dropdown 落到箭头下拉浮层', async () => {
+        scrollSpy();
+        const io = stubIntersectionObserver();
+        mountTabs({ collapsible: true, classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: { order: 2 } } }, keyPanes(['k0', 'k1', 'k2']));
+        await io.intersect({ 'k0-bar': true, 'k1-bar': false, 'k2-bar': false });
+        await userEvent.click(getElement('button', getElement(`.${prefix}-bar-arrow-end`)));
+        await screen.findAllByRole('menuitemcheckbox');
+        const dropdown = getElement(`.${prefix}-bar-dropdown`);
+        expect(dropdown).toHaveClass('my-dropdown');
+        expect(getElement(`.${BASE_CLASS_PREFIX}-dropdown`, dropdown)).toHaveStyle({ order: '2' });
     });
 
     it('不同类型的 Tabs', () => {
@@ -480,8 +531,8 @@ describe('Tabs 行为', () => {
         mountTabs({ onChange, classNames: { tabBar: 'bar' }, styles: { tabBar: { color: 'red' } } }, threePanes, { tabBar });
         expect(tabBar.mock.lastCall?.[0].tabBarProps).toMatchObject({
             activeKey: 'a',
-            class: 'bar',
-            style: { color: 'red' },
+            classNames: { tabBar: 'bar' },
+            styles: { tabBar: { color: 'red' } },
             size: 'large',
             type: 'line',
             tabPosition: 'top',

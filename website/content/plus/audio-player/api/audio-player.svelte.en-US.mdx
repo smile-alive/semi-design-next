@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property     | Description                                                                                                            | Type               | Default  |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------- | ------------------ | -------- |
-| audioUrl     | Audio address: a string, an AudioInfo object, or an array of them. An array shows the previous and next track buttons. | `AudioUrl`         | -        |
-| autoPlay     | Whether to play automatically.                                                                                         | `boolean`          | `false`  |
-| showToolbar  | Whether to display the toolbar.                                                                                        | `boolean`          | `true`   |
-| skipDuration | Seconds skipped by each backward or forward button press.                                                              | `number`           | `10`     |
-| theme        | Player theme: dark or light.                                                                                           | `AudioPlayerTheme` | `"dark"` |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| audioUrl | Audio address: a string, an AudioInfo object, or an array of them. An array shows the previous and next track buttons. | `AudioUrl` | - |
+| autoPlay | Whether to play automatically. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by controls, playButton, cover, title, error, sliderTrack, sliderProgress, sliderThumb, toolbar, speed, volumeDropdown and speedDropdown; merged with the built-in classes. The slider\* keys apply to both the progress and the volume slider; speedDropdown lands on the playback rate menu container. | <ApiType detail={"Partial\u003cRecord\u003cAudioPlayerPart, ClassValue>>"}>Type</ApiType> | - |
+| showToolbar | Whether to display the toolbar. | `boolean` | `true` |
+| skipDuration | Seconds skipped by each backward or forward button press. | `number` | `10` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cAudioPlayerPart, string>>"}>Type</ApiType> | - |
+| theme | Player theme: dark or light. | `AudioPlayerTheme` | `"dark"` |

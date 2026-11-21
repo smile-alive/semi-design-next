@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useRef } from 'react';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageState } from '@fibrae/semi-foundation/components/image/preview-image-foundation';
 import { useFoundation } from '../../../base/index';
@@ -18,7 +19,7 @@ function preventDefault(e: React.DragEvent) {
 }
 
 export default function PreviewImage(props: PreviewImageProps & { zoomEvent?: WheelEvent }) {
-    const { src, alt = '', rotation, crossOrigin } = props;
+    const { src, alt = '', rotation, crossOrigin, classNames, styles } = props;
 
     const containerRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -53,8 +54,8 @@ export default function PreviewImage(props: PreviewImageProps & { zoomEvent?: Wh
             <img
                 key={src}
                 ref={imageRef}
-                className={`${preViewImgPrefixCls}-img`}
-                style={imgStyle}
+                className={clsx(`${preViewImgPrefixCls}-img`, classNames?.img)}
+                style={{ ...imgStyle, ...styles?.img }}
                 alt={alt}
                 crossOrigin={crossOrigin}
                 src={src}

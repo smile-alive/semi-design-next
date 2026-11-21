@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | checkRelation | How the checked states of nodes relate in a multiple tree: `related` links parents and children, `unRelated` keeps them independent. | `CheckRelation` | `"related"` |
 | children | Tree does not render children; provide the nodes through treeData. | `ReactNode` | - |
 | className | Class name of the root element. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `search` (the search box container); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTreePart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `search`, `list`, `empty`, `item`, `itemSwitcher`, `itemCheckbox`, `itemIcon` and `itemTitle`; merged with the built-in classes. The `item*` keys apply to every node: `item` is the node row (`role="treeitem"`) and `itemSwitcher` the expand arrow; `itemIcon` only reaches the built-in `directory` icons, so a custom icon does not take it, and a custom `expandIcon` receives the `itemSwitcher` class but no style. | <ApiType detail={"Partial\u003cRecord\u003cTreePart, string>>"}>Type</ApiType> | - |
 | defaultExpandAll | Expands every node on mount. Later changes of treeData or treeDataSimpleJson do not affect it; use expandAll for that. | `boolean` | `false` |
 | defaultExpandedKeys | Nodes expanded initially, showing their direct children. | `string[]` | - |
 | defaultValue | The initially selected items, read once on mount. | `Value` | - |

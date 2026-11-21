@@ -2,6 +2,7 @@ import { For, Show, children, createEffect, createMemo, onCleanup, splitProps, u
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
 import { isEnterPress } from '@fibrae/semi-foundation/utils';
+import { mergeStyles } from '../../utils/index';
 import Typography from '../typography';
 import { useAnchorContext } from './context';
 import type { AnchorClickEvent } from './interface';
@@ -23,7 +24,7 @@ export default function LinkItem(props: LinkItemProps) {
     // an entry never changes its link: a new Link element makes a new entry and so a new LinkItem
     const [local, rest] = splitProps(
         untrack(() => props.link.props),
-        ['children', 'class', 'disabled', 'href', 'title']
+        ['children', 'class', 'classNames', 'disabled', 'href', 'style', 'styles', 'title']
     );
 
     const anchor = useAnchorContext('Anchor.Link');
@@ -60,13 +61,18 @@ export default function LinkItem(props: LinkItemProps) {
     });
 
     return (
-        <div {...rest} class={clsx(`${prefixCls}-link`, local.class)} role="listitem">
+        <div {...rest} class={clsx(`${prefixCls}-link`, view().classNames?.item, local.class)} style={mergeStyles(view().styles?.item, local.style)} role="listitem">
             <div
-                class={clsx(`${prefixCls}-link-title`, {
-                    [cssClasses.LINK_TITLE_ACTIVE]: active(),
-                    [`${prefixCls}-link-title-disabled`]: local.disabled,
-                })}
-                style={{ 'padding-inline-start': `${8 * props.level}px` }}
+                class={clsx(
+                    `${prefixCls}-link-title`,
+                    {
+                        [cssClasses.LINK_TITLE_ACTIVE]: active(),
+                        [`${prefixCls}-link-title-disabled`]: local.disabled,
+                    },
+                    view().classNames?.itemTitle,
+                    local.classNames?.title
+                )}
+                style={mergeStyles({ 'padding-inline-start': `${8 * props.level}px` }, view().styles?.itemTitle, local.styles?.title)}
                 aria-current={active() ? 'location' : undefined}
                 aria-disabled={Boolean(local.disabled)}
                 role="link"

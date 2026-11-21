@@ -10,8 +10,10 @@
 
     const props = withDefaults(defineProps<ScrollListProps & /* @vue-ignore */ ElementProps<'div', keyof ScrollListProps>>(), {
         bodyHeight: semiGlobalDefault('ScrollList', 'bodyHeight'),
+        classNames: semiGlobalDefault('ScrollList', 'classNames'),
         footer: semiGlobalDefault('ScrollList', 'footer'),
         header: semiGlobalDefault('ScrollList', 'header'),
+        styles: semiGlobalDefault('ScrollList', 'styles'),
     });
 
     const slots = defineSlots<ScrollListSlots>();
@@ -28,16 +30,16 @@
 
 <template>
     <div :class="prefix" :role="namedRole($attrs)">
-        <div v-if="hasHeader()" :class="`${prefix}-header`">
-            <div :class="`${prefix}-header-title`" x-semi-prop="header">
+        <div v-if="hasHeader()" :class="[`${prefix}-header`, props.classNames?.header]" :style="props.styles?.header">
+            <div :class="[`${prefix}-header-title`, props.classNames?.title]" :style="props.styles?.title" x-semi-prop="header">
                 <slot name="header">{{ props.header }}</slot>
             </div>
             <div :class="`${prefix}-line`" />
         </div>
-        <div :class="`${prefix}-body`" :style="{ height: bodyHeight(props.bodyHeight) }" x-semi-prop="children">
+        <div :class="[`${prefix}-body`, props.classNames?.body]" :style="[{ height: bodyHeight(props.bodyHeight) }, props.styles?.body]" x-semi-prop="children">
             <slot />
         </div>
-        <div v-if="hasFooter()" :class="`${prefix}-footer`" x-semi-prop="footer">
+        <div v-if="hasFooter()" :class="[`${prefix}-footer`, props.classNames?.footer]" :style="props.styles?.footer" x-semi-prop="footer">
             <slot name="footer">{{ props.footer }}</slot>
         </div>
     </div>

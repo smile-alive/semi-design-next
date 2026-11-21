@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | 底部渲染额外元素。 | `React.ReactNode` | - |
 | children | 使用 usePopover 时的触发器，默认是一个显示当前颜色的色块按钮；不使用 usePopover 时不渲染。 | `React.ReactNode` | - |
 | className | picker 根元素的类名；使用 usePopover 时位于弹层内。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `area`（选色区）、`hue`（色相滑条）、`alpha`（透明度滑条）、`handle`（三处共用的圆形手柄）、`preview`（颜色预览块）、`input`（颜色值输入框）、`format`（格式选择器）、`trigger`（默认触发按钮）、`dropdown`（usePopover 时的弹出层），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cColorPickerPart, string>>"}>Type</ApiType> | - |
 | defaultFormat | 手动输入时默认使用的颜色格式，可选 `rgba`、`hex`、`hsva`。 | `ColorFormat` | `"hex"` |
 | defaultValue | 非受控的初始值，是同时包含 hsva、hex、rgba 三种格式的 ColorValue 对象。 | `ColorValue` | <ApiType detail={"{\n hsva: { h: 176, s: 71, v: 77, a: 1 },\n rgba: { r: 57, g: 197, b: 187, a: 1 },\n hex: '#39c5bb',\n }"}>Type</ApiType> |
 | eyeDropper | 是否开启滴管拾色器，需要 HTTPS 或 localhost 等安全 context，且浏览器为 Chromium 95 以上，否则无效果。 | `boolean` | `true` |
@@ -16,6 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | popoverProps | 放入 Popover 时传给 Popover 的属性，如 `trigger`、`aria-label`、`aria-labelledby`。弹层默认以点击触发、role 为 `dialog`，名称默认取语言包；`aria-label` 或 `aria-labelledby` 优先。 | `PopoverProps` | - |
 | ref | picker 根元素（`div`）的引用；使用 usePopover 时指向弹层内的 picker 元素。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | style | picker 根元素的样式；使用 usePopover 时位于弹层内。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cColorPickerPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | topSlot | 顶部渲染额外元素。 | `React.ReactNode` | - |
 | usePopover | 是否放入 Popover 渲染，触发器使用 `children`，默认 `false`。 | `boolean` | - |
 | value | 受控值，形态同 defaultValue。传 `undefined` 视为非受控，从受控变回 `undefined` 时显示回到 defaultValue；传 `null` 是受控的空值，显示 defaultValue 且只报告变化。ColorValue 按不可变值对待，更新时整体替换。 | `ColorValue \| null` | - |

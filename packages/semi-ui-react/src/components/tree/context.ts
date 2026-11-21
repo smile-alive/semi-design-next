@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { ReactNode, MouseEvent, DragEvent, KeyboardEvent } from 'react';
+import type { TreeNodePart } from '@fibrae/semi-foundation/components/tree/constants';
 import type { Virtualize, ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import { createContext } from '../../base/index';
 import type { TreeNodeData, TreeNodeProps, RenderFullLabelProps } from './interface';
@@ -28,6 +29,8 @@ export interface TreeContextValue {
     dragOverNodeKey?: string | null;
     dropPosition?: number | null;
     labelEllipsis?: boolean | Virtualize;
+    classNames?: Partial<Record<TreeNodePart, string>>;
+    styles?: Partial<Record<TreeNodePart, React.CSSProperties>>;
 }
 
 export const [TreeContext, useTreeContext] = createContext<TreeContextValue>('Tree');

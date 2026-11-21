@@ -12,12 +12,15 @@
         duration: number;
         class?: ClassValue;
         style?: string;
+        /** The `copy` part: the button, while `class` and `style` stay on the wrapping span */
+        buttonClass?: ClassValue;
+        buttonStyle?: string;
         onCopy?: (event: MouseEvent, content: string, success: boolean) => void;
         /** The copy action swapped to or from the copied tip, whose width differs, so the text beside it is measured again */
         onCopiedChange?: () => void;
     }
 
-    let { content, duration, class: className, style, onCopy, onCopiedChange, copyIcon, copyTip, copySuccessTip, copyAction }: Props = $props();
+    let { content, duration, class: className, style, buttonClass, buttonStyle, onCopy, onCopiedChange, copyIcon, copyTip, copySuccessTip, copyAction }: Props = $props();
 
     const locale = useLocale('Typography');
 
@@ -78,7 +81,16 @@
         <Tooltip condition={!copier.copied}>
             {#snippet child({ props })}
                 <!-- a button is already focusable, so the tooltip's tabindex stays off -->
-                <button bind:this={button} {...props} aria-label={copier.copied ? copiedLabel : (iconLabel ?? locale().locale.copy)} class={[`${prefix}-action-btn`, { [`${prefix}-action-copy-icon`]: !copier.copied && !copyIcon }]} tabindex={undefined} type="button" onclick={handleClick}>
+                <button
+                    bind:this={button}
+                    {...props}
+                    aria-label={copier.copied ? copiedLabel : (iconLabel ?? locale().locale.copy)}
+                    class={[`${prefix}-action-btn`, { [`${prefix}-action-copy-icon`]: !copier.copied && !copyIcon }, buttonClass]}
+                    style={buttonStyle}
+                    tabindex={undefined}
+                    type="button"
+                    onclick={handleClick}
+                >
                     {#if copier.copied}
                         {#if copySuccessTip}
                             {@render copySuccessTip()}

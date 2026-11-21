@@ -42,7 +42,13 @@
     const isKeyboardLink = $derived(BreadcrumbItemFoundation.isKeyboardLink({ active, hasHref, noLink: route.noLink, hasOnClick: context.hasOnClick }));
     const tooltip = $derived(BreadcrumbItemFoundation.getTooltipConfig(context.showTooltip));
     const ellipsis = $derived({ showTooltip: tooltip.opts ? { opts: tooltip.opts } : false, pos: tooltip.ellipsisPos });
-    const itemClass = $derived([`${prefix}-item`, { [`${prefix}-item-active`]: active, [`${prefix}-item-link`]: !route.noLink }]);
+    const itemClass = $derived([`${prefix}-item`, { [`${prefix}-item-active`]: active, [`${prefix}-item-link`]: !route.noLink }, context.classNames?.itemLink, route.classNames?.link]);
+    const titleClass = $derived([context.classNames?.itemTitle, route.classNames?.title]);
+
+    const join = (...styles: (string | undefined)[]) => styles.filter(Boolean).join('; ') || undefined;
+
+    const linkStyle = $derived(join(context.styles?.itemLink, route.styles?.link));
+    const titleStyle = $derived(join(context.styles?.itemTitle, route.styles?.title));
 
     const handleClick = (event: MouseEvent) => foundation.handleClick(route, event);
 
@@ -50,21 +56,21 @@
 </script>
 
 {#snippet inner()}
-    {@render context.icon?.({ route, index, size: context.compact ? 'small' : 'default', class: `${prefix}-item-icon` })}{#if context.item}
-        <span class={`${prefix}-item-title ${prefix}-item-title-inline`}>{@render context.item({ route, index })}</span>
+    {@render context.icon?.({ route, index, size: context.compact ? 'small' : 'default', class: [`${prefix}-item-icon`, context.classNames?.itemIcon, route.classNames?.icon], style: join(context.styles?.itemIcon, route.styles?.icon) })}{#if context.item}
+        <span class={[`${prefix}-item-title ${prefix}-item-title-inline`, titleClass]} style={titleStyle}>{@render context.item({ route, index })}</span>
     {:else if route.name}
-        <span class={`${prefix}-item-title`}><TypographyText {ellipsis} size={context.compact ? 'small' : 'normal'} style={`max-width: ${toCssLength(tooltip.width)}`}>{route.name}</TypographyText></span>
+        <span class={[`${prefix}-item-title`, titleClass]} style={titleStyle}><TypographyText {ellipsis} size={context.compact ? 'small' : 'normal'} style={`max-width: ${toCssLength(tooltip.width)}`}>{route.name}</TypographyText></span>
     {/if}
 {/snippet}
 
-<li {...rest} aria-current={active ? 'page' : undefined} class={`${prefix}-item-wrap`}>
+<li {...rest} aria-current={active ? 'page' : undefined} class={[`${prefix}-item-wrap`, context.classNames?.item]} style={context.styles?.item}>
     {#if isLink}
-        <a class={itemClass} href={route.href} onclick={handleClick}>{@render inner()}</a>
+        <a class={itemClass} href={route.href} style={linkStyle} onclick={handleClick}>{@render inner()}</a>
     {:else}
-        <span class={itemClass} role={isKeyboardLink ? 'link' : undefined} tabindex={isKeyboardLink ? 0 : undefined} onclick={handleClick} onkeydown={handleKeydown}>{@render inner()}</span>
+        <span class={itemClass} role={isKeyboardLink ? 'link' : undefined} style={linkStyle} tabindex={isKeyboardLink ? 0 : undefined} onclick={handleClick} onkeydown={handleKeydown}>{@render inner()}</span>
     {/if}{#if shouldRenderSeparator}
         {#if route.separator}{route.separator}{:else}
-            <span class={`${prefix}-separator`}>
+            <span class={[`${prefix}-separator`, context.classNames?.separator, route.classNames?.separator]} style={join(context.styles?.separator, route.styles?.separator)}>
                 {#if typeof context.separator === 'function'}
                     {@render context.separator()}
                 {:else}

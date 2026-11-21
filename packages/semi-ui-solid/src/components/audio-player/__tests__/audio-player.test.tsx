@@ -212,6 +212,51 @@ describe('AudioPlayer', () => {
         expect(trigger).toHaveAccessibleName(`${en_US.AudioPlayer.playbackRate} 1.5x`);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['controls', 'playButton', 'cover', 'title', 'error', 'sliderTrack', 'sliderProgress', 'sliderThumb', 'toolbar', 'speed', 'volumeDropdown', 'speedDropdown'] as const;
+        const selectors = {
+            controls: `.${prefixCls}-control`,
+            playButton: `.${prefixCls}-control-button-play`,
+            cover: `.${prefixCls}-cover`,
+            title: `.${prefixCls}-info-title`,
+            error: `.${prefixCls}-error`,
+            sliderTrack: `.${prefixCls}-slider`,
+            sliderProgress: `.${prefixCls}-slider-progress`,
+            sliderThumb: `.${prefixCls}-slider-dot`,
+            toolbar: `.${prefixCls}-toolbar`,
+            speed: `.${prefixCls}-control-speed`,
+            volumeDropdown: `.${prefixCls}-control-volume`,
+            // the menu container inside the popup wrapper that carries the speed-menu class
+            speedDropdown: `.${prefixCls}-control-speed-menu .${BASE_CLASS_PREFIX}-dropdown`,
+        };
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]));
+        const expectPart = (el: Element, part: (typeof parts)[number]) => {
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        };
+        const { container, unmount } = renderPlayer({ classNames, styles, audioUrl: tracks });
+        loadMetadata(query(container, 'audio'));
+        hoverOpen(buttonWith(container, 'volume_2'));
+        await waitFor(() => query(document, selectors.volumeDropdown));
+        // the popup closes when the pointer moves to the speed trigger, so check it first
+        expectPart(query(document, selectors.volumeDropdown), 'volumeDropdown');
+        for (const part of ['sliderTrack', 'sliderProgress', 'sliderThumb'] as const) {
+            expectPart(query(document, `.${prefixCls}-control-volume ${selectors[part]}`), part);
+        }
+        hoverOpen(query(container, selectors.speed));
+        await waitFor(() => query(document, selectors.speedDropdown));
+        // the first slider in the DOM is the progress slider
+        for (const part of parts.filter((p) => p !== 'error' && p !== 'volumeDropdown')) {
+            expectPart(query(document, selectors[part]), part);
+        }
+        unmount();
+
+        const { container: errored } = renderPlayer({ classNames, styles, audioUrl: tracks });
+        fireEvent.error(query(errored, 'audio'));
+        expectPart(query(errored, selectors.error), 'error');
+    });
+
     it('读取 AudioInfo 对象的 title 与 cover', () => {
         const { container } = renderPlayer({ audioUrl: tracks[0] });
         expect(container.querySelector('audio')).toHaveAttribute('src', tracks[0].src);

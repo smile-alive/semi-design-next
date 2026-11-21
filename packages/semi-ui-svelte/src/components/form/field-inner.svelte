@@ -266,8 +266,10 @@
                 [`${cssClasses.PREFIX}-field-extra-middle`]: merged.extraTextPosition === 'middle',
                 [`${cssClasses.PREFIX}-field-extra-bottom`]: merged.extraTextPosition === 'bottom',
             },
+            form.formProps.classNames?.extra,
         ]}
         id={view.ids.extraText}
+        style={form.formProps.styles?.extra}
         x-semi-prop="extraText"
     >
         {@render extraText?.()}
@@ -278,7 +280,16 @@
     {@render control()}
 {:else}
     <div class={[`${cssClasses.PREFIX}-field`, { [`${cssClasses.PREFIX}-field-${name}`]: name }, fieldClassName]} style={fieldStyle} {...{ 'x-extra-pos': merged.extraTextPosition, 'x-field-id': field, 'x-label-pos': view.labelPosition }}>
-        <FieldGrid label={shellLabel ? labelView : undefined} labelAlign={merged.labelAlign} labelCol={merged.labelCol} labelPosition={view.labelPosition} mainClass={`${cssClasses.PREFIX}-field-main`} row={view.wrapInRow} wrapperCol={merged.wrapperCol}>
+        <FieldGrid
+            label={shellLabel ? labelView : undefined}
+            labelAlign={merged.labelAlign}
+            labelCol={merged.labelCol}
+            labelPosition={view.labelPosition}
+            mainClass={[`${cssClasses.PREFIX}-field-main`, form.formProps.classNames?.content]}
+            mainStyle={form.formProps.styles?.content}
+            row={view.wrapInRow}
+            wrapperCol={merged.wrapperCol}
+        >
             {#if extraText && merged.extraTextPosition === 'middle'}
                 {@render extraView()}
             {/if}

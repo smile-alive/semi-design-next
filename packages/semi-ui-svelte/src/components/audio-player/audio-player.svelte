@@ -21,7 +21,7 @@
     type Adapter = AudioPlayerAdapter<AudioPlayerBaseProps>;
 
     const defaults = useDefaultProps('AudioPlayer');
-    let { audioUrl, autoPlay = defaults('autoPlay', false), showToolbar = defaults('showToolbar', true), skipDuration = defaults('skipDuration', 10), theme = defaults('theme', 'dark'), ...rest }: AudioPlayerProps = $props();
+    let { audioUrl, autoPlay = defaults('autoPlay', false), classNames = defaults('classNames'), showToolbar = defaults('showToolbar', true), skipDuration = defaults('skipDuration', 10), styles = defaults('styles'), theme = defaults('theme', 'dark'), ...rest }: AudioPlayerProps = $props();
 
     const locale = useLocale('AudioPlayer');
 
@@ -56,6 +56,8 @@
     const forwardLabel = $derived(formatLocale(texts.forward, { skipDuration }));
     const speedLabel = $derived([texts.playbackRate, states().currentRate.label].join(' '));
 
+    const joinStyles = (...values: Array<string | undefined>) => values.filter(Boolean).join(';') || undefined;
+
     const progressText = (value: number) => `${formatTimeText(value, texts)} / ${formatTimeText(states().totalTime, texts)}`;
 
     const volumeText = (value: number) => `${value}%`;
@@ -82,7 +84,7 @@
 {/snippet}
 
 {#snippet speedTrigger({ props }: { props: DropdownTriggerProps })}
-    <button {...props} aria-label={speedLabel} class={[props.class, `${prefix}-control-speed`]} type="button">
+    <button {...props} aria-label={speedLabel} class={[props.class, `${prefix}-control-speed`, classNames?.speed]} style={styles?.speed} type="button">
         <span>{states().currentRate.label}</span>
     </button>
 {/snippet}
@@ -91,7 +93,7 @@
     <audio autoplay={autoPlay} bind:this={audio} src={info?.src} onpause={foundation.handleAudioPause} onplay={foundation.handleAudioPlay} ontimeupdate={foundation.handleTimeUpdate}>
         <track kind="captions" />
     </audio>
-    <div class={`${prefix}-control`}>
+    <div class={[`${prefix}-control`, classNames?.controls]} style={styles?.controls}>
         {#if isList}
             <Tooltip autoAdjustOverflow showArrow={false}>
                 {#snippet child({ props })}
@@ -102,7 +104,14 @@
                 {/snippet}
             </Tooltip>
         {/if}
-        <Button aria-label={states().isPlaying ? texts.pause : texts.play} class={[`${prefix}-control-button-play`, { [`${prefix}-control-button-play-disabled`]: states().error }]} disabled={states().error} size="large" style={circleStyle} onclick={foundation.handleStatusClick}>
+        <Button
+            aria-label={states().isPlaying ? texts.pause : texts.play}
+            class={[`${prefix}-control-button-play`, { [`${prefix}-control-button-play-disabled`]: states().error }, classNames?.playButton]}
+            disabled={states().error}
+            size="large"
+            style={joinStyles(circleStyle, styles?.playButton)}
+            onclick={foundation.handleStatusClick}
+        >
             {#snippet icon()}
                 {#if states().isPlaying}
                     <IconPause size="large" />
@@ -125,15 +134,15 @@
     <div class={`${prefix}-info-container`}>
         <!-- decorative: the title beside it names the track, so it is no preview button either -->
         {#if info?.cover}
-            <Image alt="" height={50} preview={false} src={info.cover} width={50} />
+            <Image alt="" class={[`${prefix}-cover`, classNames?.cover]} height={50} preview={false} src={info.cover} style={styles?.cover} width={50} />
         {/if}
         <div class={`${prefix}-info`}>
             <!-- the error hides the time row, so a track without a title still needs this row for the error -->
             {#if info?.title || states().error}
-                <div class={`${prefix}-info-title`}>
+                <div class={[`${prefix}-info-title`, classNames?.title]} style={styles?.title}>
                     {info?.title}
                     {#if states().error}
-                        <div class={`${prefix}-error`} role="alert">
+                        <div class={[`${prefix}-error`, classNames?.error]} role="alert" style={styles?.error}>
                             <IconAlertCircle size="large" />
                             {texts.mediaError}
                         </div>
@@ -144,7 +153,7 @@
                 <div class={`${prefix}-info-time`}>
                     <span style="width: 38px">{formatTime(states().currentTime)}</span>
                     <div class={`${prefix}-slider-container`}>
-                        <AudioSlider getValueText={progressText} label={texts.progress} max={states().totalTime} onChange={foundation.handleTimeChange} {theme} value={states().currentTime} />
+                        <AudioSlider {classNames} getValueText={progressText} label={texts.progress} max={states().totalTime} onChange={foundation.handleTimeChange} {styles} {theme} value={states().currentTime} />
                     </div>
                     <span style="width: 38px">{formatTime(states().totalTime)}</span>
                 </div>
@@ -152,7 +161,7 @@
         </div>
     </div>
     {#if showToolbar}
-        <div class={`${prefix}-control`}>
+        <div class={[`${prefix}-control`, `${prefix}-toolbar`, classNames?.toolbar]} style={styles?.toolbar}>
             {#if !states().error}
                 <Popover aria-label={texts.volume} autoAdjustOverflow role="dialog">
                     {#snippet child({ props })}
@@ -167,9 +176,9 @@
                         </Button>
                     {/snippet}
                     {#snippet content()}
-                        <div class={[`${prefix}-control-volume`, `${prefix}-control-volume-${theme}`]}>
+                        <div class={[`${prefix}-control-volume`, `${prefix}-control-volume-${theme}`, classNames?.volumeDropdown]} style={styles?.volumeDropdown}>
                             <div class={`${prefix}-control-volume-title`}>{states().volume}%</div>
-                            <AudioSlider getValueText={volumeText} height={120} label={texts.volume} max={100} onChange={foundation.handleVolumeChange} showTooltip={false} {theme} value={states().volume} vertical />
+                            <AudioSlider {classNames} getValueText={volumeText} height={120} label={texts.volume} max={100} onChange={foundation.handleVolumeChange} showTooltip={false} {styles} {theme} value={states().volume} vertical />
                         </div>
                     {/snippet}
                 </Popover>
@@ -189,7 +198,7 @@
                         {forwardLabel}
                     {/snippet}
                 </Tooltip>
-                <Dropdown child={speedTrigger} class={`${prefix}-control-speed-menu ${prefix}-control-speed-menu-${theme}`} selectionMode="single">
+                <Dropdown child={speedTrigger} class={`${prefix}-control-speed-menu ${prefix}-control-speed-menu-${theme}`} classNames={{ content: classNames?.speedDropdown }} selectionMode="single" styles={{ content: styles?.speedDropdown }}>
                     {#snippet content()}
                         <DropdownMenu>
                             {#each RATE_OPTIONS as option (option.value)}

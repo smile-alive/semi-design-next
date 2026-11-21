@@ -31,10 +31,10 @@
     // indicator; the slots object forwards only the slots given, which DialogueContentBody reads for presence.
     const defaultContent = () =>
         h(Fragment, [
-            props.message.references?.length && !editing() ? h(ReferenceWidget, { references: props.message.references }) : null,
+            props.message.references?.length && !editing() ? h(ReferenceWidget, { references: props.message.references, class: view.value.classNames?.references, style: view.value.styles?.references }) : null,
             h(DialogueContentBody, { message: props.message, editing: editing() }, slots),
             loading.value
-                ? h('span', { class: `${PREFIX_CONTENT}-loading` }, [
+                ? h('span', { class: [`${PREFIX_CONTENT}-loading`, view.value.classNames?.loading], style: view.value.styles?.loading }, [
                       h('span', { class: `${PREFIX_CONTENT}-loading-item` }),
                       h('span', { class: `${PREFIX_CONTENT}-loading-item` }),
                       h('span', { class: `${PREFIX_CONTENT}-loading-item` }),
@@ -46,7 +46,7 @@
 
 <template>
     <slot v-if="$slots.content" :class="wrapCls" :defaultContent="defaultContent()" :message="props.message" name="content" :role="props.role" />
-    <div v-else :class="[PREFIX_CONTENT, { [`${PREFIX_CONTENT}-editing`]: editing() }]">
+    <div v-else :class="[PREFIX_CONTENT, { [`${PREFIX_CONTENT}-editing`]: editing() }, view.classNames?.itemContent]" :style="view.styles?.itemContent">
         <component :is="defaultContent()" />
     </div>
 </template>

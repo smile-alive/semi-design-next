@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
-import type { strings, UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
+import type { strings, UploadFileCardPart, UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
 import type { AfterUploadResult as FoundationAfterUploadResult, BaseFileItem, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult, CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/interface.js';
@@ -92,7 +92,6 @@ export interface UploadFileItemSlotProps {
     picWidth?: string | number;
     picHeight?: string | number;
     validateMessage?: string;
-    class?: ClassValue;
     style?: string;
     onRemove: () => void;
     onRetry: () => void;
@@ -238,6 +237,8 @@ export interface FileCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
     showTooltip?: boolean | ShowTooltip;
     picWidth?: string | number;
     picHeight?: string | number;
+    classNames?: Partial<Record<UploadFileCardPart, ClassValue>>;
+    styles?: Partial<Record<UploadFileCardPart, string>>;
     /** Wins over `file.validateMessage` */
     validateMessage?: string;
     /** While present the card is clickable and gets a preview button */

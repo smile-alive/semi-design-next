@@ -1,10 +1,11 @@
 import { type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import { cssClasses, type ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as BaseColorPickerProps, type ColorPickerState, type ColorValue } from '@fibrae/semi-foundation/components/color-picker/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import { useLocale } from '../locale';
 import Popover, { type PopoverHandle, type PopoverProps } from '../popover';
 import AlphaSlider from './alpha-slider';
@@ -15,6 +16,8 @@ import DataPart from './data-part';
 export interface ColorPickerProps extends BaseColorPickerProps, ElementProps<'div', 'defaultValue' | 'onChange' | 'children'> {
     usePopover?: boolean;
     popoverProps?: PopoverProps;
+    classNames?: Partial<Record<ColorPickerPart, string>>;
+    styles?: Partial<Record<ColorPickerPart, JSX.CSSProperties | string>>;
     bottomSlot?: JSX.Element;
     topSlot?: JSX.Element;
     /**
@@ -44,7 +47,7 @@ function ColorPicker(rawProps: ColorPickerProps) {
     const props = useDefaultProps('ColorPicker', rawProps, defaultProps);
 
     // tabIndex is dropped: the root is not focusable, and a Tooltip around the picker would add a Tab stop of its own
-    const [local, rest] = splitProps(props, ['value', 'defaultValue', 'onChange', 'alpha', 'width', 'height', 'defaultFormat', 'eyeDropper', 'usePopover', 'popoverProps', 'class', 'topSlot', 'bottomSlot', 'children', 'tabIndex']);
+    const [local, rest] = splitProps(props, ['value', 'defaultValue', 'onChange', 'alpha', 'width', 'height', 'defaultFormat', 'eyeDropper', 'usePopover', 'popoverProps', 'class', 'classNames', 'styles', 'topSlot', 'bottomSlot', 'children', 'tabIndex']);
 
     const locale = useLocale('ColorPicker');
 
@@ -64,12 +67,12 @@ function ColorPicker(rawProps: ColorPickerProps) {
     const renderPicker = () => (
         <div {...rest} role={namedRole(rest)} class={clsx(cssClasses.PREFIX, local.class)}>
             {local.topSlot}
-            <ColorChooseArea handleSize={20} height={local.height ?? 280} hsva={currentColor().hsva} width={width()} onChange={foundation.handleAreaChange} />
-            <ColorSlider class="colorSliderWrapper" handleSize={18} height={10} hue={currentColor().hsva.h} width={width()} onChange={foundation.handleHueChange} />
+            <ColorChooseArea classNames={local.classNames} handleSize={20} height={local.height ?? 280} hsva={currentColor().hsva} styles={local.styles} width={width()} onChange={foundation.handleAreaChange} />
+            <ColorSlider class="colorSliderWrapper" classNames={local.classNames} handleSize={18} height={10} hue={currentColor().hsva.h} styles={local.styles} width={width()} onChange={foundation.handleHueChange} />
             <Show when={local.alpha}>
-                <AlphaSlider handleSize={18} height={10} hsva={currentColor().hsva} width={width()} onChange={foundation.handleAlphaChange} />
+                <AlphaSlider classNames={local.classNames} handleSize={18} height={10} hsva={currentColor().hsva} styles={local.styles} width={width()} onChange={foundation.handleAlphaChange} />
             </Show>
-            <DataPart alpha={local.alpha} currentColor={currentColor()} defaultFormat={local.defaultFormat} eyeDropper={local.eyeDropper} width={width()} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} />
+            <DataPart alpha={local.alpha} classNames={local.classNames} currentColor={currentColor()} defaultFormat={local.defaultFormat} eyeDropper={local.eyeDropper} styles={local.styles} width={width()} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} />
             {local.bottomSlot}
         </div>
     );
@@ -78,7 +81,8 @@ function ColorPicker(rawProps: ColorPickerProps) {
         <Show when={local.usePopover} fallback={renderPicker()}>
             <Popover
                 {...local.popoverProps}
-                class={clsx(`${cssClasses.PREFIX}-popover`, local.popoverProps?.class)}
+                class={clsx(`${cssClasses.PREFIX}-popover`, local.popoverProps?.class, local.classNames?.dropdown)}
+                style={mergeStyles(local.popoverProps?.style, local.styles?.dropdown)}
                 aria-label={local.popoverProps?.['aria-label'] ?? (local.popoverProps?.['aria-labelledby'] ? undefined : locale().locale.color)}
                 // a dialog opened by click: moving the pointer away must not close it mid-edit
                 role={local.popoverProps?.role ?? 'dialog'}
@@ -90,7 +94,7 @@ function ColorPicker(rawProps: ColorPickerProps) {
                 content={renderPicker}
                 trigger={local.popoverProps?.trigger ?? 'click'}
             >
-                {local.children ?? ((getTriggerProps) => <button {...getTriggerProps({ type: 'button' })} class={`${cssClasses.PREFIX}-popover-defaultChildren`} style={{ 'background-color': currentColor().hex }} aria-label={locale().locale.color} />)}
+                {local.children ?? ((getTriggerProps) => <button {...getTriggerProps({ type: 'button' })} class={clsx(`${cssClasses.PREFIX}-popover-defaultChildren`, local.classNames?.trigger)} style={mergeStyles({ 'background-color': currentColor().hex }, local.styles?.trigger)} aria-label={locale().locale.color} />)}
             </Popover>
         </Show>
     );

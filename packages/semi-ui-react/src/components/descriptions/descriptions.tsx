@@ -1,7 +1,7 @@
 import type React from 'react';
 import { isValidElement, useMemo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
+import { cssClasses, type DescriptionsPart } from '@fibrae/semi-foundation/components/descriptions/constants';
 import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
 import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
@@ -25,7 +25,9 @@ export interface DescriptionsProps extends ElementProps<'div'> {
     row?: boolean;
     size?: DescriptionsSize;
     style?: React.CSSProperties;
+    styles?: Partial<Record<DescriptionsPart, React.CSSProperties>>;
     className?: string;
+    classNames?: Partial<Record<DescriptionsPart, string>>;
     children?: React.ReactNode;
     data?: Data[];
     layout?: DescriptionLayout;
@@ -66,9 +68,9 @@ function renderItem({ key, value, ...item }: Data, reactKey: React.Key) {
 }
 
 function Descriptions(rawProps: DescriptionsProps) {
-    const { ref, align, row, size, className, children, data, layout, column, ...rest } = useDefaultProps('Descriptions', rawProps, defaultProps);
+    const { ref, align, row, size, className, classNames, children, data, layout, column, styles, ...rest } = useDefaultProps('Descriptions', rawProps, defaultProps);
 
-    const contextValue = useMemo(() => ({ align, layout }), [align, layout]);
+    const contextValue = useMemo(() => ({ align, layout, classNames, styles }), [align, layout, classNames, styles]);
     const body = layout === 'horizontal' ? getHorizontalList(getColumns(data, children), column).map((items, index) => <tr key={index}>{items.map((item, itemIndex) => renderItem(item, `${index}-${itemIndex}`))}</tr>) : data?.length ? data.map(renderItem) : children;
 
     return (

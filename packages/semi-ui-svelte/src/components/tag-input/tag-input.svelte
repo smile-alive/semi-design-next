@@ -28,6 +28,8 @@
     let {
         value = $bindable(),
         inputValue = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         disabled: disabledProp,
         maxLength = defaults('maxLength'),
         max = defaults('max'),
@@ -301,7 +303,7 @@
 
 {#snippet restTagList()}
     {#each restTags as value, index (`${shownTags.length + index}-${value}`)}
-        <TagItem {disabled} {draggableActive} index={shownTags.length + index} onClose={(event) => handleTagClose(shownTags.length + index, event)} {showContentTooltip} {size} {tag} {value} withHandle={false} />
+        <TagItem {disabled} {draggableActive} index={shownTags.length + index} onClose={(event) => handleTagClose(shownTags.length + index, event)} {showContentTooltip} {size} {tag} tagClass={classNames?.tag} tagStyle={styles?.tag} {value} withHandle={false} />
     {/each}
 {/snippet}
 
@@ -331,8 +333,9 @@
     {#if prefix || insetLabel}
         <div
             {@attach trackPrefix}
-            class={[`${prefixCls}-prefix`, { [`${prefixCls}-inset-label`]: insetLabel, [`${prefixCls}-prefix-text`]: prefixKind === 'text', [`${prefixCls}-prefix-icon`]: prefixKind === 'icon' }]}
+            class={[`${prefixCls}-prefix`, { [`${prefixCls}-inset-label`]: insetLabel, [`${prefixCls}-prefix-text`]: prefixKind === 'text', [`${prefixCls}-prefix-icon`]: prefixKind === 'icon' }, classNames?.prefix]}
             id={prefixId}
+            style={styles?.prefix}
             x-semi-prop="prefix"
             onclick={foundation.handleClickPrefixOrSuffix}
             onmousedown={keepFocus}
@@ -344,20 +347,20 @@
             {/if}
         </div>
     {/if}
-    <div bind:this={wrapper} class={`${prefixCls}-wrapper`}>
+    <div bind:this={wrapper} class={[`${prefixCls}-wrapper`, classNames?.content]} style={styles?.content}>
         {#if Sortable && sorting}
             <Sortable class={`${prefixCls}-sortable-list`} dragHandleLabel={locale().locale.dragSort} dragOverlayClass={`${prefixCls}-drag-item-move`} items={sortIds.ids} onDragging={handleDragging} onSortEnd={handleSortEnd} prefix={prefixCls} transition={null}>
                 {#snippet item({ id })}
                     <!-- the list shows a preview order while dragging, so the tag is found by its id, not by the position -->
                     {@const index = sortIds.ids.indexOf(String(id))}
                     {#if index >= 0}
-                        <TagItem {disabled} draggableActive {index} onClose={(event) => handleTagClose(index, event)} {showContentTooltip} {size} {tag} value={tags[index]} withHandle />
+                        <TagItem {disabled} draggableActive {index} onClose={(event) => handleTagClose(index, event)} {showContentTooltip} {size} {tag} tagClass={classNames?.tag} tagStyle={styles?.tag} value={tags[index]} withHandle />
                     {/if}
                 {/snippet}
             </Sortable>
         {:else}
             {#each shownTags as value, index (`${index}-${value}`)}
-                <TagItem {disabled} {draggableActive} {index} onClose={(event) => handleTagClose(index, event)} {showContentTooltip} {size} {tag} {value} withHandle={false} />
+                <TagItem {disabled} {draggableActive} {index} onClose={(event) => handleTagClose(index, event)} {showContentTooltip} {size} {tag} tagClass={classNames?.tag} tagStyle={styles?.tag} {value} withHandle={false} />
             {/each}
             {#if restCount > 0}
                 {#if showRestTagsPopover}
@@ -374,7 +377,7 @@
             aria-invalid={ariaInvalid}
             aria-label={ariaLabel}
             aria-labelledby={ariaLabelledby}
-            class={[`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`]}
+            class={[`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`, classNames?.input]}
             {disabled}
             onChange={foundation.handleInputChange}
             onCompositionEnd={foundation.handleInputCompositionEnd}
@@ -384,11 +387,12 @@
             {preventScroll}
             showClear={false}
             {size}
+            style={styles?.input}
         />
     </div>
     {#if showClear}
         {#if clearable}
-            <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${prefixCls}-clearBtn`} type="button" onclick={handleClear}>
+            <button aria-label={locale().locale.clear} bind:this={clearButton} class={[`${prefixCls}-clearBtn`, classNames?.clear]} style={styles?.clear} type="button" onclick={handleClear}>
                 {#if clearIcon}
                     {@render clearIcon()}
                 {:else}
@@ -400,7 +404,7 @@
         {/if}
     {/if}
     {#if suffix}
-        <div {@attach trackSuffix} class={[`${prefixCls}-suffix`, { [`${prefixCls}-suffix-text`]: suffixKind === 'text', [`${prefixCls}-suffix-icon`]: suffixKind === 'icon' }]} x-semi-prop="suffix" onclick={foundation.handleClickPrefixOrSuffix} onmousedown={keepFocus}>
+        <div {@attach trackSuffix} class={[`${prefixCls}-suffix`, { [`${prefixCls}-suffix-text`]: suffixKind === 'text', [`${prefixCls}-suffix-icon`]: suffixKind === 'icon' }, classNames?.suffix]} style={styles?.suffix} x-semi-prop="suffix" onclick={foundation.handleClickPrefixOrSuffix} onmousedown={keepFocus}>
             {@render suffix()}
         </div>
     {/if}

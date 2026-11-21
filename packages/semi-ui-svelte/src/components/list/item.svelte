@@ -7,7 +7,7 @@
     import { getListContext } from './context.js';
     import type { ListItemProps } from './interface.js';
 
-    let { align = 'flex-start', onClick, onRightClick, header, main, extra, children, ...rest }: ListItemProps = $props();
+    let { align = 'flex-start', classNames, styles, onClick, onRightClick, header, main, extra, children, ...rest }: ListItemProps = $props();
 
     const list = getListContext();
 
@@ -23,6 +23,8 @@
 
     // Grid's own class and style go to the Col; the Row-level props went to the Row
     const colProps = $derived(list?.grid && omit(list.grid, ['gutter', 'justify', 'align']));
+
+    const joinStyle = (...parts: Array<string | null | undefined>) => parts.filter(Boolean).join('; ') || undefined;
 
     const handleLiClick = (event: MouseEvent & { currentTarget: HTMLLIElement }) => {
         if (!handleClick) {
@@ -40,18 +42,22 @@
 <!-- No whitespace between the blocks of the li: it would become text between its children. A button holds phrasing content only, so its body is made of spans. -->
 {#snippet body()}
     <svelte:element this={box} class={[`${prefixCls}-item-body`, `${prefixCls}-item-body-${align}`]}>
-        {#if header}<svelte:element this={box} class={`${prefixCls}-item-body-header`}>{@render header()}</svelte:element>{/if}{#if main}<svelte:element this={box} class={`${prefixCls}-item-body-main`}>{@render main()}</svelte:element>{/if}
+        {#if header}<svelte:element this={box} class={[`${prefixCls}-item-body-header`, list?.classNames?.itemHeader, classNames?.header]} style={joinStyle(list?.styles?.itemHeader, styles?.header)}>{@render header()}</svelte:element>{/if}{#if main}<svelte:element
+                this={box}
+                class={[`${prefixCls}-item-body-main`, list?.classNames?.itemMain, classNames?.main]}
+                style={joinStyle(list?.styles?.itemMain, styles?.main)}>{@render main()}</svelte:element
+            >{/if}
     </svelte:element>
 {/snippet}
 
 {#snippet li()}
-    <li {...attrs.root} class={[`${prefixCls}-item`, rest.class, { [`${prefixCls}-item-clickable`]: clickable }]} onclick={clickable ? handleLiClick : undefined} oncontextmenu={clickable ? handleRightClick : undefined}>
+    <li {...attrs.root} class={[`${prefixCls}-item`, list?.classNames?.item, rest.class, { [`${prefixCls}-item-clickable`]: clickable }]} style={joinStyle(list?.styles?.item, rest.style)} onclick={clickable ? handleLiClick : undefined} oncontextmenu={clickable ? handleRightClick : undefined}>
         {#if clickable}
             <button {...attrs.control} class={`${prefixCls}-item-button`} type="button">
                 {#if hasBody}{@render body()}{:else}{@render children?.()}{/if}
             </button>
         {:else if hasBody}{@render body()}{/if}{#if !clickable || hasBody}{@render children?.()}{/if}{#if extra}
-            <div class={`${prefixCls}-item-extra`}>{@render extra()}</div>
+            <div class={[`${prefixCls}-item-extra`, list?.classNames?.itemExtra, classNames?.extra]} style={joinStyle(list?.styles?.itemExtra, styles?.extra)}>{@render extra()}</div>
         {/if}
     </li>
 {/snippet}

@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | avatarShape | 头像标签中头像的形状，可选 `square` 和 `circle`。 | `AvatarShape` | `"square"` |
 | avatarSrc | 头像的资源地址，设置后生成头像标签。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `prefix`、`avatar`、`content`、`suffix`、`close`，与组件自带的类名合并；`avatar` 落在头像的根元素上。 | <ApiType detail={"Partial\u003cRecord\u003cTagPart, string>>"}>Type</ApiType> | - |
 | closable | 标签是否可以关闭。 | `boolean` | `false` |
 | color | 标签颜色，可选色板中的 16 种颜色和 `white`。 | `TagColor` | `"grey"` |
 | colorful | 是否为多彩标签。 | `boolean` | `false` |
@@ -14,6 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | prefixIcon | 内容前的图标，传入 JSX 元素。 | `JSX.Element` | - |
 | shape | 标签形状，可选 `square` 和 `circle`。 | `TagShape` | `"square"` |
 | size | 标签尺寸，可选 `default`、`small` 或 `large`。 | `TagSize` | `"default"` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTagPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | suffixIcon | 内容后的图标，传入 JSX 元素。 | `JSX.Element` | - |
 | tagKey | 标签的唯一标识，作为 `onClose` 的第三个参数。 | `string \| number` | - |
 | type | 样式类型，可选 `light`、`ghost` 或 `solid`。 | `TagType` | `"light"` |

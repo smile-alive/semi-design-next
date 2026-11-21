@@ -425,4 +425,58 @@ describe('Collapse', () => {
     it('Panel 脱离 Collapse 时抛错', () => {
         expect(() => render(() => <Collapse.Panel header="a" itemKey="1" />)).toThrow('Collapse.Panel must be used inside Collapse');
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['item', 'itemHeader', 'itemTitle', 'itemIcon', 'itemExtra', 'itemBody'] as const;
+        const selectors = { item: 'item', itemHeader: 'header', itemTitle: 'header-title', itemIcon: 'header-icon', itemExtra: 'header-extra', itemBody: 'content' };
+        const { container } = render(() => (
+            <Collapse defaultActiveKey="1" classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]))}>
+                <Collapse.Panel itemKey="1" header="h" extra="e">
+                    body
+                </Collapse.Panel>
+                <Collapse.Panel itemKey="2" header="h2">
+                    body2
+                </Collapse.Panel>
+            </Collapse>
+        ));
+        for (const part of parts) {
+            const els = container.querySelectorAll(`.${prefixCls}-${selectors[part]}`);
+            expect(els.length).toBeGreaterThan(0);
+            els.forEach((el) => {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            });
+        }
+        expect(container.querySelectorAll(`.${prefixCls}-item`)).toHaveLength(2);
+    });
+
+    it('Panel 的 classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'icon', 'extra', 'body'] as const;
+        const selectors = { header: 'header', title: 'header-title', icon: 'header-icon', extra: 'header-extra', body: 'content' };
+        const { container } = render(() => (
+            <Collapse defaultActiveKey="1">
+                <Collapse.Panel itemKey="1" header="h" extra="e" classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]))}>
+                    body
+                </Collapse.Panel>
+            </Collapse>
+        ));
+        for (const part of parts) {
+            const el = container.querySelector(`.${prefixCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('父级 item* 与 Panel 自己的 classNames 都生效，父级在前，样式后写者生效', () => {
+        const { container } = render(() => (
+            <Collapse classNames={{ itemHeader: 'from-collapse' }} styles={{ itemHeader: { order: '1', color: 'red' } }}>
+                <Collapse.Panel itemKey="1" header="h" classNames={{ header: 'from-panel' }} styles={{ header: { order: '2' } }}>
+                    body
+                </Collapse.Panel>
+            </Collapse>
+        ));
+        const header = container.querySelector(`.${prefixCls}-header`);
+        expect(header!.className.split(' ').slice(-2)).toEqual(['from-collapse', 'from-panel']);
+        expect(header).toHaveStyle({ order: '2', color: 'rgb(255, 0, 0)' });
+    });
 });

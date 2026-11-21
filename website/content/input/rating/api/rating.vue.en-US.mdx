@@ -2,19 +2,21 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property      | Description                                                                                                                                            | Type                             | Default                                        |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | ---------------------------------------------- |
-| allowClear    | Whether clicking the selected star again clears the value.                                                                                             | `boolean`                        | `true`                                         |
-| allowHalf     | Whether half stars can be selected.                                                                                                                    | `boolean`                        | `false`                                        |
-| ariaLabel     | Accessible name of the radiogroup; without it the name summarizes the value.                                                                           | `string`                         | `semiGlobalDefault("Rating", "ariaLabel")`     |
-| autofocus     | Whether to focus on mount.                                                                                                                             | `boolean`                        | `semiGlobalDefault("Rating", "autofocus")`     |
-| count         | Total number of stars.                                                                                                                                 | `number`                         | `5`                                            |
-| defaultValue  | Initial value when uncontrolled.                                                                                                                       | `number`                         | `0`                                            |
-| disabled      | Read-only: no interaction and no focus.                                                                                                                | `boolean`                        | `false`                                        |
-| modelValue    | Current value, used with v-model. When given, this value decides what is shown; back to undefined it returns to defaultValue and becomes uncontrolled. | `number`                         | `undefined`                                    |
-| preventScroll | Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component.                             | `boolean`                        | `semiGlobalDefault("Rating", "preventScroll")` |
-| size          | Size: default or small, or a number for a custom size.                                                                                                 | `number \| "default" \| "small"` | `"default"`                                    |
-| tooltips      | Prompt text for each item.                                                                                                                             | `string[]`                       | `semiGlobalDefault("Rating", "tooltips")`      |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| allowClear | Whether clicking the selected star again clears the value. | `boolean` | `true` |
+| allowHalf | Whether half stars can be selected. | `boolean` | `false` |
+| ariaLabel | Accessible name of the radiogroup; without it the name summarizes the value. | `string` | `semiGlobalDefault("Rating", "ariaLabel")` |
+| autofocus | Whether to focus on mount. | `boolean` | `semiGlobalDefault("Rating", "autofocus")` |
+| classNames | Class names of the inner parts, keyed by `item` and `dropdown`; merged with the built-in classes. `item` is a single star; `dropdown` is the tip popup shown when `tooltips` is set. | <ApiType detail={"Partial\u003cRecord\u003cRatingPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Rating", "classNames")` |
+| count | Total number of stars. | `number` | `5` |
+| defaultValue | Initial value when uncontrolled. | `number` | `0` |
+| disabled | Read-only: no interaction and no focus. | `boolean` | `false` |
+| modelValue | Current value, used with v-model. When given, this value decides what is shown; back to undefined it returns to defaultValue and becomes uncontrolled. | `number` | `undefined` |
+| preventScroll | Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component. | `boolean` | `semiGlobalDefault("Rating", "preventScroll")` |
+| size | Size: default or small, or a number for a custom size. | `number \| "default" \| "small"` | `"default"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cRatingPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Rating", "styles")` |
+| tooltips | Prompt text for each item. | `string[]` | `semiGlobalDefault("Rating", "tooltips")` |
 
 **Events**
 

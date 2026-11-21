@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue } from 'svelte/elements';
 import type { Locale as DateFnsLocale } from 'date-fns';
+import type { DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { DisabledTimeType, PresetType, Type, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInputValue, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { FocusRecords, MonthDayInfo } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
@@ -19,6 +20,8 @@ export interface DatePickerFocusTarget {
 }
 
 export interface FooterProps {
+    class?: ClassValue;
+    style?: string;
     locale: DatePickerLocale;
     disabledConfirm?: boolean;
     onCancel: () => void;
@@ -26,6 +29,8 @@ export interface FooterProps {
 }
 
 export interface NavigationProps {
+    class?: ClassValue;
+    style?: string;
     locale: DatePickerLocale;
     monthText?: string;
     density?: DatePickerDensity;
@@ -40,6 +45,8 @@ export interface NavigationProps {
 }
 
 export interface QuickControlProps {
+    class?: ClassValue;
+    style?: string;
     locale: DatePickerLocale;
     type: Type;
     presets?: DatePickerPresetsType;
@@ -49,6 +56,8 @@ export interface QuickControlProps {
 }
 
 export interface MonthProps {
+    classNames?: Partial<Record<DatePickerPart, ClassValue>>;
+    styles?: Partial<Record<DatePickerPart, string>>;
     month: Date;
     weekStartsOn: WeekStartNumber;
     locale: DatePickerLocale;
@@ -98,6 +107,8 @@ export interface YearAndMonthProps {
 }
 
 export interface MonthsGridProps {
+    classNames?: Partial<Record<DatePickerPart, ClassValue>>;
+    styles?: Partial<Record<DatePickerPart, string>>;
     type: Type;
     locale: DatePickerLocale;
     dateFnsLocale?: DateFnsLocale;
@@ -160,8 +171,8 @@ export interface DateInputProps {
     showClear?: boolean;
     showClearIgnoreDisabled?: boolean;
     inputReadOnly?: boolean;
-    inputClassName?: ClassValue;
-    inputStyle?: string;
+    classNames?: Partial<Record<DatePickerPart, ClassValue>>;
+    styles?: Partial<Record<DatePickerPart, string>>;
     insetLabelId?: string;
     validateStatus?: ValidateStatus;
     borderless?: boolean;

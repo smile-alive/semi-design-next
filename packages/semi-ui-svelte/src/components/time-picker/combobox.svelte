@@ -5,7 +5,26 @@
     import { ScrollItem, type ScrollItemHandle, type ScrollItemSelectData, ScrollList } from '../scroll-list/index.js';
     import type { ComboboxProps } from './interface.js';
 
-    let { timeStampValue, format = strings.DEFAULT_FORMAT, prefixCls, use12Hours = false, defaultIsAM = true, hideDisabledOptions = false, hourStep, minuteStep, secondStep, disabledHours, disabledMinutes, disabledSeconds, scrollItemProps, panelHeader, panelFooter, onChange }: ComboboxProps = $props();
+    let {
+        classNames,
+        styles,
+        timeStampValue,
+        format = strings.DEFAULT_FORMAT,
+        prefixCls,
+        use12Hours = false,
+        defaultIsAM = true,
+        hideDisabledOptions = false,
+        hourStep,
+        minuteStep,
+        secondStep,
+        disabledHours,
+        disabledMinutes,
+        disabledSeconds,
+        scrollItemProps,
+        panelHeader,
+        panelFooter,
+        onChange,
+    }: ComboboxProps = $props();
 
     const locale = useLocale('TimePicker');
 
@@ -17,6 +36,10 @@
     const options = $derived(getOptions({ timeStampValue, format, use12Hours, defaultIsAM, hideDisabledOptions, hourStep, minuteStep, secondStep, disabledHours, disabledMinutes, disabledSeconds }));
     const ampmOptions = $derived(options.ampm.list.map(({ value }) => ({ value, text: locale().locale[value] })));
     const mode = $derived(scrollItemProps?.mode ?? 'normal');
+
+    // always objects, so the columns do not read ScrollItem's global default
+    const itemClassNames = $derived({ option: classNames?.item });
+    const itemStyles = $derived({ option: styles?.item });
 
     const columnClass = (type: ColumnType) => {
         return prefixCls ? `${prefixCls}-list-${type}` : undefined;
@@ -41,17 +64,53 @@
     }
 </script>
 
-<ScrollList footer={panelFooter} header={panelHeader}>
+<ScrollList classNames={{ header: classNames?.header, body: classNames?.content, footer: classNames?.footer }} footer={panelFooter} header={panelHeader} styles={{ header: styles?.header, body: styles?.content, footer: styles?.footer }}>
     {#if use12Hours}
-        <ScrollItem bind:this={ampm} {...scrollItemProps} aria-label={locale().locale.ampmList} bind:selectedIndex={() => options.ampm.selectedIndex, keepIndex} class={columnClass('ampm')} list={ampmOptions} {mode} onSelect={(item) => pick('ampm', item)} />
+        <ScrollItem bind:this={ampm} {...scrollItemProps} aria-label={locale().locale.ampmList} bind:selectedIndex={() => options.ampm.selectedIndex, keepIndex} class={columnClass('ampm')} classNames={itemClassNames} list={ampmOptions} {mode} onSelect={(item) => pick('ampm', item)} styles={itemStyles} />
     {/if}
     {#if options.showHour}
-        <ScrollItem bind:this={hour} transform={withUnit('hour')} {...scrollItemProps} aria-label={locale().locale.hourList} bind:selectedIndex={() => options.hour.selectedIndex, keepIndex} class={columnClass('hour')} list={options.hour.list} {mode} onSelect={(item) => pick('hour', item)} />
+        <ScrollItem
+            bind:this={hour}
+            transform={withUnit('hour')}
+            {...scrollItemProps}
+            aria-label={locale().locale.hourList}
+            bind:selectedIndex={() => options.hour.selectedIndex, keepIndex}
+            class={columnClass('hour')}
+            classNames={itemClassNames}
+            list={options.hour.list}
+            {mode}
+            onSelect={(item) => pick('hour', item)}
+            styles={itemStyles}
+        />
     {/if}
     {#if options.showMinute}
-        <ScrollItem bind:this={minute} transform={withUnit('minute')} {...scrollItemProps} aria-label={locale().locale.minuteList} bind:selectedIndex={() => options.minute.selectedIndex, keepIndex} class={columnClass('minute')} list={options.minute.list} {mode} onSelect={(item) => pick('minute', item)} />
+        <ScrollItem
+            bind:this={minute}
+            transform={withUnit('minute')}
+            {...scrollItemProps}
+            aria-label={locale().locale.minuteList}
+            bind:selectedIndex={() => options.minute.selectedIndex, keepIndex}
+            class={columnClass('minute')}
+            classNames={itemClassNames}
+            list={options.minute.list}
+            {mode}
+            onSelect={(item) => pick('minute', item)}
+            styles={itemStyles}
+        />
     {/if}
     {#if options.showSecond}
-        <ScrollItem bind:this={second} transform={withUnit('second')} {...scrollItemProps} aria-label={locale().locale.secondList} bind:selectedIndex={() => options.second.selectedIndex, keepIndex} class={columnClass('second')} list={options.second.list} {mode} onSelect={(item) => pick('second', item)} />
+        <ScrollItem
+            bind:this={second}
+            transform={withUnit('second')}
+            {...scrollItemProps}
+            aria-label={locale().locale.secondList}
+            bind:selectedIndex={() => options.second.selectedIndex, keepIndex}
+            class={columnClass('second')}
+            classNames={itemClassNames}
+            list={options.second.list}
+            {mode}
+            onSelect={(item) => pick('second', item)}
+            styles={itemStyles}
+        />
     {/if}
 </ScrollList>

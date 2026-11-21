@@ -1,6 +1,9 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { CollapsePanelPart, CollapsePart } from '@fibrae/semi-foundation/components/collapse/constants';
 
 export interface CollapseProps {
+    classNames?: Partial<Record<CollapsePart, ClassValue>>;
+    styles?: Partial<Record<CollapsePart, StyleValue>>;
     /** `null` and `''` are controlled "nothing open" values. */
     activeKey?: string | string[] | null;
     defaultActiveKey?: string | string[];
@@ -25,6 +28,8 @@ export interface CollapseSlots {
 }
 
 export interface CollapsePanelProps {
+    classNames?: Partial<Record<CollapsePanelPart, ClassValue>>;
+    styles?: Partial<Record<CollapsePanelPart, StyleValue>>;
     itemKey: string;
     showArrow?: boolean;
     disabled?: boolean;

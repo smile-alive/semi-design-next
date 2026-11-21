@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { TagInputPart } from '@fibrae/semi-foundation/components/tag-input/constants';
 import type { TagInputValidateStatus } from '@fibrae/semi-foundation/components/tag-input/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { PopoverProps } from '../popover/index.js';
@@ -26,6 +27,8 @@ export interface TagInputProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
     value?: string[] | null;
     /** The input text, bindable; leave it out for an uncontrolled text. `bind:inputValue={get, set}` makes it fully controlled */
     inputValue?: string;
+    classNames?: Partial<Record<TagInputPart, ClassValue>>;
+    styles?: Partial<Record<TagInputPart, string>>;
     disabled?: boolean;
     maxLength?: number;
     max?: number;

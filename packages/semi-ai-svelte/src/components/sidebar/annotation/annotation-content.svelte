@@ -5,7 +5,7 @@
     import AnnotationItemView from './annotation-item.svelte';
     import type { AnnotationContentProps } from './interface.js';
 
-    let { activeKey = $bindable(), info = [], onChange, onClick, header: groupHeader, item, ...rest }: AnnotationContentProps = $props();
+    let { activeKey = $bindable(), classNames, styles, info = [], onChange, onClick, header: groupHeader, item, ...rest }: AnnotationContentProps = $props();
 
     const collapseCls = cssClasses.COLLAPSE;
     const annotationCls = cssClasses.ANNOTATION;
@@ -16,17 +16,17 @@
         <CollapsePanel itemKey={group.key}>
             {#snippet header()}
                 <!-- a span: Collapse renders the header inside its toggle button -->
-                <span class={`${collapseCls}-header-content`}>
+                <span class={[`${collapseCls}-header-content`, classNames?.groupHeader]} style={styles?.groupHeader}>
                     <IconBookOpenStroked />
                     {#if groupHeader}{@render groupHeader({ item: group, index: groupIndex })}{:else}{group.header}{/if}
                 </span>
             {/snippet}
-            <div class={`${annotationCls}-content`}>
+            <div class={[`${annotationCls}-content`, classNames?.groupContent]} style={styles?.groupContent}>
                 {#each group.annotations as cite, index (index)}
                     {#if item}
                         {@render item({ item: cite, index })}
                     {:else}
-                        <AnnotationItemView item={cite} onClick={(event) => onClick?.(event, cite)} />
+                        <AnnotationItemView {classNames} item={cite} onClick={(event) => onClick?.(event, cite)} {styles} />
                     {/if}
                 {/each}
             </div>

@@ -1,11 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性     | 说明                                                                                                                                | 类型                          | 默认值 |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------ |
-| children | 选项在下拉列表与回显中的内容，设置后代替 label 显示，可以是任意 JSX。它不参与搜索，也不作为回调里的 label；需要搜索时同时传 label。 | `JSX.Element`                 | -      |
-| class    | 选项行的类名。                                                                                                                      | `string`                      | -      |
-| disabled | 是否禁用。                                                                                                                          | `boolean`                     | -      |
-| label    | 选项的文本，用于搜索、高亮与回调；没有 children 时作为显示内容。未设置时取 value。                                                  | `string \| number`            | -      |
-| showTick | 选中时是否显示 √ 图标，默认显示。                                                                                                   | `boolean`                     | -      |
-| style    | 选项行的样式。                                                                                                                      | `JSX.CSSProperties \| string` | -      |
-| value    | 选项的值，用来识别选项，每个选项都应声明。                                                                                          | `V`                           | -      |
+| 属性       | 说明                                                                                                                                     | 类型                                                                                                      | 默认值 |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------ |
+| children   | 选项在下拉列表与回显中的内容，设置后代替 label 显示，可以是任意 JSX。它不参与搜索，也不作为回调里的 label；需要搜索时同时传 label。      | `JSX.Element`                                                                                             | -      |
+| class      | 选项行的类名。                                                                                                                           | `string`                                                                                                  | -      |
+| classNames | 选项内部各部位的类名，键为 `icon`（选中的对勾图标容器）、`content`（children 为字符串时的文本元素），在 Select 的 `item*` 类名之后追加。 | <ApiType detail={"Partial\u003cRecord\u003cOptionPart, string>>"}>Type</ApiType>                          | -      |
+| disabled   | 是否禁用。                                                                                                                               | `boolean`                                                                                                 | -      |
+| label      | 选项的文本，用于搜索、高亮与回调；没有 children 时作为显示内容。未设置时取 value。                                                       | `string \| number`                                                                                        | -      |
+| showTick   | 选中时是否显示 √ 图标，默认显示。                                                                                                        | `boolean`                                                                                                 | -      |
+| style      | 选项行的样式。                                                                                                                           | `JSX.CSSProperties \| string`                                                                             | -      |
+| styles     | 选项内部各部位的样式，键同 `classNames`，值可以是键为 kebab-case 的对象，也可以是字符串。                                                | <ApiType detail={"Partial\u003cRecord\u003cOptionPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |
+| value      | 选项的值，用来识别选项，每个选项都应声明。                                                                                               | `V`                                                                                                       | -      |

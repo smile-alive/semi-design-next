@@ -51,6 +51,17 @@
     const okFn = computed(() => props.onOk ?? readSemiDefault(semi, 'Feedback', 'onOk'));
     const cancelFn = computed(() => props.onCancel ?? readSemiDefault(semi, 'Feedback', 'onCancel'));
 
+    // `emoji` is Feedback's own part and lies outside the Modal and SideSheet types
+    const overlayClassNames = computed(() => {
+        const { emoji: _emoji, ...rest } = props.classNames ?? {};
+        return rest;
+    });
+
+    const overlayStyles = computed(() => {
+        const { emoji: _emoji, ...rest } = props.styles ?? {};
+        return rest;
+    });
+
     // A forwarded `undefined` attr would replace the preset values (okText, mask, placement) on Modal or SideSheet, so
     // attrs are bound by hand with the undefined ones dropped.
     const definedAttrs = () => omitBy(attrs, (value) => value === undefined);
@@ -120,6 +131,8 @@
                 textAreaProps: props.textAreaProps,
                 radioGroupProps: props.radioGroupProps,
                 checkboxGroupProps: props.checkboxGroupProps,
+                emojiClass: props.classNames?.emoji,
+                emojiStyle: props.styles?.emoji,
                 onTextChange: (value: string, event: TextAreaEvent) => foundation.handleTextChange(value, event),
                 onReasonChange: (value: string, event: TextAreaEvent) => foundation.handleEmojiReasonChange(value, event),
                 onEmojiChange: (emoji: string) => foundation.handleEmojiChange(emoji),
@@ -143,12 +156,12 @@
         :cancelButtonProps="modalCancelProps"
         :cancelText="locale.locale.cancel"
         :class="[prefix, `${prefix}-${props.type}`]"
-        :classNames="props.classNames"
+        :classNames="overlayClassNames"
         :okButtonProps="modalOkProps"
         :okText="locale.locale.submit"
         :onCancel="foundation.handleModalCancel"
         :onOk="foundation.handleModalOk"
-        :styles="props.styles"
+        :styles="overlayStyles"
         :title="props.title"
         :visible="props.visible"
         v-bind="definedAttrs()"
@@ -182,13 +195,13 @@
         ref="sheet"
         canVerticalSetWidth
         :class="[prefix, `${prefix}-${props.type}`]"
-        :classNames="props.classNames"
+        :classNames="overlayClassNames"
         closeOnEsc
         :disableScroll="false"
         height="auto"
         :mask="false"
         placement="bottom"
-        :styles="props.styles"
+        :styles="overlayStyles"
         :title="props.title"
         :visible="props.visible"
         v-bind="definedAttrs()"

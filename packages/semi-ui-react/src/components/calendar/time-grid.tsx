@@ -25,7 +25,7 @@ export interface TimeGridProps extends CalendarProps {
 }
 
 export default function TimeGrid(props: TimeGridProps) {
-    const { ref, className, style, mode, displayValue, range, labelDate, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest } = props;
+    const { ref, className, classNames, style, styles, mode, displayValue, range, labelDate, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest } = props;
 
     const { locale, localeCode } = useLocale('Calendar');
     const { dateFnsLocale: contextDateFnsLocale } = useConfigContext();
@@ -62,7 +62,7 @@ export default function TimeGrid(props: TimeGridProps) {
                         <div role="cell">{header}</div>
                     </div>
                 )}
-                <div className={`${prefixCls}-header`} role="row">
+                <div className={clsx(`${prefixCls}-header`, classNames?.header)} style={styles?.header} role="row">
                     <div id={monthId} className={`${cssClasses.PREFIX}-tag ${prefixCls}-tag ${prefixCls}-sticky-left`} role="cell">
                         <span>{month}</span>
                     </div>
@@ -71,10 +71,14 @@ export default function TimeGrid(props: TimeGridProps) {
                             {week.map((day) => (
                                 <div
                                     key={`${day.date.toString()}-weekheader`}
-                                    className={clsx({
-                                        [`${cssClasses.PREFIX}-today`]: day.isToday,
-                                        [`${cssClasses.PREFIX}-weekend`]: markWeekend && day.isWeekend,
-                                    })}
+                                    className={clsx(
+                                        {
+                                            [`${cssClasses.PREFIX}-today`]: day.isToday,
+                                            [`${cssClasses.PREFIX}-weekend`]: markWeekend && day.isWeekend,
+                                        },
+                                        classNames?.headerCell
+                                    )}
+                                    style={styles?.headerCell}
                                     aria-current={day.isToday ? 'date' : undefined}
                                     role="columnheader"
                                 >
@@ -91,7 +95,7 @@ export default function TimeGrid(props: TimeGridProps) {
                         </div>
                     </div>
                 </div>
-                <div className={allDayCls} style={allDayEventsRender ? null : { height: `${calcRowHeight(allDayEvents)}em` }} role="row">
+                <div className={clsx(allDayCls, classNames?.allDay)} style={{ ...(allDayEventsRender ? null : { height: `${calcRowHeight(allDayEvents)}em` }), ...styles?.allDay }} role="row">
                     <div className={`${cssClasses.PREFIX}-tag ${allDayCls}-tag ${prefixCls}-sticky-left`} role="rowheader">
                         <span>{locale.allDay}</span>
                     </div>
@@ -107,11 +111,12 @@ export default function TimeGrid(props: TimeGridProps) {
                                 : allDayEvents.map(({ leftPos, width: eventWidth, topInd, children: content, key }, ind) => (
                                       <li
                                           key={key || `allDay-${ind}`}
-                                          className={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`}
+                                          className={clsx(`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`, classNames?.event)}
                                           style={{
                                               insetInlineStart: toPercent(leftPos),
                                               width: toPercent(eventWidth),
                                               top: `${topInd}em`,
+                                              ...styles?.event,
                                           }}
                                       >
                                           {content}
@@ -123,13 +128,15 @@ export default function TimeGrid(props: TimeGridProps) {
             </div>
             <div className={`${prefixCls}-scroll-wrapper`} role="rowgroup">
                 <div ref={scrollRef} className={`${prefixCls}-scroll`} role="row">
-                    <TimeCol className={`${prefixCls}-sticky-left`} renderTimeDisplay={renderTimeDisplay} />
+                    <TimeCol className={`${prefixCls}-sticky-left`} classNames={classNames} styles={styles} renderTimeDisplay={renderTimeDisplay} />
                     {week.map((day) => {
                         const dateString = day.date.toString();
                         const dayEvents = parsedEvents.day.get(dateString) ?? [];
                         return (
                             <DayCol
                                 key={`${dateString}-weekday`}
+                                classNames={classNames}
+                                styles={styles}
                                 displayValue={day.date}
                                 events={CalendarFoundation.getParseDailyEvents(dayEvents, day.date).day}
                                 isWeekend={markWeekend && day.isWeekend}

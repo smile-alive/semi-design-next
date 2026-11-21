@@ -1,13 +1,19 @@
+import type { JSX } from 'solid-js';
+import clsx from 'clsx';
 import ColorChooseAreaFoundation, { type ColorChooseAreaAdapter, type ColorChooseAreaBaseProps, type ColorChooseAreaBaseState } from '@fibrae/semi-foundation/components/color-picker/color-choose-area-foundation';
-import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import { cssClasses, type ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
 import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
 import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
 import { useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import { useLocale } from '../locale';
 
-export type ColorChooseAreaProps = ColorChooseAreaBaseProps;
+export interface ColorChooseAreaProps extends ColorChooseAreaBaseProps {
+    classNames?: Partial<Record<ColorPickerPart, string>>;
+    styles?: Partial<Record<ColorPickerPart, JSX.CSSProperties | string>>;
+}
 
 type Foundation = ColorChooseAreaFoundation<ColorChooseAreaBaseProps>;
 type Adapter = ColorChooseAreaAdapter<ColorChooseAreaBaseProps>;
@@ -58,26 +64,32 @@ export default function ColorChooseArea(props: ColorChooseAreaProps) {
     return (
         <div
             ref={(node) => (dom = node)}
-            class={`${cssClasses.PREFIX}-colorChooseArea`}
-            style={{
-                'background-color': hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 }),
-                width: `${props.width}px`,
-                height: `${props.height}px`,
-                cursor: state().isHandleGrabbing ? 'grabbing' : 'pointer',
-            }}
+            class={clsx(`${cssClasses.PREFIX}-colorChooseArea`, props.classNames?.area)}
+            style={mergeStyles(
+                {
+                    'background-color': hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 }),
+                    width: `${props.width}px`,
+                    height: `${props.height}px`,
+                    cursor: state().isHandleGrabbing ? 'grabbing' : 'pointer',
+                },
+                props.styles?.area
+            )}
             onLostPointerCapture={foundation.handleLostPointerCapture}
             onPointerDown={foundation.handlePointerDown}
             onPointerMove={foundation.handlePointerMove}
         >
             <div
-                class={`${cssClasses.PREFIX}-handle`}
-                style={{
-                    width: `${props.handleSize}px`,
-                    height: `${props.handleSize}px`,
-                    left: `${handlePosition().x}px`,
-                    top: `${handlePosition().y}px`,
-                    'background-color': handleColor(),
-                }}
+                class={clsx(`${cssClasses.PREFIX}-handle`, props.classNames?.handle)}
+                style={mergeStyles(
+                    {
+                        width: `${props.handleSize}px`,
+                        height: `${props.handleSize}px`,
+                        left: `${handlePosition().x}px`,
+                        top: `${handlePosition().y}px`,
+                        'background-color': handleColor(),
+                    },
+                    props.styles?.handle
+                )}
             >
                 {renderRange('s', () => locale().locale.saturation)}
                 {renderRange('v', () => locale().locale.brightness)}

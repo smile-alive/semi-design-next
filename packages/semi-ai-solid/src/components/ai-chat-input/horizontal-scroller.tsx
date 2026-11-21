@@ -1,9 +1,10 @@
 import { type JSX, Show, children, createEffect, createSignal, on } from 'solid-js';
+import clsx from 'clsx';
 import { numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { IconChevronRightStroked } from '@fibrae/semi-icons-solid';
 import { useFocusHandover, useLocale, useResizeObserver } from '@fibrae/semi-ui-solid/primitives';
 
-export default function HorizontalScroller(props: { prefix: string; children: JSX.Element }) {
+export default function HorizontalScroller(props: { prefix: string; class?: string; style?: JSX.CSSProperties; children: JSX.Element }) {
     const locale = useLocale('AIChatInput');
 
     let wrapper: HTMLDivElement | undefined;
@@ -36,7 +37,7 @@ export default function HorizontalScroller(props: { prefix: string; children: JS
     createEffect(on([resolved, scrollContainer], checkScrollAbility));
 
     return (
-        <div ref={(element) => (wrapper = element)} class={`${props.prefix}-scroll-wrapper`}>
+        <div ref={(element) => (wrapper = element)} class={clsx(`${props.prefix}-scroll-wrapper`, props.class)} style={props.style}>
             <Show when={canScrollLeft()}>
                 <button ref={handoverFromLeft} type="button" class={`${props.prefix}-scroll-button ${props.prefix}-scroll-button-left`} aria-label={locale().locale.scrollLeft} onClick={() => handleScroll(-numbers.SCROLL_AMOUNT)}>
                     <IconChevronRightStroked class={`${props.prefix}-scroll-button-left-icon`} />

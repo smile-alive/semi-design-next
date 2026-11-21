@@ -124,7 +124,10 @@ function TableRow({
     onRowContextMenu = noop,
     onHover = noop,
 }: BaseRowProps) {
-    const { handleRowSelection, headerRowCount = 0 } = useTableContext('Table.Row');
+    const { handleRowSelection, headerRowCount = 0, classNames, styles } = useTableContext('Table.Row');
+
+    // section and expanded rows are no records; classNames.row and styles.row skip them
+    const dataRow = !isSection && !expandedRow;
 
     // the first data column gets the indent and the expand button; the built-in columns may sit anywhere
     const firstIndex = Math.max(
@@ -162,7 +165,7 @@ function TableRow({
         }
 
         if (isExpandedColumn(column) && !displayExpandedColumn) {
-            cells.push(<TableCell key={columnIndex} isSection={isSection} />);
+            cells.push(<TableCell key={columnIndex} dataCell={dataRow} isSection={isSection} />);
         } else {
             const diyProps: { width?: number } = {};
 
@@ -179,6 +182,7 @@ function TableRow({
                     disabled={disabled}
                     column={column}
                     columnsToEnd={columns.length - columnIndex}
+                    dataCell={dataRow}
                     expanded={expanded}
                     firstFixedRight={isFirstFixedRight(columns, column)}
                     fixedLeft={isFixedLeft(column) && arrayAdd(cellWidths, 0, columnIndex)}
@@ -209,6 +213,7 @@ function TableRow({
                       [`${prefixCls}-row-hovered`]: hovered,
                       [`${prefixCls}-row-hidden`]: displayNone,
                   },
+                  dataRow && classNames?.row,
                   customClassName
               );
 
@@ -260,7 +265,7 @@ function TableRow({
             role="row"
             {...rowProps}
             className={rowCls}
-            style={{ ...style, ...customStyle }}
+            style={{ ...style, ...(dataRow ? styles?.row : null), ...customStyle }}
             data-row-key={rowKey}
             onClick={handleClick}
             onContextMenu={handleContextMenu}

@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | changeOnSelect | 单选时是否允许选择非叶子节点。 | `boolean` | `false` |
 | changeWithObject | 是否让 change 事件携带每个节点的数据而不是它的 value。开启后受控的 modelValue 与 defaultValue 也要传节点数据，并含有 value。这是布尔属性，不是事件，不要写成 @changeWithObject。 | `boolean` | `false` |
 | checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `"related" \| "unRelated"` | `strings.RELATED` |
-| classNames | 内部各部位的类名，键为 dropdown（下拉），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "classNames")` |
+| classNames | 内部各部位的类名，键为 prefix、suffix、content、placeholder、input、tag、clear、arrow、dropdown、list、empty、item、itemContent、itemIcon，值的写法同 class，与组件自带的类名合并。content 是触发器中的已选内容区，list 是每一级的选项列表，item 系列作用于每个选项。 | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "classNames")` |
 | clickToSelect | 多选时，点击任意节点即触发选中，常与 showNext 为 hover 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `false` |
 | defaultOpen | 是否在挂载时展开下拉。 | `boolean` | `false` |
 | defaultValue | 指定默认选中的条目，只在挂载时读取。 | <ApiType detail={"ByMultiple\u003cMultiple, CascaderSimpleValue[] \u007c CascaderSimpleValue, CascaderValue>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "defaultValue")` |
@@ -43,7 +43,7 @@ import ApiType from '#/components/ApiType.astro';
 | showRestTagsPopover | 超出 maxTagCount 后，悬停 +N 时是否用 Popover 展示剩余标签。 | `boolean` | `false` |
 | size | 选择框的尺寸。 | `Size` | `undefined` |
 | stopPropagation | 是否阻止下拉上的点击事件冒泡。 | `string \| boolean` | `true` |
-| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "styles")` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "styles")` |
 | treeData | 节点数据，label 只接受文本，节点内容用 label 插槽。原地修改响应式数据也会被识别，内容相同的新数组不会重置展开和选中状态。 | `CascaderData[]` | `[]` |
 | treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `"label"` |
 | validateStatus | 触发器的校验状态，只影响样式。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Cascader", "validateStatus")` |

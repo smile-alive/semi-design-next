@@ -29,8 +29,10 @@
         count: () => semiDefault('PinCode', 'count', 6),
         format: undefined,
         autofocus: () => semiDefault('PinCode', 'autofocus', false),
+        classNames: semiGlobalDefault('PinCode', 'classNames'),
         disabled: semiGlobalDefault('PinCode', 'disabled'),
         size: semiGlobalDefault('PinCode', 'size'),
+        styles: semiGlobalDefault('PinCode', 'styles'),
         validateStatus: semiGlobalDefault('PinCode', 'validateStatus'),
     });
 
@@ -118,12 +120,14 @@
             v-bind="cellAttrs(index)"
             :aria-label="digitLabel(index)"
             :autofocus="props.autofocus && index === 0"
+            :class="props.classNames?.input"
             composition
             :disabled="props.disabled"
             :inputmode="format === 'number' ? 'numeric' : 'text'"
             :modelValue="state.valueList[index] ?? ''"
             :showClear="false"
             :size="props.size"
+            :style="props.styles?.input"
             :validateStatus="props.validateStatus"
             @change="(value, event) => handleCellChange(index, value, event)"
             @focus="foundation.handleCurrentActiveIndexChange(index, 'focus')"

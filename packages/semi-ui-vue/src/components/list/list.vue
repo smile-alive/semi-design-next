@@ -13,12 +13,14 @@
 
     const props = withDefaults(defineProps<ListProps<T> & /* @vue-ignore */ ElementProps<'div', keyof ListProps<T>>>(), {
         bordered: () => semiDefault('List', 'bordered', false),
+        classNames: semiGlobalDefault('List', 'classNames'),
         dataSource: semiGlobalDefault('List', 'dataSource'),
         grid: semiGlobalDefault('List', 'grid'),
         layout: () => semiDefault('List', 'layout', 'vertical'),
         loading: () => semiDefault('List', 'loading', false),
         size: () => semiDefault('List', 'size', 'default'),
         split: () => semiDefault('List', 'split', true),
+        styles: semiGlobalDefault('List', 'styles'),
         onClick: undefined,
         onRightClick: undefined,
     });
@@ -33,6 +35,8 @@
     provideListContext(
         computed(() => ({
             grid: props.grid,
+            classNames: props.classNames,
+            styles: props.styles,
             onClick: props.onClick ?? readSemiDefault(semi, 'List', 'onClick'),
             onRightClick: props.onRightClick ?? readSemiDefault(semi, 'List', 'onRightClick'),
         }))
@@ -76,15 +80,15 @@
         ]"
         :role="namedRole($attrs)"
     >
-        <div v-if="hasSlotContent($slots.header)" :class="`${prefixCls}-header`" x-semi-prop="header">
+        <div v-if="hasSlotContent($slots.header)" :class="[`${prefixCls}-header`, props.classNames?.header]" :style="props.styles?.header" x-semi-prop="header">
             <slot name="header" />
         </div>
         <Spin size="large" :spinning="props.loading">
             <template v-if="showEmpty()">
-                <div v-if="hasSlotContent($slots.emptyContent)" :class="`${prefixCls}-empty`" x-semi-prop="emptyContent">
+                <div v-if="hasSlotContent($slots.emptyContent)" :class="[`${prefixCls}-empty`, props.classNames?.empty]" :style="props.styles?.empty" x-semi-prop="emptyContent">
                     <slot name="emptyContent" />
                 </div>
-                <div v-else :class="`${prefixCls}-empty`">{{ locale.locale.emptyText }}</div>
+                <div v-else :class="[`${prefixCls}-empty`, props.classNames?.empty]" :style="props.styles?.empty">{{ locale.locale.emptyText }}</div>
             </template>
             <Row v-else-if="props.grid" :align="props.grid.align" :gutter="props.grid.gutter" :justify="props.grid.justify" role="list">
                 <component :is="node" v-for="[node, key] in renderedItems()" :key="key" />
@@ -95,7 +99,7 @@
                 <slot />
             </ul>
         </Spin>
-        <div v-if="hasSlotContent($slots.footer)" :class="`${prefixCls}-footer`" x-semi-prop="footer">
+        <div v-if="hasSlotContent($slots.footer)" :class="[`${prefixCls}-footer`, props.classNames?.footer]" :style="props.styles?.footer" x-semi-prop="footer">
             <slot name="footer" />
         </div>
         <slot name="loadMore" />

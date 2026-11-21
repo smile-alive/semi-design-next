@@ -8,18 +8,18 @@ import Content, { type ContentProps } from './content';
 
 const prefixCls = cssClasses.ANNOTATION;
 
-export interface AnnotationProps extends Omit<ContainerReactProps, 'onChange' | 'onClick'>, Omit<ContentProps, 'title'> {}
+export interface AnnotationProps extends Omit<ContainerReactProps, 'onChange' | 'onClick' | 'classNames' | 'styles'>, Omit<ContentProps, 'title'> {}
 
 const defaultProps = {} satisfies Partial<AnnotationProps>;
 
 function Annotation(rawProps: AnnotationProps) {
-    const { activeKey, info, onChange, onClick, renderItem, title, className, ...rest } = useDefaultProps('Annotation', rawProps, defaultProps);
+    const { activeKey, info, onChange, onClick, renderItem, title, className, classNames, styles, ...rest } = useDefaultProps('Annotation', rawProps, defaultProps);
 
     const { locale } = useLocale('Sidebar');
 
     return (
-        <Container {...rest} className={clsx(prefixCls, className)} title={title ?? locale.annotationTitle}>
-            <Content activeKey={activeKey} info={info} renderItem={renderItem} onChange={onChange} onClick={onClick} />
+        <Container {...rest} className={clsx(prefixCls, className)} classNames={classNames} styles={styles} title={title ?? locale.annotationTitle}>
+            <Content classNames={classNames} styles={styles} activeKey={activeKey} info={info} renderItem={renderItem} onChange={onChange} onClick={onClick} />
         </Container>
     );
 }

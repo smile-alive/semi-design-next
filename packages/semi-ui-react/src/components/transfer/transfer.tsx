@@ -2,7 +2,7 @@ import type React from 'react';
 import { Fragment, Suspense, lazy, useCallback, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/transfer/constants';
+import { cssClasses, strings, type TransferPart } from '@fibrae/semi-foundation/components/transfer/constants';
 import TransferFoundation, { type TransferAdapter, type BasicDataItem, type OnSortEndProps } from '@fibrae/semi-foundation/components/transfer/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
 import { namedRole } from '@fibrae/semi-foundation/utils';
@@ -160,6 +160,8 @@ const TRANSFER_OWNED_INPUT_PROPS = ['value', 'onChange'] as const;
 export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onChange' | 'onSelect'> {
     style?: React.CSSProperties;
     className?: string;
+    classNames?: Partial<Record<TransferPart, string>>;
+    styles?: Partial<Record<TransferPart, React.CSSProperties>>;
     disabled?: boolean;
     dataSource?: DataSource;
     filter?: boolean | ((searchValue: string, item: DataItem) => boolean);
@@ -203,15 +205,21 @@ function staticHandle(WrapperComponent: React.ComponentType) {
     return WrapperComponent;
 }
 
-// the list outer elements are module-level components, so the disabled state arrives through context
-const [ListDisabledContext, useListDisabledContext] = createContext<boolean>('Transfer', { defaultValue: false });
+interface ListContextValue {
+    disabled: boolean;
+    className?: string;
+    style?: React.CSSProperties;
+}
+
+// the list outer elements are module-level components, so the disabled state and the `list` part arrive through context
+const [ListContext, useListContext] = createContext<ListContextValue>('Transfer', { defaultValue: { disabled: false } });
 
 function SelectedListOuter(props: React.ComponentProps<'div'>) {
     const { locale } = useLocale('Transfer');
-    const disabled = useListDisabledContext();
+    const { disabled, className, style } = useListContext();
 
     // disabled buttons leave nothing focusable, so the list itself takes the Tab stop to stay scrollable
-    return <div {...props} aria-label={locale.selectedList} role="list" tabIndex={disabled ? 0 : undefined} />;
+    return <div {...props} className={clsx(props.className, className)} style={{ ...props.style, ...style }} aria-label={locale.selectedList} role="list" tabIndex={disabled ? 0 : undefined} />;
 }
 
 function SortableListOuter(props: React.ComponentProps<'div'>) {
@@ -235,14 +243,6 @@ function getVirtualItemKey(index: number, data: VirtualRowData) {
     return data.selectedData[index]?.key ?? index;
 }
 
-/** null hides the empty state; other empty values fall back to the locale text */
-function renderEmpty(side: 'left' | 'right', custom: React.ReactNode, fallback: string) {
-    if (custom === null) {
-        return null;
-    }
-    return <div className={clsx(`${prefixCls}-empty`, `${prefixCls}-${side}-empty`)}>{custom || fallback}</div>;
-}
-
 export default function Transfer(rawProps: TransferProps) {
     const props = useDefaultProps('Transfer', rawProps, defaultProps);
 
@@ -250,6 +250,8 @@ export default function Transfer(rawProps: TransferProps) {
         ref,
         style,
         className,
+        classNames,
+        styles,
         disabled,
         dataSource,
         filter,
@@ -331,6 +333,18 @@ export default function Transfer(rawProps: TransferProps) {
 
     const onSortEnd = (sortProps: OnSortEndProps) => foundation.handleSortEnd(sortProps);
 
+    /** null hides the empty state; other empty values fall back to the locale text */
+    const renderEmpty = (side: 'left' | 'right', custom: React.ReactNode, fallback: string) => {
+        if (custom === null) {
+            return null;
+        }
+        return (
+            <div className={clsx(`${prefixCls}-empty`, `${prefixCls}-${side}-empty`, classNames?.empty)} style={styles?.empty}>
+                {custom || fallback}
+            </div>
+        );
+    };
+
     const renderHeader = (headerConfig: HeaderConfig) => {
         const { totalContent, allContent, onAllClick, num, showButton, side } = headerConfig;
         if (side === 'left' && typeof renderSourceHeader === 'function') {
@@ -340,12 +354,14 @@ export default function Transfer(rawProps: TransferProps) {
         if (side === 'right' && typeof renderSelectedHeader === 'function') {
             return renderSelectedHeader({ num, showButton, onClear: onAllClick });
         }
-        const headerCls = clsx(`${prefixCls}-header`, `${prefixCls}-${side}-header`);
+        const headerCls = clsx(`${prefixCls}-header`, `${prefixCls}-${side}-header`, classNames?.header);
         return (
-            <div className={headerCls}>
-                <span className={`${prefixCls}-header-total`}>{totalContent}</span>
+            <div className={headerCls} style={styles?.header}>
+                <span className={clsx(`${prefixCls}-header-total`, classNames?.title)} style={styles?.title}>
+                    {totalContent}
+                </span>
                 {showButton && (
-                    <Button type="tertiary" className={`${prefixCls}-header-all`} disabled={disabled} size="small" theme="borderless" onClick={onAllClick}>
+                    <Button type="tertiary" className={clsx(`${prefixCls}-header-all`, classNames?.action)} style={styles?.action} disabled={disabled} size="small" theme="borderless" onClick={onAllClick}>
                         {allContent}
                     </Button>
                 )}
@@ -362,12 +378,15 @@ export default function Transfer(rawProps: TransferProps) {
                 </div>
             );
         }
-        const leftItemCls = clsx({
-            [`${prefixCls}-item`]: true,
-            [`${prefixCls}-item-disabled`]: item.disabled,
-        });
+        const leftItemCls = clsx(
+            {
+                [`${prefixCls}-item`]: true,
+                [`${prefixCls}-item-disabled`]: item.disabled,
+            },
+            classNames?.item
+        );
         return (
-            <Checkbox key={item.key} className={leftItemCls} role="listitem" checked={checked} disabled={item.disabled || disabled} x-semi-children-alias={`dataSource[${index}].label`} onChange={() => onSelectOrRemove(item)}>
+            <Checkbox key={item.key} className={leftItemCls} style={styles?.item} role="listitem" checked={checked} disabled={item.disabled || disabled} x-semi-children-alias={`dataSource[${index}].label`} onChange={() => onSelectOrRemove(item)}>
                 {item.label}
             </Checkbox>
         );
@@ -380,7 +399,7 @@ export default function Transfer(rawProps: TransferProps) {
                 const titleId = `${idPrefix}-group-${groupIndex}`;
                 return (
                     <div key={groupIndex} role="listitem">
-                        <div id={titleId} className={`${prefixCls}-group-title`}>
+                        <div id={titleId} className={clsx(`${prefixCls}-group-title`, classNames?.groupTitle)} style={styles?.groupTitle}>
                             {title}
                         </div>
                         <div aria-labelledby={titleId} role="list">
@@ -394,7 +413,8 @@ export default function Transfer(rawProps: TransferProps) {
         }
         return (
             <div
-                className={`${prefixCls}-left-list`}
+                className={clsx(`${prefixCls}-left-list`, classNames?.list)}
+                style={styles?.list}
                 aria-label={locale.optionList}
                 role="list"
                 // disabled checkboxes leave nothing focusable, so the list takes the Tab stop to stay scrollable
@@ -488,7 +508,7 @@ export default function Transfer(rawProps: TransferProps) {
 
         const filterCom =
             filter === false ? null : (
-                <search className={`${prefixCls}-filter`} aria-label={locale.filter}>
+                <search className={clsx(`${prefixCls}-filter`, classNames?.filter)} style={styles?.filter} aria-label={locale.filter}>
                     <Input
                         tabIndex={tabIndex}
                         disabled={disabled}
@@ -507,7 +527,7 @@ export default function Transfer(rawProps: TransferProps) {
             );
 
         return (
-            <section className={`${prefixCls}-left`}>
+            <section className={clsx(`${prefixCls}-left`, classNames?.source)} style={styles?.source}>
                 {filterCom}
                 {content}
             </section>
@@ -524,11 +544,14 @@ export default function Transfer(rawProps: TransferProps) {
                 </div>
             );
         }
-        const rightItemCls = clsx({
-            [`${prefixCls}-item`]: true,
-            [`${prefixCls}-right-item`]: true,
-            [`${prefixCls}-right-item-draggable`]: draggable,
-        });
+        const rightItemCls = clsx(
+            {
+                [`${prefixCls}-item`]: true,
+                [`${prefixCls}-right-item`]: true,
+                [`${prefixCls}-right-item-draggable`]: draggable,
+            },
+            classNames?.item
+        );
         // the path keeps each label a node, as a label may be an element
         const label =
             isTree && showPath === true
@@ -539,16 +562,24 @@ export default function Transfer(rawProps: TransferProps) {
                       </Fragment>
                   ))
                 : item.label;
-        const DragHandle = draggable && sortableHandle ? sortableHandle(() => <IconHandle className={`${prefixCls}-right-item-drag-handler`} {...(sortableHandle === staticHandle ? { 'aria-label': locale.dragSort, role: 'button', 'aria-disabled': 'true' } : {})} />) : null;
+        const DragHandle =
+            draggable && sortableHandle
+                ? sortableHandle(() => <IconHandle className={clsx(`${prefixCls}-right-item-drag-handler`, classNames?.itemDragHandle)} style={styles?.itemDragHandle} {...(sortableHandle === staticHandle ? { 'aria-label': locale.dragSort, role: 'button', 'aria-disabled': 'true' } : {})} />)
+                : null;
         return (
-            <div key={item.key} className={rightItemCls} role="listitem">
+            <div key={item.key} className={rightItemCls} style={styles?.item} role="listitem">
                 {DragHandle && <DragHandle />}
                 <div className={`${prefixCls}-right-item-text`}>{label}</div>
                 <button
                     type="button"
-                    className={clsx(`${prefixCls}-item-close-icon`, {
-                        [`${prefixCls}-item-close-icon-disabled`]: item.disabled,
-                    })}
+                    className={clsx(
+                        `${prefixCls}-item-close-icon`,
+                        {
+                            [`${prefixCls}-item-close-icon-disabled`]: item.disabled,
+                        },
+                        classNames?.itemRemove
+                    )}
+                    style={styles?.itemRemove}
                     aria-label={locale.remove}
                     disabled={item.disabled || disabled}
                     onClick={onRemove}
@@ -560,7 +591,7 @@ export default function Transfer(rawProps: TransferProps) {
     };
 
     const renderRightList = (selectedData: Array<ResolvedDataItem>, sortableHandle?: typeof staticHandle) => (
-        <div className={`${prefixCls}-right-list`} aria-label={locale.selectedList} role="list" tabIndex={disabled ? 0 : undefined}>
+        <div className={clsx(`${prefixCls}-right-list`, classNames?.list)} style={styles?.list} aria-label={locale.selectedList} role="list" tabIndex={disabled ? 0 : undefined}>
             {selectedData.map((item) => renderRightItem(item, sortableHandle))}
         </div>
     );
@@ -642,7 +673,7 @@ export default function Transfer(rawProps: TransferProps) {
         }
 
         return (
-            <section className={`${prefixCls}-right`}>
+            <section className={clsx(`${prefixCls}-right`, classNames?.selected)} style={styles?.selected}>
                 {headerCom}
                 {content}
             </section>
@@ -653,10 +684,10 @@ export default function Transfer(rawProps: TransferProps) {
 
     return (
         <div role={namedRole(rest)} {...rest} className={transferCls} style={style} onBlur={foundation.handleFocusOut}>
-            <ListDisabledContext value={Boolean(disabled)}>
+            <ListContext value={{ disabled: Boolean(disabled), className: classNames?.list, style: styles?.list }}>
                 {renderLeft()}
                 {renderRight()}
-            </ListDisabledContext>
+            </ListContext>
         </div>
     );
 }

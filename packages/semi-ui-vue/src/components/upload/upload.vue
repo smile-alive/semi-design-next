@@ -14,6 +14,7 @@
     import Modal from '../modal';
     import type { ModalProps } from '../modal/interface';
     import AddArea from './add-area.vue';
+    import { provideUploadContext } from './context';
     import FileCard from './file-card.vue';
     import type { FileItem, UploadCropModalProps, UploadCropProps, UploadEmits, UploadFileItemSlotProps, UploadHandle, UploadProps, UploadSlots } from './interface';
 
@@ -104,6 +105,8 @@
     const pictureListAttrs = computed(() => (isPicture.value ? { class: `${prefix}-picture-list`, role: 'list', 'aria-label': i18n.value.locale.pictureList } : {}));
     const addTabindex = computed(() => (attrs.tabindex ?? attrs.tabIndex) as number | string | undefined);
     const addDescribedby = computed(() => (attrs['aria-required'] === true || attrs['aria-required'] === 'true' ? requiredId : undefined));
+
+    provideUploadContext(computed(() => ({ classNames: props.classNames, styles: props.styles })));
 
     const fnProp = <K extends FnKey>(key: K) => (props[key] ?? readSemiDefault(semi, 'Upload', key)) as UploadProps[K];
 
@@ -205,8 +208,9 @@
                 [`${prefix}-picture-add-disabled`]: props.disabled,
                 [`${dragArea}-legal`]: props.draggable && state.value.dragAreaStatus === strings.DRAG_AREA_LEGAL,
             },
+            props.classNames?.trigger,
         ],
-        style: { height: toCssLength(props.picHeight), width: toCssLength(props.picWidth) },
+        style: [{ height: toCssLength(props.picHeight), width: toCssLength(props.picWidth) }, props.styles?.trigger],
         'x-semi-prop': 'children',
         tabindex: addTabindex.value,
         describedby: addDescribedby.value,
@@ -227,8 +231,6 @@
         picWidth: props.picWidth,
         picHeight: props.picHeight,
         validateMessage: UploadFoundation.getFallbackValidateMessage(file, i18n.value.locale),
-        class: props.classNames?.item,
-        style: props.styles?.item,
         onRemove: () => foundation.handleRemove(file),
         onRetry: () => foundation.retry(file),
         onReplace: () => foundation.startReplace(file.uid),
@@ -297,24 +299,26 @@
                         [`${dragArea}-legal`]: state.dragAreaStatus === strings.DRAG_AREA_LEGAL,
                         [`${dragArea}-custom`]: $slots.default,
                     },
+                    props.classNames?.trigger,
                 ]"
                 :describedby="addDescribedby"
                 :disabled="props.disabled"
+                :style="props.styles?.trigger"
                 :tabindex="addTabindex"
                 v-bind="dragListeners"
                 @open="openFileDialog"
             >
                 <slot>
-                    <div :class="`${dragArea}-icon`" x-semi-prop="dragIcon">
+                    <div :class="[`${dragArea}-icon`, props.classNames?.dragIcon]" :style="props.styles?.dragIcon" x-semi-prop="dragIcon">
                         <slot name="dragIcon">
                             <IconUpload size="extra-large" />
                         </slot>
                     </div>
                     <div :class="`${dragArea}-text`">
-                        <div :class="`${dragArea}-main-text`" x-semi-prop="dragMainText">
+                        <div :class="[`${dragArea}-main-text`, props.classNames?.dragMainText]" :style="props.styles?.dragMainText" x-semi-prop="dragMainText">
                             <slot name="dragMainText">{{ i18n.locale.mainText }}</slot>
                         </div>
-                        <div :class="`${dragArea}-sub-text`" x-semi-prop="dragSubText">
+                        <div :class="[`${dragArea}-sub-text`, props.classNames?.dragSubText]" :style="props.styles?.dragSubText" x-semi-prop="dragSubText">
                             <slot name="dragSubText" />
                         </div>
                         <div :class="`${dragArea}-tips`">
@@ -325,25 +329,32 @@
                     </div>
                 </slot>
             </AddArea>
-            <AddArea v-else v-model:hasControl="addAreaHasControl" :class="`${prefix}-add`" :describedby="addDescribedby" :disabled="props.disabled" :tabindex="addTabindex" @open="openFileDialog">
+            <AddArea v-else v-model:hasControl="addAreaHasControl" :class="[`${prefix}-add`, props.classNames?.trigger]" :describedby="addDescribedby" :disabled="props.disabled" :style="props.styles?.trigger" :tabindex="addTabindex" @open="openFileDialog">
                 <slot />
             </AddArea>
         </template>
-        <div v-if="hasSlotContent($slots.prompt)" :class="`${prefix}-prompt`" x-semi-prop="prompt">
+        <div v-if="hasSlotContent($slots.prompt)" :class="[`${prefix}-prompt`, props.classNames?.prompt]" :style="props.styles?.prompt" x-semi-prop="prompt">
             <slot name="prompt" />
         </div>
-        <div v-if="hasSlotContent($slots.validateMessage)" :class="`${prefix}-validate-message`" x-semi-prop="validateMessage">
+        <div v-if="hasSlotContent($slots.validateMessage)" :class="[`${prefix}-validate-message`, props.classNames?.validateMessage]" :style="props.styles?.validateMessage" x-semi-prop="validateMessage">
             <slot name="validateMessage" />
         </div>
         <!-- the picture wall keeps its wrappers when the list is empty, so adding the first file keeps the add button mounted and focused -->
-        <div v-if="props.showUploadList && (isPicture || (props.listType === strings.FILE_LIST_DEFAULT && shownFiles.length))" ref="fileListRoot" :class="[`${prefix}-file-list`, { [`${prefix}-picture-file-list`]: isPicture }]" @focusin="trackFocus" @focusout="untrackFocus">
-            <div v-if="!isPicture && props.limit !== 1" :class="`${prefix}-file-list-title`">
+        <div
+            v-if="props.showUploadList && (isPicture || (props.listType === strings.FILE_LIST_DEFAULT && shownFiles.length))"
+            ref="fileListRoot"
+            :class="[`${prefix}-file-list`, { [`${prefix}-picture-file-list`]: isPicture }, props.classNames?.list]"
+            :style="props.styles?.list"
+            @focusin="trackFocus"
+            @focusout="untrackFocus"
+        >
+            <div v-if="!isPicture && props.limit !== 1" :class="[`${prefix}-file-list-title`, props.classNames?.listTitle]" :style="props.styles?.listTitle">
                 <slot v-if="$slots.fileListHeader" name="fileListHeader" v-bind="{ fileList: shownFiles, onClear: foundation.handleClear, clearText: i18n.locale.clear }" />
                 <template v-else>
                     <span :class="`${prefix}-file-list-title-choosen`">
                         <slot name="fileListTitle">{{ i18n.locale.selectedFiles }}</slot>
                     </span>
-                    <button v-if="props.showClear && !props.disabled" :class="`${prefix}-file-list-title-clear`" type="button" @click="foundation.handleClear">
+                    <button v-if="props.showClear && !props.disabled" :class="[`${prefix}-file-list-title-clear`, props.classNames?.clear]" :style="props.styles?.clear" type="button" @click="foundation.handleClear">
                         {{ i18n.locale.clear }}
                     </button>
                 </template>

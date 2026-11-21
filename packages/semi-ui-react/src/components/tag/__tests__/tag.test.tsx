@@ -253,4 +253,19 @@ describe('Tag', () => {
             expect(tag).toHaveClass(`${BASE_CLASS_PREFIX}-tag-small`, `${BASE_CLASS_PREFIX}-tag-avatar-square`);
         });
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['prefix', 'avatar', 'content', 'suffix', 'close'] as const;
+        const selectors = { prefix: 'tag-prefix-icon', avatar: 'avatar', content: 'tag-content', suffix: 'tag-suffix-icon', close: 'tag-close' };
+        const { container } = render(
+            <Tag classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} avatarSrc="a.png" closable prefixIcon="p" suffixIcon="s">
+                semi
+            </Tag>
+        );
+        for (const part of parts) {
+            const el = container.querySelector(`.${BASE_CLASS_PREFIX}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
 });

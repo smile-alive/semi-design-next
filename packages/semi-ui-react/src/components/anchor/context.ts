@@ -1,7 +1,7 @@
 import type { AnchorProps, AnchorState } from '.';
 import { createContext } from '../../base/index';
 
-export type AnchorContextType = Pick<AnchorProps, 'showTooltip' | 'position' | 'autoCollapse' | 'size'> &
+export type AnchorContextType = Pick<AnchorProps, 'showTooltip' | 'position' | 'autoCollapse' | 'size' | 'classNames' | 'styles'> &
     Pick<AnchorState, 'activeLink'> & {
         /** The links registered below each mounted link, whatever components render them */
         childMap: Record<string, Set<string>>;

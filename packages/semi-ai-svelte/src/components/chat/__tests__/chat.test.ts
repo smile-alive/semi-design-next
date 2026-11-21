@@ -410,12 +410,57 @@ describe('Chat 输入框', () => {
         expect(document.activeElement).toBe(textarea(container));
     });
 
-    it('classNames 与 styles 按部位落到对应元素', () => {
-        const { container } = renderChat({ classNames: { hint: 'my-hint', inputBox: 'my-input' }, styles: { hint: 'order: 1', inputBox: 'order: 2' } }, {}, { hints: ['first'] });
-        expect(container.querySelector('.semi-chat-hints')).toHaveClass('my-hint');
-        expect(container.querySelector('.semi-chat-hints')).toHaveStyle({ order: '1' });
-        expect(container.querySelector('.semi-chat-inputBox')).toHaveClass('my-input');
-        expect(container.querySelector('.semi-chat-inputBox')).toHaveStyle({ order: '2' });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = {
+            messages: '.semi-chat-container',
+            dropArea: '.semi-chat-dropArea',
+            item: '.semi-chat-chatBox',
+            itemAvatar: '.semi-chat-chatBox-avatar',
+            itemTitle: '.semi-chat-chatBox-title',
+            itemContent: '.semi-chat-chatBox-content',
+            itemActions: '.semi-chat-chatBox-action',
+            divider: '.semi-chat-divider',
+            hint: '.semi-chat-hints',
+            hintItem: '.semi-chat-hint-item',
+            backBottom: '.semi-chat-action-backBottom',
+            stop: '.semi-chat-action-stop',
+            inputBox: '.semi-chat-inputBox',
+            input: '.semi-chat-inputBox-textarea',
+            send: '.semi-chat-inputBox-sendButton',
+        };
+        const keys = Object.keys(parts);
+        const classNames = Object.fromEntries(keys.map((key) => [key, `my-${key}`]));
+        const styles = Object.fromEntries(keys.map((key, index) => [key, `order: ${index + 1}`]));
+        const expectParts = (container: Element, shown: string[]) => {
+            for (const key of shown) {
+                const part = container.querySelector(`.my-${key}`);
+                expect(part).toHaveClass(parts[key as keyof typeof parts].slice(1));
+                expect(part).toHaveStyle({ order: String(keys.indexOf(key) + 1) });
+            }
+        };
+        const generating: ChatMessage[] = [...chats.slice(0, 2), { ...chats[2], status: 'incomplete' }];
+
+        mockScroll();
+        const { container, store } = renderChat({ classNames, styles }, {}, { chats: [...chats, { role: 'divider', id: 'd' }], hints: ['first'] });
+        await fireEvent.dragOver(root(container), filesDrag);
+        flushSync();
+        expectParts(
+            container,
+            keys.filter((key) => key !== 'backBottom' && key !== 'stop')
+        );
+
+        fakeTimers();
+        const area = contentArea(container);
+        area.scrollTop = 100;
+        await fireEvent.scroll(area);
+        vi.advanceTimersByTime(200);
+        flushSync();
+        expectParts(container, ['backBottom']);
+
+        store.chats = generating;
+        store.props = { classNames, styles, showStopGenerate: true };
+        flushSync();
+        expectParts(container, ['stop']);
     });
 
     it('应用 placeholder、classNames.inputBox、styles.inputBox、snippet、class 与 style', () => {

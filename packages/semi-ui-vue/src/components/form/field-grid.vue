@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import type { HTMLAttributes, VNode } from 'vue';
+    import type { HTMLAttributes, StyleValue, VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { SlotFragment } from '../../base/index';
     import Col from '../grid/col.vue';
@@ -12,11 +12,12 @@
             labelCol?: ColProps;
             labelPosition?: string;
             mainClass?: HTMLAttributes['class'];
+            mainStyle?: StyleValue;
             /** Wraps the columns in their own Row, for a field whose columns the Form does not set */
             row?: boolean;
             wrapperCol?: ColProps;
         }>(),
-        { row: undefined }
+        { mainStyle: undefined, row: undefined }
     );
 
     defineSlots<{ default?: () => VNode[]; label?: () => VNode[] }>();
@@ -27,7 +28,7 @@
 <template>
     <template v-if="!(props.labelCol && props.wrapperCol)">
         <slot name="label" />
-        <div :class="props.mainClass">
+        <div :class="props.mainClass" :style="props.mainStyle">
             <slot />
         </div>
     </template>
@@ -39,7 +40,7 @@
             </Col>
         </component>
         <Col v-bind="props.wrapperCol">
-            <div :class="props.mainClass">
+            <div :class="props.mainClass" :style="props.mainStyle">
                 <slot />
             </div>
         </Col>

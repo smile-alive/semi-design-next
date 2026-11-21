@@ -1,7 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                                                                                                          | Type          | Default |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------- | ------- |
-| disabled | Whether the link is disabled and ignores clicks.                                                                                     | `boolean`     | -       |
-| href     | Target of the link. A value starting with # is looked up by element id, anything else as a CSS selector. Defaults to `#` when unset. | `string`      | -       |
-| title    | Text of the link, which can be a node. When showTooltip is off and the value is a non-empty string, it is also the native title.     | `JSX.Element` | -       |
+| Property   | Description                                                                                                                                 | Type                                                                                                          | Default |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------- |
+| classNames | Class names of the inner parts of the link, keyed by `title`; merged with the built-in classes, after the `itemTitle` class name of Anchor. | <ApiType detail={"Partial\u003cRecord\u003cAnchorLinkPart, string>>"}>Type</ApiType>                          | -       |
+| disabled   | Whether the link is disabled and ignores clicks.                                                                                            | `boolean`                                                                                                     | -       |
+| href       | Target of the link. A value starting with # is looked up by element id, anything else as a CSS selector. Defaults to `#` when unset.        | `string`                                                                                                      | -       |
+| styles     | Inline styles of the inner parts of the link, keyed like `classNames`, after `styles` of Anchor.                                            | <ApiType detail={"Partial\u003cRecord\u003cAnchorLinkPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -       |
+| title      | Text of the link, which can be a node. When showTooltip is off and the value is a non-empty string, it is also the native title.            | `JSX.Element`                                                                                                 | -       |

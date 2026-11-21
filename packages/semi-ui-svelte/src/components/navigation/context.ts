@@ -3,6 +3,8 @@ import type { ItemKey, Mode, NavClickData, NavOpenChangeData, NavProps, OnSelect
 
 /** Getters over the Nav's live values, so readers stay reactive; a Sub provides a copy of it to its own subtree */
 export interface NavContextValue {
+    readonly classNames: NavProps['classNames'];
+    readonly styles: NavProps['styles'];
     readonly isCollapsed: boolean;
     readonly mode: Mode;
     readonly isInSubNav: boolean;
@@ -27,5 +29,8 @@ export interface NavContextValue {
     notifyClick: (data: NavClickData) => void;
     notifyOpenChange: (data: NavOpenChangeData) => void;
 }
+
+/** Later styles win */
+export const joinStyles = (...styles: Array<string | null | undefined>) => styles.filter(Boolean).join('; ') || undefined;
 
 export const [getNavContext, setNavContext] = createContext<NavContextValue>('Nav');

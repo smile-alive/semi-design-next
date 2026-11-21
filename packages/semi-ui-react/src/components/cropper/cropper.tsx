@@ -108,7 +108,7 @@ export default function Cropper(rawProps: CropperProps) {
                     }}
                 />
             </div>
-            <div className={cssClasses.MASK} onLostPointerCapture={foundation.handleMaskLostPointerCapture} onPointerDown={foundation.handleMaskPointerDown} onPointerMove={foundation.handleMaskPointerMove} />
+            <div className={clsx(cssClasses.MASK, classNames?.mask)} style={styles?.mask} onLostPointerCapture={foundation.handleMaskLostPointerCapture} onPointerDown={foundation.handleMaskPointerDown} onPointerMove={foundation.handleMaskPointerMove} />
             <div
                 className={clsx(
                     cssClasses.CROPPER_BOX,
@@ -159,7 +159,15 @@ export default function Cropper(rawProps: CropperProps) {
                 {loaded &&
                     showResizeBox &&
                     (shape === 'round' ? strings.roundCorner : strings.corner).map((corner) => (
-                        <div key={corner} className={clsx(cssClasses.CORNER, `${cssClasses.CORNER}-${corner}`)} data-dir={corner} onLostPointerCapture={foundation.handleCornerLostPointerCapture} onPointerDown={foundation.handleCornerPointerDown} onPointerMove={foundation.handleCornerPointerMove} />
+                        <div
+                            key={corner}
+                            className={clsx(cssClasses.CORNER, `${cssClasses.CORNER}-${corner}`, classNames?.handle)}
+                            style={styles?.handle}
+                            data-dir={corner}
+                            onLostPointerCapture={foundation.handleCornerLostPointerCapture}
+                            onPointerDown={foundation.handleCornerPointerDown}
+                            onPointerMove={foundation.handleCornerPointerMove}
+                        />
                     ))}
             </div>
         </div>

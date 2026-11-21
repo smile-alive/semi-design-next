@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | allDayEvents | Snippet for the area for events at the top of the day, range and week views; events is the whole events array that was passed in, to be filtered by the snippet, which renders li items. | <ApiType detail={"Snippet\u003c[CalendarAllDayEventsArgs]>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by header, headerCell, allDay, timeColumn, timeLabel, day, event, currentTimeLine, currentTimeDot, more and dropdown; values take anything class takes (string, array or object) and merge with the built-in classes. Parts appear per view: the day view has no header or headerCell, and the month view has no allDay, timeColumn, timeLabel, currentTimeLine or currentTimeDot. day is the time column of one day in the day, week and range views and a date cell in the month view; dropdown is the event card that opens from "N more". | <ApiType detail={"Partial\u003cRecord\u003cCalendarPart, ClassValue>>"}>Type</ApiType> | - |
 | dateDisplay | Snippet for custom date text: the column titles of the week and range views and every cell of the month view. The day view does not use it. | <ApiType detail={"Snippet\u003c[CalendarDateDisplayArgs]>"}>Type</ApiType> | - |
 | dateGrid | Snippet for custom content of a date cell or column, with the date and its dateString (date.toString()). Use absolute positioning for elements. | <ApiType detail={"Snippet\u003c[CalendarDateGridArgs]>"}>Type</ApiType> | - |
 | displayValue | Display date. When omitted it is the current date and updates at midnight. | `Date` | - |
@@ -21,6 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | range | Date range shown in range mode, left-closed and right-open. Required in range mode. | `Date[]` | - |
 | scrollTop | Default scroll offset of the content in the day, week and range views. | `number` | `400` |
 | showCurrTime | Shows the red line of the current time in the day, week and range views. | `boolean` | `true` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cCalendarPart, string>>"}>Type</ApiType> | - |
 | timeDisplay | Snippet for custom time text in the day, week and range views; time is the hour. | <ApiType detail={"Snippet\u003c[CalendarTimeDisplayArgs]>"}>Type</ApiType> | - |
 | weekStartsOn | Day of the week that starts the week, 0 for Sunday, 1 for Monday and so on. Applies to the month and week views. | `WeekStartsOn` | `0` |
 | width | Width of the calendar; a number is in pixels. | `number \| string` | - |

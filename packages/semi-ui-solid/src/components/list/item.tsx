@@ -2,10 +2,10 @@ import { children, Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+import { cssClasses, type ListItemPart } from '@fibrae/semi-foundation/components/list/constants';
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import type { ElementProps } from '../../base/index';
-import { splitControlAttrs, forwardFocus, hasContent, mergeRefs } from '../../utils/index';
+import { splitControlAttrs, forwardFocus, hasContent, mergeRefs, mergeStyles } from '../../utils/index';
 import { Col } from '../grid';
 import { type ListItemEventHandler, useListContext } from './context';
 
@@ -16,6 +16,9 @@ export interface ListItemProps extends ElementProps<'li', 'onClick'> {
     header?: JSX.Element;
     main?: JSX.Element;
     align?: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
+    /** Applied after the `item*` classNames of the parent List */
+    classNames?: Partial<Record<ListItemPart, string>>;
+    styles?: Partial<Record<ListItemPart, JSX.CSSProperties | string>>;
     onClick?: ListItemEventHandler;
     onRightClick?: ListItemEventHandler;
 }
@@ -28,7 +31,7 @@ const extraClicks = new WeakMap<Event, Element | null>();
 const isControlKey = (key: string): key is 'tabIndex' | 'tabindex' | `aria-${string}` => key === 'tabIndex' || key === 'tabindex' || isAriaKey(key);
 
 export default function ListItem(props: ListItemProps) {
-    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'extra', 'header', 'main', 'onClick', 'onRightClick', 'ref']);
+    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'classNames', 'extra', 'header', 'main', 'onClick', 'onRightClick', 'ref', 'style', 'styles']);
     const [control, rootAttrs] = splitControlAttrs(rest, isControlKey);
 
     const list = useListContext();
@@ -55,12 +58,12 @@ export default function ListItem(props: ListItemProps) {
     const body = () => (
         <Dynamic component={box()} class={clsx(`${prefixCls}-item-body`, `${prefixCls}-item-body-${align()}`)}>
             <Show when={hasContent(header())}>
-                <Dynamic component={box()} class={`${prefixCls}-item-body-header`}>
+                <Dynamic component={box()} class={clsx(`${prefixCls}-item-body-header`, list().classNames?.itemHeader, local.classNames?.header)} style={mergeStyles(list().styles?.itemHeader, local.styles?.header)}>
                     {header()}
                 </Dynamic>
             </Show>
             <Show when={hasContent(main())}>
-                <Dynamic component={box()} class={`${prefixCls}-item-body-main`}>
+                <Dynamic component={box()} class={clsx(`${prefixCls}-item-body-main`, list().classNames?.itemMain, local.classNames?.main)} style={mergeStyles(list().styles?.itemMain, local.styles?.main)}>
                     {main()}
                 </Dynamic>
             </Show>
@@ -73,7 +76,8 @@ export default function ListItem(props: ListItemProps) {
             // Known limit: a non-clickable item given a tabIndex no longer focuses through ref.focus(); install the
             // forward only while the item is clickable if a consumer needs that
             ref={mergeRefs(local.ref, (node: HTMLLIElement) => forwardFocus(node, () => button))}
-            class={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-clickable`]: clickable() }, local.class)}
+            class={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-clickable`]: clickable() }, list().classNames?.item, local.class)}
+            style={mergeStyles(list().styles?.item, local.style)}
             onClick={(e) => {
                 if (extraClicks.get(e) !== e.currentTarget) {
                     handleClick()?.(e);
@@ -91,7 +95,7 @@ export default function ListItem(props: ListItemProps) {
             </Show>
             <Show when={!clickable() || hasBody()}>{local.children}</Show>
             <Show when={hasContent(extra())}>
-                <div class={`${prefixCls}-item-extra`} onClick={(e) => extraClicks.set(e, e.currentTarget.parentElement)}>
+                <div class={clsx(`${prefixCls}-item-extra`, list().classNames?.itemExtra, local.classNames?.extra)} style={mergeStyles(list().styles?.itemExtra, local.styles?.extra)} onClick={(e) => extraClicks.set(e, e.currentTarget.parentElement)}>
                     {extra()}
                 </div>
             </Show>

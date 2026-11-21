@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| classNames | 内部各部位的类名，键为 `body`（导航项列表），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `body`、`list`、`item`、`itemIcon`、`itemText`、`itemToggleIcon`、`subNav`、`subNavTitle`、`subNavList`、`subNavDropdown`，与组件自带的类名合并。`item*` 作用到全部导航项，其中 `itemIcon`、`itemText`、`itemToggleIcon` 同时作用到子导航的标题；`subNav*` 作用到全部子导航。 | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | defaultIsCollapsed | 默认是否处于收起状态，仅 `mode` 为 `vertical` 时有效。 | `boolean` | - |
 | defaultOpenKeys | 初始展开的子导航 `itemKey` 数组，仅 `mode` 为 `vertical` 且侧边栏处于展开状态时有效。 | `ItemKey[]` | - |
 | defaultSelectedKeys | 初始选中的导航项 `itemKey` 数组。 | `ItemKey[]` | - |

@@ -38,7 +38,7 @@
     };
 </script>
 
-<a class={[`${PREFIX_CONTENT}-file`, { [`${PREFIX_CONTENT}-file-last`]: isLastFile }]} href={file.file_url} rel="noopener noreferrer" target="_blank" onclick={onClick}>
+<a class={[`${PREFIX_CONTENT}-file`, { [`${PREFIX_CONTENT}-file-last`]: isLastFile }, view.classNames?.file]} href={file.file_url} rel="noopener noreferrer" style={view.styles?.file} target="_blank" onclick={onClick}>
     <div class={[`${PREFIX_CONTENT}-file-icon-wrapper`, `${PREFIX_CONTENT}-file-icon-${kind}`]}>
         {#if Icon}
             <Icon class="{PREFIX_CONTENT}-file-icon" size="extra-large" />

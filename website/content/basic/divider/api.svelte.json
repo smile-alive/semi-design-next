@@ -2,6 +2,14 @@
     "divider": {
         "source": "packages/semi-ui-svelte/src/components/divider/divider.svelte",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 content（包裹内容的文字容器，传入 children 时渲染），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by content (the wrapper around the content, rendered when children is passed); values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式（字符串），键同 classNames。",
+                "en-US": "Inline styles of the inner parts, as strings, keyed like classNames."
+            },
             "align": {
                 "zh-CN": "带内容时内容的对齐方式，可选 left、center、right。",
                 "en-US": "Alignment of the content: left, center or right."

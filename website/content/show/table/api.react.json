@@ -13,8 +13,8 @@
             },
             "className": { "zh-CN": "最外层容器的类名。", "en-US": "Class name of the outermost container." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `header`（每个表头单元格 `<th>`，包括固定表头），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `header` (every header cell `<th>`, fixed headers included); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `header`、`title`、`row`、`cell`、`footer`、`pagination`、`empty`，与组件自带的类名合并；`header` 落在每个表头单元格 `<th>`（包括固定表头），`row` 和 `cell` 只作用于数据行与数据单元格。",
+                "en-US": "Class names of the inner parts, keyed by `header`, `title`, `row`, `cell`, `footer`, `pagination` and `empty`; merged with the built-in classes. `header` lands on every header cell `<th>` (fixed headers included); `row` and `cell` apply to data rows and data cells only."
             },
             "clickGroupedRowToExpand": { "zh-CN": "点击分组行时展开或收起该组。", "en-US": "Clicking a group row expands or collapses the group." },
             "columns": {
@@ -142,8 +142,8 @@
             },
             "style": { "zh-CN": "最外层容器的样式。", "en-US": "Style of the outermost container." },
             "styles": {
-                "zh-CN": "内部各部位的内联样式，键同 `classNames`；列的 `onHeaderCell` 返回的 `style` 优先级更高。",
-                "en-US": "Inline styles of the inner parts, keyed like `classNames`; the `style` returned by a column's `onHeaderCell` takes precedence."
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`onHeaderCell`、`onRow`、`onCell` 返回的 `style` 优先级更高。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; the `style` returned by `onHeaderCell`, `onRow` and `onCell` takes precedence."
             },
             "title": {
                 "zh-CN": "表格标题，可以是元素，或接收当前页数据返回元素的函数。",

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/backtop/constants';
+import { cssClasses, numbers, type BackTopPart } from '@fibrae/semi-foundation/components/backtop/constants';
 import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/components/backtop/foundation';
 import '@fibrae/semi-foundation/components/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-react';
@@ -23,7 +23,9 @@ export interface BackTopProps extends ElementProps<'button', 'onClick' | 'type' 
     duration?: number;
     onClick?: (e: React.MouseEvent) => void;
     style?: React.CSSProperties;
+    styles?: Partial<Record<BackTopPart, React.CSSProperties>>;
     className?: string;
+    classNames?: Partial<Record<BackTopPart, string>>;
     /** Static content of the button, shown in place of `icon`; must not contain interactive elements */
     children?: React.ReactNode;
     /** Accessible name of the button, needed whenever it shows only an icon */
@@ -41,7 +43,7 @@ const defaultProps = {
 
 export default function BackTop(rawProps: BackTopProps) {
     const props = useDefaultProps('BackTop', rawProps, defaultProps);
-    const { ref, children, icon, className, style, onClick, visibilityHeight, target, duration, 'aria-label': ariaLabel, ...rest } = props;
+    const { ref, children, icon, className, classNames, style, styles, onClick, visibilityHeight, target, duration, 'aria-label': ariaLabel, ...rest } = props;
 
     const { locale } = useLocale('BackTop');
 
@@ -79,7 +81,9 @@ export default function BackTop(rawProps: BackTopProps) {
             {...rest}
             ref={mergedRef}
             className={clsx(prefixCls, className)}
+            classNames={classNames ?? {}}
             style={style}
+            styles={styles ?? {}}
             // static children are the visible name; a different default would contradict them
             aria-label={ariaLabel ?? (hasChildren ? undefined : locale.backToTop)}
             x-semi-prop="children"

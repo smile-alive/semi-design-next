@@ -67,8 +67,8 @@
                 "en-US": "Custom trigger content. In single mode it receives the array of labels on the path; in multiple mode it receives the Entity of a node and its index, and returns the content of its tag."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `dropdown`（下拉菜单），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown menu); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `prefix`、`suffix`、`content`、`placeholder`、`input`、`tag`、`clear`、`arrow`、`dropdown`、`list`、`empty`、`item`、`itemContent`、`itemIcon`，与组件自带的类名合并。`content` 是触发器中的已选内容区，`list` 是每一级的选项列表，`item` 系列作用于每个选项。",
+                "en-US": "Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `placeholder`, `input`, `tag`, `clear`, `arrow`, `dropdown`, `list`, `empty`, `item`, `itemContent` and `itemIcon`; merged with the built-in classes. `content` is the selection area in the trigger, `list` is the option list of each level, and the `item` keys apply to every option."
             },
             "styles": {
                 "zh-CN": "内部各部位的样式，键同 `classNames`，值可以是键为 kebab-case 的对象，也可以是字符串。",

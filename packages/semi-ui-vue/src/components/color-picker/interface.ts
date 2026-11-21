@@ -1,4 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import type { ColorValue } from '@fibrae/semi-foundation/components/color-picker/foundation';
 import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/components/color-picker/interface';
 import type { PopoverEmits, PopoverProps } from '../popover/interface';
@@ -13,6 +14,9 @@ type PopoverListeners = {
 /** Popover's props and listeners; `class` and `style` replace React's `className` and `style` */
 export type ColorPickerPopoverProps = PopoverProps & PopoverListeners & { class?: HTMLAttributes['class']; style?: StyleValue };
 
+export type ColorPickerClassNames = Partial<Record<ColorPickerPart, ClassValue>>;
+export type ColorPickerStyles = Partial<Record<ColorPickerPart, StyleValue>>;
+
 export interface ColorPickerProps {
     /** `null` is a controlled empty value: shows `defaultValue` and only reports changes */
     modelValue?: ColorValue | null;
@@ -24,6 +28,8 @@ export interface ColorPickerProps {
     height?: number;
     usePopover?: boolean;
     popoverProps?: ColorPickerPopoverProps;
+    classNames?: ColorPickerClassNames;
+    styles?: ColorPickerStyles;
 }
 
 export interface ColorPickerEmits {
@@ -53,6 +59,8 @@ export interface ColorChooseAreaProps {
     width: number;
     height: number;
     handleSize: number;
+    classNames?: ColorPickerClassNames;
+    styles?: ColorPickerStyles;
 }
 
 export interface ColorSliderProps {
@@ -60,6 +68,8 @@ export interface ColorSliderProps {
     width: number;
     height: number;
     handleSize: number;
+    classNames?: ColorPickerClassNames;
+    styles?: ColorPickerStyles;
 }
 
 export interface AlphaSliderProps {
@@ -67,6 +77,8 @@ export interface AlphaSliderProps {
     width: number;
     height: number;
     handleSize: number;
+    classNames?: ColorPickerClassNames;
+    styles?: ColorPickerStyles;
 }
 
 export interface DataPartProps {
@@ -75,4 +87,6 @@ export interface DataPartProps {
     width: number;
     alpha: boolean;
     eyeDropper: boolean;
+    classNames?: ColorPickerClassNames;
+    styles?: ColorPickerStyles;
 }

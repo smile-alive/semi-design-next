@@ -19,6 +19,8 @@
     defineOptions({ name: 'Sidebar' });
 
     const props = withDefaults(defineProps<SideBarProps & /* @vue-ignore */ ElementProps<'div', keyof SideBarProps | EmitHandlers<SideBarEmits>>>(), {
+        classNames: semiGlobalDefault('Sidebar', 'classNames'),
+        styles: semiGlobalDefault('Sidebar', 'styles'),
         visible: semiGlobalDefault('Sidebar', 'visible'),
         title: semiGlobalDefault('Sidebar', 'title'),
         motion: semiGlobalDefault('Sidebar', 'motion'),
@@ -102,17 +104,17 @@
         </template>
         <template v-if="!isMain" #header>
             <slot v-if="hasSlotContent(() => $slots.detailHeader?.({ mode: props.mode, detailContent: props.detailContent }) ?? [])" :detailContent="props.detailContent" :mode="props.mode" name="detailHeader" />
-            <div v-else :class="`${prefix}-detail-header`">
+            <div v-else :class="[`${prefix}-detail-header`, props.classNames?.header]" :style="props.styles?.header">
                 <span :class="cssClasses.DETAIL_HEADER_LEFT">
-                    <Button :aria-label="locale.locale.close" theme="borderless" type="tertiary" @click="emit('backWard', $event, strings.MODE.MAIN)">
+                    <Button :aria-label="locale.locale.close" :class="[`${prefix}-detail-header-back`, props.classNames?.close]" :style="props.styles?.close" theme="borderless" type="tertiary" @click="emit('backWard', $event, strings.MODE.MAIN)">
                         <template #icon>
                             <IconClose />
                         </template>
                     </Button>
-                    <span :class="`${prefix}-detail-header-title`">{{ props.detailContent?.name }}</span>
+                    <span :class="[`${prefix}-detail-header-title`, props.classNames?.title]" :style="props.styles?.title">{{ props.detailContent?.name }}</span>
                 </span>
                 <span :class="`${prefix}-detail-header-right`">
-                    <Button v-if="typeof props.detailContent?.content === 'string'" :aria-label="locale.locale.copy" theme="borderless" type="tertiary" @click="copyDetail">
+                    <Button v-if="typeof props.detailContent?.content === 'string'" :aria-label="locale.locale.copy" :class="[`${prefix}-detail-header-copy`, props.classNames?.copy]" :style="props.styles?.copy" theme="borderless" type="tertiary" @click="copyDetail">
                         <template #icon>
                             <IconCopyStroked />
                         </template>
@@ -122,7 +124,7 @@
         </template>
 
         <div v-if="isMain" :class="`${prefix}-main-content-wrapper`">
-            <div :class="optionsCls">
+            <div :class="[optionsCls, props.classNames?.options]" :style="props.styles?.options">
                 <template v-for="(option, index) in props.options" :key="option.key">
                     <slot v-if="$slots.optionItem" :active="props.activeKey === option.key" :index="index" :item="option" name="optionItem" :onClick="optionClick(option)" />
                     <Button
@@ -133,7 +135,9 @@
                             {
                                 [`${optionsCls}-normal`]: props.activeKey !== option.key,
                             },
+                            props.classNames?.option,
                         ]"
+                        :style="props.styles?.option"
                         @click="selectOption($event, option)"
                     >
                         <template v-if="$slots.optionIcon" #icon>
@@ -143,7 +147,7 @@
                     </Button>
                 </template>
             </div>
-            <div :class="`${prefix}-main-content`">
+            <div :class="[`${prefix}-main-content`, props.classNames?.mainContent]" :style="props.styles?.mainContent">
                 <slot :activeKey="props.activeKey" name="mainContent" />
             </div>
         </div>

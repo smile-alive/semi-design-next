@@ -8,7 +8,7 @@ import type { TimeColProps } from './interface';
 const prefixCls = `${cssClasses.PREFIX}-time`;
 const hours = Array.from({ length: 24 }, (_, hour) => hour);
 
-export default function TimeCol({ className, renderTimeDisplay }: TimeColProps) {
+export default function TimeCol({ className, classNames, styles, renderTimeDisplay }: TimeColProps) {
     const { locale } = useLocale('Calendar');
 
     const formatTime = (hour: number) => {
@@ -19,10 +19,10 @@ export default function TimeCol({ className, renderTimeDisplay }: TimeColProps) 
     };
 
     return (
-        <div className={clsx(className, prefixCls)} role="cell">
+        <div className={clsx(className, prefixCls, classNames?.timeColumn)} style={styles?.timeColumn} role="cell">
             <div className={`${prefixCls}-items`}>
                 {hours.map((hour) => (
-                    <div key={`time-${hour}`} className={`${prefixCls}-item`}>
+                    <div key={`time-${hour}`} className={clsx(`${prefixCls}-item`, classNames?.timeLabel)} style={styles?.timeLabel}>
                         {/* the grid starts at 00:00, which has no label */}
                         <span>{hour === 0 ? '' : formatTime(hour)}</span>
                     </div>

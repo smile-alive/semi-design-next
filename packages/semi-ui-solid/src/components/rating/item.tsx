@@ -4,7 +4,7 @@ import { type strings, cssClasses } from '@fibrae/semi-foundation/components/rat
 import RatingFoundation from '@fibrae/semi-foundation/components/rating/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
 import { IconStar } from '@fibrae/semi-icons-solid';
-import { hasContent } from '../../utils/index';
+import { hasContent, mergeStyles } from '../../utils/index';
 import { useLocale } from '../locale';
 import { useTooltipDescription } from '../tooltip/context';
 
@@ -26,6 +26,8 @@ export interface RatingItemProps {
     size: number | (typeof strings.SIZE_SET)[number];
     unitOf: (n: number) => string;
     liProps?: JSX.HTMLAttributes<HTMLLIElement>;
+    partClass?: string;
+    partStyle?: JSX.CSSProperties | string;
     onHover: (event: MouseEvent, index: number) => void;
     onClick: (event: MouseEvent, index: number) => void;
     /** Enter or Space on a radio, or a click without a pointer (assistive technology): the value that radio stands for */
@@ -88,12 +90,16 @@ export default function Item(props: RatingItemProps) {
     return (
         <li
             {...props.liProps}
-            class={clsx(props.prefixCls, {
-                [`${props.prefixCls}-half`]: model().isHalf,
-                [`${props.prefixCls}-full`]: model().isFull,
-                [`${props.prefixCls}-${props.size}`]: !isCustomSize(),
-            })}
-            style={isCustomSize() ? { width: `${props.size}px`, height: `${props.size}px`, 'font-size': `${props.size}px` } : undefined}
+            class={clsx(
+                props.prefixCls,
+                {
+                    [`${props.prefixCls}-half`]: model().isHalf,
+                    [`${props.prefixCls}-full`]: model().isFull,
+                    [`${props.prefixCls}-${props.size}`]: !isCustomSize(),
+                },
+                props.partClass
+            )}
+            style={mergeStyles(isCustomSize() ? { width: `${props.size}px`, height: `${props.size}px`, 'font-size': `${props.size}px` } : undefined, props.partStyle)}
             role="none"
         >
             <div class={clsx(`${props.prefixCls}-wrapper`, { [`${props.prefixCls}-disabled`]: props.disabled })} role="presentation" onClick={handleClick} onKeyDown={handleKeyDown} onMouseMove={(event) => !props.disabled && props.onHover(event, props.index)}>

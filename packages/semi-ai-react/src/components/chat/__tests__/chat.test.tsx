@@ -303,15 +303,52 @@ describe('Chat', () => {
         });
 
         it('classNames 与 styles 按部位落到对应元素', async () => {
-            const { container } = await renderChat({
-                hints: ['first'],
-                classNames: { hint: 'my-hint', inputBox: 'my-input' },
-                styles: { hint: { order: 1 }, inputBox: { order: 2 } },
-            });
-            expect(container.querySelector('.semi-chat-hints')).toHaveClass('my-hint');
-            expect(container.querySelector('.semi-chat-hints')).toHaveStyle({ order: '1' });
-            expect(container.querySelector('.semi-chat-inputBox')).toHaveClass('my-input');
-            expect(container.querySelector('.semi-chat-inputBox')).toHaveStyle({ order: '2' });
+            const parts = {
+                messages: '.semi-chat-container',
+                dropArea: '.semi-chat-dropArea',
+                item: '.semi-chat-chatBox',
+                itemAvatar: '.semi-chat-chatBox-avatar',
+                itemTitle: '.semi-chat-chatBox-title',
+                itemContent: '.semi-chat-chatBox-content',
+                itemActions: '.semi-chat-chatBox-action',
+                divider: '.semi-chat-divider',
+                hint: '.semi-chat-hints',
+                hintItem: '.semi-chat-hint-item',
+                backBottom: '.semi-chat-action-backBottom',
+                stop: '.semi-chat-action-stop',
+                inputBox: '.semi-chat-inputBox',
+                input: '.semi-chat-inputBox-textarea',
+                send: '.semi-chat-inputBox-sendButton',
+            };
+            const keys = Object.keys(parts);
+            const classNames = Object.fromEntries(keys.map((key) => [key, `my-${key}`]));
+            const styles = Object.fromEntries(keys.map((key, index) => [key, { order: index + 1 }]));
+            const expectParts = (container, shown: string[]) => {
+                for (const key of shown) {
+                    const part = container.querySelector(`.my-${key}`);
+                    expect(part).toHaveClass(parts[key].slice(1));
+                    expect(part).toHaveStyle({ order: String(keys.indexOf(key) + 1) });
+                }
+            };
+            const generating: Message[] = [...chats.slice(0, 2), { role: 'assistant', id: '3', content: 'thinking', status: 'incomplete' }];
+
+            mockScroll();
+            const { container, rerender } = await renderChat({ chats: [...chats, { role: 'divider', id: 'd' }], hints: ['first'], classNames, styles });
+            fireEvent.dragOver(container.firstChild, filesDrag);
+            expectParts(
+                container,
+                keys.filter((key) => key !== 'backBottom' && key !== 'stop')
+            );
+
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance'] });
+            const area = contentArea(container);
+            area.scrollTop = 100;
+            fireEvent.scroll(area);
+            void act(() => vi.advanceTimersByTime(200));
+            expectParts(container, ['backBottom']);
+
+            rerender(<Chat classNames={classNames} styles={styles} chats={generating} roleConfig={roleConfig} showStopGenerate />);
+            expectParts(container, ['stop']);
         });
 
         it('renderInputArea 接收默认节点及发送与清空处理函数', async () => {

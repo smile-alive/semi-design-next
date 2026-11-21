@@ -2,17 +2,19 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性           | 说明                                                                                                               | 类型                                             | 默认值                                           |
-| -------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------------------------------------------------ |
-| autofocus      | 挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。 | `boolean`                                        | `false`                                          |
-| count          | 验证码位数。                                                                                                       | `number`                                         | `6`                                              |
-| defaultValue   | 非受控时的初始内容。                                                                                               | `string`                                         | `semiGlobalDefault("PinCode", "defaultValue")`   |
-| disabled       | 是否禁用。                                                                                                         | `boolean`                                        | `semiGlobalDefault("PinCode", "disabled")`       |
-| format         | 单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。                                | `PinCodeFormat`                                  | `undefined`                                      |
-| modelModifiers | v-model 修饰符，由 Vue 在使用 v-model.trim 等修饰符时传入；声明后修饰符不再作为属性落到根元素上。                  | `ModelModifiers`                                 | `undefined`                                      |
-| modelValue     | 输入框内容，配合 v-model 使用。                                                                                    | `string`                                         | `undefined`                                      |
-| size           | 输入框大小，可选 large、default、small。                                                                           | `Size`                                           | `semiGlobalDefault("PinCode", "size")`           |
-| validateStatus | 校验状态，传给每个输入框；error 时显示错误样式。                                                                   | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("PinCode", "validateStatus")` |
+| 属性           | 说明                                                                                                               | 类型                                                                                | 默认值                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------ |
+| autofocus      | 挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。 | `boolean`                                                                           | `false`                                          |
+| classNames     | 内部各部位的类名，键为 `input`，与组件自带的类名合并。`input` 作用到每个输入格的根元素，不是原生 input。           | <ApiType detail={"Partial\u003cRecord\u003c\"input\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("PinCode", "classNames")`     |
+| count          | 验证码位数。                                                                                                       | `number`                                                                            | `6`                                              |
+| defaultValue   | 非受控时的初始内容。                                                                                               | `string`                                                                            | `semiGlobalDefault("PinCode", "defaultValue")`   |
+| disabled       | 是否禁用。                                                                                                         | `boolean`                                                                           | `semiGlobalDefault("PinCode", "disabled")`       |
+| format         | 单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。                                | `PinCodeFormat`                                                                     | `undefined`                                      |
+| modelModifiers | v-model 修饰符，由 Vue 在使用 v-model.trim 等修饰符时传入；声明后修饰符不再作为属性落到根元素上。                  | `ModelModifiers`                                                                    | `undefined`                                      |
+| modelValue     | 输入框内容，配合 v-model 使用。                                                                                    | `string`                                                                            | `undefined`                                      |
+| size           | 输入框大小，可选 large、default、small。                                                                           | `Size`                                                                              | `semiGlobalDefault("PinCode", "size")`           |
+| styles         | 内部各部位的内联样式，键同 `classNames`。                                                                          | <ApiType detail={"Partial\u003cRecord\u003c\"input\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("PinCode", "styles")`         |
+| validateStatus | 校验状态，传给每个输入框；error 时显示错误样式。                                                                   | `"default" \| "error" \| "success" \| "warning"`                                    | `semiGlobalDefault("PinCode", "validateStatus")` |
 
 **Events**
 

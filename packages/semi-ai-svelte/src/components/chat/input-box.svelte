@@ -24,6 +24,10 @@
         uploadTipProps?: ChatProps['uploadTipProps'];
         inputBoxClass?: ClassValue;
         inputBoxStyle?: string;
+        inputClass?: ClassValue;
+        inputStyle?: string;
+        sendClass?: ClassValue;
+        sendStyle?: string;
         inputArea?: ChatProps['inputArea'];
         uploadButton?: ChatProps['uploadButton'];
         uploadTip?: ChatProps['uploadTip'];
@@ -35,7 +39,7 @@
     type Foundation = InputBoxFoundation<InputBoxProps>;
     type Adapter = InputBoxAdapter<InputBoxProps>;
 
-    let { placeholder, showClearContext, sendHotKey, canSend, disableSend, clickUpload, dragUpload, pasteUpload, uploadProps, uploadTipProps, inputBoxClass, inputBoxStyle, inputArea, uploadButton, uploadTip, onSend, onClear, onInputChange }: InputBoxProps = $props();
+    let { placeholder, showClearContext, sendHotKey, canSend, disableSend, clickUpload, dragUpload, pasteUpload, uploadProps, uploadTipProps, inputBoxClass, inputBoxStyle, inputClass, inputStyle, sendClass, sendStyle, inputArea, uploadButton, uploadTip, onSend, onClear, onInputChange }: InputBoxProps = $props();
 
     // shortcut: one placement per node. A custom #inputArea that renders the same node twice (defaultNode and inputNode, or
     // uploadNode) leaves these refs on the last instance only; upgrade by registering each instance as Solid's input does.
@@ -94,11 +98,23 @@
 {/snippet}
 
 {#snippet inputNode()}
-    <InputBoxInput attachment={states().attachment} bind:this={input} content={states().content} onChange={foundation.onInputAreaChange} onClear={foundation.onAttachmentDelete} onEnterPress={foundation.onEnterPress} onPaste={foundation.onPaste} {placeholder} {sendHotKey} />
+    <InputBoxInput
+        attachment={states().attachment}
+        bind:this={input}
+        content={states().content}
+        onChange={foundation.onInputAreaChange}
+        onClear={foundation.onAttachmentDelete}
+        onEnterPress={foundation.onEnterPress}
+        onPaste={foundation.onPaste}
+        {placeholder}
+        {sendHotKey}
+        textareaClass={inputClass}
+        textareaStyle={inputStyle}
+    />
 {/snippet}
 
 {#snippet sendNode()}
-    <SendButton disabled={sendDisabled} onClick={foundation.onSend} />
+    <SendButton class={sendClass} disabled={sendDisabled} onClick={foundation.onSend} style={sendStyle} />
 {/snippet}
 
 {#snippet defaultNode()}

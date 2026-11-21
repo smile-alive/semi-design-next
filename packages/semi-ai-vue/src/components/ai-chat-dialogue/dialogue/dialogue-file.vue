@@ -41,7 +41,7 @@
 </script>
 
 <template>
-    <a :class="[`${PREFIX_CONTENT}-file`, { [`${PREFIX_CONTENT}-file-last`]: props.isLastFile }]" :href="props.file.file_url" rel="noopener noreferrer" target="_blank" @click="onClick">
+    <a :class="[`${PREFIX_CONTENT}-file`, { [`${PREFIX_CONTENT}-file-last`]: props.isLastFile }, view.classNames?.file]" :href="props.file.file_url" rel="noopener noreferrer" :style="view.styles?.file" target="_blank" @click="onClick">
         <div :class="[`${PREFIX_CONTENT}-file-icon-wrapper`, `${PREFIX_CONTENT}-file-icon-${kind}`]">
             <component :is="icon" v-if="icon" :class="`${PREFIX_CONTENT}-file-icon`" size="extra-large" />
             <div v-else :class="`${PREFIX_CONTENT}-file-icon`" :style="{ backgroundImage: `url(${props.file.file_url})` }" />

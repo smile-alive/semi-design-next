@@ -1,14 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | alpha | Whether to enable transparency selection. | `boolean` | `true` |
+| classNames | Class names of the inner parts, keyed by `area` (saturation and brightness area), `hue` (hue slider), `alpha` (alpha slider), `handle` (the round handle shared by all three), `preview` (color preview block), `input` (color value input), `format` (format select), `trigger` (default trigger button) and `dropdown` (the popup with `usePopover`); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cColorPickerPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("ColorPicker", "classNames")` |
 | defaultFormat | Color format used by default for manual input: rgba, hex or hsva. | `ColorFormat` | `"hex"` |
 | defaultValue | Initial value when uncontrolled, an object holding hsva, hex and rgba; defaults to the color object of #39c5bb. | `ColorValue` | `DEFAULT_COLOR` |
 | eyeDropper | Whether to enable the eyedropper color picker; requires a secure context and Chromium 95 or later. | `boolean` | `true` |
 | height | Height in pixels. | `number` | `280` |
 | modelValue | Controlled value, bound with v-model; same shape as defaultValue. undefined means uncontrolled, and going back to undefined from a controlled value shows defaultValue again. Treat ColorValue as immutable and replace it as a whole. | `ColorValue \| null` | `undefined` |
 | popoverProps | Props and listeners (such as onVisibleChange) passed to the Popover when usePopover is on; class and style replace className and style. The popup opens on click with role dialog by default and takes its default name from the locale; ariaLabel and ariaLabelledby take precedence. | `ColorPickerPopoverProps` | `semiGlobalDefault("ColorPicker", "popoverProps")` |
+| styles | Styles of the inner parts, keyed like `classNames`; values take any style binding. | <ApiType detail={"Partial\u003cRecord\u003cColorPickerPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("ColorPicker", "styles")` |
 | usePopover | Whether to render inside a Popover; the trigger comes from the default slot. | `boolean` | `false` |
 | width | Width in pixels. | `number` | `280` |
 

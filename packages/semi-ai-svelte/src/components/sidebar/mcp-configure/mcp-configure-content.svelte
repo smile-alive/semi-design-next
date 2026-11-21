@@ -19,7 +19,7 @@
     type Adapter = MCPConfigureContentAdapter<MouseEvent, MCPConfigureOption>;
 
     // No fallback on the bindables: a bound `undefined` would throw with one
-    let { options = $bindable(), customOptions = $bindable(), filter, placeholder, onStatusChange, onSearch, onAddClick, onConfigureClick, onEditClick, icon, desc, item }: MCPConfigureContentProps = $props();
+    let { options = $bindable(), customOptions = $bindable(), classNames, styles, filter, placeholder, onStatusChange, onSearch, onAddClick, onConfigureClick, onEditClick, icon, desc, item }: MCPConfigureContentProps = $props();
 
     const locale = useLocale('Sidebar');
 
@@ -84,7 +84,7 @@
 {/snippet}
 
 {#snippet searchInput()}
-    <Input class={isCustom ? undefined : `${contentCls}-search`} onChange={foundation.handleSearch} placeholder={placeholder ?? text.searchPlaceholder} showClear={false} value={states().inputValue}>
+    <Input class={isCustom ? undefined : [`${contentCls}-search`, classNames?.search]} onChange={foundation.handleSearch} placeholder={placeholder ?? text.searchPlaceholder} showClear={false} style={isCustom ? undefined : styles?.search} value={states().inputValue}>
         {#snippet prefix()}
             <IconSearch />
         {/snippet}
@@ -92,12 +92,12 @@
 {/snippet}
 
 <div class={contentCls}>
-    <div class={`${contentCls}-header`}>
+    <div class={[`${contentCls}-header`, classNames?.toolbar]} style={styles?.toolbar}>
         <RadioGroup aria-label={text.mcpConfigure} onChange={(event) => foundation.handleModeChange(event.target.value as MCPConfigureMode)} type="button" value={states().mode}>
             <Radio value={strings.MCP_MODE.INNER}>{text.mcpServers}</Radio>
             <Radio value={strings.MCP_MODE.CUSTOM}>{text.newMcpAdd}</Radio>
         </RadioGroup>
-        <span class={`${contentCls}-header-count`}>{text.activeMCPNumber} {activatedCount}/{total}</span>
+        <span class={[`${contentCls}-header-count`, classNames?.count]} style={styles?.count}>{text.activeMCPNumber} {activatedCount}/{total}</span>
     </div>
     {#if isCustom && customList.length === 0}
         <Empty class={`${contentCls}-custom-empty`}>
@@ -111,41 +111,41 @@
             {@render addButton()}
         </Empty>
     {:else if isCustom}
-        <div class={[`${contentCls}-search`, `${contentCls}-search-container`]}>
+        <div class={[`${contentCls}-search`, `${contentCls}-search-container`, classNames?.search]} style={styles?.search}>
             {@render searchInput()}
             {@render addButton()}
         </div>
     {:else}
         {@render searchInput()}
     {/if}
-    <div class={`${contentCls}-item-container`}>
+    <div class={[`${contentCls}-item-container`, classNames?.list]} style={styles?.list}>
         {#each showOptions as option, index (option.value)}
             {#if item}
                 {@render item({ custom: isCustom, index, item: option })}
             {:else}
-                <div class={`${contentCls}-item`}>
+                <div class={[`${contentCls}-item`, classNames?.item]} style={styles?.item}>
                     {#if !icon && option.icon}
-                        <img alt="" class={`${contentCls}-item-sign`} src={option.icon} />
+                        <img alt="" class={[`${contentCls}-item-sign`, classNames?.itemIcon]} src={option.icon} style={styles?.itemIcon} />
                     {:else}
-                        <div class={`${contentCls}-item-sign`}>
+                        <div class={[`${contentCls}-item-sign`, classNames?.itemIcon]} style={styles?.itemIcon}>
                             {@render icon?.({ custom: isCustom, index, item: option })}
                         </div>
                     {/if}
                     <div class={`${contentCls}-item-content`}>
-                        <div class={`${contentCls}-item-content-label`}>{option.label}</div>
-                        <div class={`${contentCls}-item-content-desc`}>
+                        <div class={[`${contentCls}-item-content-label`, classNames?.itemTitle]} style={styles?.itemTitle}>{option.label}</div>
+                        <div class={[`${contentCls}-item-content-desc`, classNames?.itemDescription]} style={styles?.itemDescription}>
                             {#if desc}{@render desc({ custom: isCustom, index, item: option })}{:else}{option.desc}{/if}
                         </div>
                     </div>
                     {#if option.configure}
-                        <Button aria-label={text.configure} class={[`${contentCls}-item-button`, `${contentCls}-item-button-configure`]} onclick={(event: MouseEvent) => foundation.onConfigureButtonClick(event, option)}>
+                        <Button aria-label={text.configure} class={[`${contentCls}-item-button`, `${contentCls}-item-button-configure`, classNames?.itemAction]} style={styles?.itemAction} onclick={(event: MouseEvent) => foundation.onConfigureButtonClick(event, option)}>
                             {#snippet icon()}
                                 <IconSetting />
                             {/snippet}
                         </Button>
                     {/if}
                     {#if isCustom}
-                        <Button aria-label={text.edit} class={[`${contentCls}-item-button`, `${contentCls}-item-button-configure`]} onclick={(event: MouseEvent) => foundation.onEditButtonClick(event, option)}>
+                        <Button aria-label={text.edit} class={[`${contentCls}-item-button`, `${contentCls}-item-button-configure`, classNames?.itemAction]} style={styles?.itemAction} onclick={(event: MouseEvent) => foundation.onEditButtonClick(event, option)}>
                             {#snippet icon()}
                                 <IconEdit />
                             {/snippet}
@@ -160,7 +160,8 @@
                                     {...props}
                                     aria-disabled="true"
                                     aria-label={statusLabel(option)}
-                                    class={[buttonCls, `${buttonCls}-${option.active ? 'light' : 'solid'}`, `${buttonCls}-disabled`, `${buttonCls}-primary-disabled`, `${buttonCls}-with-icon`, `${buttonCls}-with-icon-only`, `${contentCls}-item-button`]}
+                                    class={[buttonCls, `${buttonCls}-${option.active ? 'light' : 'solid'}`, `${buttonCls}-disabled`, `${buttonCls}-primary-disabled`, `${buttonCls}-with-icon`, `${buttonCls}-with-icon-only`, `${contentCls}-item-button`, classNames?.itemAction]}
+                                    style={styles?.itemAction}
                                     type="button"
                                 >
                                     <span class={`${buttonCls}-content`}>
@@ -171,7 +172,7 @@
                             {#snippet content()}{text.defaultMcpInfo}{/snippet}
                         </Tooltip>
                     {:else}
-                        <Button aria-label={statusLabel(option)} class={`${contentCls}-item-button`} theme={option.active ? 'light' : 'solid'} type="primary" onclick={() => foundation.handleStatusChange(option, !option.active)}>
+                        <Button aria-label={statusLabel(option)} class={[`${contentCls}-item-button`, classNames?.itemAction]} style={styles?.itemAction} theme={option.active ? 'light' : 'solid'} type="primary" onclick={() => foundation.handleStatusChange(option, !option.active)}>
                             {#snippet icon()}
                                 {#if option.active}<IconMinus />{:else}<IconPlus />{/if}
                             {/snippet}

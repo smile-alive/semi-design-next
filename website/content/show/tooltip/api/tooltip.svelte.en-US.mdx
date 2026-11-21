@@ -14,8 +14,8 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
 | child | Snippet that renders the trigger element itself; spread its `{ props }` on the trigger as a whole (`<button {...props}>`). It wins over children. Use it for every focusable trigger such as Button or Input. | <ApiType detail={"Snippet\u003c[{ props: TooltipTriggerProps }]>"}>Type</ApiType> | - |
 | children | The trigger, written inside the tag; it is wrapped in Tooltip's own span (`semi-tooltip-trigger-wrapper`), which suits text and content that cannot take focus. | `Snippet` | - |
-| class | Class name of the popup. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, ClassValue>>"}>Type</ApiType> | - |
+| class | Class name of the popup. | `ClassValue` | - |
+| classNames | Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed) and `arrow` (the default arrow, not applied when the `arrow` snippet is used); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, ClassValue>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click on the popup or anything inside it closes the popup. | `boolean` | - |
 | clickTriggerToHide | Whether a click on the trigger closes an open popup. | `boolean` | - |
 | closeOnEsc | Whether Esc closes the open popup. With trigger custom it only calls onEscKeyDown and the caller decides whether to close. | `boolean` | `true` |

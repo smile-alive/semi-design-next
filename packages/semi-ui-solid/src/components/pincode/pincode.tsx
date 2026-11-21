@@ -1,6 +1,6 @@
-import { Index, splitProps } from 'solid-js';
+import { type JSX, Index, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/pincode/constants';
+import { cssClasses, type PinCodePart } from '@fibrae/semi-foundation/components/pincode/constants';
 import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/pincode/pincode.scss';
@@ -14,7 +14,9 @@ import { useSpecialTrigger } from '../tooltip/context';
 /** `class`, `style`, `ref` and other attributes go to the role="group" wrapper; the aria states, `id` and `tabindex` to the inputs */
 export interface PinCodeProps extends Omit<PinCodeBaseProps, 'autoFocus'>, ElementProps<'div', 'defaultValue' | 'onChange' | 'onFocus' | 'onBlur'> {
     autofocus?: boolean;
+    classNames?: Partial<Record<PinCodePart, string>>;
     size?: InputSize;
+    styles?: Partial<Record<PinCodePart, JSX.CSSProperties | string>>;
     validateStatus?: ValidateStatus;
     /** Fires as focus enters the code from outside; moving between its inputs does not fire it */
     onFocus?: (e: FocusEvent) => void;
@@ -43,6 +45,7 @@ export default function PinCode(rawProps: PinCodeProps) {
         'aria-required',
         'autofocus',
         'class',
+        'classNames',
         'count',
         'defaultValue',
         'disabled',
@@ -57,6 +60,7 @@ export default function PinCode(rawProps: PinCodeProps) {
         'onFocus',
         'ref',
         'size',
+        'styles',
         // a Tooltip's tabindex on the wrapper would add an extra tab stop
         'tabIndex',
         'tabindex',
@@ -111,6 +115,8 @@ export default function PinCode(rawProps: PinCodeProps) {
                     <Input
                         inputRef={(node) => (inputs[index] = node)}
                         id={index === 0 ? local.id : undefined}
+                        class={local.classNames?.input}
+                        style={local.styles?.input}
                         aria-describedby={local['aria-describedby']}
                         aria-errormessage={local['aria-errormessage']}
                         aria-invalid={local['aria-invalid']}

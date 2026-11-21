@@ -16,6 +16,16 @@ describe('Divider', () => {
         expect(divider).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const view = render(Divider, {
+            props: { classNames: { content: 'my-content' }, styles: { content: { order: 1 } } },
+            slots: { default: () => 'divider title' },
+        });
+        const content = view.container.querySelector('.semi-divider_inner-text');
+        expect(content).toHaveClass('my-content');
+        expect(content).toHaveStyle({ order: '1' });
+    });
+
     it('title 标题', () => {
         const view = render(Divider, { slots: { default: () => 'divider title' } });
         expect(view.container.firstChild).toHaveTextContent(/^divider title$/);

@@ -1,4 +1,5 @@
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { PinCodePart } from '@fibrae/semi-foundation/components/pincode/constants';
 import type { PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
 import type { InputSize, ValidateStatus } from '../input/interface.js';
 
@@ -12,8 +13,10 @@ export interface PinCodeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onfo
     count?: number;
     format?: PinCodeFormat;
     autofocus?: boolean;
+    classNames?: Partial<Record<PinCodePart, ClassValue>>;
     disabled?: boolean;
     size?: InputSize;
+    styles?: Partial<Record<PinCodePart, string>>;
     validateStatus?: ValidateStatus;
     onChange?: (value: string) => void;
     onComplete?: (value: string) => void;

@@ -1,7 +1,7 @@
 import type React from 'react';
 import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
+import { cssClasses, type SwitchPart } from '@fibrae/semi-foundation/components/switch/constants';
 import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
 import { isAriaKey, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/switch/switch.scss';
@@ -18,7 +18,9 @@ export interface SwitchProps extends ElementProps<'div', 'onChange'> {
     onChange?: (checked: boolean, e: React.ChangeEvent<HTMLInputElement>) => void;
     loading?: boolean;
     className?: string;
+    classNames?: Partial<Record<SwitchPart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<SwitchPart, React.CSSProperties>>;
     onMouseEnter?: (e: React.MouseEvent) => any;
     onMouseLeave?: (e: React.MouseEvent) => any;
     size?: Size;
@@ -48,7 +50,9 @@ export default function Switch(rawProps: SwitchProps) {
     const {
         ref,
         className,
+        classNames,
         style,
+        styles,
         onMouseEnter,
         onMouseLeave,
         size,
@@ -101,14 +105,14 @@ export default function Switch(rawProps: SwitchProps) {
 
     return (
         <div {...rest} ref={ref} className={wrapperCls} style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-            {loading ? <Spin className={cssClasses.LOADING_SPIN} size={size === 'default' ? 'middle' : size} /> : <div className={cssClasses.KNOB} aria-hidden />}
+            {loading ? <Spin className={clsx(cssClasses.LOADING_SPIN, classNames?.indicator)} style={styles?.indicator} size={size === 'default' ? 'middle' : size} /> : <div className={clsx(cssClasses.KNOB, classNames?.indicator)} style={styles?.indicator} aria-hidden />}
             {showCheckedText && (
-                <div className={cssClasses.CHECKED_TEXT} x-semi-prop="checkedText">
+                <div className={clsx(cssClasses.CHECKED_TEXT, classNames?.content)} style={styles?.content} x-semi-prop="checkedText">
                     {checkedText}
                 </div>
             )}
             {showUncheckedText && (
-                <div className={cssClasses.UNCHECKED_TEXT} x-semi-prop="uncheckedText">
+                <div className={clsx(cssClasses.UNCHECKED_TEXT, classNames?.content)} style={styles?.content} x-semi-prop="uncheckedText">
                     {uncheckedText}
                 </div>
             )}

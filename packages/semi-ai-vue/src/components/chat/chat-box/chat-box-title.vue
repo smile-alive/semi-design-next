@@ -1,17 +1,20 @@
 <script setup lang="ts">
-    import { h } from 'vue';
+    import { computed, h } from 'vue';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
+    import { useChatContext } from '../context';
     import type { ChatMessage, ChatMetadata, ChatSlots } from '../interface';
 
     const props = defineProps<{ message: ChatMessage; role: ChatMetadata }>();
     defineSlots<Pick<ChatSlots, 'title'>>();
 
-    const titleClass = `${cssClasses.PREFIX_CHAT_BOX}-title`;
+    const { view } = useChatContext();
 
-    const defaultTitle = () => h('span', { class: titleClass }, props.role.name);
+    const titleClass = computed(() => [`${cssClasses.PREFIX_CHAT_BOX}-title`, view.value.classNames?.itemTitle]);
+
+    const defaultTitle = () => h('span', { class: titleClass.value, style: view.value.styles?.itemTitle }, props.role.name);
 </script>
 
 <template>
     <slot v-if="$slots.title" :defaultTitle="defaultTitle()" :message="props.message" name="title" :role="props.role" />
-    <span v-else :class="titleClass">{{ props.role.name }}</span>
+    <span v-else :class="titleClass" :style="view.styles?.itemTitle">{{ props.role.name }}</span>
 </template>

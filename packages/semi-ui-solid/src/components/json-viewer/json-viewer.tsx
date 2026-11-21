@@ -2,7 +2,7 @@ import { type JSX, type Ref, For, Show, createEffect, createMemo, createRenderEf
 import { insert } from 'solid-js/web';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
+import { cssClasses, type JsonViewerPart } from '@fibrae/semi-foundation/components/json-viewer/constants';
 import JsonViewerFoundation, { type CustomRenderRule, type FindMatch, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions, type SearchOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 import { namedRole, toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
@@ -51,8 +51,12 @@ export interface JsonViewerHandle {
 
 export type JsonViewerElement = HTMLDivElement & JsonViewerHandle;
 
+type Style = JSX.CSSProperties | string;
+
 // the editor owns the root's content, so children and raw HTML would clash with it
 export interface JsonViewerProps extends ElementProps<'div', 'onChange' | 'children' | 'innerHTML' | 'textContent' | 'ref'> {
+    classNames?: Partial<Record<JsonViewerPart, string>>;
+    styles?: Partial<Record<JsonViewerPart, Style>>;
     value?: string;
     width?: number | string;
     height?: number | string;
@@ -96,7 +100,7 @@ const defaultProps = {
 
 export default function JsonViewer(rawProps: JsonViewerProps) {
     const props = useDefaultProps('JsonViewer', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['class', 'height', 'limitSearchButtonBounds', 'onChange', 'options', 'ref', 'renderSearchButton', 'showSearch', 'style', 'value', 'width']);
+    const [local, rest] = splitProps(props, ['class', 'classNames', 'height', 'limitSearchButtonBounds', 'onChange', 'options', 'ref', 'renderSearchButton', 'showSearch', 'style', 'styles', 'value', 'width']);
 
     const locale = useLocale('JsonViewer');
 
@@ -217,11 +221,12 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
     const searchFromInput = () => foundation.search(searchInput?.value ?? '');
 
     const searchBox = () => (
-        <search class={`${prefixCls}-search-bar-container`} style={{ position: 'absolute', top: '20px', right: '20px' }} aria-label={locale().locale.search}>
+        <search class={clsx(`${prefixCls}-search-bar-container`, local.classNames?.searchBox)} style={mergeStyles({ position: 'absolute', top: '20px', right: '20px' }, local.styles?.searchBox)} aria-label={locale().locale.search}>
             <div class={`${prefixCls}-search-bar`}>
                 <Input
                     inputRef={(node) => (searchInput = node)}
-                    class={`${prefixCls}-search-bar-input`}
+                    class={clsx(`${prefixCls}-search-bar-input`, local.classNames?.searchInput)}
+                    style={local.styles?.searchInput}
                     aria-label={locale().locale.search}
                     placeholder={locale().locale.search}
                     // the bar lays out a fixed row: the adornments and showClear are set so global Input defaults cannot add them
@@ -238,7 +243,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                     }}
                     onKeyDown={closeOnEscape}
                 />
-                <ul class={`${prefixCls}-search-options`}>
+                <ul class={clsx(`${prefixCls}-search-options`, local.classNames?.searchOptions)} style={local.styles?.searchOptions}>
                     <For each={searchOptionItems}>
                         {(item) => (
                             <li class={clsx(`${prefixCls}-search-options-item`, { [`${prefixCls}-search-options-item-active`]: state().searchOptions[item.key] })}>
@@ -272,7 +277,8 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
             <div class={`${prefixCls}-replace-bar`}>
                 <Input
                     inputRef={(node) => (replaceInput = node)}
-                    class={`${prefixCls}-replace-bar-input`}
+                    class={clsx(`${prefixCls}-replace-bar-input`, local.classNames?.replaceInput)}
+                    style={local.styles?.replaceInput}
                     aria-label={locale().locale.replaceWith}
                     placeholder={locale().locale.replace}
                     addonAfter={null}
@@ -314,8 +320,8 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                 <Show when={!state().showSearchBar} fallback={searchBox()}>
                     <Button
                         ref={(node) => (trigger = node)}
-                        class={`${prefixCls}-search-bar-trigger`}
-                        style={{ position: 'absolute', top: '20px', right: '20px' }}
+                        class={clsx(`${prefixCls}-search-bar-trigger`, local.classNames?.searchTrigger)}
+                        style={mergeStyles({ position: 'absolute', top: '20px', right: '20px' }, local.styles?.searchTrigger)}
                         aria-label={locale().locale.search}
                         icon={<IconSearch />}
                         onClick={(e) => {
@@ -350,7 +356,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
     return (
         // the methods read the editor only when called, so they ride on the root before the editor exists
         <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest)} class={local.class} style={rootStyle()}>
-            <div ref={(node) => (editor = node)} class={clsx(prefixCls, `${prefixCls}-background`)} style={sizeStyle()} />
+            <div ref={(node) => (editor = node)} class={clsx(prefixCls, `${prefixCls}-background`, local.classNames?.editor)} style={mergeStyles(sizeStyle(), local.styles?.editor)} />
             <Show when={local.showSearch}>
                 <Show keyed when={local.renderSearchButton} fallback={defaultSearchButton()}>
                     {/* the button is created only where the render function calls defaultSearchButton */}

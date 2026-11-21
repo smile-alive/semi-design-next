@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+import { cssClasses, type ScrollListItemPart } from '@fibrae/semi-foundation/components/scroll-list/constants';
 import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 import { type ElementProps, type Motion, useDefaultProps, useFoundation } from '../../base/index';
 
@@ -15,8 +15,10 @@ export interface ScrollItemProps<T extends Item> extends ElementProps<'div', 'on
     onSelect?: (data: T & { index: number }) => void;
     transform?: (value: T['value'], text?: string) => string;
     className?: string;
+    classNames?: Partial<Record<ScrollListItemPart, string>>;
     motion?: Motion;
     style?: React.CSSProperties;
+    styles?: Partial<Record<ScrollListItemPart, React.CSSProperties>>;
 }
 
 /** Called by TimePicker and DatePicker to re-centre a column, e.g. after the panel resizes */
@@ -37,7 +39,7 @@ const defaultProps = {
 
 export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> & { ref?: React.Ref<ScrollItemHandle> }) {
     const props = useDefaultProps('ScrollItem', rawProps, defaultProps);
-    const { ref, mode, cycled, list, selectedIndex, onSelect, transform, className, motion, style, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, ...rest } = props;
+    const { ref, mode, cycled, list, selectedIndex, onSelect, transform, className, classNames, motion, style, styles, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, ...rest } = props;
 
     const listRef = useRef<HTMLUListElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -64,6 +66,8 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
     const renderListbox = (options: React.ReactNode, onClick?: (e: React.MouseEvent) => void) => (
         <ul
             ref={listRef}
+            className={classNames?.list}
+            style={styles?.list}
             aria-activedescendant={list[selectedIndex] ? optionId(selectedIndex) : undefined}
             aria-describedby={ariaDescribedby}
             aria-label={ariaLabel}
@@ -87,11 +91,15 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
                 <li
                     key={key}
                     id={copy ? undefined : optionId(index)}
-                    className={clsx({
-                        [`${prefix}-item-sel`]: selected && !isWheel,
-                        [cssClasses.SELECTED]: isWheel && key === state.highlightedKey,
-                        [`${prefix}-item-disabled`]: item.disabled,
-                    })}
+                    className={clsx(
+                        {
+                            [`${prefix}-item-sel`]: selected && !isWheel,
+                            [cssClasses.SELECTED]: isWheel && key === state.highlightedKey,
+                            [`${prefix}-item-disabled`]: item.disabled,
+                        },
+                        classNames?.option
+                    )}
+                    style={styles?.option}
                     aria-disabled={item.disabled}
                     aria-hidden={copy ? true : undefined}
                     aria-selected={selected}
@@ -116,7 +124,7 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
     return (
         <div {...rest} className={clsx(`${prefix}-item-wheel`, className)} style={style}>
             <div className={`${prefix}-shade ${prefix}-shade-pre`} />
-            <div ref={selectorRef} className={`${prefix}-selector`} />
+            <div ref={selectorRef} className={clsx(`${prefix}-selector`, classNames?.selector)} style={styles?.selector} />
             <div className={`${prefix}-shade ${prefix}-shade-post`} />
             <div ref={wrapperRef} className={clsx(`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !cycled })} onScroll={foundation.handleScroll}>
                 {renderListbox(renderItems(), (e) => foundation.handleWheelClick(e.nativeEvent))}

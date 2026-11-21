@@ -1,5 +1,6 @@
 import type { JSX } from 'solid-js';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
+import type { FormPart } from '@fibrae/semi-foundation/components/form/constants';
 import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { ElementProps } from '../../base/index';
 import type { ColProps } from '../grid';
@@ -122,6 +123,8 @@ interface AllFormProps<Values extends Record<string, any> = any, Output = Values
     getFormApi?: (formApi: FormApi<Values, Output>) => void;
     form?: FormApi<Values, Output>;
     extraTextPosition?: 'middle' | 'bottom';
+    classNames?: Partial<Record<FormPart, string>>;
+    styles?: Partial<Record<FormPart, JSX.CSSProperties | string>>;
     layout?: 'horizontal' | 'vertical';
     labelPosition?: 'top' | 'left' | 'inset';
     labelWidth?: number | string;

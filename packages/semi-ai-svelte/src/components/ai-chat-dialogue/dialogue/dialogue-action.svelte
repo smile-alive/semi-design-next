@@ -95,7 +95,7 @@
 {#if context.snippets.action}
     {@render context.snippets.action({ class: wrapCls, defaultActions: Object.values(defaultActionsObj), defaultActionsObj, message })}
 {:else}
-    <div class={wrapCls}>
+    <div class={[wrapCls, context.view.classNames?.itemActions]} style={context.view.styles?.itemActions}>
         {#each barKeys as key (key)}
             {@render actionNodes[key]()}
         {/each}

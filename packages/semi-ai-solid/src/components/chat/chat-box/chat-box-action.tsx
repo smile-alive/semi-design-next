@@ -93,10 +93,14 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
     const shownKeys = createMemo(() => getChatBoxActionKeys(flags()), [], { equals: (a, b) => a.join() === b.join() });
 
     const wrapCls = () =>
-        clsx(PREFIX_CHAT_BOX_ACTION, {
-            [`${PREFIX_CHAT_BOX_ACTION}-show`]: ChatBoxActionFoundation.isActionBarShown({ showReset: flags().showReset, finished: flags().finished, showAction: state().showAction }),
-            [`${PREFIX_CHAT_BOX_ACTION}-hidden`]: !flags().finished,
-        });
+        clsx(
+            PREFIX_CHAT_BOX_ACTION,
+            {
+                [`${PREFIX_CHAT_BOX_ACTION}-show`]: ChatBoxActionFoundation.isActionBarShown({ showReset: flags().showReset, finished: flags().finished, showAction: state().showAction }),
+                [`${PREFIX_CHAT_BOX_ACTION}-hidden`]: !flags().finished,
+            },
+            chat.view().classNames?.itemActions
+        );
 
     // called again when the renderer or the set of buttons changes; what the renderer reads itself is not tracked
     const customActions = () => {
@@ -132,7 +136,7 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
         <Show
             when={props.customRenderFunc}
             fallback={
-                <div class={wrapCls()}>
+                <div class={wrapCls()} style={chat.view().styles?.itemActions}>
                     <For each={shownKeys()}>{(key) => actionNodes[key]()}</For>
                 </div>
             }

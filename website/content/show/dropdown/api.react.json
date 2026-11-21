@@ -59,8 +59,8 @@
                 "en-US": "Dropdown sets this to the menu content, so a value passed here has no effect. Use `render` or `menu` for the content."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `content`（下拉菜单容器 `.semi-dropdown`）、`wrapper`（触发元素被 `span` 包裹时的该 `span`），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `content` (the menu container `.semi-dropdown`) and `wrapper` (the `span` that wraps the trigger when a wrapper is needed); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `wrapper`（触发元素被 `span` 包裹时的该 `span`）、`content`（下拉菜单容器 `.semi-dropdown`）、`menu`（菜单列表 `ul`）、`item`（每个菜单项的 `li`）、`itemIcon`（每个菜单项的图标容器），与组件自带的类名合并。`menu`、`item`、`itemIcon` 对子菜单同样生效，子菜单 Dropdown 自己的排在其后。",
+                "en-US": "Class names of the inner parts, keyed by `wrapper` (the `span` that wraps the trigger when a wrapper is needed), `content` (the menu container `.semi-dropdown`), `menu` (the menu list `ul`), `item` (the `li` of every item) and `itemIcon` (the icon container of every item); merged with the built-in classes. `menu`, `item` and `itemIcon` also apply in submenus, where the submenu Dropdown's own come after."
             },
             "disableFocusListener": {
                 "zh-CN": "`trigger` 为 `hover` 时，是否不响应键盘聚焦打开菜单，默认 `false`。",
@@ -155,8 +155,8 @@
                 "en-US": "Inline style of the menu container `.semi-dropdown`."
             },
             "styles": {
-                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`content` 写在 `style` 之后。",
-                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `content` is applied after `style`."
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`content` 写在 `style` 之后，`menu`、`item`、`itemIcon` 写在对应元素自己的 `style` 之前。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `content` is applied after `style`, while `menu`, `item` and `itemIcon` come before the `style` of the element itself."
             },
             "trigger": {
                 "zh-CN": "触发菜单显示的行为，可选 `hover`、`focus`、`click`、`custom`、`contextMenu`；`custom` 时显示与否完全由 `visible` 决定。",
@@ -222,6 +222,10 @@
                 "zh-CN": "根 `li` 元素的类名。",
                 "en-US": "Class name of the root `li` element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `icon`（图标容器 `.semi-dropdown-item-icon`），与组件自带的类名及 Dropdown 的 `itemIcon` 合并，排在其后。",
+                "en-US": "Class names of the inner parts, keyed by `icon` (the icon container `.semi-dropdown-item-icon`); merged with the built-in classes and the `itemIcon` of the Dropdown, coming after them."
+            },
             "disabled": {
                 "zh-CN": "是否禁用该项；禁用项不响应点击与鼠标事件，并带 `aria-disabled` 为 `true`。",
                 "en-US": "Whether the item is disabled. A disabled item does not respond to clicks or mouse events and has `aria-disabled` `true`."
@@ -261,6 +265,10 @@
             "style": {
                 "zh-CN": "根 `li` 元素的内联样式。",
                 "en-US": "Inline style of the root `li` element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，写在 Dropdown 的 `itemIcon` 之后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; applied after the `itemIcon` of the Dropdown."
             },
             "type": {
                 "zh-CN": "文本颜色类型，可选 `primary`、`secondary`、`tertiary`、`warning`、`danger`。",

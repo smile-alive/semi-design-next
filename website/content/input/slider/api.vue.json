@@ -41,12 +41,12 @@
                 "en-US": "Reverses the vertical direction, so the larger value is on top."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 rail，值的写法同 class，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by rail; values take any class binding and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `rail`、`track`、`handle`、`dot`、`mark`、`dropdown`，值的写法同 class，与组件自带的类名合并；`dropdown` 是悬停、拖动或聚焦手柄时显示当前值的提示弹出层。",
+                "en-US": "Class names of the inner parts, keyed by `rail`, `track`, `handle`, `dot`, `mark` and `dropdown`; values take any class binding and merge with the built-in classes. `dropdown` is the tip popup that shows the current value on hover, drag or focus."
             },
             "styles": {
-                "zh-CN": "内部各部位的样式，键为 rail，值的写法同 style。",
-                "en-US": "Styles of the inner parts, keyed by rail; values take any style binding."
+                "zh-CN": "内部各部位的样式，键同 `classNames`，值的写法同 style。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`; values take any style binding."
             },
             "handleDot": {
                 "zh-CN": "滑块上的圆点，单个滑块传一个对象，range 时按手柄传数组。",

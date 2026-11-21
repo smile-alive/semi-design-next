@@ -1098,6 +1098,32 @@ describe('UserGuide KeepAlive', () => {
     });
 });
 
+describe('UserGuide classNames 与 styles', () => {
+    const parts = ['cover', 'body', 'title', 'description', 'progress', 'indicators', 'footer'] as const;
+    const selectors = {
+        popup: { cover: 'popup-content-cover', body: 'popup-content-body', title: 'popup-content-title', description: 'popup-content-description', progress: 'popup-content-indicator', footer: 'popup-content-footer' },
+        modal: { cover: 'modal-cover', body: 'modal-body', title: 'modal-body-title', description: 'modal-body-description', progress: 'modal-progress', indicators: 'modal-indicator', footer: 'modal-footer' },
+    } as Record<string, Record<string, string>>;
+    const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+    const styles = Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]));
+
+    for (const mode of ['popup', 'modal'] as const) {
+        it(`classNames 与 styles 按部位落到对应元素（${mode}）`, async () => {
+            renderGuide({ classNames, styles, mode }, { cover: coverOfFirst });
+            await screen.findByText('Title A');
+            for (const part of parts) {
+                const selector = selectors[mode][part];
+                if (!selector) {
+                    continue;
+                }
+                const el = $(`.${prefix}-${selector}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        });
+    }
+});
+
 describe('UserGuide 与 ConfigProvider', () => {
     it('ConfigProvider 内的 popup 引导可正常渲染', async () => {
         render(ConfigProvider, {

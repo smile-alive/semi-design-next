@@ -9,6 +9,7 @@
     import { useAnimatedPercent } from './use-progress';
 
     const props = withDefaults(defineProps<ProgressProps & /* @vue-ignore */ ElementProps<'div', keyof ProgressProps>>(), {
+        classNames: semiGlobalDefault('Progress', 'classNames'),
         direction: () => semiDefault('Progress', 'direction', 'horizontal'),
         indeterminate: () => semiDefault('Progress', 'indeterminate', false),
         motion: () => semiDefault('Progress', 'motion', true),
@@ -20,6 +21,7 @@
         strokeGradient: () => semiDefault('Progress', 'strokeGradient', false),
         strokeLinecap: () => semiDefault('Progress', 'strokeLinecap', 'round'),
         strokeWidth: () => semiDefault('Progress', 'strokeWidth', 4),
+        styles: semiGlobalDefault('Progress', 'styles'),
         type: () => semiDefault('Progress', 'type', 'line'),
         width: semiGlobalDefault('Progress', 'width'),
     });
@@ -66,10 +68,10 @@
         ]"
         role="progressbar"
     >
-        <div aria-hidden="true" :class="`${prefixCls}-track`" :style="props.orbitStroke ? { backgroundColor: props.orbitStroke } : undefined">
-            <div aria-hidden="true" :class="[`${prefixCls}-track-inner`, { [`${prefixCls}-track-inner-indeterminate`]: props.indeterminate }]" :style="innerStyle" />
+        <div aria-hidden="true" :class="[`${prefixCls}-track`, props.classNames?.rail]" :style="[props.orbitStroke ? { backgroundColor: props.orbitStroke } : undefined, props.styles?.rail]">
+            <div aria-hidden="true" :class="[`${prefixCls}-track-inner`, props.classNames?.track, { [`${prefixCls}-track-inner-indeterminate`]: props.indeterminate }]" :style="[innerStyle, props.styles?.track]" />
         </div>
-        <div v-if="props.showInfo && !props.indeterminate" :class="`${prefixCls}-line-text`">
+        <div v-if="props.showInfo && !props.indeterminate" :class="[`${prefixCls}-line-text`, props.classNames?.text]" :style="props.styles?.text">
             <slot name="format" :percent="percNumber">{{ percNumber }}%</slot>
         </div>
     </div>
@@ -77,7 +79,7 @@
         <svg :key="props.size" aria-hidden="true" :class="`${prefixCls}-circle-ring`" :height="diameter" :width="diameter">
             <circle
                 aria-hidden="true"
-                :class="`${prefixCls}-circle-ring-track`"
+                :class="[`${prefixCls}-circle-ring-track`, props.classNames?.rail]"
                 :cx="geometry.center"
                 :cy="geometry.center"
                 fill="transparent"
@@ -86,11 +88,11 @@
                 stroke-dashoffset="0"
                 :stroke-linecap="props.strokeLinecap"
                 :stroke-width="props.strokeWidth"
-                :style="{ stroke: props.orbitStroke }"
+                :style="[{ stroke: props.orbitStroke }, props.styles?.rail]"
             />
             <circle
                 aria-hidden="true"
-                :class="[`${prefixCls}-circle-ring-inner`, { [`${prefixCls}-circle-ring-inner-indeterminate`]: props.indeterminate }]"
+                :class="[`${prefixCls}-circle-ring-inner`, props.classNames?.track, { [`${prefixCls}-circle-ring-inner-indeterminate`]: props.indeterminate }]"
                 :cx="geometry.center"
                 :cy="geometry.center"
                 fill="transparent"
@@ -99,10 +101,10 @@
                 :stroke-dashoffset="geometry.strokeDashoffset"
                 :stroke-linecap="props.strokeLinecap"
                 :stroke-width="props.strokeWidth"
-                :style="{ stroke: strokeColor }"
+                :style="[{ stroke: strokeColor }, props.styles?.track]"
             />
         </svg>
-        <span v-if="props.showInfo && props.size !== 'small' && !props.indeterminate" :class="`${prefixCls}-circle-text`">
+        <span v-if="props.showInfo && props.size !== 'small' && !props.indeterminate" :class="[`${prefixCls}-circle-text`, props.classNames?.text]" :style="props.styles?.text">
             <slot name="format" :percent="percNumber">{{ percNumber }}%</slot>
         </span>
     </div>

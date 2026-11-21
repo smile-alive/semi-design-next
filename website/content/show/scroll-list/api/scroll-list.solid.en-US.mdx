@@ -1,8 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property   | Description                                                                | Type               | Default |
-| ---------- | -------------------------------------------------------------------------- | ------------------ | ------- |
-| bodyHeight | Height of the list body; a number is in px. Unset, the stylesheet decides. | `number \| string` | -       |
-| children   | The ScrollItem columns.                                                    | `JSX.Element`      | -       |
-| footer     | Footer content; any JSX element.                                           | `JSX.Element`      | -       |
-| header     | Header content; any JSX element.                                           | `JSX.Element`      | -       |
+| Property   | Description                                                                                                        | Type                                                                                                          | Default |
+| ---------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ------- |
+| bodyHeight | Height of the list body; a number is in px. Unset, the stylesheet decides.                                         | `number \| string`                                                                                            | -       |
+| children   | The ScrollItem columns.                                                                                            | `JSX.Element`                                                                                                 | -       |
+| classNames | Class names of the inner parts, keyed by `header`, `title`, `body` and `footer`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, string>>"}>Type</ApiType>                          | -       |
+| footer     | Footer content; any JSX element.                                                                                   | `JSX.Element`                                                                                                 | -       |
+| header     | Header content; any JSX element.                                                                                   | `JSX.Element`                                                                                                 | -       |
+| styles     | Inline styles of the inner parts, keyed like `classNames`, as style objects or strings.                            | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -       |

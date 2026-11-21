@@ -26,6 +26,44 @@ describe('Pagination', () => {
         expect(nav).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['list', 'total', 'prev', 'next', 'item', 'ellipsis', 'sizeChanger', 'sizeChangerDropdown', 'quickJumper', 'dropdown'] as const;
+        const selectors = {
+            list: `ul.${prefixCls}`,
+            total: `.${prefixCls}-total`,
+            prev: `.${prefixCls}-prev`,
+            next: `.${prefixCls}-next`,
+            item: `.${prefixCls}-item-active`,
+            ellipsis: `.${prefixCls}-item-ellipsis`,
+            sizeChanger: `.${prefixCls}-switch`,
+            sizeChangerDropdown: `.${prefixCls}-select-dropdown`,
+            quickJumper: `.${prefixCls}-quickjump`,
+            dropdown: `.${prefixCls}-rest-list`,
+        };
+        const { container } = render(<Pagination classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} currentPage={10} showQuickJumper showSizeChanger showTotal total={200} />);
+        await userEvent.click(screen.getByRole('combobox'));
+        await userEvent.hover(screen.getAllByRole('button', { name: zh_CN.Pagination.more })[0]);
+        await waitFor(() => expect(document.querySelector(selectors.dropdown)).not.toBeNull());
+        for (const part of parts) {
+            const el = part === 'dropdown' ? document.querySelector(selectors[part]).closest(`.${BASE_CLASS_PREFIX}-popover`) : document.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+        expect(container.querySelector(selectors.ellipsis)).toHaveClass('my-item');
+    });
+
+    it('classNames.dropdown 同样作用于 small 型的页码浮层', async () => {
+        const { container } = render(<Pagination classNames={{ dropdown: 'my-dropdown', item: 'my-item' }} styles={{ dropdown: { order: 3 }, item: { order: 2 } }} hoverShowPageSelect size="small" total={90} />);
+        const counter = container.querySelector(`.${prefixCls}-item-small`);
+        expect(counter).toHaveClass('my-item');
+        expect(counter).toHaveStyle({ order: '2' });
+        await userEvent.hover(counter);
+        await waitFor(() => expect(document.querySelector(`.${prefixCls}-rest-list`)).not.toBeNull());
+        const dropdown = document.querySelector(`.${prefixCls}-rest-list`).closest(`.${BASE_CLASS_PREFIX}-popover`);
+        expect(dropdown).toHaveClass('my-dropdown');
+        expect(dropdown).toHaveStyle({ order: '3' });
+    });
+
     it('渲染 mini pagination', () => {
         const { container } = render(<Pagination size="small" total={90} />);
         expect(container.querySelector(`.${prefixCls}-small`)).not.toBeNull();

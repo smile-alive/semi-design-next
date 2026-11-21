@@ -35,10 +35,10 @@
 
 <template>
     <!-- every control closes the bar on Escape; the landmark takes no keyboard handler -->
-    <SearchLandmark :aria-label="locale.locale.search" :class="`${prefix}-search-bar-container`" style="position: absolute; top: 20px; right: 20px">
+    <SearchLandmark :aria-label="locale.locale.search" :class="[`${prefix}-search-bar-container`, view.classNames?.searchBox]" :style="['position: absolute; top: 20px; right: 20px', view.styles?.searchBox]">
         <div :class="`${prefix}-search-bar`">
-            <Input ref="searchInput" :aria-label="locale.locale.search" :class="`${prefix}-search-bar-input`" composition :placeholder="locale.locale.search" :showClear="false" @change="onSearchInput" @keydown.esc.stop="emit('close')" />
-            <ul :class="`${prefix}-search-options`">
+            <Input ref="searchInput" :aria-label="locale.locale.search" :class="[`${prefix}-search-bar-input`, view.classNames?.searchInput]" composition :placeholder="locale.locale.search" :showClear="false" :style="view.styles?.searchInput" @change="onSearchInput" @keydown.esc.stop="emit('close')" />
+            <ul :class="[`${prefix}-search-options`, view.classNames?.searchOptions]" :style="view.styles?.searchOptions">
                 <li v-for="{ key, icon } in searchOptionItems" :key="key" :class="optionClass(key)">
                     <Button :aria-label="locale.locale[key]" :aria-pressed="view.searchOptions[key]" theme="borderless" type="tertiary" @click="ctx.toggleSearchOption(key)" @keydown.esc.stop="emit('close')">
                         <template #icon>
@@ -66,7 +66,7 @@
             </Button>
         </div>
         <div :class="`${prefix}-replace-bar`">
-            <Input v-model="replaceText" :aria-label="locale.locale.replaceWith" :class="`${prefix}-replace-bar-input`" :placeholder="locale.locale.replace" :showClear="false" @keydown.esc.stop="emit('close')" />
+            <Input v-model="replaceText" :aria-label="locale.locale.replaceWith" :class="[`${prefix}-replace-bar-input`, view.classNames?.replaceInput]" :placeholder="locale.locale.replace" :showClear="false" :style="view.styles?.replaceInput" @keydown.esc.stop="emit('close')" />
             <Button :disabled="view.readOnly" style="width: fit-content" @click="ctx.replace(replaceText)" @keydown.esc.stop="emit('close')">
                 {{ locale.locale.replace }}
             </Button>

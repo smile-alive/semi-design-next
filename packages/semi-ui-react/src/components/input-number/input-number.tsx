@@ -166,6 +166,8 @@ export default function InputNumber(rawProps: InputNumberProps) {
         showCurrencySymbol,
         localeCode: localeCodeProp,
         scientificNotation,
+        classNames,
+        styles,
         ...rest
     } = props;
 
@@ -195,16 +197,27 @@ export default function InputNumber(rawProps: InputNumberProps) {
 
     const buttons = (
         <div
-            className={clsx(`${prefixCls}-number-suffix-btns`, {
-                [`${prefixCls}-number-suffix-btns-inner`]: innerButtons,
-                [`${prefixCls}-number-suffix-btns-inner-hover`]: innerButtons && hovering && !focusing,
-            })}
+            className={clsx(
+                `${prefixCls}-number-suffix-btns`,
+                {
+                    [`${prefixCls}-number-suffix-btns-inner`]: innerButtons,
+                    [`${prefixCls}-number-suffix-btns-inner-hover`]: innerButtons && hovering && !focusing,
+                },
+                classNames?.actions
+            )}
+            style={styles?.actions}
         >
             <span
-                className={clsx(`${prefixCls}-number-button`, `${prefixCls}-number-button-up`, {
-                    [`${prefixCls}-number-button-up-disabled`]: disabled,
-                    [`${prefixCls}-number-button-up-not-allowed`]: notAllowedUp,
-                })}
+                className={clsx(
+                    `${prefixCls}-number-button`,
+                    `${prefixCls}-number-button-up`,
+                    {
+                        [`${prefixCls}-number-button-up-disabled`]: disabled,
+                        [`${prefixCls}-number-button-up-not-allowed`]: notAllowedUp,
+                    },
+                    classNames?.upButton
+                )}
+                style={styles?.upButton}
                 onLostPointerCapture={foundation.handlePressEnd}
                 onMouseDown={foundation.handleStepMouseDown}
                 onPointerDown={foundation.handleUpPress}
@@ -212,10 +225,16 @@ export default function InputNumber(rawProps: InputNumberProps) {
                 <IconChevronUp size="extra-small" />
             </span>
             <span
-                className={clsx(`${prefixCls}-number-button`, `${prefixCls}-number-button-down`, {
-                    [`${prefixCls}-number-button-down-disabled`]: disabled,
-                    [`${prefixCls}-number-button-down-not-allowed`]: notAllowedDown,
-                })}
+                className={clsx(
+                    `${prefixCls}-number-button`,
+                    `${prefixCls}-number-button-down`,
+                    {
+                        [`${prefixCls}-number-button-down-disabled`]: disabled,
+                        [`${prefixCls}-number-button-down-not-allowed`]: notAllowedDown,
+                    },
+                    classNames?.downButton
+                )}
+                style={styles?.downButton}
                 onLostPointerCapture={foundation.handlePressEnd}
                 onMouseDown={foundation.handleStepMouseDown}
                 onPointerDown={foundation.handleDownPress}
@@ -251,8 +270,8 @@ export default function InputNumber(rawProps: InputNumberProps) {
                     {...rest}
                     ref={setInput}
                     // InputNumber's own global defaults apply to the parts, adornments and showClear; the global Input ones must not
-                    classNames={rest.classNames ?? {}}
-                    styles={rest.styles ?? {}}
+                    classNames={classNames ?? {}}
+                    styles={styles ?? {}}
                     disabled={disabled}
                     value={value}
                     addonAfter={addonAfter ?? null}

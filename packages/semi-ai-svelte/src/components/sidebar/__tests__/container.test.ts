@@ -337,3 +337,21 @@ describe('Svelte Sidebar.Container 的 Resizable', () => {
         release();
     });
 });
+
+describe('Svelte Sidebar.Container classNames 与 styles', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'close', 'content'] as const;
+        const selectors = { header: 'container-header', title: 'container-header-title', close: 'container-header-closeBtn', content: 'container-content' };
+        setup({
+            visible: true,
+            title: 't',
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+        });
+        for (const part of parts) {
+            const el = $(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+});

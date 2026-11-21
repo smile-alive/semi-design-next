@@ -18,6 +18,8 @@ export interface PopconfirmProps extends Omit<PopoverProps, 'content'> {
     cancelText?: string;
     cancelType?: ButtonType;
     classNames?: Partial<Record<PopconfirmPart, ClassValue>>;
+    /** `arrow` is the arrow color config of Popover, the other keys are inline style strings */
+    styles?: Partial<Record<Exclude<PopconfirmPart, 'arrow'>, string>> & Pick<NonNullable<PopoverProps['styles']>, 'arrow'>;
     disabled?: boolean;
     okButtonProps?: PopconfirmButtonProps;
     okText?: string;

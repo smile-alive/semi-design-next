@@ -1,5 +1,6 @@
-import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { HookApi } from '@fibrae/semi-foundation/base';
+import type { ToastPart } from '@fibrae/semi-foundation/components/toast/constants';
 import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import type { ElementProps } from '../../base/index';
 
@@ -13,6 +14,9 @@ export type ToastNode = string | VNode | (() => VNodeChild);
 export interface ToastProps extends Omit<FoundationToastProps, 'content' | 'icon' | 'className' | 'style' | 'close'>, ElementProps<'div', 'id' | 'class' | 'style' | 'innerHTML'> {
     id?: string;
     content: ToastNode;
+    /** `icon` lands on a type icon or a Semi icon; a custom icon node of another kind has no element of its own to take it */
+    classNames?: Partial<Record<ToastPart, ClassValue>>;
+    styles?: Partial<Record<ToastPart, StyleValue>>;
     icon?: ToastNode;
     motion?: boolean;
     class?: HTMLAttributes['class'];
@@ -27,6 +31,8 @@ export interface ToastProps extends Omit<FoundationToastProps, 'content' | 'icon
  */
 export interface ToastItemProps extends Omit<FoundationToastProps, 'content' | 'icon' | 'className' | 'style' | 'close' | 'stack' | 'onClose' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex' | 'getPopupContainer'> {
     id?: string;
+    classNames?: Partial<Record<ToastPart, ClassValue>>;
+    styles?: Partial<Record<ToastPart, StyleValue>>;
     content?: ToastNode;
     icon?: ToastNode;
     motion?: boolean;

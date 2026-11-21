@@ -13,27 +13,31 @@
 
     const injected = useDescriptionsContext();
 
+    const prefixCls = cssClasses.PREFIX;
     const horizontal = computed(() => injected?.value.layout === 'horizontal');
     const plain = computed(() => injected?.value.align === 'plain');
-    const prefixCls = cssClasses.PREFIX;
+    const keyClass = computed(() => [`${prefixCls}-key`, injected?.value.classNames?.itemKey, props.classNames?.key]);
+    const keyStyle = computed(() => [injected?.value.styles?.itemKey, props.styles?.key]);
+    const valueClass = computed(() => [`${prefixCls}-value`, injected?.value.classNames?.itemValue, props.classNames?.value]);
+    const valueStyle = computed(() => [injected?.value.styles?.itemValue, props.styles?.value]);
 </script>
 
 <template>
     <component :is="horizontal ? SlotFragment : 'tr'" v-if="!props.hidden" v-bind="horizontal ? {} : $attrs">
         <td v-if="plain" :class="`${prefixCls}-item`" :colspan="props.span || 1">
-            <span :class="[`${prefixCls}-key`, props.classNames?.key]" :style="props.styles?.key"><slot name="itemKey" />:</span>
-            <span :class="`${prefixCls}-value`">
+            <span :class="keyClass" :style="keyStyle"><slot name="itemKey" />:</span>
+            <span :class="valueClass" :style="valueStyle">
                 <slot />
             </span>
         </td>
         <template v-else>
             <th :class="[`${prefixCls}-item`, `${prefixCls}-item-th`]">
-                <span :class="[`${prefixCls}-key`, props.classNames?.key]" :style="props.styles?.key">
+                <span :class="keyClass" :style="keyStyle">
                     <slot name="itemKey" />
                 </span>
             </th>
             <td :class="[`${prefixCls}-item`, `${prefixCls}-item-td`]" :colspan="props.span ? props.span * 2 - 1 : 1">
-                <span :class="`${prefixCls}-value`">
+                <span :class="valueClass" :style="valueStyle">
                     <slot />
                 </span>
             </td>

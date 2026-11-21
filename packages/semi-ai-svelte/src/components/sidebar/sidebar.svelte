@@ -20,6 +20,8 @@
     let {
         visible = $bindable(),
         activeKey = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         title = defaults('title'),
         motion = defaults('motion'),
         resizable = defaults('resizable'),
@@ -104,16 +106,16 @@
     {#if detailHeader}
         {@render detailHeader({ mode, detailContent })}
     {:else}
-        <div class={`${prefix}-detail-header`}>
+        <div class={[`${prefix}-detail-header`, classNames?.header]} style={styles?.header}>
             <span class={cssClasses.DETAIL_HEADER_LEFT}>
-                <Button aria-label={locale().locale.close} theme="borderless" type="tertiary" onclick={(event: MouseEvent) => onBackWard?.(event, strings.MODE.MAIN)}>
+                <Button aria-label={locale().locale.close} class={[`${prefix}-detail-header-back`, classNames?.close]} style={styles?.close} theme="borderless" type="tertiary" onclick={(event: MouseEvent) => onBackWard?.(event, strings.MODE.MAIN)}>
                     {#snippet icon()}<IconClose />{/snippet}
                 </Button>
-                <span class={`${prefix}-detail-header-title`}>{detailContent?.name}</span>
+                <span class={[`${prefix}-detail-header-title`, classNames?.title]} style={styles?.title}>{detailContent?.name}</span>
             </span>
             <span class={`${prefix}-detail-header-right`}>
                 {#if typeof detailContent?.content === 'string'}
-                    <Button aria-label={locale().locale.copy} theme="borderless" type="tertiary" onclick={copyDetail}>
+                    <Button aria-label={locale().locale.copy} class={[`${prefix}-detail-header-copy`, classNames?.copy]} style={styles?.copy} theme="borderless" type="tertiary" onclick={copyDetail}>
                         {#snippet icon()}<IconCopyStroked />{/snippet}
                     </Button>
                 {/if}
@@ -128,6 +130,7 @@
     bind:this={container}
     bind:visible
     class={[isMain ? `${prefix}-main` : `${prefix}-detail`, rest.class]}
+    {classNames}
     {closeOnEsc}
     {defaultSize}
     header={isMain ? undefined : detailHeaderView}
@@ -136,11 +139,12 @@
     {motion}
     {resizable}
     {showClose}
+    {styles}
     title={isMain ? title : undefined}
 >
     {#if isMain}
         <div class={`${prefix}-main-content-wrapper`}>
-            <div class={optionsCls}>
+            <div class={[optionsCls, classNames?.options]} style={styles?.options}>
                 {#each options ?? [] as option, index (option.key)}
                     {#if optionItem}
                         {@render optionItem({ active: activeKey === option.key, index, item: option, onClick: (event) => selectOption(event, option) })}
@@ -148,13 +152,13 @@
                         {#snippet optionIconView()}
                             {@render optionIcon?.({ item: option, index })}
                         {/snippet}
-                        <Button aria-pressed={activeKey === option.key} class={[`${optionsCls}-button`, { [`${optionsCls}-normal`]: activeKey !== option.key }]} icon={optionIcon ? optionIconView : undefined} onclick={(event: MouseEvent) => selectOption(event, option)}>
+                        <Button aria-pressed={activeKey === option.key} class={[`${optionsCls}-button`, { [`${optionsCls}-normal`]: activeKey !== option.key }, classNames?.option]} icon={optionIcon ? optionIconView : undefined} style={styles?.option} onclick={(event: MouseEvent) => selectOption(event, option)}>
                             {option.name}
                         </Button>
                     {/if}
                 {/each}
             </div>
-            <div class={`${prefix}-main-content`}>
+            <div class={[`${prefix}-main-content`, classNames?.mainContent]} style={styles?.mainContent}>
                 {@render mainContent?.({ activeKey })}
             </div>
         </div>

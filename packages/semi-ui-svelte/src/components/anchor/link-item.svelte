@@ -46,13 +46,13 @@
     {/if}
 {/snippet}
 
-<div class={`${prefixCls}-link`} role="listitem">
+<div class={[`${prefixCls}-link`, anchor.classNames?.item]} role="listitem" style={anchor.styles?.item}>
     <div
         aria-current={active ? 'location' : undefined}
         aria-disabled={Boolean(item.disabled)}
-        class={[`${prefixCls}-link-title`, { [cssClasses.LINK_TITLE_ACTIVE]: active, [`${prefixCls}-link-title-disabled`]: item.disabled }]}
+        class={[`${prefixCls}-link-title`, { [cssClasses.LINK_TITLE_ACTIVE]: active, [`${prefixCls}-link-title-disabled`]: item.disabled }, anchor.classNames?.itemTitle, item.classNames?.title]}
         role="link"
-        style={`padding-inline-start: ${8 * level}px`}
+        style={[`padding-inline-start: ${8 * level}px`, anchor.styles?.itemTitle, item.styles?.title].filter(Boolean).join('; ')}
         tabindex="0"
         title={(!anchor.showTooltip && !anchor.title && item.title) || undefined}
         onclick={handleClick}

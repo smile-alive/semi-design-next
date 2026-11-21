@@ -1,8 +1,11 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { TypographyTextPart } from '@fibrae/semi-foundation/components/typography/constants';
 import type { Ellipsis, TypographyBaseSize, TypographyCommonProps, TypographyCopySnippets, TypographyEllipsisSnippets } from './interface.js';
 
 export interface TypographyBaseProps extends HTMLAttributes<HTMLElement>, TypographyCommonProps, TypographyCopySnippets, TypographyEllipsisSnippets {
+    classNames?: Partial<Record<TypographyTextPart, ClassValue>>;
+    styles?: Partial<Record<TypographyTextPart, string>>;
     code?: boolean;
     ellipsis?: Ellipsis | boolean;
     size?: TypographyBaseSize;

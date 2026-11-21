@@ -554,11 +554,23 @@ describe('Table 行为基线', () => {
             { title: 'Name', dataIndex: 'name', onHeaderCell: () => ({ style: { color: 'blue' } }) },
             { title: 'Age', dataIndex: 'age' },
         ];
-        render(() => <Table classNames={{ header: 'custom-head' }} styles={{ header: { color: 'red', 'font-weight': 700 } }} columns={columns} dataSource={smallData()} pagination={false} />);
+        const parts = ['header', 'title', 'row', 'cell', 'footer', 'pagination', 'empty'] as const;
+        const selectors = { header: `.${P}-thead .${P}-row-head`, title: `.${P}-title`, row: `.${P}-tbody .${P}-row`, cell: `.${P}-row-cell`, footer: `.${P}-footer`, pagination: `.${P}-pagination-outer`, empty: `.${P}-empty` };
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]));
+        render(() => <Table classNames={classNames} styles={{ ...styles, header: { ...styles.header, color: 'red' } }} columns={columns} dataSource={smallData()} pagination={{ pageSize: 10 }} title="t" footer="f" />);
+        render(() => <Table classNames={classNames} styles={styles} columns={columns} dataSource={[]} pagination={false} />);
+        for (const part of parts) {
+            const els = queryAll(selectors[part]);
+            expect(els.length).toBeGreaterThan(0);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
         const heads = queryAll(`.${P}-thead .${P}-row-head`);
-        expect(heads[0]).toHaveClass('custom-head', `${P}-row-head`);
-        expect(heads[1]).toHaveClass('custom-head');
-        expect(heads[0]).toHaveStyle({ color: 'rgb(0, 0, 255)', fontWeight: '700' });
+        expect(heads[0]).toHaveClass('my-header', `${P}-row-head`);
+        expect(heads[0]).toHaveStyle({ color: 'rgb(0, 0, 255)' });
         expect(heads[1]).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 });

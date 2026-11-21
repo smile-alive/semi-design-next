@@ -63,9 +63,17 @@
                 "zh-CN": "头像，位于标题与描述的左侧。",
                 "en-US": "Avatar, to the left of the title and description."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 avatar、section、title、description，与组件自带的类名合并；section 是标题与描述所在的文字区域。",
+                "en-US": "Class names of the inner parts, keyed by avatar, section, title and description; merged with the built-in classes. section is the text area holding the title and description."
+            },
             "description": {
                 "zh-CN": "描述内容，位于标题之下。",
                 "en-US": "Description, below the title."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
             },
             "title": {
                 "zh-CN": "标题内容。",

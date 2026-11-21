@@ -14,6 +14,10 @@
                 "zh-CN": "按钮内的静态内容，传入时代替 `icon` 显示。不能包含链接、按钮、输入框等可交互元素，开发环境下检测到会警告。",
                 "en-US": "Static content of the button, shown in place of `icon` when passed. It must not contain interactive elements such as links, buttons or inputs; a warning is logged in development when it does."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `body`（按钮内承载图标或 `children` 的容器 `.semi-floatButton-body`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `body` (the container of the icon or `children` inside the button, `.semi-floatButton-body`); merged with the built-in classes."
+            },
             "colorful": {
                 "zh-CN": "多彩按钮，同 FloatButton。",
                 "en-US": "Colorful button, same as FloatButton."
@@ -41,6 +45,10 @@
             "size": {
                 "zh-CN": "尺寸，可选 default、small、large；未设置时取 FloatButton 的默认值。",
                 "en-US": "Size: default, small or large. Falls back to the FloatButton default when unset."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，接受对象（键用 kebab-case）或字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as an object with kebab-case keys or a string."
             },
             "target": {
                 "zh-CN": "返回被监听滚动元素的函数，未设置时为 window；返回 null 表示节点尚不可用。挂载后调用一次，此时父容器的 ref 已可读取；之后只在函数本身变化时重新调用。稳定的函数晚于挂载才返回元素时，需要重新挂载 BackTop。",

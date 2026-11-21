@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale';
     import { IconHandle } from '@fibrae/semi-icons-svelte';
@@ -18,6 +19,8 @@
         draggableActive,
         withHandle,
         tag,
+        tagClass,
+        tagStyle,
         onClose,
     }: {
         value: string;
@@ -28,6 +31,9 @@
         draggableActive: boolean;
         withHandle: boolean;
         tag?: Snippet<[TagInputTagSnippetProps]>;
+        /** `classNames.tag` and `styles.tag` of the TagInput */
+        tagClass?: ClassValue;
+        tagStyle?: string;
         onClose: (event?: Event) => void;
     } = $props();
 
@@ -44,7 +50,16 @@
     {#if tag}
         {@render tag({ value, index, onClose })}
     {:else}
-        <Tag aria-label={tagLabel} class={[`${prefix}-wrapper-tag`, `${prefix}-wrapper-tag-size-${size}`, { [`${prefix}-wrapper-tag-icon`]: draggableActive && !withHandle }]} closable={!disabled} color="white" onClose={(event) => onClose(event)} size={size === 'small' ? 'small' : 'large'} type="light">
+        <Tag
+            aria-label={tagLabel}
+            class={[`${prefix}-wrapper-tag`, `${prefix}-wrapper-tag-size-${size}`, { [`${prefix}-wrapper-tag-icon`]: draggableActive && !withHandle }, tagClass]}
+            closable={!disabled}
+            color="white"
+            onClose={(event) => onClose(event)}
+            size={size === 'small' ? 'small' : 'large'}
+            style={tagStyle}
+            type="light"
+        >
             <TypographyParagraph class={[`${prefix}-wrapper-typo`, { [`${prefix}-wrapper-typo-disabled`]: disabled }]} {ellipsis}>{value}</TypographyParagraph>
         </Tag>
     {/if}

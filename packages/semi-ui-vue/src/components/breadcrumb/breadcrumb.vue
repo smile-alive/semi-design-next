@@ -36,12 +36,14 @@
     const props = withDefaults(defineProps<BreadcrumbProps & /* @vue-ignore */ ElementProps<'nav', keyof BreadcrumbProps>>(), {
         activeIndex: semiGlobalDefault('Breadcrumb', 'activeIndex'),
         autoCollapse: () => semiDefault('Breadcrumb', 'autoCollapse', true),
+        classNames: semiGlobalDefault('Breadcrumb', 'classNames'),
         compact: () => semiDefault('Breadcrumb', 'compact', true),
         maxItemCount: () => semiDefault('Breadcrumb', 'maxItemCount', 4),
         moreType: () => semiDefault('Breadcrumb', 'moreType', 'default'),
         routes: () => semiDefault('Breadcrumb', 'routes', []),
         separator: () => semiDefault('Breadcrumb', 'separator', '/'),
         showTooltip: () => semiDefault('Breadcrumb', 'showTooltip', DEFAULT_TOOLTIP),
+        styles: semiGlobalDefault('Breadcrumb', 'styles'),
         onClick: undefined,
     });
 
@@ -68,6 +70,8 @@
             showTooltip: props.showTooltip,
             separator: props.separator,
             hasOnClick: Boolean(props.onClick),
+            classNames: props.classNames,
+            styles: props.styles,
         })),
         onClick: (info, e) => props.onClick?.(info, e),
         separatorSlot: () => slots.separator?.(),
@@ -137,13 +141,21 @@
 
 <template>
     <nav ref="root" v-bind="$attrs" :aria-label="($attrs['aria-label'] as string | undefined) ?? locale.locale.label" :class="[`${prefix}-wrapper`, props.compact ? `${prefix}-wrapper-compact` : `${prefix}-wrapper-loose`]">
-        <ol ref="list" :class="`${prefix}-list`">
+        <ol ref="list" :class="[`${prefix}-list`, props.classNames?.list]" :style="props.styles?.list">
             <template v-for="(view, v) in [layout()]" :key="v">
                 <!-- The key sits on each entry's fragment, so the branches inside cannot replace an item's own key. -->
                 <template v-for="entry in view.items" :key="entry.key">
                     <li v-if="entry.kind === 'more'" :ref="handoverFocus" :class="`${prefix}-collapse`">
                         <span :class="`${prefix}-item-wrap`">
-                            <span :aria-label="locale.locale.expand" :class="[`${prefix}-item`, `${prefix}-item-more`]" role="button" tabindex="0" @click="foundation.handleExpand" @keydown="foundation.handleExpandKeyDown($event as KeyboardEvent & { currentTarget: Node })">
+                            <span
+                                :aria-label="locale.locale.expand"
+                                :class="[`${prefix}-item`, `${prefix}-item-more`, props.classNames?.more]"
+                                role="button"
+                                :style="props.styles?.more"
+                                tabindex="0"
+                                @click="foundation.handleExpand"
+                                @keydown="foundation.handleExpandKeyDown($event as KeyboardEvent & { currentTarget: Node })"
+                            >
                                 <slot v-if="$slots.more" name="more" :restItems="restItems(view)" />
                                 <IconMore v-else-if="props.moreType === 'default'" />
                                 <Popover v-else showArrow :style="{ padding: '12px' }">
@@ -161,7 +173,7 @@
                                     </template>
                                 </Popover>
                             </span>
-                            <span :class="`${prefix}-separator`" x-semi-prop="separator">
+                            <span :class="[`${prefix}-separator`, props.classNames?.separator]" :style="props.styles?.separator" x-semi-prop="separator">
                                 <slot name="separator">{{ props.separator }}</slot>
                             </span>
                         </span>

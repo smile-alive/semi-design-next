@@ -19,6 +19,8 @@ import { ReasoningWidget } from './content-item/reasoning';
 import { ReferenceWidget } from './content-item/reference';
 
 interface FileAttachmentProps extends InputFile {
+    className?: string;
+    style?: React.CSSProperties;
     onFileClick?: (file: InputFile) => void;
     disabledFileItemClick?: boolean;
     role?: string;
@@ -32,14 +34,19 @@ const { STATUS, ROLE, MESSAGE_ITEM_TYPE, TEXT_TYPES } = strings;
 
 const FILE_ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo, default: IconFile } satisfies Record<DialogueIconKind | 'default', unknown>;
 
-const ImageAttachment = React.memo(function ImageAttachment({ src, isList, msg, onImageClick, isLastImage }: { src: string; isList: boolean; msg: InputImage; onImageClick?: (msg: InputImage) => void; isLastImage?: boolean }) {
+const ImageAttachment = React.memo(function ImageAttachment({ src, isList, msg, onImageClick, isLastImage, className, style }: { src: string; isList: boolean; msg: InputImage; onImageClick?: (msg: InputImage) => void; isLastImage?: boolean; className?: string; style?: React.CSSProperties }) {
     const { locale } = useLocale('AIChatDialogue');
     return (
         <Image
-            className={clsx(`${PREFIX_CONTENT}-img`, {
-                [`${PREFIX_CONTENT}-img-list`]: isList,
-                [`${PREFIX_CONTENT}-img-last`]: isLastImage,
-            })}
+            className={clsx(
+                `${PREFIX_CONTENT}-img`,
+                {
+                    [`${PREFIX_CONTENT}-img-list`]: isList,
+                    [`${PREFIX_CONTENT}-img-last`]: isLastImage,
+                },
+                className
+            )}
+            style={style}
             alt={locale.image}
             src={src}
             onClick={() => {
@@ -50,7 +57,7 @@ const ImageAttachment = React.memo(function ImageAttachment({ src, isList, msg, 
 });
 
 const FileAttachment = React.memo(function FileAttachment(props: FileAttachmentProps) {
-    const { onFileClick, disabledFileItemClick, role, onReferenceClick, showReference, isLastFile, ...restProps } = props;
+    const { onFileClick, disabledFileItemClick, role, onReferenceClick, showReference, isLastFile, className, style, ...restProps } = props;
     const { locale } = useLocale('AIChatDialogue');
     const realType = getFileType(restProps.filename, restProps.fileInstance?.type);
     const kind = getDialogueFileKind(realType) ?? 'default';
@@ -71,9 +78,14 @@ const FileAttachment = React.memo(function FileAttachment(props: FileAttachmentP
 
     return (
         <a
-            className={clsx(`${PREFIX_CONTENT}-file`, {
-                [`${PREFIX_CONTENT}-file-last`]: isLastFile,
-            })}
+            className={clsx(
+                `${PREFIX_CONTENT}-file`,
+                {
+                    [`${PREFIX_CONTENT}-file-last`]: isLastFile,
+                },
+                className
+            )}
+            style={style}
             href={restProps?.file_url}
             rel="noreferrer"
             target="_blank"
@@ -125,7 +137,7 @@ const ToolCallWidget = React.memo(function ToolCallWidget(props: FunctionToolCal
     );
 });
 
-function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, markdownRenderProps, editing, messageEditRender, showReference, onFileClick, onImageClick, disabledFileItemClick, renderDialogueContentItem, onAnnotationClick, onReferenceClick, escapeHtml }: DialogueContentProps) {
+function DialogueContent({ classNames, styles, message, customRenderFunc, role: roleInfo, mode, markdownRenderProps, editing, messageEditRender, showReference, onFileClick, onImageClick, disabledFileItemClick, renderDialogueContentItem, onAnnotationClick, onReferenceClick, escapeHtml }: DialogueContentProps) {
     const { locale } = useLocale('AIChatDialogue');
 
     const { content, role, status, references } = message;
@@ -136,7 +148,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
     const loadingNode = useMemo(() => {
         if (awaitingOutput) {
             return (
-                <span className={`${PREFIX_CONTENT}-loading`}>
+                <span className={clsx(`${PREFIX_CONTENT}-loading`, classNames?.loading)} style={styles?.loading}>
                     <span className={`${PREFIX_CONTENT}-loading-item`} />
                     <span className={`${PREFIX_CONTENT}-loading-item`} />
                     <span className={`${PREFIX_CONTENT}-loading-item`} />
@@ -148,7 +160,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
         } else {
             return null;
         }
-    }, [awaitingOutput]);
+    }, [awaitingOutput, classNames?.loading, styles?.loading]);
 
     const customRenderer = useCallback(
         (type: string, key: React.Key, item: ContentItem) => {
@@ -200,6 +212,8 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
                         <React.Fragment key={`msg-${index}-${innerIdx}`}>
                             {annotations.length > 0 && (
                                 <AnnotationWidget
+                                    className={classNames?.annotation}
+                                    style={styles?.annotation}
                                     annotation={annotations}
                                     // Known limitation: the count is fixed; make it configurable when needed
                                     maxCount={15}
@@ -215,7 +229,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
                     const { isLast, breakAfter } = getAttachmentLayout(inner, innerIdx);
                     return (
                         <React.Fragment key={`msg-${index}-${innerIdx}`}>
-                            <ImageAttachment isLastImage={isLast} isList={imageList} msg={i} src={(i as InputImage).image_url} onImageClick={onImageClick} />
+                            <ImageAttachment className={classNames?.image} style={styles?.image} isLastImage={isLast} isList={imageList} msg={i} src={(i as InputImage).image_url} onImageClick={onImageClick} />
                             {breakAfter && <br />}
                         </React.Fragment>
                     );
@@ -224,7 +238,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
                     const { isLast, breakAfter } = getAttachmentLayout(inner, innerIdx);
                     return (
                         <React.Fragment key={`msg-${index}-${innerIdx}`}>
-                            <FileAttachment {...i} role={role} disabledFileItemClick={!!disabledFileItemClick} isLastFile={isLast} showReference={showReference} onFileClick={onFileClick} onReferenceClick={onReferenceClick} />
+                            <FileAttachment {...i} className={classNames?.file} style={styles?.file} role={role} disabledFileItemClick={!!disabledFileItemClick} isLastFile={isLast} showReference={showReference} onFileClick={onFileClick} onReferenceClick={onReferenceClick} />
                             {breakAfter && <br />}
                         </React.Fragment>
                     );
@@ -232,7 +246,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
                 return null;
             });
         },
-        [renderMarkdown, customRenderer, onAnnotationClick, onImageClick, onFileClick, disabledFileItemClick, role, onReferenceClick, showReference]
+        [renderMarkdown, customRenderer, classNames, styles, onAnnotationClick, onImageClick, onFileClick, disabledFileItemClick, role, onReferenceClick, showReference]
     );
 
     const renderToolCall = useCallback((item: ContentItem, index: number) => <ToolCallWidget key={`tool-${index}`} {...(item as FunctionToolCall | CustomToolCall)} />, []);
@@ -241,11 +255,13 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
         () =>
             ({
                 [MESSAGE_ITEM_TYPE.MESSAGE]: (item: ContentItem, index: number) => renderMessage(item, index),
-                [MESSAGE_ITEM_TYPE.REASONING]: (item: ContentItem, index: number) => <ReasoningWidget key={`reason-${index}`} content={(item as Reasoning).content} markdownRenderProps={markdownRenderProps} status={(item as Reasoning).status} summary={(item as Reasoning).summary} />,
+                [MESSAGE_ITEM_TYPE.REASONING]: (item: ContentItem, index: number) => (
+                    <ReasoningWidget key={`reason-${index}`} className={classNames?.reasoning} style={styles?.reasoning} content={(item as Reasoning).content} markdownRenderProps={markdownRenderProps} status={(item as Reasoning).status} summary={(item as Reasoning).summary} />
+                ),
                 [MESSAGE_ITEM_TYPE.FUNCTION_CALL]: renderToolCall,
                 [MESSAGE_ITEM_TYPE.CUSTOM_TOOL_CALL]: renderToolCall,
             }) as Record<string, (item: ContentItem, index: number) => React.ReactNode>,
-        [renderMessage, markdownRenderProps, renderToolCall]
+        [renderMessage, classNames?.reasoning, styles?.reasoning, markdownRenderProps, renderToolCall]
     );
 
     const node = useMemo(() => {
@@ -299,7 +315,7 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
 
     const defaultContent = (
         <>
-            {references && references.length > 0 && !editing && <ReferenceWidget references={references} />}
+            {references && references.length > 0 && !editing && <ReferenceWidget className={classNames?.references} style={styles?.references} references={references} />}
             {node}
             {loadingNode}
         </>
@@ -316,9 +332,14 @@ function DialogueContent({ message, customRenderFunc, role: roleInfo, mode, mark
 
     return (
         <div
-            className={clsx(`${PREFIX_CONTENT}`, {
-                [`${PREFIX_CONTENT}-editing`]: editing,
-            })}
+            className={clsx(
+                `${PREFIX_CONTENT}`,
+                {
+                    [`${PREFIX_CONTENT}-editing`]: editing,
+                },
+                classNames?.itemContent
+            )}
+            style={styles?.itemContent}
         >
             {defaultContent}
         </div>

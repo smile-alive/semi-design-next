@@ -21,8 +21,10 @@
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<ToastItemProps>(), {
+        classNames: semiGlobalDefault('Toast', 'classNames'),
         content: undefined,
         icon: undefined,
+        styles: semiGlobalDefault('Toast', 'styles'),
         type: semiGlobalDefault('Toast', 'type'),
         theme: () => semiDefault('Toast', 'theme', 'normal'),
         duration: () => semiDefault('Toast', 'duration', numbers.duration),
@@ -97,16 +99,16 @@
             :role="role"
             :style="{ transform: getStackLayerTransform(props.positionInList) }"
         >
-            <div :class="`${prefix}-content`">
+            <div :class="[`${prefix}-content`, props.classNames?.content]" :style="props.styles?.content">
                 <template v-if="icon && typeof icon === 'string'">{{ icon }}</template>
-                <component :is="icon" v-else-if="elementType(icon) === 'Icon'" :class="`${prefix}-icon`" :size="iconSize(icon)" />
+                <component :is="icon" v-else-if="elementType(icon) === 'Icon'" :class="[`${prefix}-icon`, props.classNames?.icon]" :size="iconSize(icon)" :style="props.styles?.icon" />
                 <component :is="icon" v-else-if="icon" />
-                <component :is="typeIcon" v-else-if="typeIcon" :class="[`${prefix}-icon`, `${prefix}-icon-${props.type}`]" size="large" />
-                <span :class="`${prefix}-content-text`" :style="{ maxWidth: toCssLength(props.textMaxWidth) }" x-semi-prop="content">
+                <component :is="typeIcon" v-else-if="typeIcon" :class="[`${prefix}-icon`, `${prefix}-icon-${props.type}`, props.classNames?.icon]" size="large" :style="props.styles?.icon" />
+                <span :class="[`${prefix}-content-text`, props.classNames?.text]" :style="[{ maxWidth: toCssLength(props.textMaxWidth) }, props.styles?.text]" x-semi-prop="content">
                     <template v-if="typeof content === 'string'">{{ content }}</template>
                     <component :is="content" v-else-if="content" />
                 </span>
-                <div v-if="props.showClose" :class="`${prefix}-close-button`">
+                <div v-if="props.showClose" :class="[`${prefix}-close-button`, props.classNames?.close]" :style="props.styles?.close">
                     <IconButton :aria-label="locale.locale.close" size="small" theme="borderless" type="tertiary" @click="close">
                         <template #icon>
                             <IconClose x-semi-prop="icon" />

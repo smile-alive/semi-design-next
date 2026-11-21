@@ -1,5 +1,5 @@
-import type { VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { strings, TagPart } from '@fibrae/semi-foundation/components/tag/constants';
 import type { PopoverProps } from '../popover/interface';
 
 export type TagColor = (typeof strings.TAG_COLOR)[number];
@@ -10,6 +10,8 @@ export type TagShape = 'circle' | 'square';
 export type TagCloseEvent = MouseEvent | KeyboardEvent;
 
 export interface TagProps {
+    classNames?: Partial<Record<TagPart, ClassValue>>;
+    styles?: Partial<Record<TagPart, StyleValue>>;
     tabindex?: number;
     tagKey?: string | number;
     size?: TagSize;

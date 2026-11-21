@@ -1,7 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性        | 说明                     | 类型                | 默认值 |
-| ----------- | ------------------------ | ------------------- | ------ |
-| avatar      | 头像。                   | `Snippet`           | -      |
-| description | 描述。                   | `Snippet`           | -      |
-| title       | 标题，字符串或 snippet。 | `string \| Snippet` | -      |
+| 属性        | 说明                                                                                                                                                           | 类型                                                                                   | 默认值 |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------ |
+| avatar      | 头像。                                                                                                                                                         | `Snippet`                                                                              | -      |
+| classNames  | 内部各部位的类名，键为 avatar、section、title、description，值的写法同 class（字符串、数组或对象），与组件自带的类名合并；section 是标题与描述所在的文字区域。 | <ApiType detail={"Partial\u003cRecord\u003cCardMetaPart, ClassValue>>"}>Type</ApiType> | -      |
+| description | 描述。                                                                                                                                                         | `Snippet`                                                                              | -      |
+| styles      | 内部各部位的样式字符串，键同 classNames。                                                                                                                      | <ApiType detail={"Partial\u003cRecord\u003cCardMetaPart, string>>"}>Type</ApiType>     | -      |
+| title       | 标题，字符串或 snippet。                                                                                                                                       | `string \| Snippet`                                                                    | -      |

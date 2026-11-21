@@ -12,6 +12,8 @@
         visible = $bindable(),
         options = $bindable(),
         customOptions = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         title = defaults('title'),
         motion = defaults('motion'),
         resizable = defaults('resizable'),
@@ -43,6 +45,6 @@
     }
 </script>
 
-<Container {...rest} bind:this={container} bind:visible {closeOnEsc} {defaultSize} {maxWidth} {minWidth} {motion} {resizable} {showClose} title={title ?? locale().locale.mcpConfigure}>
-    <MCPConfigureContent bind:customOptions bind:options {desc} {filter} {icon} {item} {onAddClick} {onConfigureClick} {onEditClick} {onSearch} {onStatusChange} {placeholder} />
+<Container {...rest} bind:this={container} bind:visible {classNames} {closeOnEsc} {defaultSize} {maxWidth} {minWidth} {motion} {resizable} {showClose} {styles} title={title ?? locale().locale.mcpConfigure}>
+    <MCPConfigureContent bind:customOptions bind:options {classNames} {desc} {filter} {icon} {item} {onAddClick} {onConfigureClick} {onEditClick} {onSearch} {onStatusChange} {placeholder} {styles} />
 </Container>

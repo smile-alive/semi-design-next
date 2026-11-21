@@ -4,10 +4,10 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
     import { IconTick } from '@fibrae/semi-icons-svelte';
-    import { getDropdownContext, menuItems } from './context.js';
+    import { getDropdownContext, joinStyles, menuItems } from './context.js';
     import type { DropdownItemProps } from './interface.js';
 
-    let { active = false, disabled = false, showTick, type, icon, children, ...rest }: DropdownItemProps = $props();
+    let { active = false, disabled = false, showTick, type, icon, classNames, styles, children, ...rest }: DropdownItemProps = $props();
 
     const ctx = getDropdownContext();
 
@@ -62,8 +62,10 @@
             [`${prefix}-item-${type}`]: type,
             [`${prefix}-item-active`]: active,
         },
+        ctx?.view.classNames?.item,
     ]}
     {role}
+    style={joinStyles(ctx?.view.styles?.item, rest.style)}
     tabindex={-1}
     onclick={handleClick}
     onmousedown={handleMouseDown}
@@ -73,7 +75,7 @@
         <IconTick style={active ? undefined : 'color: transparent'} />
     {/if}
     {#if icon}
-        <div class={`${prefix}-item-icon`}>{@render icon()}</div>
+        <div class={[`${prefix}-item-icon`, ctx?.view.classNames?.itemIcon, classNames?.icon]} style={joinStyles(ctx?.view.styles?.itemIcon, styles?.icon)}>{@render icon()}</div>
     {/if}
     {@render children?.()}
 </li>

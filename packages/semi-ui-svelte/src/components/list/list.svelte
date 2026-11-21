@@ -13,12 +13,14 @@
 
     let {
         bordered = defaults('bordered', false),
+        classNames = defaults('classNames'),
         dataSource = defaults('dataSource') as T[] | undefined,
         grid = defaults('grid'),
         layout = defaults('layout', 'vertical'),
         loading = defaults('loading', false),
         size = defaults('size', 'default'),
         split = defaults('split', true),
+        styles = defaults('styles'),
         onClick = defaults('onClick'),
         onRightClick = defaults('onRightClick'),
         item,
@@ -39,6 +41,12 @@
         get grid() {
             return grid;
         },
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
         get onClick() {
             return onClick;
         },
@@ -57,14 +65,14 @@
 
 <div {...rest} class={[prefixCls, rest.class, { [`${prefixCls}-flex`]: layout === 'horizontal' }, `${prefixCls}-${size}`, { [`${prefixCls}-grid`]: grid, [`${prefixCls}-split`]: split, [`${prefixCls}-bordered`]: bordered }]} role={namedRole(rest)}>
     {#if header}
-        <div class={`${prefixCls}-header`} x-semi-prop="header">{@render header()}</div>
+        <div class={[`${prefixCls}-header`, classNames?.header]} style={styles?.header} x-semi-prop="header">{@render header()}</div>
     {/if}
     <Spin size="large" spinning={loading}>
         {#if showEmpty}
             {#if emptyContent}
-                <div class={`${prefixCls}-empty`} x-semi-prop="emptyContent">{@render emptyContent()}</div>
+                <div class={[`${prefixCls}-empty`, classNames?.empty]} style={styles?.empty} x-semi-prop="emptyContent">{@render emptyContent()}</div>
             {:else}
-                <div class={`${prefixCls}-empty`}>{locale().locale.emptyText}</div>
+                <div class={[`${prefixCls}-empty`, classNames?.empty]} style={styles?.empty}>{locale().locale.emptyText}</div>
             {/if}
         {:else if grid}
             <Row align={grid.align} gutter={grid.gutter} justify={grid.justify} role="list">
@@ -77,7 +85,7 @@
         {/if}
     </Spin>
     {#if footer}
-        <div class={`${prefixCls}-footer`} x-semi-prop="footer">{@render footer()}</div>
+        <div class={[`${prefixCls}-footer`, classNames?.footer]} style={styles?.footer} x-semi-prop="footer">{@render footer()}</div>
     {/if}
     {@render loadMore?.()}
 </div>

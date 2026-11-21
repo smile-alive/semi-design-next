@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
+import React, { cloneElement, isValidElement, memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+import { cssClasses, type BreadcrumbItemPart } from '@fibrae/semi-foundation/components/breadcrumb/constants';
 import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter, type Route, type BreadcrumbItemInfo as BaseBreadcrumbItemInfo } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
 import { type ElementProps, type BaseProps, useFoundation } from '../../base/index';
 import { fitNavIcon } from '../navigation/nav-icon';
@@ -21,6 +21,9 @@ export interface RouteProps extends Route {
     icon?: React.ReactNode;
 }
 export interface BreadcrumbItemProps extends BaseProps, ElementProps<'li', 'onClick'> {
+    /** Applied after the `item*` classNames of the parent Breadcrumb */
+    classNames?: Partial<Record<BreadcrumbItemPart, string>>;
+    styles?: Partial<Record<BreadcrumbItemPart, React.CSSProperties>>;
     onClick?: (item: BreadcrumbItemInfo | RouteProps, e: React.MouseEvent) => void;
     icon?: React.ReactNode;
     href?: string;
@@ -38,11 +41,13 @@ export interface BreadcrumbItemInternalProps extends BreadcrumbItemProps {
 }
 
 function BreadcrumbItem(props: BreadcrumbItemProps) {
-    const { ref, onClick, icon, href, separator, noLink, active, shouldRenderSeparator = true, route, children, className, ...rest } = props as BreadcrumbItemInternalProps;
+    const { ref, onClick, icon, href, separator, noLink, active, shouldRenderSeparator = true, route, children, className, style, classNames, styles, ...rest } = props as BreadcrumbItemInternalProps;
 
     const context = useBreadContext();
 
     let inner: React.ReactNode;
+
+    const { classNames: parentClassNames, styles: parentStyles } = context;
 
     const [foundation] = useFoundation<Foundation, Adapter, BreadcrumbItemProps, object, BreadContextType>(
         BreadcrumbItemFoundation,
@@ -57,9 +62,18 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
     );
 
     const { compact } = context;
+
+    let iconNode = fitNavIcon(icon, compact ? 'small' : 'default', clsx(`${clsPrefix}-item-icon`, parentClassNames?.itemIcon, classNames?.icon));
+
     const hasHref = href != null;
     const itemInfo: BreadcrumbItemInfo = route ?? { name: children, ...(hasHref && { href }) };
-    const iconNode = fitNavIcon(icon, compact ? 'small' : 'default', `${clsPrefix}-item-icon`);
+
+    if ((parentStyles?.itemIcon || styles?.icon) && isValidElement<{ style?: React.CSSProperties }>(iconNode)) {
+        iconNode = cloneElement(iconNode, { style: { ...iconNode.props.style, ...parentStyles?.itemIcon, ...styles?.icon } });
+    }
+
+    const titleCls = clsx(`${clsPrefix}-item-title`, parentClassNames?.itemTitle, classNames?.title);
+    const titleStyle = { ...parentStyles?.itemTitle, ...styles?.title };
 
     if (typeof children === 'number' || (children && typeof children === 'string')) {
         const { showTooltip } = context;
@@ -67,7 +81,7 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
         inner = (
             <>
                 {iconNode}
-                <span className={`${clsPrefix}-item-title`}>
+                <span className={titleCls} style={titleStyle}>
                     <Typography.Text
                         style={{ maxWidth: tooltip.width }}
                         ellipsis={{
@@ -86,16 +100,26 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
         inner = (
             <>
                 {iconNode}
-                {children != null && children !== false && children !== '' && <span className={`${clsPrefix}-item-title ${clsPrefix}-item-title-inline`}>{children}</span>}
+                {children != null && children !== false && children !== '' && (
+                    <span className={clsx(titleCls, `${clsPrefix}-item-title-inline`)} style={titleStyle}>
+                        {children}
+                    </span>
+                )}
             </>
         );
     }
 
-    const itemCls = clsx(`${clsPrefix}-item`, {
-        [`${clsPrefix}-item-active`]: active,
-        [`${clsPrefix}-item-link`]: !noLink,
-    });
+    const itemCls = clsx(
+        `${clsPrefix}-item`,
+        {
+            [`${clsPrefix}-item-active`]: active,
+            [`${clsPrefix}-item-link`]: !noLink,
+        },
+        parentClassNames?.itemLink,
+        classNames?.link
+    );
 
+    const linkStyle = { ...parentStyles?.itemLink, ...styles?.link };
     const isKeyboardLink = BreadcrumbItemFoundation.isKeyboardLink({ active, hasHref, noLink, hasOnClick: Boolean(onClick) || context.hasOnClick });
 
     const handleClick = (e: React.MouseEvent) => foundation.handleClick(itemInfo, e);
@@ -104,19 +128,24 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
 
     const item =
         active || !hasHref ? (
-            <span className={itemCls} role={isKeyboardLink ? 'link' : undefined} tabIndex={isKeyboardLink ? 0 : undefined} onClick={handleClick} onKeyDown={handleKeyDown}>
+            <span className={itemCls} style={linkStyle} role={isKeyboardLink ? 'link' : undefined} tabIndex={isKeyboardLink ? 0 : undefined} onClick={handleClick} onKeyDown={handleKeyDown}>
                 {inner}
             </span>
         ) : (
-            <a className={itemCls} href={href} onClick={handleClick}>
+            <a className={itemCls} style={linkStyle} href={href} onClick={handleClick}>
                 {inner}
             </a>
         );
 
     return (
-        <li {...rest} ref={ref} className={clsx(`${clsPrefix}-item-wrap`, className)} aria-current={active ? 'page' : undefined}>
+        <li {...rest} ref={ref} className={clsx(`${clsPrefix}-item-wrap`, parentClassNames?.item, className)} style={{ ...parentStyles?.item, ...style }} aria-current={active ? 'page' : undefined}>
             {item}
-            {shouldRenderSeparator && (separator || <span className={`${clsPrefix}-separator`}>{context.separator}</span>)}
+            {shouldRenderSeparator &&
+                (separator || (
+                    <span className={clsx(`${clsPrefix}-separator`, parentClassNames?.separator, classNames?.separator)} style={{ ...parentStyles?.separator, ...styles?.separator }}>
+                        {context.separator}
+                    </span>
+                ))}
         </li>
     );
 }

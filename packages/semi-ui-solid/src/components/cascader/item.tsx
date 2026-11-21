@@ -1,11 +1,11 @@
 import { type Accessor, type JSX, For, Show, children, createMemo, createRenderEffect, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+import { cssClasses, numbers, strings, type CascaderPart } from '@fibrae/semi-foundation/components/cascader/constants';
 import CascaderFoundation, { type BasicCascaderData, type BasicData, type BasicEntity, type ShowNextType, type Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
 import { IconChevronRight, IconTick } from '@fibrae/semi-icons-solid';
 import { VirtualList, type VirtualListHandle } from '../../internal/index';
-import { hasContent } from '../../utils/index';
+import { hasContent, mergeStyles } from '../../utils/index';
 import Checkbox, { type CheckboxEvent } from '../checkbox';
 import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
@@ -77,25 +77,25 @@ export interface CascaderItemProps {
     keyboardKey: string | null;
     optionId: (key: string) => string;
     virtualListRef: (handle?: VirtualListHandle) => void;
+    classNames?: Partial<Record<CascaderPart, string>>;
+    styles?: Partial<Record<CascaderPart, JSX.CSSProperties | string>>;
 }
 
 type Column = ReturnType<typeof getColumns<Entity>>[number];
 
 const prefixcls = cssClasses.PREFIX_OPTION;
 
-function VirtualListInner(props: { style?: JSX.CSSProperties; children?: JSX.Element }) {
-    return (
-        <ul style={props.style} class={`${prefixcls}-list`} role="none">
-            {props.children}
-        </ul>
-    );
-}
-
 export default function Item(props: CascaderItemProps) {
     const config = useConfig();
     const locale = useLocale('Cascader');
 
     const emptyContent = children(() => props.emptyContent);
+
+    const VirtualListInner = (inner: { style?: JSX.CSSProperties; children?: JSX.Element }) => (
+        <ul style={mergeStyles(props.styles?.list, inner.style)} class={clsx(`${prefixcls}-list`, props.classNames?.list)} role="none">
+            {inner.children}
+        </ul>
+    );
 
     const isEmpty = () => !props.data.length;
 
@@ -135,7 +135,7 @@ export default function Item(props: CascaderItemProps) {
             <Show
                 when={iconProps.loading}
                 fallback={
-                    <Show when={hasContent(custom())} fallback={<IconChevronRight class={`${prefixcls}-icon ${prefixcls}-icon-expand ${prefixcls}-icon-left`} />}>
+                    <Show when={hasContent(custom())} fallback={<IconChevronRight class={clsx(`${prefixcls}-icon ${prefixcls}-icon-expand ${prefixcls}-icon-left`, props.classNames?.itemIcon)} style={props.styles?.itemIcon} />}>
                         {custom()}
                     </Show>
                 }
@@ -155,12 +155,17 @@ export default function Item(props: CascaderItemProps) {
         return (
             <li
                 id={props.optionId(key())}
-                class={clsx(prefixcls, {
-                    [`${prefixcls}-active`]: state().showActive,
-                    [`${prefixcls}-select`]: state().showSelected,
-                    [`${prefixcls}-disabled`]: itemProps.item.data.disabled,
-                    [`${prefixcls}-focused`]: key() === props.keyboardKey,
-                })}
+                class={clsx(
+                    prefixcls,
+                    {
+                        [`${prefixcls}-active`]: state().showActive,
+                        [`${prefixcls}-select`]: state().showSelected,
+                        [`${prefixcls}-disabled`]: itemProps.item.data.disabled,
+                        [`${prefixcls}-focused`]: key() === props.keyboardKey,
+                    },
+                    props.classNames?.item
+                )}
+                style={props.styles?.item}
                 {...state().aria}
                 aria-disabled={itemProps.item.data.disabled || undefined}
                 aria-level={itemProps.column.level + 1}
@@ -170,12 +175,12 @@ export default function Item(props: CascaderItemProps) {
                 onClick={(e) => onClick(e, itemProps.item)}
                 onMouseEnter={(e) => onHover(e, itemProps.item)}
             >
-                <span class={`${prefixcls}-label`}>
+                <span class={clsx(`${prefixcls}-label`, props.classNames?.itemContent)} style={props.styles?.itemContent}>
                     <Show
                         when={props.multiple}
                         fallback={
-                            <Show when={state().selected} fallback={<span class={`${prefixcls}-icon ${prefixcls}-icon-empty`} aria-hidden="true" />}>
-                                <IconTick class={`${prefixcls}-icon ${prefixcls}-icon-active`} />
+                            <Show when={state().selected} fallback={<span class={clsx(`${prefixcls}-icon ${prefixcls}-icon-empty`, props.classNames?.itemIcon)} style={props.styles?.itemIcon} aria-hidden="true" />}>
+                                <IconTick class={clsx(`${prefixcls}-icon ${prefixcls}-icon-active`, props.classNames?.itemIcon)} style={props.styles?.itemIcon} />
                             </Show>
                         }
                     >
@@ -198,8 +203,8 @@ export default function Item(props: CascaderItemProps) {
     };
 
     const ResultContent = (contentProps: { item: Data }) => (
-        <span class={`${prefixcls}-label`}>
-            <Show when={props.multiple} fallback={<span class={`${prefixcls}-icon ${prefixcls}-icon-empty`} aria-hidden="true" />}>
+        <span class={clsx(`${prefixcls}-label`, props.classNames?.itemContent)} style={props.styles?.itemContent}>
+            <Show when={props.multiple} fallback={<span class={clsx(`${prefixcls}-icon ${prefixcls}-icon-empty`, props.classNames?.itemIcon)} style={props.styles?.itemIcon} aria-hidden="true" />}>
                 {renderCheckbox(
                     () => contentProps.item,
                     () => contentProps.item.disabled
@@ -219,12 +224,16 @@ export default function Item(props: CascaderItemProps) {
         const key = () => rowProps.item.key;
         const selected = () => props.selectedKeys.has(key());
         const className = () =>
-            clsx(prefixcls, {
-                [`${prefixcls}-flatten`]: !props.filterRender,
-                [`${prefixcls}-disabled`]: rowProps.item.disabled,
-                [`${prefixcls}-select`]: selected() && !props.multiple,
-                [`${prefixcls}-focused`]: key() === props.keyboardKey,
-            });
+            clsx(
+                prefixcls,
+                {
+                    [`${prefixcls}-flatten`]: !props.filterRender,
+                    [`${prefixcls}-disabled`]: rowProps.item.disabled,
+                    [`${prefixcls}-select`]: selected() && !props.multiple,
+                    [`${prefixcls}-focused`]: key() === props.keyboardKey,
+                },
+                props.classNames?.item
+            );
         const ariaDisabled = () => rowProps.item.disabled || undefined;
         const ariaSelected = () => (props.multiple ? props.checkedKeys.has(key()) : selected());
         const onItemClickInList = (e: MouseEvent) => onClick(e, rowProps.item);
@@ -287,7 +296,7 @@ export default function Item(props: CascaderItemProps) {
 
         // the combobox handles the keys: it points at this option with aria-activedescendant
         const renderRow = (content: JSX.Element) => (
-            <li id={props.optionId(key())} class={className()} style={rowProps.style} aria-disabled={ariaDisabled()} aria-selected={ariaSelected()} role="option" onClick={onItemClickInList}>
+            <li id={props.optionId(key())} class={className()} style={mergeStyles(props.styles?.item, rowProps.style)} aria-disabled={ariaDisabled()} aria-selected={ariaSelected()} role="option" onClick={onItemClickInList}>
                 {content}
             </li>
         );
@@ -304,7 +313,7 @@ export default function Item(props: CascaderItemProps) {
             when={props.virtualize}
             keyed
             fallback={
-                <ul class={`${prefixcls}-list`} role="none">
+                <ul class={clsx(`${prefixcls}-list`, props.classNames?.list)} style={props.styles?.list} role="none">
                     <For each={results()}>{(item) => <ResultRow item={item} />}</For>
                 </ul>
             }
@@ -342,7 +351,7 @@ export default function Item(props: CascaderItemProps) {
             {(key) => {
                 const column = createMemo((previous?: Column) => columns().get(key) ?? previous) as Accessor<Column>;
                 return (
-                    <ul class={`${prefixcls}-list`} role="none" onScroll={(e) => props.onListScroll(e, column().level)}>
+                    <ul class={clsx(`${prefixcls}-list`, props.classNames?.list)} style={props.styles?.list} role="none" onScroll={(e) => props.onListScroll(e, column().level)}>
                         <For each={column().items}>{(item, index) => <TreeItem item={item} index={index()} column={column()} />}</For>
                     </ul>
                 );
@@ -357,7 +366,7 @@ export default function Item(props: CascaderItemProps) {
                 // the id stays for the combobox's aria-controls; with nothing to choose there is no tree or listbox
                 <div id={props.id} class={clsx(`${prefixcls}-lists`, `${prefixcls}-lists-empty`)}>
                     <Show when={emptyContent() !== null}>
-                        <div class={`${prefixcls} ${prefixcls}-empty`}>
+                        <div class={clsx(prefixcls, `${prefixcls}-empty`, props.classNames?.empty)} style={props.styles?.empty}>
                             <span class={`${prefixcls}-label`} x-semi-prop="emptyContent">
                                 {hasContent(emptyContent()) ? emptyContent() : locale().locale.emptyText}
                             </span>

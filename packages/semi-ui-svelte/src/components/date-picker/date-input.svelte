@@ -173,7 +173,7 @@
             autofocus={props.autofocus}
             bind:value={() => rangeParts.start, () => {}}
             borderless={props.borderless}
-            class={props.inputClassName}
+            class={props.classNames?.input}
             disabled={props.disabled}
             onChange={(next, event) => props.onChange?.(rangeValue(next, rangeParts.end), event)}
             onEnterPress={(event) => foundation.handleRangeInputEnterPress(event, rangeValue(rangeParts.start, rangeParts.end))}
@@ -182,10 +182,10 @@
             readOnly={props.inputReadOnly}
             showClear={false}
             size={inputSize}
-            style={props.inputStyle}
+            style={props.styles?.input}
         />
     </div>
-    <span class={[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: (rangeParts.start || rangeParts.end) && !props.disabled }]} onclick={(event) => focusRange(event, 'rangeStart')}>
+    <span class={[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: (rangeParts.start || rangeParts.end) && !props.disabled }, props.classNames?.separator]} style={props.styles?.separator} onclick={(event) => focusRange(event, 'rangeStart')}>
         {#if props.rangeSeparatorNode}
             {@render props.rangeSeparatorNode()}
         {:else}
@@ -209,7 +209,7 @@
             {...rangeAttrs}
             bind:value={() => rangeParts.end, () => {}}
             borderless={props.borderless}
-            class={props.inputClassName}
+            class={props.classNames?.input}
             disabled={props.disabled}
             onChange={(next, event) => props.onChange?.(rangeValue(rangeParts.start, next), event)}
             onEnterPress={(event) => foundation.handleRangeInputEnterPress(event, rangeValue(rangeParts.start, rangeParts.end))}
@@ -219,11 +219,20 @@
             readOnly={props.inputReadOnly}
             showClear={false}
             size={inputSize}
-            style={props.inputStyle}
+            style={props.styles?.input}
         />
     </div>
     {#if allowRangeClear}
-        <button aria-label={locale().locale.clearRange} class={`${prefix}-range-input-clearbtn`} type="button" onblur={(event) => releaseIfConnected(event.currentTarget)} onclick={foundation.handleRangeInputClearClick} onfocus={(event) => (focusedClearButton = event.currentTarget)} onmousedown={clearRangeOnMouseDown}>
+        <button
+            aria-label={locale().locale.clearRange}
+            class={[`${prefix}-range-input-clearbtn`, props.classNames?.clear]}
+            style={props.styles?.clear}
+            type="button"
+            onblur={(event) => releaseIfConnected(event.currentTarget)}
+            onclick={foundation.handleRangeInputClearClick}
+            onfocus={(event) => (focusedClearButton = event.currentTarget)}
+            onmousedown={clearRangeOnMouseDown}
+        >
             {#if props.clearIcon}
                 {@render props.clearIcon()}
             {:else}
@@ -231,7 +240,7 @@
             {/if}
         </button>
     {/if}
-    <div class={`${prefix}-range-input-suffix`} onclick={foundation.handleRangeInputAffixClick}>
+    <div class={[`${prefix}-range-input-suffix`, props.classNames?.suffix]} style={props.styles?.suffix} onclick={foundation.handleRangeInputAffixClick}>
         {@render calendarIcon()}
     </div>
 {:else}
@@ -242,7 +251,8 @@
         autofocus={props.autofocus}
         bind:value={() => text, () => {}}
         borderless={props.borderless}
-        class={[inputClass, props.inputClassName]}
+        class={[inputClass, props.classNames?.input]}
+        classNames={{ suffix: props.classNames?.suffix, clear: props.classNames?.clear }}
         clearIcon={props.clearIcon}
         disabled={props.disabled}
         hideSuffix={props.showClear}
@@ -262,7 +272,8 @@
         showClear={props.showClear}
         showClearIgnoreDisabled={props.showClearIgnoreDisabled}
         size={props.size}
-        style={props.inputStyle}
+        style={props.styles?.input}
+        styles={{ suffix: props.styles?.suffix, clear: props.styles?.clear }}
         suffix={calendarIcon}
         validateStatus={props.validateStatus}
     />

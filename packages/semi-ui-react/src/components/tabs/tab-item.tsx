@@ -28,7 +28,7 @@ export interface TabItemProps extends ElementProps<'div', 'onClick'> {
 }
 
 export default function TabItem({ ref, tab, size, type, icon, selected, closable, disabled, itemKey, deleteTabItem, tabPosition, handleKeyDown, onClick, className: userClassName, ...restProps }: TabItemProps) {
-    const { tabsId, everyPanelMounted, type: contextType, tabPosition: contextTabPosition, deleteTabItem: contextDeleteTabItem, handleKeyDown: contextHandleKeyDown, tabbableKey } = useTabsContext();
+    const { classNames, styles, tabsId, everyPanelMounted, type: contextType, tabPosition: contextTabPosition, deleteTabItem: contextDeleteTabItem, handleKeyDown: contextHandleKeyDown, tabbableKey } = useTabsContext();
     const { locale } = useLocale('Tabs');
 
     const tabType = type ?? contextType;
@@ -57,7 +57,8 @@ export default function TabItem({ ref, tab, size, type, icon, selected, closable
             [`${cssClasses.TABS_TAB}-small`]: size === 'small',
             [`${cssClasses.TABS_TAB}-medium`]: size === 'medium',
         },
-        userClassName
+        userClassName,
+        classNames?.item
     );
 
     return (
@@ -68,6 +69,7 @@ export default function TabItem({ ref, tab, size, type, icon, selected, closable
             {...getTabKeyAttrs(itemKey)}
             ref={ref}
             className={className}
+            style={{ ...restProps.style, ...styles?.item }}
             aria-disabled={disabled ? 'true' : 'false'}
             aria-selected={selected ? 'true' : 'false'}
             tabIndex={selected || itemKey === tabbableKey ? 0 : -1}
@@ -81,11 +83,16 @@ export default function TabItem({ ref, tab, size, type, icon, selected, closable
                 handleKey?.(event, itemKey, closable);
             }}
         >
-            {Boolean(icon) && <span className={`${cssClasses.TABS_BAR}-icon`}>{icon}</span>}
+            {Boolean(icon) && (
+                <span className={clsx(`${cssClasses.TABS_BAR}-icon`, classNames?.itemIcon)} style={styles?.itemIcon}>
+                    {icon}
+                </span>
+            )}
             {tab}
             {closable && (
                 <IconClose
-                    className={`${cssClasses.TABS_TAB}-icon-close`}
+                    className={clsx(`${cssClasses.TABS_TAB}-icon-close`, classNames?.itemClose)}
+                    style={styles?.itemClose}
                     aria-label={locale.close}
                     role="button"
                     onClick={(e: MouseEvent<HTMLSpanElement>) => {

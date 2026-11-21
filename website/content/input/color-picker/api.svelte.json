@@ -14,6 +14,10 @@
                 "zh-CN": "usePopover 时作为触发器的 snippet，默认是当前颜色的色块；不使用 usePopover 时不渲染。",
                 "en-US": "Snippet used as the trigger when usePopover is on, a swatch of the current color by default; not rendered without usePopover."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `area`（选色区）、`hue`（色相滑条）、`alpha`（透明度滑条）、`handle`（三处共用的圆形手柄）、`preview`（颜色预览块）、`input`（颜色值输入框）、`format`（格式选择器）、`trigger`（默认触发按钮）、`dropdown`（usePopover 时的弹出层），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `area` (saturation and brightness area), `hue` (hue slider), `alpha` (alpha slider), `handle` (the round handle shared by all three), `preview` (color preview block), `input` (color value input), `format` (format select), `trigger` (default trigger button) and `dropdown` (the popup with `usePopover`); values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
             "defaultFormat": {
                 "zh-CN": "手动输入时默认使用的颜色格式，可选 `rgba`、`hex`、`hsva`。",
                 "en-US": "Color format used by default for manual input: `rgba`, `hex` or `hsva`."
@@ -33,6 +37,10 @@
             "popoverProps": {
                 "zh-CN": "放入 Popover 时传给 Popover 的属性，如 `trigger`、`aria-label`、`aria-labelledby`。弹层默认以点击触发、role 为 `dialog`，名称默认取语言包；`aria-label` 或 `aria-labelledby` 优先。",
                 "en-US": "Props passed to the Popover when usePopover is on, such as `trigger`, `aria-label` and `aria-labelledby`. The popup opens on click with role `dialog` by default and takes its name from the locale; `aria-label` or `aria-labelledby` takes precedence."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 `classNames`。",
+                "en-US": "Style strings of the inner parts, keyed like `classNames`."
             },
             "topSlot": {
                 "zh-CN": "顶部渲染额外元素的 snippet。",

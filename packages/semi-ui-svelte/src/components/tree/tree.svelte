@@ -282,6 +282,12 @@
         get dropPosition() {
             return view.dropPosition;
         },
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
         onNodeExpand: foundation.handleNodeExpand,
         onNodeSelect: foundation.handleNodeSelect,
         onNodeCheck: foundation.handleNodeSelect,
@@ -361,8 +367,8 @@
         </div>
     {/if}
     {#if noData}
-        <div class={listClass} role="none">
-            <ul class={[`${prefixCls}-option`, `${prefixCls}-option-empty`]}>
+        <div class={[listClass, classNames?.list]} role="none" style={styles?.list}>
+            <ul class={[`${prefixCls}-option`, `${prefixCls}-option-empty`, classNames?.empty]} style={styles?.empty}>
                 <li class={[`${prefixCls}-option-label`, `${prefixCls}-option-label-empty`]} x-semi-prop="emptyContent">
                     {#if emptyContent}
                         {@render emptyContent()}
@@ -378,8 +384,9 @@
             {...attrs.control}
             aria-activedescendant={activeKey === undefined ? undefined : nodeId(treeId, activeKey)}
             aria-multiselectable={multiple}
-            class={listClass}
+            class={[listClass, classNames?.list]}
             role="tree"
+            style={styles?.list}
             tabindex={(attrs.control.tabindex as number | undefined) ?? 0}
             onfocusin={handleTreeFocus}
             onkeydown={foundation.handleKeyDown}

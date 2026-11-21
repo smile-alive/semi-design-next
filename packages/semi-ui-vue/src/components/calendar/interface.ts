@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { CalendarPart } from '@fibrae/semi-foundation/components/calendar/constants';
 
 export type CalendarMode = 'day' | 'week' | 'month' | 'range';
 export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -14,6 +15,8 @@ export interface EventObject {
 }
 
 export interface CalendarProps {
+    classNames?: Partial<Record<CalendarPart, ClassValue>>;
+    styles?: Partial<Record<CalendarPart, StyleValue>>;
     displayValue?: Date;
     range?: Date[];
     events?: EventObject[];

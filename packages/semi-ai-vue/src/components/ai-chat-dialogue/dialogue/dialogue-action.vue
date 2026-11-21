@@ -105,7 +105,7 @@
 
 <template>
     <slot v-if="$slots.action" name="action" v-bind="actionSlotProps()" />
-    <div v-else :class="wrapCls">
+    <div v-else :class="[wrapCls, context.view.value.classNames?.itemActions]" :style="context.view.value.styles?.itemActions">
         <component :is="nodes[key]()" v-for="key in barKeys" :key="key" />
     </div>
 </template>

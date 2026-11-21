@@ -10,6 +10,10 @@
                 "zh-CN": "超出 maxItemCount 后是否自动折叠。",
                 "en-US": "Whether items beyond maxItemCount collapse automatically."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `list`、`item`、`itemLink`、`itemIcon`、`itemTitle`、`separator`、`more`，与组件自带的类名合并。`item*` 作用到每一项，`separator` 同时作用于折叠项后的分隔符，`more` 是省略号按钮；路由对象自带的 `classNames`（键为 `link`、`icon`、`title`、`separator`）写在 `item*` 之后。`itemIcon` 经 `icon` snippet 的 `class` 参数传出，需要放到图标上。",
+                "en-US": "Class names of the inner parts, keyed by `list`, `item`, `itemLink`, `itemIcon`, `itemTitle`, `separator` and `more`; merged with the built-in classes. The `item*` keys apply to every item, `separator` also reaches the separator after the ellipsis, and `more` is the ellipsis button. A route can carry its own `classNames` (keys `link`, `icon`, `title` and `separator`), applied after the `item*` keys. `itemIcon` is passed out through the `class` parameter of the `icon` snippet and must be put on the icon."
+            },
             "compact": { "zh-CN": "是否使用紧凑尺寸。", "en-US": "Whether the compact size is used." },
             "maxItemCount": {
                 "zh-CN": "超出多少个级别后自动折叠。",
@@ -30,6 +34,10 @@
             "showTooltip": {
                 "zh-CN": "是否在标题溢出时展示 Tooltip 及相关配置：width 为溢出宽度，ellipsisPos 为截断方式（从末尾或中间），opts 为传给 Tooltip 的属性，不含 content，class 与 style 落在弹层上。",
                 "en-US": "Whether a Tooltip shows for an overflowing title, with its options: width is the overflow width, ellipsisPos truncates at the end or in the middle, and opts are passed to the Tooltip without content, with class and style landing on the popup."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，值为 CSS 文本；路由对象自带的 `styles` 写在其后，`itemIcon` 经 `icon` snippet 的 `style` 参数传出。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as CSS text. A route's own `styles` come after them, and `itemIcon` is passed out through the `style` parameter of the `icon` snippet."
             },
             "onClick": {
                 "zh-CN": "点击时调用，收到该项的路由（字符串路由为 `{ name }`）与原生 MouseEvent。是函数 prop，不是 nav 的原生点击监听；传入后没有 href 的项也可以用 Enter 操作。",

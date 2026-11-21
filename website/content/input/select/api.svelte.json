@@ -8,8 +8,8 @@
             },
             "multiple": { "zh-CN": "是否多选。", "en-US": "Whether multiple options can be selected." },
             "optionList": {
-                "zh-CN": "选项数据，条目含 `value`、`label`、`disabled`、`showTick`、`class`、`style` 以及可选的 `group: { key, label }`，其他字段随选项记录回传。同一分组的条目必须相邻。",
-                "en-US": "The option data. An entry has `value`, `label`, `disabled`, `showTick`, `class`, `style` and an optional `group: { key, label }`; other fields travel with the option record. Entries of one group must be adjacent."
+                "zh-CN": "选项数据，条目含 `value`、`label`、`disabled`、`showTick`、`class`、`style`、`classNames`、`styles`（键为 `icon`、`content`，分别是选中的对勾图标容器与文本元素）以及可选的 `group: { key, label }`，其他字段随选项记录回传。同一分组的条目必须相邻。",
+                "en-US": "The option data. An entry has `value`, `label`, `disabled`, `showTick`, `class`, `style`, `classNames`, `styles` (keyed by `icon` and `content`, the tick icon container and the text element) and an optional `group: { key, label }`; other fields travel with the option record. Entries of one group must be adjacent."
             },
             "filter": {
                 "zh-CN": "是否开启搜索。传 true 时用输入值与选项 label 或分组标题做 include 对比（不区分大小写），传函数时自定义匹配。",
@@ -103,8 +103,8 @@
                 "en-US": "Extra props of the search Input; `class` and `style` land on the Input wrapper."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 dropdown（下拉层），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by dropdown (the dropdown layer); values take anything class takes (string, array or object) and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、groupLabel、item、itemIcon、itemContent，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。content 是触发器中间的已选内容区，input 是触发器内搜索框的根元素（与 Input 的 input 不同，后者是原生输入框），search 是 searchPosition=\"dropdown\" 时下拉层顶部的搜索区域，dropdown 是弹出层最外层，list 是选项列表。item、itemIcon、itemContent 作用到全部选项，先于 optionList 条目自己的 classNames（键为 icon、content）生效，对 optionItem、createItem snippet 渲染的选项不生效。",
+                "en-US": "Class names of the inner parts, keyed by prefix, suffix, content, placeholder, input, search, tag, clear, arrow, dropdown, list, empty, groupLabel, item, itemIcon and itemContent; values take anything class takes (string, array or object) and merge with the built-in classes. content is the selection area in the middle of the trigger, input is the root element of the search field inside the trigger (unlike input of Input, which is the native input), search is the search area at the top of the dropdown when searchPosition=\"dropdown\", dropdown is the outermost layer of the popup, and list is the option list. item, itemIcon and itemContent apply to every option and come before the classNames of an optionList entry (keyed by icon and content); they do not apply to options drawn by the optionItem or createItem snippet."
             },
             "styles": {
                 "zh-CN": "内部各部位的样式字符串，键同 classNames。",

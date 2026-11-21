@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by header, title, close, content, toolbar, count, search, list, item, itemIcon, itemTitle, itemDescription and itemAction; merged with the built-in classes. Values take the same forms as class. The first four apply to the outer container, toolbar is the row with the mode switch and the enabled count, and the item\* keys apply to every MCP entry. | <ApiType detail={"Partial\u003cRecord\u003cMCPConfigurePart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("MCPConfigure", "classNames")` |
 | closeOnEsc | Whether pressing Esc emits cancel. | `boolean` | `semiGlobalDefault("MCPConfigure", "closeOnEsc")` |
 | customOptions | Custom MCP tools; bind it with v-model:customOptions. | `MCPConfigureOption[]` | `semiGlobalDefault("MCPConfigure", "customOptions")` |
 | defaultSize | Initial width and height; applies only when resizable is true. | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("MCPConfigure", "defaultSize")` |
@@ -15,6 +16,7 @@ import ApiType from '#/components/ApiType.astro';
 | placeholder | Placeholder of the search input, the locale text by default. | `string` | `semiGlobalDefault("MCPConfigure", "placeholder")` |
 | resizable | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean` | `semiGlobalDefault("MCPConfigure", "resizable")` |
 | showClose | Whether the header shows the close button. | `boolean` | `semiGlobalDefault("MCPConfigure", "showClose")` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cMCPConfigurePart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("MCPConfigure", "styles")` |
 | title | Plain-text title, the locale's MCP configure text by default; the title slot takes precedence. | `string` | `semiGlobalDefault("MCPConfigure", "title")` |
 | visible | Whether it is shown; bind it with v-model:visible. | `boolean` | `semiGlobalDefault("MCPConfigure", "visible")` |
 

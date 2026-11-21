@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | bordered | Whether to show the outer border and the column borders. | `boolean` | `false` |
 | children | `Table.Column` children, read when `columns` is not given. | `JSX.Element` | - |
 | childrenRecordName | The field of a record that holds its child records in a tree table. | `string` | `"children"` |
-| classNames | Class names of the inner parts, keyed by `header` (every header cell `<th>`, fixed headers included); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTablePart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `header`, `title`, `row`, `cell`, `footer`, `pagination` and `empty`; merged with the built-in classes. `header` lands on every header cell `<th>` (fixed headers included); `row` and `cell` apply to data rows and data cells only. | <ApiType detail={"Partial\u003cRecord\u003cTablePart, string>>"}>Type</ApiType> | - |
 | clickGroupedRowToExpand | Clicking a group row expands or collapses the group. | `boolean` | - |
 | columns | The column configuration, see Column. When given, an empty array included, it takes precedence over the `Table.Column` children. | <ApiType detail={"ColumnProps\u003cRecordType>[]"}>Type</ApiType> | - |
 | components | Replaces the elements Table renders, such as `table`, `body`, `row`, `td` and `th`, with a tag name or a component; the component receives the attributes and events of the element it replaces. | `TableComponents` | - |
@@ -54,7 +54,7 @@ import ApiType from '#/components/ApiType.astro';
 | showHeader | Whether to show the header. | `boolean` | `true` |
 | size | The table size, which sets the padding of the cells. | `Size` | `"default"` |
 | sticky | Sticks the header to the top of the page. With an object, `top` is the distance from the top of the scroll container. | `Sticky` | - |
-| styles | Inline styles of the inner parts, keyed like `classNames`, as a style object (kebab-case property names) or a CSS string; the `style` returned by a column's `onHeaderCell` takes precedence. | <ApiType detail={"Partial\u003cRecord\u003cTablePart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`, as a style object (kebab-case property names) or a CSS string; the `style` returned by `onHeaderCell`, `onRow` and `onCell` takes precedence. | <ApiType detail={"Partial\u003cRecord\u003cTablePart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | title | The table title: an element, or a function that receives the data of the current page and returns an element. | <ApiType detail={"Title\u003cRecordType>"}>Type</ApiType> | - |
 | virtualized | Turns on virtualization, which needs `scroll.y` as a number. An object sets the row height `itemSize`, the scroll callback `onScroll` and the extra rows `overscanCount`. | `Virtualized` | - |
 

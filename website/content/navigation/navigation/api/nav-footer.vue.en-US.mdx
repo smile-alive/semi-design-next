@@ -1,8 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property       | Description                                                                                                         | Type      | Default |
-| -------------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ------- |
-| collapseButton | Whether to show the collapse button. Applies only when mode is vertical and the Footer has no default slot content. | `boolean` | `false` |
+| Property       | Description                                                                                                                                                                            | Type                                                                                         | Default     |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------- |
+| classNames     | Class names of the inner parts, keyed by `collapseButton` (the container of the built-in collapse button, rendered when `collapseButton` is `true`); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"collapseButton\", ClassValue>>"}>Type</ApiType> | `undefined` |
+| collapseButton | Whether to show the collapse button. Applies only when mode is vertical and the Footer has no default slot content.                                                                    | `boolean`                                                                                    | `false`     |
+| styles         | Inline styles of the inner parts, keyed like `classNames`.                                                                                                                             | <ApiType detail={"Partial\u003cRecord\u003c\"collapseButton\", StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

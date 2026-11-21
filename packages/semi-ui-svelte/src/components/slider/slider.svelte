@@ -156,6 +156,8 @@
     // autofocus belongs to the start handle alone: the slider has one Tab stop to land on first
     const inputAttrs = (pos: Handle) => Object.fromEntries(Object.entries(attrs.control).filter(([key]) => key !== 'aria-required' && key !== 'tabindex' && (key !== 'autofocus' || pos === 'min')));
 
+    const joinStyle = (...parts: (string | undefined)[]) => parts.filter(Boolean).join('; ') || undefined;
+
     const handleIndex = (pos: Handle) => (pos === 'min' ? 0 : 1);
 
     const handleValue = (pos: Handle) => {
@@ -212,13 +214,13 @@
 
 <!-- The mark tip is for the pointer only: the Tooltip trigger props must not make the dot a Tab stop -->
 {#snippet markDot(item: MarkItem, trigger?: TooltipTriggerProps)}
-    <span {...trigger} class={[`${prefix}-dot`, { [`${prefix}-dot-active`]: item.active === 'active' }]} style="{layout.startProp}: calc({SliderFoundation.getMarkPercent({ min, max }, item.value)}% - 2px)" tabindex="-1" onclick={foundation.handleWrapClick}></span>
+    <span {...trigger} class={[`${prefix}-dot`, { [`${prefix}-dot-active`]: item.active === 'active' }, classNames?.dot]} style={joinStyle(`${layout.startProp}: calc(${SliderFoundation.getMarkPercent({ min, max }, item.value)}% - 2px)`, styles?.dot)} tabindex="-1" onclick={foundation.handleWrapClick}></span>
 {/snippet}
 
 {#snippet handleView(pos: Handle)}
     {@const dot = dotOf(pos)}
     <!-- closeOnEsc off: the slider drives this tip, which Escape cannot hide, so the key goes on to the layer below -->
-    <Tooltip class={`${cssClasses.HANDLE}-tooltip`} closeOnEsc={false} position="top" {showArrow} trigger="custom" visible={states().isInRenderTree && (tips.tipVisible[pos] || states().focusVisibleHandle === pos)}>
+    <Tooltip class={[`${cssClasses.HANDLE}-tooltip`, classNames?.dropdown]} closeOnEsc={false} position="top" {showArrow} style={styles?.dropdown} trigger="custom" visible={states().isInRenderTree && (tips.tipVisible[pos] || states().focusVisibleHandle === pos)}>
         {#snippet content()}
             {#if tip}{@render tip({ value: tips.tipChildren[pos], handle: pos })}{:else}{tips.tipChildren[pos]}{/if}
         {/snippet}
@@ -227,8 +229,8 @@
             <span
                 {...props}
                 aria-describedby={undefined}
-                class={[cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: states().chooseMovePos === pos && states().isDrag }]}
-                style="{layout.startProp}: {layout.handles[pos].start}; z-index: {layout.handles[pos].zIndex}"
+                class={[cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: states().chooseMovePos === pos && states().isDrag }, classNames?.handle]}
+                style={joinStyle(`${layout.startProp}: ${layout.handles[pos].start}; z-index: ${layout.handles[pos].zIndex}`, styles?.handle)}
                 tabindex="-1"
                 onmousedown={(event) => event.preventDefault()}
                 onmouseenter={() => foundation.onHandleEnter(pos)}
@@ -301,7 +303,7 @@
         }}
     >
         <div class={[`${prefix}-rail`, classNames?.rail]} style={styles?.rail} onclick={foundation.handleWrapClick}></div>
-        <div class={cssClasses.TRACK} style={trackStyle} onclick={foundation.handleWrapClick}></div>
+        <div class={[cssClasses.TRACK, classNames?.track]} style={joinStyle(trackStyle, styles?.track)} onclick={foundation.handleWrapClick}></div>
         {#if markList.length}
             <div class={cssClasses.DOTS}>
                 {#each shownMarks as item (item.key)}
@@ -324,7 +326,7 @@
         {#if showMarkLabel && markList.length}
             <div class={cssClasses.MARKS + layout.reverse}>
                 {#each shownMarks as item (item.key)}
-                    <span class={`${prefix}-mark${layout.reverse}`} style="{layout.startProp}: {SliderFoundation.getMarkPercent({ min, max }, item.value)}%" onclick={() => foundation.handleMarkClick(item.value)}>
+                    <span class={[`${prefix}-mark${layout.reverse}`, classNames?.mark]} style={joinStyle(`${layout.startProp}: ${SliderFoundation.getMarkPercent({ min, max }, item.value)}%`, styles?.mark)} onclick={() => foundation.handleMarkClick(item.value)}>
                         {@render markLabel(item)}
                     </span>
                 {/each}

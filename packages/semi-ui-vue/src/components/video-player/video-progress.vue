@@ -12,7 +12,7 @@
     type Foundation = VideoProgressFoundation<VideoProgressProps>;
     type Adapter = VideoProgressAdapter<VideoProgressProps>;
 
-    const props = withDefaults(defineProps<VideoProgressProps>(), { markers: undefined, showTooltip: true });
+    const props = withDefaults(defineProps<VideoProgressProps>(), { classNames: undefined, markers: undefined, showTooltip: true, styles: undefined });
     const emit = defineEmits<VideoProgressEmits>();
 
     const localeResult = useLocale('VideoPlayer');
@@ -74,8 +74,9 @@
             aria-valuemin="0"
             :aria-valuenow="props.value"
             :aria-valuetext="`${formatTimeText(props.value, locale)} / ${formatTimeText(props.max, locale)}`"
-            :class="[prefix, { [`${prefix}-dragging`]: state.isDragging }]"
+            :class="[prefix, { [`${prefix}-dragging`]: state.isDragging }, props.classNames?.progress]"
             role="slider"
+            :style="props.styles?.progress"
             tabindex="0"
             @focus="onFocus"
             @keydown="foundation.handleKeyDown"
@@ -87,11 +88,11 @@
             <div :class="`${prefix}-markers`">
                 <div v-for="(marker, index) in markersList" :key="`${marker.start}-${index}`" :class="[`${prefix}-slider`, { [`${prefix}-slider-active`]: index === state.activeIndex && state.isDragging }]" :style="{ left: marker.left, width: marker.width }">
                     <div :class="`${prefix}-slider-list`" />
-                    <div :class="`${prefix}-slider-buffered`" :style="{ width: VideoProgressFoundation.getValueWidth(marker, props.bufferedValue) }" />
-                    <div :class="`${prefix}-slider-played`" :style="{ width: VideoProgressFoundation.getValueWidth(marker, props.value) }" />
+                    <div :class="[`${prefix}-slider-buffered`, props.classNames?.progressBuffered]" :style="[{ width: VideoProgressFoundation.getValueWidth(marker, props.bufferedValue) }, props.styles?.progressBuffered]" />
+                    <div :class="[`${prefix}-slider-played`, props.classNames?.progressPlayed]" :style="[{ width: VideoProgressFoundation.getValueWidth(marker, props.value) }, props.styles?.progressPlayed]" />
                 </div>
             </div>
-            <div :class="`${prefix}-handle`" :style="{ left: VideoProgressFoundation.getHandleLeft(props.value, props.max) }" />
+            <div :class="[`${prefix}-handle`, props.classNames?.progressHandle]" :style="[{ left: VideoProgressFoundation.getHandleLeft(props.value, props.max) }, props.styles?.progressHandle]" />
         </div>
     </component>
 </template>

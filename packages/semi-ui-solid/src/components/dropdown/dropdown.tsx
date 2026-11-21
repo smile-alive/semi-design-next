@@ -130,7 +130,26 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     const ref = props.ref;
     const focusTarget = { focus: foundation.handleOpened };
     const handle: DropdownHandle = { focusTrigger: () => tooltip?.focusTrigger(), rePosition: () => tooltip?.rePosition() };
-    const view = createMemo(() => ({ menuDepth: DropdownFoundation.getChildMenuDepth(parent?.view().menuDepth), showTick: props.showTick, selectionMode: local.selectionMode, trigger: props.trigger }));
+
+    const view = createMemo(() => {
+        const inherited = parent?.view();
+        return {
+            menuDepth: DropdownFoundation.getChildMenuDepth(inherited?.menuDepth),
+            showTick: props.showTick,
+            selectionMode: local.selectionMode,
+            trigger: props.trigger,
+            classNames: {
+                menu: clsx(inherited?.classNames?.menu, local.classNames?.menu),
+                item: clsx(inherited?.classNames?.item, local.classNames?.item),
+                itemIcon: clsx(inherited?.classNames?.itemIcon, local.classNames?.itemIcon),
+            },
+            styles: {
+                menu: mergeStyles(inherited?.styles?.menu, local.styles?.menu),
+                item: mergeStyles(inherited?.styles?.item, local.styles?.item),
+                itemIcon: mergeStyles(inherited?.styles?.itemIcon, local.styles?.itemIcon),
+            },
+        };
+    });
 
     const context: DropdownContextValue = {
         view,

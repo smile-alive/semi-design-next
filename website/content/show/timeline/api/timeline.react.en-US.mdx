@@ -2,11 +2,13 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property   | Description                                                                                                                                                        | Type                                                                | Default  |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | -------- |
-| children   | Timeline items, usually `Timeline.Item`. Ignored when dataSource is not empty.                                                                                     | `React.ReactNode`                                                   | -        |
-| className  | Class name of the root `ul` element.                                                                                                                               | `string`                                                            | -        |
-| dataSource | Data array. When it is not empty, the items are rendered from it and children are ignored. Each item takes the Timeline.Item props, with `content` as its content. | `Data[]`                                                            | -        |
-| mode       | Position of the timeline relative to the content: `left`, `right`, `center` or `alternate`.                                                                        | `'alternate' \| 'center' \| 'left' \| 'right'`                      | `"left"` |
-| ref        | Reference to the root `ul` element.                                                                                                                                | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType> | -        |
-| style      | Style of the root `ul` element.                                                                                                                                    | `React.CSSProperties`                                               | -        |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Timeline items, usually `Timeline.Item`. Ignored when dataSource is not empty. | `React.ReactNode` | - |
+| className | Class name of the root `ul` element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `item`, `itemRail`, `itemIcon`, `itemContent`, `itemExtra` and `itemTime`; merged with the built-in classes. `item` lands on every `li`, `itemRail` is the connecting line and `itemIcon` holds the dot or the custom dot; the `item*` keys apply to every Timeline.Item, before the item's own classNames. | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, string>>"}>Type</ApiType> | - |
+| dataSource | Data array. When it is not empty, the items are rendered from it and children are ignored. Each item takes the Timeline.Item props, with `content` as its content. | `Data[]` | - |
+| mode | Position of the timeline relative to the content: `left`, `right`, `center` or `alternate`. | `'alternate' \| 'center' \| 'left' \| 'right'` | `"left"` |
+| ref | Reference to the root `ul` element. | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType> | - |
+| style | Style of the root `ul` element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, React.CSSProperties>>"}>Type</ApiType> | - |

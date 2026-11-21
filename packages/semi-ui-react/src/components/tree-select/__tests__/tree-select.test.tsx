@@ -442,14 +442,82 @@ describe('TreeSelect', () => {
     it('classNames 与 styles 按部位落到对应元素', () => {
         renderTreeSelect({
             defaultOpen: true,
-            classNames: { dropdown: 'test', optionList: 'my-list' },
-            styles: { dropdown: { color: 'red' }, optionList: { height: '200px' } },
+            classNames: { dropdown: 'test', list: 'my-list' },
+            styles: { dropdown: { color: 'red' }, list: { height: '200px' } },
         });
         expect(getPopover()).toHaveClass('test');
         expect(getPopover()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         const list = document.querySelector('.my-list');
         expect(list).toHaveClass('semi-tree-option-list');
         expect(list).toHaveStyle({ height: '200px' });
+    });
+
+    describe('部位', () => {
+        const prefixCls = `${BASE_CLASS_PREFIX}-tree-select`;
+        const treeCls = `${BASE_CLASS_PREFIX}-tree`;
+        const partProps = (selectors: Record<string, string>) => {
+            const parts = Object.keys(selectors);
+            return {
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+            };
+        };
+        const expectParts = (selectors: Record<string, string>) => {
+            const parts = Object.keys(selectors);
+            for (const part of parts) {
+                const el = document.querySelector(`.my-${part}`);
+                expect([part, el?.matches(selectors[part])]).toEqual([part, true]);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+
+        it('classNames 与 styles 按部位落到对应元素', () => {
+            const selectors = {
+                prefix: `.${prefixCls}-prefix`,
+                suffix: `.${prefixCls}-suffix`,
+                content: `.${prefixCls}-selection`,
+                clear: `.${prefixCls}-clearbtn`,
+                arrow: `.${prefixCls}-arrow`,
+                dropdown: `.${prefixCls}-popover`,
+                search: `.${treeCls}-search-wrapper`,
+                list: `.${treeCls}-option-list`,
+                item: `li.${treeCls}-option`,
+                itemTitle: `.${treeCls}-option-label-text`,
+                itemSwitcher: `.${treeCls}-option-expand-icon`,
+            };
+            renderTreeSelect({ defaultValue: 'Beijing', showClear: true, prefix: 'pre', suffix: 'suf', filterTreeNode: true, defaultExpandAll: true, ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('classNames.placeholder 落在未选择时的占位文本上', () => {
+            const selectors = { placeholder: `.${prefixCls}-selection-placeholder` };
+            renderTreeSelect({ defaultOpen: false, placeholder: 'ph', ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('classNames.empty 落在无数据时的空状态上', () => {
+            const selectors = { empty: `ul.${treeCls}-option-empty`, list: `.${treeCls}-option-list` };
+            renderTreeSelect({ treeData: [], ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('searchPosition 为 trigger 时 classNames.input 落在单选搜索框上', () => {
+            const selectors = { input: `.${prefixCls}-inputTrigger` };
+            renderTreeSelect({ defaultOpen: false, filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('多选时 classNames.input 落在 TagInput 上，classNames.tag 落在已选标签上', () => {
+            const selectors = { input: `.${BASE_CLASS_PREFIX}-tagInput`, tag: `.${prefixCls}-selection-tag` };
+            renderTreeSelect({ defaultOpen: false, multiple: true, defaultValue: ['Beijing'], filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('多选的已选标签组里 classNames.tag 落在标签上', () => {
+            const selectors = { tag: `.${BASE_CLASS_PREFIX}-tag` };
+            renderTreeSelect({ defaultOpen: false, multiple: true, defaultValue: ['Beijing'], ...partProps(selectors) });
+            expectParts(selectors);
+        });
     });
 
     // jsdom has no layout, so only the trigger-width variable wiring on the popover wrapper is checked

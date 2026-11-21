@@ -10,6 +10,14 @@
                 "zh-CN": "默认已选中的 value 数组，只在挂载时读取。",
                 "en-US": "The values selected initially, read once on mount."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `source`、`selected`、`filter`、`header`、`title`、`action`、`list`、`groupTitle`、`item`、`itemDragHandle`、`itemRemove`、`empty`，与组件自带的类名合并。`source`、`selected` 是左右两个面板，`item` 同时作用于两侧的选项行。",
+                "en-US": "Class names of the inner parts, keyed by `source`, `selected`, `filter`, `header`, `title`, `action`, `list`, `groupTitle`, `item`, `itemDragHandle`, `itemRemove` and `empty`; merged with the built-in classes. `source` and `selected` are the left and right panels, and `item` applies to the option rows on both sides."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "dataSource": {
                 "zh-CN": "数据源。type 为 list 时是数据项数组，groupList 时是分组数组，treeList 时是带 children 的树形数据。treeList 的左侧树只在传入新数组时更新，原地修改不会生效。",
                 "en-US": "Data source: an array of items for list, an array of groups for groupList, or tree data with children for treeList. The tree of a treeList only updates when a new array is passed, changes made in place are not seen."

@@ -1000,6 +1000,27 @@ describe('Svelte UserGuide 未声明的属性', () => {
         expect(onclick).not.toHaveBeenCalled();
     });
 
+    for (const mode of ['popup', 'modal'] as const) {
+        it(`classNames 与 styles 按部位落到对应元素（${mode}）`, async () => {
+            const parts = ['cover', 'body', 'title', 'description', 'progress', 'indicators', 'footer'] as const;
+            const selectors: Record<string, Record<string, string>> = {
+                popup: { cover: 'popup-content-cover', body: 'popup-content-body', title: 'popup-content-title', description: 'popup-content-description', progress: 'popup-content-indicator', footer: 'popup-content-footer' },
+                modal: { cover: 'modal-cover', body: 'modal-body', title: 'modal-body-title', description: 'modal-body-description', progress: 'modal-progress', indicators: 'modal-indicator', footer: 'modal-footer' },
+            };
+            setup({ mode, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) }, { covers: 'first' });
+            await screen.findByText('Title A');
+            for (const part of parts) {
+                const selector = selectors[mode][part];
+                if (!selector) {
+                    continue;
+                }
+                const el = $(`.${prefix}-${selector}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        });
+    }
+
     it('modal 模式同样丢弃其余属性', async () => {
         const onclick = vi.fn<() => void>();
         setup({ mode: 'modal', class: 'attr-cls', id: 'guide-id', 'data-x': '1', 'aria-label': 'ignored', onclick } as never);

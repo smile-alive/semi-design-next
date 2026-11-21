@@ -1,16 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                                                                                                                                                                                              | Type               | Default     |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ----------- |
-| align    | Text alignment of the label.                                                                                                                                                                                             | `string`           | `"left"`    |
-| disabled | Whether the label looks disabled.                                                                                                                                                                                        | `boolean`          | `undefined` |
-| extra    | Content after the label text. The extra slot takes precedence.                                                                                                                                                           | `string \| number` | `undefined` |
-| name     | The id of the labeled control, written to the for attribute.                                                                                                                                                             | `string`           | `undefined` |
-| optional | Whether to append the optional text of the locale. When true, the \* of required is hidden.                                                                                                                              | `boolean`          | `false`     |
-| required | Whether to display the required \* symbol.                                                                                                                                                                               | `boolean`          | `false`     |
-| text     | Text of the label. The default slot takes precedence.                                                                                                                                                                    | `string \| number` | `undefined` |
-| tooltip  | Tooltip content of the help button beside the label. The tooltip slot takes precedence. The button sits outside the label element, so it is not part of the field's accessible name, and its name comes from the locale. | `string \| number` | `undefined` |
-| width    | Width of the label. A number is in px.                                                                                                                                                                                   | `string \| number` | `undefined` |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| align | Text alignment of the label. | `string` | `"left"` |
+| classNames | Class names of the inner parts, keyed by `text`, `extra` and `tooltip`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cFormLabelPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| disabled | Whether the label looks disabled. | `boolean` | `undefined` |
+| extra | Content after the label text. The extra slot takes precedence. | `string \| number` | `undefined` |
+| name | The id of the labeled control, written to the for attribute. | `string` | `undefined` |
+| optional | Whether to append the optional text of the locale. When true, the \* of required is hidden. | `boolean` | `false` |
+| required | Whether to display the required \* symbol. | `boolean` | `false` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cFormLabelPart, StyleValue>>"}>Type</ApiType> | `undefined` |
+| text | Text of the label. The default slot takes precedence. | `string \| number` | `undefined` |
+| tooltip | Tooltip content of the help button beside the label. The tooltip slot takes precedence. The button sits outside the label element, so it is not part of the field's accessible name, and its name comes from the locale. | `string \| number` | `undefined` |
+| width | Width of the label. A number is in px. | `string \| number` | `undefined` |
 
 **Events**
 

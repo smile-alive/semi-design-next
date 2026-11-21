@@ -664,4 +664,31 @@ describe('Anchor', () => {
         expect(link('a')).toHaveClass(activeCls);
         expect(onChange).toHaveBeenCalledTimes(1);
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['rail', 'indicator', 'list', 'item', 'itemTitle'] as const;
+        const selectors = { rail: 'slide', indicator: 'slide-bar', list: 'link-wrapper', item: 'link', itemTitle: 'link-title' };
+        const { container } = renderAnchor({ classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }])) });
+        for (const part of parts) {
+            const el = container.querySelector(`.${BASE_CLASS_PREFIX}-anchor-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('Anchor.Link 的 classNames 在父级 item* 之后，样式后写', () => {
+        const { container } = render(() => (
+            <Anchor classNames={{ item: 'p-item', itemTitle: 'p-title' }} styles={{ itemTitle: { order: '1', opacity: '0.5' } }}>
+                <Link title="a" href="#a" class="own" classNames={{ title: 'c-title' }} styles={{ title: { order: '2' } }} />
+                <Link title="b" href="#b" />
+            </Anchor>
+        ));
+        const [first, second] = container.querySelectorAll(`.${BASE_CLASS_PREFIX}-anchor-link`);
+        expect(first.className).toMatch(/p-item own$/);
+        expect(second).toHaveClass('p-item');
+        const title = defined(first.querySelector(`.${BASE_CLASS_PREFIX}-anchor-link-title`));
+        expect(title.className).toMatch(/p-title c-title$/);
+        expect(title).toHaveStyle({ order: '2', opacity: '0.5' });
+        expect(defined(second.querySelector(`.${BASE_CLASS_PREFIX}-anchor-link-title`))).toHaveStyle({ order: '1' });
+    });
 });

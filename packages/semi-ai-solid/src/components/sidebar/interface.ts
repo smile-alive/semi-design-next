@@ -1,9 +1,12 @@
 import type { JSX, Ref } from 'solid-js';
+import type { SidebarContainerPart, SidebarPart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import type { ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
 import type { ElementProps } from '@fibrae/semi-ui-solid/base';
 import type { CodeItemProps } from './code';
 import type { FileItemProps } from './file';
 import type { ImageUploadNodeOptions } from './image-slot';
+
+export type PartStyle = JSX.CSSProperties | string;
 
 export interface SideBarCollapseProps extends ElementProps<'div', 'onChange'> {
     activeKey?: string | string[];
@@ -11,6 +14,8 @@ export interface SideBarCollapseProps extends ElementProps<'div', 'onChange'> {
 }
 
 export interface ContainerSolidProps extends ElementProps<'div', 'title' | 'style' | 'children' | 'onCancel'>, Omit<ContainerProps, 'title' | 'style' | 'className' | 'children' | 'onCancel'> {
+    classNames?: Partial<Record<SidebarContainerPart, string>>;
+    styles?: Partial<Record<SidebarContainerPart, PartStyle>>;
     title?: JSX.Element;
     renderHeader?: () => JSX.Element;
     style?: JSX.CSSProperties | string;
@@ -36,7 +41,9 @@ export interface OptionProps {
 
 export type DetailContent = CodeItemProps | Omit<FileItemProps, 'editable' | 'imgUploadProps' | 'onContentChange'>;
 
-export interface SideBarProps extends Omit<ContainerSolidProps, 'onChange'>, Omit<OptionProps, 'onChange'> {
+export interface SideBarProps extends Omit<ContainerSolidProps, 'onChange' | 'classNames' | 'styles'>, Omit<OptionProps, 'onChange'> {
+    classNames?: Partial<Record<SidebarPart, string>>;
+    styles?: Partial<Record<SidebarPart, PartStyle>>;
     mode?: string;
     detailContent?: DetailContent;
     onActiveOptionChange?: (e: MouseEvent, activeKey: string) => void;

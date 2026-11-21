@@ -44,7 +44,7 @@
     {#if parent}
         {#if type !== undefined && TEXT_TYPES.includes(type)}
             {#if citations.length > 0}
-                <AnnotationWidget annotation={citations} maxCount={15} onClick={() => annotationClick(citations)} />
+                <AnnotationWidget annotation={citations} class={view.classNames?.annotation} maxCount={15} onClick={() => annotationClick(citations)} style={view.styles?.annotation} />
             {/if}
             {#if text !== ''}
                 <DialogueMarkdown {message} {text} />
@@ -53,7 +53,7 @@
                 <DialogueMarkdown {message} text={refusal} />
             {/if}
         {:else if type === MESSAGE_ITEM_TYPE.INPUT_IMAGE}
-            <Image alt={locale().locale.image} class={[`${PREFIX_CONTENT}-img`, { [`${PREFIX_CONTENT}-img-list`]: imageList, [`${PREFIX_CONTENT}-img-last`]: layout.isLast }]} src={image.image_url} onclick={() => imageClick(image)} />
+            <Image alt={locale().locale.image} class={[`${PREFIX_CONTENT}-img`, { [`${PREFIX_CONTENT}-img-list`]: imageList, [`${PREFIX_CONTENT}-img-last`]: layout.isLast }, view.classNames?.image]} src={image.image_url} style={view.styles?.image} onclick={() => imageClick(image)} />
             {#if layout.breakAfter}
                 <br />
             {/if}
@@ -74,7 +74,7 @@
             {/each}
         {/if}
     {:else if type === MESSAGE_ITEM_TYPE.REASONING}
-        <ReasoningWidget content={reasoning.content} markdownRenderProps={view.markdownRenderProps} status={reasoning.status} summary={reasoning.summary} />
+        <ReasoningWidget class={view.classNames?.reasoning} content={reasoning.content} markdownRenderProps={view.markdownRenderProps} status={reasoning.status} style={view.styles?.reasoning} summary={reasoning.summary} />
     {:else if type === MESSAGE_ITEM_TYPE.FUNCTION_CALL || type === MESSAGE_ITEM_TYPE.CUSTOM_TOOL_CALL}
         <div class="{PREFIX_CONTENT}-tool-call"><IconWrench />{toolCall.name} {toolCall.arguments ?? toolCall.input}</div>
     {/if}

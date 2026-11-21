@@ -175,12 +175,12 @@
                 "en-US": "Suggestion list. The suggestion panel shows when the list changes to a non-empty one and hides when it is empty."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `templates`（模版面板），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `templates` (the template panel); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `references`（引用列表）、`reference`（单个引用）、`attachments`（附件列表）、`attachment`（单个附件）、`editor`（输入区域）、`footer`（底部栏）、`configure`（配置区）、`actions`（操作区）、`upload`（默认上传按钮）、`send`（发送与停止按钮）、`templates`（模板面板）、`skills`、`skillItem`（技能列表与单项）、`suggestions`、`suggestionItem`（联想列表与单项），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `references` (reference list), `reference` (one reference), `attachments` (attachment list), `attachment` (one attachment), `editor` (input area), `footer` (bottom bar), `configure` (configure area), `actions` (action area), `upload` (default upload button), `send` (send and stop button), `templates` (template panel), `skills` and `skillItem` (skill list and item), `suggestions` and `suggestionItem` (suggestion list and item); merged with the built-in classes."
             },
             "styles": {
-                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`templates` 与默认的最大高度合并。",
-                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `templates` is merged over the panel's default max height."
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；`templates`、`skills`、`suggestions` 与默认的最大高度合并。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; `templates`, `skills` and `suggestions` are merged over the panel's default max height."
             },
             "topSlotPosition": {
                 "zh-CN": "顶部区域相对于引用区域与上传文件区域的位置，可选 `top`、`middle` 或 `bottom`。",

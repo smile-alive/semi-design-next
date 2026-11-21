@@ -67,7 +67,8 @@ export default function Slot(props: SlotProps) {
                 labelAlign={formProps()?.labelAlign}
                 labelCol={formProps()?.labelCol}
                 labelPosition={labelPosition()}
-                mainClass={`${prefix}-field-main ${prefix}-slot-main`}
+                mainClass={clsx(`${prefix}-field-main`, `${prefix}-slot-main`, formProps()?.classNames?.content)}
+                mainStyle={formProps()?.styles?.content}
                 wrapperCol={formProps()?.wrapperCol}
             >
                 {local.children}

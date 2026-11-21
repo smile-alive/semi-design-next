@@ -2,6 +2,14 @@
     "json-viewer": {
         "source": "packages/semi-ui-solid/src/components/json-viewer/json-viewer.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `editor`、`searchTrigger`、`searchBox`、`searchInput`、`searchOptions`、`replaceInput`，与组件自带的类名合并；`editor` 是挂载编辑器的元素，搜索面板的部位只在面板打开时存在。",
+                "en-US": "Class names of the inner parts, keyed by `editor`, `searchTrigger`, `searchBox`, `searchInput`, `searchOptions` and `replaceInput`, merged with the built-in classes. `editor` is the element the editor mounts in; the search panel parts exist only while the panel is open."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "value": {
                 "zh-CN": "展示与编辑的 JSON 文本，未传时按空文本创建。只有 value 变为与编辑器当前内容不同的值时才会重建编辑器，把 onChange 的值写回 value 不会丢失光标。",
                 "en-US": "JSON text to show and edit; the editor starts empty when omitted. The editor is re-created only when value becomes different from its current content, so writing the onChange value back keeps the caret."

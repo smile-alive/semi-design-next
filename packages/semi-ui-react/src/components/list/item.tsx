@@ -2,7 +2,7 @@ import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+import { cssClasses, type ListItemPart } from '@fibrae/semi-foundation/components/list/constants';
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
 import type { ElementProps } from '../../base/index';
 import { hasContent } from '../../utils/index';
@@ -17,6 +17,9 @@ export interface ListItemProps extends ElementProps<'li'> {
     className?: string;
     children?: React.ReactNode;
     style?: React.CSSProperties;
+    /** Applied after the `item*` classNames of the parent List */
+    classNames?: Partial<Record<ListItemPart, string>>;
+    styles?: Partial<Record<ListItemPart, React.CSSProperties>>;
     onRightClick?: React.MouseEventHandler<HTMLLIElement>;
     /** Attached to the li, which sits inside a Col when the List has `grid` */
     ref?: React.Ref<HTMLLIElement>;
@@ -29,8 +32,8 @@ const noRole = { role: 'none' };
 // with the li they belong to; a nested List's extra then does not silence the outer item
 const extraClicks = new WeakMap<Event, Element | null>();
 
-function ListItem({ ref, header, main, className, extra, children, align = 'flex-start', onClick, onRightClick, ...rest }: ListItemProps) {
-    const { grid, onClick: listOnClick, onRightClick: listOnRightClick } = useListContext();
+function ListItem({ ref, header, main, className, style, extra, children, align = 'flex-start', onClick, onRightClick, classNames, styles, ...rest }: ListItemProps) {
+    const { grid, onClick: listOnClick, onRightClick: listOnRightClick, classNames: parentClassNames, styles: parentStyles } = useListContext();
 
     const handleClick = onClick || listOnClick;
     const handleRightClick = onRightClick || listOnRightClick;
@@ -42,8 +45,16 @@ function ListItem({ ref, header, main, className, extra, children, align = 'flex
     const body =
         hasContent(header) || hasContent(main) ? (
             <Box className={clsx(`${prefixCls}-item-body`, { [`${prefixCls}-item-body-${align}`]: align })}>
-                {hasContent(header) && <Box className={`${prefixCls}-item-body-header`}>{header}</Box>}
-                {hasContent(main) && <Box className={`${prefixCls}-item-body-main`}>{main}</Box>}
+                {hasContent(header) && (
+                    <Box className={clsx(`${prefixCls}-item-body-header`, parentClassNames?.itemHeader, classNames?.header)} style={{ ...parentStyles?.itemHeader, ...styles?.header }}>
+                        {header}
+                    </Box>
+                )}
+                {hasContent(main) && (
+                    <Box className={clsx(`${prefixCls}-item-body-main`, parentClassNames?.itemMain, classNames?.main)} style={{ ...parentStyles?.itemMain, ...styles?.main }}>
+                        {main}
+                    </Box>
+                )}
             </Box>
         ) : null;
 
@@ -57,7 +68,8 @@ function ListItem({ ref, header, main, className, extra, children, align = 'flex
         <li
             {...liProps}
             ref={ref}
-            className={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-clickable`]: clickable }, className)}
+            className={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-clickable`]: clickable }, parentClassNames?.item, className)}
+            style={{ ...parentStyles?.item, ...style }}
             onClick={
                 handleClick &&
                 ((e) => {
@@ -79,7 +91,7 @@ function ListItem({ ref, header, main, className, extra, children, align = 'flex
             )}
             {!(clickable && !body) && children}
             {hasContent(extra) && (
-                <div className={`${prefixCls}-item-extra`} onClick={(e) => extraClicks.set(e.nativeEvent, e.currentTarget.parentElement)}>
+                <div className={clsx(`${prefixCls}-item-extra`, parentClassNames?.itemExtra, classNames?.extra)} style={{ ...parentStyles?.itemExtra, ...styles?.extra }} onClick={(e) => extraClicks.set(e.nativeEvent, e.currentTarget.parentElement)}>
                     {extra}
                 </div>
             )}

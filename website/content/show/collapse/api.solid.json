@@ -10,6 +10,11 @@
                 "zh-CN": "初始展开面板的 key。",
                 "en-US": "Key of the panel expanded initially."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`itemHeader`、`itemTitle`、`itemIcon`、`itemExtra`、`itemBody`，作用到全部面板，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `item`, `itemHeader`, `itemTitle`, `itemIcon`, `itemExtra` and `itemBody`; applied to every panel and merged with the built-in classes."
+            },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "accordion": { "zh-CN": "手风琴模式。", "en-US": "Accordion mode." },
             "clickHeaderToExpand": {
                 "zh-CN": "点击面板头整行展开收起；为 false 时只响应切换按钮和箭头。",
@@ -52,6 +57,14 @@
     "collapse-panel": {
         "source": "packages/semi-ui-solid/src/components/collapse/panel.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "当前面板内部各部位的类名，键为 `header`、`title`、`icon`、`extra`、`body`，与组件自带的类名及 Collapse 的 `item*` 类名合并，面板自己的在后。",
+                "en-US": "Class names of this panel's inner parts, keyed by `header`, `title`, `icon`, `extra` and `body`; merged with the built-in classes and Collapse's `item*` classes, the panel's own last."
+            },
+            "styles": {
+                "zh-CN": "当前面板内部各部位的内联样式，键同 `classNames`，与 Collapse 的 `item*` 样式合并，面板自己的后写。",
+                "en-US": "Inline styles of this panel's inner parts, keyed like `classNames`; merged with Collapse's `item*` styles, the panel's own written last."
+            },
             "itemKey": {
                 "zh-CN": "必填且唯一，用于匹配 activeKey 与 defaultActiveKey。",
                 "en-US": "Required and unique, matched against activeKey and defaultActiveKey."

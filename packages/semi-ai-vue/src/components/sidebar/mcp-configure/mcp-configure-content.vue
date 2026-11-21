@@ -19,10 +19,12 @@
     type Adapter = MCPConfigureContentAdapter<MouseEvent, MCPConfigureOption>;
 
     const props = withDefaults(defineProps<MCPConfigureContentProps>(), {
+        classNames: undefined,
         options: () => [],
         customOptions: () => [],
         filter: undefined,
         placeholder: undefined,
+        styles: undefined,
     });
 
     const emit = defineEmits<MCPConfigureContentEmits>();
@@ -64,12 +66,12 @@
 
 <template>
     <div :class="prefix">
-        <div :class="`${prefix}-header`">
+        <div :class="[`${prefix}-header`, props.classNames?.toolbar]" :style="props.styles?.toolbar">
             <RadioGroup :aria-label="text.mcpConfigure" :modelValue="state.mode" type="button" @update:modelValue="foundation.handleModeChange($event!)">
                 <Radio :value="strings.MCP_MODE.INNER">{{ text.mcpServers }}</Radio>
                 <Radio :value="strings.MCP_MODE.CUSTOM">{{ text.newMcpAdd }}</Radio>
             </RadioGroup>
-            <span :class="`${prefix}-header-count`">{{ text.activeMCPNumber }} {{ activatedCount }}/{{ total }}</span>
+            <span :class="[`${prefix}-header-count`, props.classNames?.count]" :style="props.styles?.count">{{ text.activeMCPNumber }} {{ activatedCount }}/{{ total }}</span>
         </div>
         <Empty v-if="isCustom && props.customOptions.length === 0" :class="`${prefix}-custom-empty`">
             <template #image>
@@ -86,8 +88,8 @@
                 <template #default>{{ text.newMcpAdd }}</template>
             </Button>
         </Empty>
-        <component :is="isCustom ? 'div' : SlotFragment" v-else :class="isCustom ? [`${prefix}-search`, `${prefix}-search-container`] : undefined">
-            <Input :class="isCustom ? undefined : `${prefix}-search`" :modelValue="state.inputValue" :placeholder="props.placeholder ?? text.searchPlaceholder" :showClear="false" @change="foundation.handleSearch">
+        <component :is="isCustom ? 'div' : SlotFragment" v-else :class="isCustom ? [`${prefix}-search`, `${prefix}-search-container`, props.classNames?.search] : undefined" :style="isCustom ? props.styles?.search : undefined">
+            <Input :class="isCustom ? undefined : [`${prefix}-search`, props.classNames?.search]" :modelValue="state.inputValue" :placeholder="props.placeholder ?? text.searchPlaceholder" :showClear="false" :style="isCustom ? undefined : props.styles?.search" @change="foundation.handleSearch">
                 <template #prefix>
                     <IconSearch />
                 </template>
@@ -99,26 +101,26 @@
                 <template #default>{{ text.newMcpAdd }}</template>
             </Button>
         </component>
-        <div :class="`${prefix}-item-container`">
+        <div :class="[`${prefix}-item-container`, props.classNames?.list]" :style="props.styles?.list">
             <template v-for="(option, index) in showOptions" :key="option.value">
                 <slot v-if="$slots.item" :custom="isCustom" :index="index" :item="option" name="item" />
-                <div v-else :class="`${prefix}-item`">
-                    <img v-if="!$slots.icon && option.icon" alt="" :class="`${prefix}-item-sign`" :src="option.icon" />
-                    <div v-else :class="`${prefix}-item-sign`">
+                <div v-else :class="[`${prefix}-item`, props.classNames?.item]" :style="props.styles?.item">
+                    <img v-if="!$slots.icon && option.icon" alt="" :class="[`${prefix}-item-sign`, props.classNames?.itemIcon]" :src="option.icon" :style="props.styles?.itemIcon" />
+                    <div v-else :class="[`${prefix}-item-sign`, props.classNames?.itemIcon]" :style="props.styles?.itemIcon">
                         <slot :custom="isCustom" :index="index" :item="option" name="icon" />
                     </div>
                     <div :class="`${prefix}-item-content`">
-                        <div :class="`${prefix}-item-content-label`">{{ option.label }}</div>
-                        <div :class="`${prefix}-item-content-desc`">
+                        <div :class="[`${prefix}-item-content-label`, props.classNames?.itemTitle]" :style="props.styles?.itemTitle">{{ option.label }}</div>
+                        <div :class="[`${prefix}-item-content-desc`, props.classNames?.itemDescription]" :style="props.styles?.itemDescription">
                             <slot :custom="isCustom" :index="index" :item="option" name="desc">{{ option.desc }}</slot>
                         </div>
                     </div>
-                    <Button v-if="option.configure" :aria-label="text.configure" :class="[`${prefix}-item-button`, `${prefix}-item-button-configure`]" @click="foundation.onConfigureButtonClick($event, option)">
+                    <Button v-if="option.configure" :aria-label="text.configure" :class="[`${prefix}-item-button`, `${prefix}-item-button-configure`, props.classNames?.itemAction]" :style="props.styles?.itemAction" @click="foundation.onConfigureButtonClick($event, option)">
                         <template #icon>
                             <IconSetting />
                         </template>
                     </Button>
-                    <Button v-if="isCustom" :aria-label="text.edit" :class="[`${prefix}-item-button`, `${prefix}-item-button-configure`]" @click="foundation.onEditButtonClick($event, option)">
+                    <Button v-if="isCustom" :aria-label="text.edit" :class="[`${prefix}-item-button`, `${prefix}-item-button-configure`, props.classNames?.itemAction]" :style="props.styles?.itemAction" @click="foundation.onEditButtonClick($event, option)">
                         <template #icon>
                             <IconEdit />
                         </template>
@@ -127,14 +129,20 @@
                     leaves the Tab order. No click listener since the status cannot change. -->
                     <Tooltip v-if="option.disabled">
                         <template #content>{{ text.defaultMcpInfo }}</template>
-                        <button aria-disabled="true" :aria-label="statusLabel(option)" :class="[buttonCls, `${buttonCls}-${option.active ? 'light' : 'solid'}`, `${buttonCls}-disabled`, `${buttonCls}-primary-disabled`, `${buttonCls}-with-icon`, `${buttonCls}-with-icon-only`, `${prefix}-item-button`]" type="button">
+                        <button
+                            aria-disabled="true"
+                            :aria-label="statusLabel(option)"
+                            :class="[buttonCls, `${buttonCls}-${option.active ? 'light' : 'solid'}`, `${buttonCls}-disabled`, `${buttonCls}-primary-disabled`, `${buttonCls}-with-icon`, `${buttonCls}-with-icon-only`, `${prefix}-item-button`, props.classNames?.itemAction]"
+                            :style="props.styles?.itemAction"
+                            type="button"
+                        >
                             <span :class="`${buttonCls}-content`">
                                 <IconMinus v-if="option.active" />
                                 <IconPlus v-else />
                             </span>
                         </button>
                     </Tooltip>
-                    <Button v-else :aria-label="statusLabel(option)" :class="`${prefix}-item-button`" :theme="option.active ? 'light' : 'solid'" type="primary" @click="foundation.handleStatusChange(option, !option.active)">
+                    <Button v-else :aria-label="statusLabel(option)" :class="[`${prefix}-item-button`, props.classNames?.itemAction]" :style="props.styles?.itemAction" :theme="option.active ? 'light' : 'solid'" type="primary" @click="foundation.handleStatusChange(option, !option.active)">
                         <template #icon>
                             <IconMinus v-if="option.active" />
                             <IconPlus v-else />

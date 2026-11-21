@@ -70,8 +70,8 @@
                 "en-US": "Validation status: default, error or warning; error outputs aria-invalid."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 input（原生 input 元素），值的写法同 class，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by input (the native input element); values take any class binding and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 input（原生 input 元素）、prefix（前缀与 insetLabel）、suffix、clear（清除按钮）、visibilityToggle（密码可见性切换按钮）、addonBefore、addonAfter，值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by input (the native input element), prefix (also holds insetLabel), suffix, clear (the clear button), visibilityToggle (the password visibility button), addonBefore and addonAfter; values take any class binding and merge with the built-in classes."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 classNames，数字需带单位。",
@@ -221,8 +221,8 @@
             "showLineNumber": { "zh-CN": "是否展示行号。", "en-US": "Whether to show line numbers." },
             "lineNumberStart": { "zh-CN": "行号起始值。", "en-US": "Starting line number." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 textarea（原生 textarea 元素）、lineNumber（行号区域），值的写法同 class，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by textarea (the native textarea element) and lineNumber (the line number area); values take any class binding and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 textarea（原生 textarea 元素）、lineNumber（行号区域）、clear（清除按钮）、counter（字数统计），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by textarea (the native textarea element), lineNumber (the line number area), clear (the clear button) and counter (the character counter); values take any class binding and merge with the built-in classes."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 classNames，数字需带单位；textarea 的尺寸由 autosize、resize、rows 决定，同名样式以后者为准。",

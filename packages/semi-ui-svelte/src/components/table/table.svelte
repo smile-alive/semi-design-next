@@ -648,7 +648,7 @@
                 <TablePagination {formatPageText} pagination={mergedPagination} />
             {/if}
             {#if hasTitle}
-                <div class="{prefixCls}-title" id={titleId} x-semi-prop="title">
+                <div class={[`${prefixCls}-title`, classNames?.title]} id={titleId} style={styles?.title} x-semi-prop="title">
                     {#if typeof title === 'function'}{@render title({ pageData })}{:else}{title}{/if}
                 </div>
             {/if}
@@ -670,14 +670,14 @@
                 >
                     {#snippet emptyContent()}
                         <div class="{prefixCls}-placeholder">
-                            <div class="{prefixCls}-empty" x-semi-prop="empty">
+                            <div class={[`${prefixCls}-empty`, classNames?.empty]} style={styles?.empty} x-semi-prop="empty">
                                 {#if empty}{@render empty()}{:else}{locale().locale.emptyText}{/if}
                             </div>
                         </div>
                     {/snippet}
                 </Body>
                 {#if hasFooter}
-                    <div class="{prefixCls}-footer" x-semi-prop="footer">
+                    <div class={[`${prefixCls}-footer`, classNames?.footer]} style={styles?.footer} x-semi-prop="footer">
                         {#if typeof footer === 'function'}{@render footer({ pageData })}{:else}{footer}{/if}
                     </div>
                 {/if}

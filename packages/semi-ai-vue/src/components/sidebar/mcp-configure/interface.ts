@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { MCPConfigurePart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import type { MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
 import type { ContainerEmits, ContainerProps } from '../container/interface';
 
@@ -9,6 +10,8 @@ export interface MCPConfigureOption extends MCPOption {
 }
 
 export interface MCPConfigureContentProps {
+    classNames?: Partial<Record<MCPConfigurePart, ClassValue>>;
+    styles?: Partial<Record<MCPConfigurePart, StyleValue>>;
     options?: MCPConfigureOption[];
     customOptions?: MCPConfigureOption[];
     /** Receives the lower-cased input; by default the label and desc are searched */
@@ -41,7 +44,7 @@ export interface MCPConfigureContentSlots {
     item?: (props: MCPConfigureItemSlotProps) => VNode[];
 }
 
-export interface MCPConfigureProps extends ContainerProps, MCPConfigureContentProps {}
+export interface MCPConfigureProps extends Omit<ContainerProps, 'classNames' | 'styles'>, MCPConfigureContentProps {}
 
 export interface MCPConfigureEmits extends ContainerEmits, MCPConfigureContentEmits {}
 

@@ -10,6 +10,8 @@
     defineOptions({ name: 'Combobox', inheritAttrs: false });
 
     const props = withDefaults(defineProps<ComboboxProps>(), {
+        classNames: undefined,
+        styles: undefined,
         timeStampValue: undefined,
         format: strings.DEFAULT_FORMAT,
         prefixCls: undefined,
@@ -38,6 +40,10 @@
     const options = computed(() => getOptions(props));
     const ampmOptions = computed(() => options.value.ampm.list.map(({ value }) => ({ value, text: locale.value.locale[value] })));
 
+    // always objects, so the columns do not read ScrollItem's global default
+    const itemClassNames = computed(() => ({ option: props.classNames?.item }));
+    const itemStyles = computed(() => ({ option: props.styles?.item }));
+
     const columnClass = (type: ColumnType) => (props.prefixCls ? `${props.prefixCls}-list-${type}` : undefined);
 
     const withUnit = (unit: 'hour' | 'minute' | 'second') => (value: string) => value + locale.value.locale[unit];
@@ -57,16 +63,55 @@
 </script>
 
 <template>
-    <ScrollList>
+    <ScrollList :classNames="{ header: props.classNames?.header, body: props.classNames?.content, footer: props.classNames?.footer }" :styles="{ header: props.styles?.header, body: props.styles?.content, footer: props.styles?.footer }">
         <template #header>
             <slot name="panelHeader" />
         </template>
         <template #footer>
             <slot name="panelFooter" />
         </template>
-        <ScrollItem v-if="props.use12Hours" ref="ampm" :aria-label="locale.locale.ampmList" :class="columnClass('ampm')" :list="ampmOptions" mode="normal" :selectedIndex="options.ampm.selectedIndex" v-bind="props.scrollItemProps" @select="pick('ampm', $event)" />
-        <ScrollItem v-if="options.showHour" ref="hour" :aria-label="locale.locale.hourList" :class="columnClass('hour')" :list="options.hour.list" mode="normal" :selectedIndex="options.hour.selectedIndex" :transform="withUnit('hour')" v-bind="props.scrollItemProps" @select="pick('hour', $event)" />
-        <ScrollItem v-if="options.showMinute" ref="minute" :aria-label="locale.locale.minuteList" :class="columnClass('minute')" :list="options.minute.list" mode="normal" :selectedIndex="options.minute.selectedIndex" :transform="withUnit('minute')" v-bind="props.scrollItemProps" @select="pick('minute', $event)" />
-        <ScrollItem v-if="options.showSecond" ref="second" :aria-label="locale.locale.secondList" :class="columnClass('second')" :list="options.second.list" mode="normal" :selectedIndex="options.second.selectedIndex" :transform="withUnit('second')" v-bind="props.scrollItemProps" @select="pick('second', $event)" />
+        <ScrollItem v-if="props.use12Hours" ref="ampm" :aria-label="locale.locale.ampmList" :class="columnClass('ampm')" :classNames="itemClassNames" :list="ampmOptions" mode="normal" :selectedIndex="options.ampm.selectedIndex" :styles="itemStyles" v-bind="props.scrollItemProps" @select="pick('ampm', $event)" />
+        <ScrollItem
+            v-if="options.showHour"
+            ref="hour"
+            :aria-label="locale.locale.hourList"
+            :class="columnClass('hour')"
+            :classNames="itemClassNames"
+            :list="options.hour.list"
+            mode="normal"
+            :selectedIndex="options.hour.selectedIndex"
+            :styles="itemStyles"
+            :transform="withUnit('hour')"
+            v-bind="props.scrollItemProps"
+            @select="pick('hour', $event)"
+        />
+        <ScrollItem
+            v-if="options.showMinute"
+            ref="minute"
+            :aria-label="locale.locale.minuteList"
+            :class="columnClass('minute')"
+            :classNames="itemClassNames"
+            :list="options.minute.list"
+            mode="normal"
+            :selectedIndex="options.minute.selectedIndex"
+            :styles="itemStyles"
+            :transform="withUnit('minute')"
+            v-bind="props.scrollItemProps"
+            @select="pick('minute', $event)"
+        />
+        <ScrollItem
+            v-if="options.showSecond"
+            ref="second"
+            :aria-label="locale.locale.secondList"
+            :class="columnClass('second')"
+            :classNames="itemClassNames"
+            :list="options.second.list"
+            mode="normal"
+            :selectedIndex="options.second.selectedIndex"
+            :styles="itemStyles"
+            :transform="withUnit('second')"
+            v-bind="props.scrollItemProps"
+            @select="pick('second', $event)"
+        />
     </ScrollList>
 </template>

@@ -6,7 +6,7 @@
 
     let { message, role, continueSend }: { message: ChatMessage; role: ChatMetadata; continueSend: boolean } = $props();
 
-    const { snippets } = getChatContext();
+    const { view, snippets } = getChatContext();
 
     const { PREFIX_CHAT_BOX } = cssClasses;
 </script>
@@ -17,7 +17,7 @@
 
 {#snippet defaultAvatar()}
     <!-- the title next to it names the sender -->
-    <Avatar alt="" children={snippets.roleAvatar ? roleNode : undefined} class={[`${PREFIX_CHAT_BOX}-avatar`, { [`${PREFIX_CHAT_BOX}-avatar-hidden`]: continueSend }]} color={role.color} size="extra-small" src={role.avatar} />
+    <Avatar alt="" children={snippets.roleAvatar ? roleNode : undefined} class={[`${PREFIX_CHAT_BOX}-avatar`, { [`${PREFIX_CHAT_BOX}-avatar-hidden`]: continueSend }, view.classNames?.itemAvatar]} color={role.color} size="extra-small" src={role.avatar} style={view.styles?.itemAvatar} />
 {/snippet}
 
 {#if snippets.avatar}

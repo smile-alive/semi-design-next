@@ -177,4 +177,27 @@ describe('Annotation', () => {
         const { container } = render(<VideoItem title="Video title" url="https://semi.design/video" />);
         expect(container.querySelector('img')).toBeNull();
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'close', 'content', 'groupHeader', 'groupContent', 'item', 'itemTitle', 'itemDetail', 'itemFooter'] as const;
+        const selectors = {
+            header: '.semi-sidebar-container-header',
+            title: '.semi-sidebar-container-header-title',
+            close: '.semi-sidebar-container-header-closeBtn',
+            content: '.semi-sidebar-container-content',
+            groupHeader: '.semi-sidebar-collapse-header-content',
+            groupContent: '.semi-sidebar-annotation-content',
+            item: '.semi-sidebar-annotation-item-text',
+            itemTitle: '.semi-sidebar-annotation-item-text .semi-sidebar-annotation-item-title',
+            itemDetail: '.semi-sidebar-annotation-item-text-detail',
+            itemFooter: '.semi-sidebar-annotation-item-text .semi-sidebar-annotation-item-footer',
+        };
+        const { container } = render(<Annotation classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} activeKey={['1']} info={info} visible />);
+        for (const part of parts) {
+            const el = container.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+        expect(container.querySelector('.semi-sidebar-annotation-item-video')).toHaveClass('my-item');
+    });
 });

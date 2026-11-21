@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 `source`、`selected`、`filter`、`header`、`title`、`action`、`list`、`groupTitle`、`item`、`itemDragHandle`、`itemRemove`、`empty`，与组件自带的类名合并。`source`、`selected` 是左右两个面板，`item` 同时作用于两侧的选项行。 | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, ClassValue>>"}>Type</ApiType> | - |
 | dataSource | 数据源。type 为 list 时是数据项数组，groupList 时是分组数组，treeList 时是带 children 的树形数据（叶子节点写 `children: []`）。treeList 的左侧树只在传入新数组时更新，原地修改不会生效。 | `TransferDataSource` | `[]` |
 | disabled | 是否禁用。 | `boolean` | `false` |
 | draggable | 是否开启右侧已选项的拖拽排序。排序后 value 与 onChange 的数组顺序随之改变。 | `boolean` | `false` |
@@ -27,6 +28,7 @@ import ApiType from '#/components/ApiType.astro';
 | sourceHeader | 自定义左侧面板头部。leafOnlyNum 仅 treeList 提供。 | <ApiType detail={"Snippet\u003c[TransferSourceHeaderSnippetProps]>"}>Type</ApiType> | - |
 | sourceItem | 完全自定义左侧单个候选项。index 是过滤与分页后可见条目中的下标，不是在 dataSource 中的位置。 | <ApiType detail={"Snippet\u003c[TransferSourceItemSnippetProps]>"}>Type</ApiType> | - |
 | sourcePanel | 完全自定义左侧候选面板，可复用 Transfer 的筛选与选择逻辑。 | <ApiType detail={"Snippet\u003c[TransferSourcePanelSnippetProps]>"}>Type</ApiType> | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, string>>"}>Type</ApiType> | - |
 | treeProps | 仅 treeList 有效，传给左侧 Tree 的属性，会覆盖默认的 multiple、disableStrictly、leafOnly、filterTreeNode、defaultExpandAll。选中值、树数据由 Transfer 决定，value、onChange、keyMaps、treeData、treeDataSimpleJson、onChangeWithObject 会被忽略；Tree 的 snippet 只转发 label。 | `TransferTreeProps` | - |
 | type | 穿梭框类型，可选 list、groupList、treeList。 | `TransferType` | `"list"` |
 | value | 已选中项的 value 数组，可用 bind:value 绑定。只传值时作为初始选中项，之后由组件自己维护；`bind:value={get, set}` 使其完全受控，数组顺序就是右侧的显示顺序。 | `TransferValue` | - |

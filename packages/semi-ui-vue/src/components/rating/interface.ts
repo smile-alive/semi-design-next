@@ -1,8 +1,11 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { RatingPart } from '@fibrae/semi-foundation/components/rating/constants';
 
 export type { RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 
 export interface RatingProps {
+    classNames?: Partial<Record<RatingPart, ClassValue>>;
+    styles?: Partial<Record<RatingPart, StyleValue>>;
     modelValue?: number;
     defaultValue?: number;
     count?: number;

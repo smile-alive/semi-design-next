@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性       | 说明                                                          | 类型             | 默认值                                        |
-| ---------- | ------------------------------------------------------------- | ---------------- | --------------------------------------------- |
-| dataSource | 数据数组；非空时按数据渲染，忽略默认插槽。项的字段见下表。    | `TimelineData[]` | `semiGlobalDefault("Timeline", "dataSource")` |
-| mode       | 时间轴与内容的相对位置，可选 left、right、center、alternate。 | `TimelineMode`   | `"left"`                                      |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 `item`、`itemRail`、`itemIcon`、`itemContent`、`itemExtra`、`itemTime`，与组件自带的类名合并；`item` 落在每个 `li` 上，`itemRail` 是连接线，`itemIcon` 是圆点或自定义 dot 的容器；`item*` 键作用到全部 TimelineItem，且在节点自己的 classNames 之前。 | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Timeline", "classNames")` |
+| dataSource | 数据数组；非空时按数据渲染，忽略默认插槽。项的字段见下表。 | `TimelineData[]` | `semiGlobalDefault("Timeline", "dataSource")` |
+| mode | 时间轴与内容的相对位置，可选 left、right、center、alternate。 | `TimelineMode` | `"left"` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Timeline", "styles")` |
 
 **Events**
 

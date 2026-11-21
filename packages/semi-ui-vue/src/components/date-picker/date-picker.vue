@@ -122,6 +122,8 @@
     const hasPresets = computed(() => Boolean(props.presets?.length));
 
     const quickControlProps = computed(() => ({
+        class: props.classNames?.presets,
+        style: props.styles?.presets,
         insetInput: props.insetInput,
         locale: locale.value.locale,
         presetPosition: props.presetPosition,
@@ -349,6 +351,7 @@
                                 v-else
                                 ref="monthsGrid"
                                 :autoSwitchDate="props.autoSwitchDate"
+                                :classNames="props.classNames"
                                 :dateFnsLocale="dateFnsLocale"
                                 :defaultPickerValue="props.defaultPickerValue"
                                 :density="props.density"
@@ -371,6 +374,7 @@
                                 :selectionControlled="selectionControlled"
                                 :startDateOffset="props.startDateOffset ?? readSemiDefault(semi, 'DatePicker', 'startDateOffset')"
                                 :startYear="props.startYear"
+                                :styles="props.styles"
                                 :syncSwitchMonth="props.syncSwitchMonth"
                                 :timePickerOpts="props.timePickerOpts"
                                 :timeZone="timeZone"
@@ -402,7 +406,7 @@
                             <slot name="rightSlot" />
                         </div>
                     </div>
-                    <Footer v-if="confirmNeeded" :disabledConfirm="confirmDisabled" :locale="locale.locale" @cancel="foundation.handleCancel" @confirm="foundation.handleConfirm" />
+                    <Footer v-if="confirmNeeded" :class="props.classNames?.footer" :disabledConfirm="confirmDisabled" :locale="locale.locale" :style="props.styles?.footer" @cancel="foundation.handleCancel" @confirm="foundation.handleConfirm" />
                 </div>
             </template>
             <!-- The inputs, or a focusable custom trigger, are the Tab stop; Tooltip would add tabindex 0 here. -->
@@ -431,13 +435,12 @@
                     :aria-label="$attrs['aria-labelledby'] ? undefined : triggerName"
                     :autofocus="state.autofocus"
                     :borderless="isRangeType(type) ? false : props.borderless"
+                    :classNames="props.classNames"
                     :dateFnsLocale="dateFnsLocale"
                     :defaultPickerValue="props.defaultPickerValue"
                     :disabled="inputDisabled"
                     :format="props.format"
-                    :inputClassName="props.classNames?.input"
                     :inputReadOnly="props.inputReadOnly || Boolean(props.insetInput)"
-                    :inputStyle="props.styles?.input"
                     :inputValue="state.inputValue"
                     :insetLabelId="props.insetLabelId"
                     :placeholder="placeholder"
@@ -447,6 +450,7 @@
                     :showClear="props.showClear"
                     :showClearIgnoreDisabled="Boolean(props.insetInput)"
                     :size="looks.size"
+                    :styles="props.styles"
                     :type="type"
                     :validateStatus="props.validateStatus"
                     :value="state.value"

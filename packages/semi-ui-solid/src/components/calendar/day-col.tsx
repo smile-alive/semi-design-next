@@ -5,6 +5,7 @@ import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from
 import { toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import { useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import ByKey from './by-key';
 import EventContent from './event-content';
 import type { DayColProps } from './interface';
@@ -33,14 +34,14 @@ export default function DayCol(props: DayColProps) {
     const minEventHeight = () => props.minEventHeight ?? Number.MIN_SAFE_INTEGER;
 
     return (
-        <div class={prefixCls} role="cell">
+        <div class={clsx(prefixCls, props.classNames?.day)} style={props.styles?.day} role="cell">
             <div class={`${prefixCls}-content`}>
                 <Show when={(props.showCurrTime ?? true) && state().showCurrTime}>
                     <For each={currPos()}>
                         {(pos) => (
                             <>
-                                <div class={`${prefixCls}-curr-circle`} style={{ top: currTop(pos) }} />
-                                <div class={`${prefixCls}-curr-line`} style={{ top: currTop(pos) }} />
+                                <div class={clsx(`${prefixCls}-curr-circle`, props.classNames?.currentTimeDot)} style={mergeStyles({ top: currTop(pos) }, props.styles?.currentTimeDot)} />
+                                <div class={clsx(`${prefixCls}-curr-line`, props.classNames?.currentTimeLine)} style={mergeStyles({ top: currTop(pos) }, props.styles?.currentTimeLine)} />
                             </>
                         )}
                     </For>
@@ -61,12 +62,15 @@ export default function DayCol(props: DayColProps) {
                     <ByKey each={props.events} by={(event) => event.key}>
                         {(event) => (
                             <li
-                                class={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-day`}
-                                style={{
-                                    top: `${event().startPos * props.scrollHeight}px`,
-                                    height: `${Math.max(minEventHeight(), (event().endPos - event().startPos) * props.scrollHeight)}px`,
-                                    'inset-inline-start': toCssLength(event().left),
-                                }}
+                                class={clsx(`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-day`, props.classNames?.event)}
+                                style={mergeStyles(
+                                    {
+                                        top: `${event().startPos * props.scrollHeight}px`,
+                                        height: `${Math.max(minEventHeight(), (event().endPos - event().startPos) * props.scrollHeight)}px`,
+                                        'inset-inline-start': toCssLength(event().left),
+                                    },
+                                    props.styles?.event
+                                )}
                             >
                                 <EventContent of={event().children} />
                             </li>

@@ -14,6 +14,10 @@
                 "zh-CN": "Checkbox 的文本内容 snippet，同时是原生 input 的可访问名称；写在标签内的其余内容就是它。",
                 "en-US": "Label content snippet of the checkbox, which is also the native input's accessible name. The rest of the tag's content is this snippet."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 icon（勾选框本体）、label（标签文字）、extra（补充说明），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by icon (the box), label (the label text) and extra (the supplementary text); values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the checkbox is disabled." },
             "extra": {
                 "zh-CN": "辅助文本的 snippet，aria-describedby 指向它。",
@@ -43,6 +47,10 @@
                 "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。",
                 "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the focus method."
             },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
+            },
             "type": {
                 "zh-CN": "样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。",
                 "en-US": "Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies."
@@ -63,6 +71,10 @@
             "children": {
                 "zh-CN": "组内的 Checkbox；设置 options 时忽略。",
                 "en-US": "Checkbox components in the group. Ignored when options is set."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 item（每个 Checkbox 的根元素）、itemIcon、itemLabel、itemExtra，作用于组内全部 Checkbox，值的写法同 class（字符串、数组或对象），与 Checkbox 自己的 classNames 合并，组的类名在前。",
+                "en-US": "Class names of the inner parts, keyed by item (the root of every Checkbox), itemIcon, itemLabel and itemExtra. They apply to every Checkbox in the group; values take anything class takes (string, array or object) and merge with each Checkbox's own classNames, the group's first."
             },
             "direction": {
                 "zh-CN": "组内布局方向，可选 horizontal 或 vertical。",
@@ -96,6 +108,10 @@
             "options": {
                 "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style }`，其中 `style` 为字符串。",
                 "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style }`, where `style` is a string."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames，Checkbox 自己的 styles 后写。",
+                "en-US": "Style strings of the inner parts, keyed like classNames; each Checkbox's own styles are applied after them."
             },
             "type": {
                 "zh-CN": "组内所有 Checkbox 的样式类型，可选 default、card、pureCard。",

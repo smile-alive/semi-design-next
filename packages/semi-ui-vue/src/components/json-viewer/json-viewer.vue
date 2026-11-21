@@ -20,7 +20,9 @@
     type Adapter = JsonViewerAdapter<FoundationProps>;
 
     const props = withDefaults(defineProps<JsonViewerProps & /* @vue-ignore */ ElementProps<'div', keyof JsonViewerProps | EmitHandlers<JsonViewerEmits>>>(), {
+        classNames: semiGlobalDefault('JsonViewer', 'classNames'),
         modelValue: undefined,
+        styles: semiGlobalDefault('JsonViewer', 'styles'),
         width: () => semiDefault('JsonViewer', 'width', 400),
         height: () => semiDefault('JsonViewer', 'height', 400),
         showSearch: () => semiDefault('JsonViewer', 'showSearch', true),
@@ -71,6 +73,8 @@
 
     provideJsonViewerContext({
         view: computed(() => ({
+            classNames: props.classNames,
+            styles: props.styles,
             showSearchBar: state.value.showSearchBar,
             searchOptions: state.value.searchOptions,
             readOnly: mergedOptions.value.readOnly,
@@ -114,7 +118,7 @@
 
 <template>
     <div :role="namedRole($attrs)" :style="[sizeStyle(), { position: 'relative' }]">
-        <div ref="editor" :class="[prefix, `${prefix}-background`]" :style="sizeStyle()" />
+        <div ref="editor" :class="[prefix, `${prefix}-background`, props.classNames?.editor]" :style="[sizeStyle(), props.styles?.editor]" />
         <template v-if="props.showSearch">
             <slot v-if="$slots.searchButton" name="searchButton" v-bind="searchButtonProps()" />
             <SearchButton v-else />

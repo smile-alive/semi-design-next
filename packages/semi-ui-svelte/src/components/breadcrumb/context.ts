@@ -10,6 +10,8 @@ export interface BreadcrumbContext {
     readonly hasOnClick: boolean;
     readonly item?: Snippet<[BreadcrumbRouteContext]>;
     readonly icon?: Snippet<[BreadcrumbIconContext]>;
+    readonly classNames?: BreadcrumbProps['classNames'];
+    readonly styles?: BreadcrumbProps['styles'];
     onClick: BreadcrumbClick;
 }
 

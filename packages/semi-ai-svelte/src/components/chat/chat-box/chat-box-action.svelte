@@ -47,7 +47,7 @@
     const { PREFIX_CHAT_BOX_ACTION } = cssClasses;
     const flags = $derived(getChatBoxActionFlags({ role: message.role, status: message.status, isLast }));
     const keys = $derived(getChatBoxActionKeys(flags));
-    const wrapClass = $derived([PREFIX_CHAT_BOX_ACTION, ChatBoxActionFoundation.isActionBarShown({ showReset: flags.showReset, finished: flags.finished, showAction: states().showAction }) && `${PREFIX_CHAT_BOX_ACTION}-show`, !flags.finished && `${PREFIX_CHAT_BOX_ACTION}-hidden`]);
+    const wrapClass = $derived([PREFIX_CHAT_BOX_ACTION, ChatBoxActionFoundation.isActionBarShown({ showReset: flags.showReset, finished: flags.finished, showAction: states().showAction }) && `${PREFIX_CHAT_BOX_ACTION}-show`, !flags.finished && `${PREFIX_CHAT_BOX_ACTION}-hidden`, context.view.classNames?.itemActions]);
 
     // read lazily: the snippets below are declared after the script runs
     const actionNodes: Record<ChatBoxActionKey, Snippet> = $derived({ copyNode, likeNode, dislikeNode, resetNode, deleteNode });
@@ -77,7 +77,7 @@
 {#if context.snippets.action}
     {@render context.snippets.action({ class: wrapClass.filter(Boolean).join(' '), defaultActions: Object.values(defaultActionsObj), defaultActionsObj, message })}
 {:else}
-    <div class={wrapClass}>
+    <div class={wrapClass} style={context.view.styles?.itemActions}>
         {#each keys as key (key)}
             {@render actionNodes[key]()}
         {/each}

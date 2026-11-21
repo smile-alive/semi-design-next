@@ -389,7 +389,7 @@
                     }"
                 >
                     <TablePagination v-if="mergedPagination && (paginationPosition === 'top' || paginationPosition === 'both')" :formatPageText="formatPageText" :pagination="mergedPagination" />
-                    <div v-if="frame.title" :id="titleId" :class="`${prefixCls}-title`" x-semi-prop="title">
+                    <div v-if="frame.title" :id="titleId" :class="[`${prefixCls}-title`, props.classNames?.title]" :style="props.styles?.title" x-semi-prop="title">
                         <template v-if="typeof frame.title === 'string'">{{ frame.title }}</template>
                         <component :is="node" v-for="[node, key] in frame.title" v-else :key="key" />
                     </div>
@@ -409,14 +409,14 @@
                         >
                             <template #empty>
                                 <div :class="`${prefixCls}-placeholder`">
-                                    <div :class="`${prefixCls}-empty`" x-semi-prop="empty">
+                                    <div :class="[`${prefixCls}-empty`, props.classNames?.empty]" :style="props.styles?.empty" x-semi-prop="empty">
                                         <slot v-if="$slots.empty" name="empty" />
                                         <template v-else>{{ locale.locale.emptyText }}</template>
                                     </div>
                                 </div>
                             </template>
                         </Body>
-                        <div v-if="frame.footer" :class="`${prefixCls}-footer`" x-semi-prop="footer">
+                        <div v-if="frame.footer" :class="[`${prefixCls}-footer`, props.classNames?.footer]" :style="props.styles?.footer" x-semi-prop="footer">
                             <template v-if="typeof frame.footer === 'string'">{{ frame.footer }}</template>
                             <component :is="node" v-for="[node, key] in frame.footer" v-else :key="key" />
                         </div>

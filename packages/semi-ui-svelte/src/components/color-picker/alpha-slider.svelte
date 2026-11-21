@@ -7,6 +7,7 @@
     import useLocale from '../locale/use-locale.svelte.js';
     import { toDragEvent } from './drag-event.js';
     import type { AlphaSliderProps } from './interface.js';
+    import { joinStyle } from './join-style.js';
 
     type Foundation = ColorSliderFoundation<ColorSliderBaseProps>;
     type Adapter = ColorSliderAdapter<ColorSliderBaseProps>;
@@ -50,22 +51,16 @@
 
 <div
     bind:this={dom}
-    class={`${cssClasses.PREFIX}-alphaSlider`}
-    style:height={`${props.height}px`}
-    style:width={`${props.width}px`}
+    class={[`${cssClasses.PREFIX}-alphaSlider`, props.classNames?.alpha]}
+    style={joinStyle(`height: ${props.height}px; width: ${props.width}px`, props.styles?.alpha)}
     onlostpointercapture={foundation.handleLostPointerCapture}
     onpointerdown={(event) => foundation.handlePointerDown(toDragEvent(event))}
     onpointermove={(event) => foundation.handlePointerMove(toDragEvent(event))}
 >
     <div class={`${cssClasses.PREFIX}-alphaSliderInner`} style:background={`linear-gradient(90deg, ${hsvaToHslaString({ ...props.hsva, a: 0 })}, ${hsvaToHslaString({ ...props.hsva, a: 1 })})`}>
         <div
-            class={`${cssClasses.PREFIX}-alphaHandle`}
-            style:background-color={hsvaToRgbaString(props.hsva)}
-            style:height={`${props.handleSize}px`}
-            style:left={`${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`}
-            style:top="50%"
-            style:transform="translateY(-50%)"
-            style:width={`${props.handleSize}px`}
+            class={[`${cssClasses.PREFIX}-alphaHandle`, props.classNames?.handle]}
+            style={joinStyle(`background-color: ${hsvaToRgbaString(props.hsva)}; height: ${props.handleSize}px; left: ${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px; top: 50%; transform: translateY(-50%); width: ${props.handleSize}px`, props.styles?.handle)}
         >
             <input aria-label={locale().locale.alpha} aria-valuetext={`${round(props.hsva.a * 100)}%`} class={`${cssClasses.PREFIX}-handleSlider`} max={100} min={0} type="range" value={round(props.hsva.a * 100)} oninput={handleInput} onkeydown={foundation.handleKeyDown} />
         </div>

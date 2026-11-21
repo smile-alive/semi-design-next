@@ -6,6 +6,7 @@ import { warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/timeline/timeline.scss';
 import { isToken, type Token, useDefaultProps } from '../../base/index';
 import { hasContent } from '../../utils/index';
+import { TimelineContext } from './context';
 import type { Data, TimelineItemProps, TimelineProps } from './interface';
 import Item, { TIMELINE_ITEM } from './item';
 import TimelineItemView from './item-view';
@@ -18,7 +19,7 @@ const itemProps = ({ content, extra, time, ...item }: Data) => item;
 
 function Timeline(rawProps: TimelineProps) {
     const props = useDefaultProps('Timeline', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['children', 'class', 'dataSource', 'mode', 'renderContent', 'renderDot', 'renderExtra', 'renderTime']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'dataSource', 'mode', 'renderContent', 'renderDot', 'renderExtra', 'renderTime', 'styles']);
 
     const resolved = children(() => local.children);
 
@@ -30,29 +31,33 @@ function Timeline(rawProps: TimelineProps) {
         })
     );
 
+    const context = createMemo(() => ({ classNames: local.classNames, styles: local.styles }));
+
     return (
         <ul {...rest} class={clsx(prefixCls, local.class, { [`${prefixCls}-${local.mode}`]: local.mode })}>
-            <Show
-                when={local.dataSource?.length}
-                fallback={
-                    // the index counts rendered items only, so a skipped child does not take an alternate slot
-                    <For each={tokens()}>{(token, index) => <TimelineItemView {...token.props} class={clsx(token.props.class, getPosCls(local.mode, token.props.position, index()))} />}</For>
-                }
-            >
-                <Index each={local.dataSource}>
-                    {(item, index) => (
-                        <TimelineItemView
-                            {...itemProps(item())}
-                            class={clsx(item().class, getPosCls(local.mode, item().position, index))}
-                            dot={local.renderDot?.(item(), index)}
-                            time={local.renderTime ? local.renderTime(item(), index) : item().time}
-                            extra={local.renderExtra ? local.renderExtra(item(), index) : item().extra}
-                        >
-                            {local.renderContent ? local.renderContent(item(), index) : item().content}
-                        </TimelineItemView>
-                    )}
-                </Index>
-            </Show>
+            <TimelineContext.Provider value={context}>
+                <Show
+                    when={local.dataSource?.length}
+                    fallback={
+                        // the index counts rendered items only, so a skipped child does not take an alternate slot
+                        <For each={tokens()}>{(token, index) => <TimelineItemView {...token.props} class={clsx(token.props.class, getPosCls(local.mode, token.props.position, index()))} />}</For>
+                    }
+                >
+                    <Index each={local.dataSource}>
+                        {(item, index) => (
+                            <TimelineItemView
+                                {...itemProps(item())}
+                                class={clsx(item().class, getPosCls(local.mode, item().position, index))}
+                                dot={local.renderDot?.(item(), index)}
+                                time={local.renderTime ? local.renderTime(item(), index) : item().time}
+                                extra={local.renderExtra ? local.renderExtra(item(), index) : item().extra}
+                            >
+                                {local.renderContent ? local.renderContent(item(), index) : item().content}
+                            </TimelineItemView>
+                        )}
+                    </Index>
+                </Show>
+            </TimelineContext.Provider>
         </ul>
     );
 }

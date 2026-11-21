@@ -7,8 +7,8 @@
                 "en-US": "Layout mode: vertical or horizontal."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 image，值的写法同 class，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by image; values take any class binding and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 image、title、description、footer（默认插槽所在的底部区域），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by image, title, description and footer (the bottom area holding the default slot); values take any class binding and merge with the built-in classes."
             },
             "styles": {
                 "zh-CN": "内部各部位的样式，键为 image，值的写法同 style。",

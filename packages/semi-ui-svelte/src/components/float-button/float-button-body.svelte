@@ -1,19 +1,24 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-foundation/components/float-button/constants';
     import type { FloatButtonShape, FloatButtonSize } from './interface.js';
 
     let {
+        class: className,
         colorful = false,
         disabled = false,
         shape,
         size,
+        style,
         children,
     }: {
+        class?: ClassValue;
         colorful?: boolean;
         disabled?: boolean;
         shape?: FloatButtonShape;
         size?: FloatButtonSize;
+        style?: string;
         children?: Snippet;
     } = $props();
 
@@ -30,7 +35,9 @@
             [`${prefix}-disabled`]: disabled,
             [`${prefix}-${size}`]: size,
         },
+        className,
     ]}
+    {style}
 >
     {@render children?.()}
 </span>

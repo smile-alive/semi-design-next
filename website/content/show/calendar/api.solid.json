@@ -6,6 +6,10 @@
                 "zh-CN": "自定义日、多日、周视图顶部的全天事件区域，参数 events 为传入的全部事件，需自行筛选。",
                 "en-US": "Custom area for events at the top of the day, range and week views; events is the whole events array that was passed in, so the function filters it itself."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 header、headerCell、allDay、timeColumn、timeLabel、day、event、currentTimeLine、currentTimeDot、more、dropdown，与组件自带的类名合并。部位按视图出现：日视图没有 header、headerCell，月视图没有 allDay、timeColumn、timeLabel、currentTimeLine、currentTimeDot；day 在日、周、多日视图是一天的时间列，在月视图是日期格；dropdown 是点击「还有 N 项」后弹出的事件卡片。",
+                "en-US": "Class names of the inner parts, keyed by header, headerCell, allDay, timeColumn, timeLabel, day, event, currentTimeLine, currentTimeDot, more and dropdown; merged with the built-in classes. Parts appear per view: the day view has no header or headerCell, and the month view has no allDay, timeColumn, timeLabel, currentTimeLine or currentTimeDot. day is the time column of one day in the day, week and range views and a date cell in the month view; dropdown is the event card that opens from \"N more\"."
+            },
             "dateGridRender": {
                 "zh-CN": "自定义单元格或列的内容，参数为 dateString（date.toString() 得到的字符串）和日期，需要绝对定位。",
                 "en-US": "Custom content of a date cell or column, with the dateString (date.toString()) and the date. Use absolute positioning for elements."
@@ -69,6 +73,10 @@
             "showCurrTime": {
                 "zh-CN": "日、周、多日视图下显示当前时间的红线。",
                 "en-US": "Shows the red line of the current time in the day, week and range views."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
             },
             "weekStartsOn": {
                 "zh-CN": "以周几作为每周第一天，0 代表周日，1 代表周一，以此类推；对月视图、周视图生效。",

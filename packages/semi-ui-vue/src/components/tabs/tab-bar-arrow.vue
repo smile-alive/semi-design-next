@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
+    import type { ClassValue, StyleValue } from 'vue';
+    import { cssClasses, type TabsPart } from '@fibrae/semi-foundation/components/tabs/constants';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-vue';
     import { SlotFragment } from '../../base/index';
     import { slotNodes, hasSlotContent } from '../../utils/index';
@@ -14,6 +15,8 @@
         position: 'start' | 'end';
         showRestInDropdown: boolean;
         dropdownProps?: TabsDropdownItemProps;
+        classNames?: Partial<Record<TabsPart, ClassValue>>;
+        styles?: Partial<Record<TabsPart, StyleValue>>;
     }>();
 
     const emit = defineEmits<{
@@ -27,7 +30,7 @@
 </script>
 
 <template>
-    <div v-if="!props.items.length" :class="[`${prefix}-arrow-${props.position}`, `${prefix}-arrow`]" role="presentation">
+    <div v-if="!props.items.length" :class="[`${prefix}-arrow-${props.position}`, `${prefix}-arrow`, props.classNames?.arrow]" role="presentation" :style="props.styles?.arrow">
         <Button :aria-label="props.position === 'start' ? locale.locale.prevTabs : locale.locale.nextTabs" disabled theme="borderless">
             <template #icon>
                 <IconChevronLeft v-if="props.position === 'start'" />
@@ -35,9 +38,21 @@
             </template>
         </Button>
     </div>
-    <component :is="props.showRestInDropdown ? Dropdown : SlotFragment" v-else :class="`${prefix}-dropdown`" clickToHide clickTriggerToHide disableFocusListener :position="props.position === 'start' ? 'bottomLeft' : 'bottomRight'" showTick trigger="hover" v-bind="props.dropdownProps">
+    <component
+        :is="props.showRestInDropdown ? Dropdown : SlotFragment"
+        v-else
+        :class="[`${prefix}-dropdown`, props.classNames?.dropdown]"
+        clickToHide
+        clickTriggerToHide
+        disableFocusListener
+        :position="props.position === 'start' ? 'bottomLeft' : 'bottomRight'"
+        showTick
+        :style="props.styles?.dropdown"
+        trigger="hover"
+        v-bind="props.dropdownProps"
+    >
         <!-- the Button is the Tab stop; Dropdown would add tabindex 0 here -->
-        <div :class="[`${prefix}-arrow-${props.position}`, `${prefix}-arrow`]" role="presentation" tabindex="-1" @click="emit('arrowClick')">
+        <div :class="[`${prefix}-arrow-${props.position}`, `${prefix}-arrow`, props.classNames?.arrow]" role="presentation" :style="props.styles?.arrow" tabindex="-1" @click="emit('arrowClick')">
             <Button :aria-label="props.position === 'start' ? locale.locale.prevTabs : locale.locale.nextTabs" theme="borderless">
                 <template #icon>
                     <IconChevronLeft v-if="props.position === 'start'" />

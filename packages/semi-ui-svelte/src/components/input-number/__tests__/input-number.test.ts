@@ -190,10 +190,41 @@ describe('Svelte InputNumber', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        mount({ value: 1, classNames: { input: 'my-input' }, styles: { input: 'order: 2' } });
-        expect(getInput()).toHaveClass(`${prefixCls}`, 'my-input');
-        expect(getInput()).toHaveStyle({ order: '2' });
+        const parts = ['input', 'prefix', 'suffix', 'clear', 'addonBefore', 'addonAfter', 'actions', 'upButton', 'downButton'] as const;
+        const selectors = {
+            input: prefixCls,
+            prefix: `${prefixCls}-prefix`,
+            suffix: `${prefixCls}-suffix`,
+            clear: `${prefixCls}-clearbtn`,
+            addonBefore: `${prefixCls}-prepend`,
+            addonAfter: `${prefixCls}-append`,
+            actions: `${prefixCls}-number-suffix-btns`,
+            upButton: `${prefixCls}-number-button-up`,
+            downButton: `${prefixCls}-number-button-down`,
+        };
+        mount(
+            {
+                value: 1,
+                showClear: true,
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            },
+            true
+        );
+        for (const part of parts) {
+            const el = document.querySelector(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
         expect(getWrapper()).not.toHaveClass('my-input');
+    });
+
+    it('innerButtons 时 actions 落在 suffix 内的步进按钮组上', async () => {
+        mount({ innerButtons: true, classNames: { actions: 'my-actions', suffix: 'my-suffix' } }, true);
+        await fireEvent.mouseEnter(getWrapper());
+        flushSync();
+        expect(getButtons()).toHaveClass('my-actions');
+        expect(getButtons()?.parentElement).toHaveClass('my-suffix');
     });
 
     it('size、showClear、hideButtons 与句柄', () => {

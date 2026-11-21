@@ -1,4 +1,4 @@
-import { memo, useCallback, useId, useImperativeHandle, useLayoutEffect, useRef, useState, type ReactNode, type CSSProperties, type ChangeEvent, type DragEvent, type FocusEvent, type KeyboardEvent } from 'react';
+import { memo, useCallback, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type CSSProperties, type ChangeEvent, type DragEvent, type FocusEvent, type KeyboardEvent } from 'react';
 import clsx from 'clsx';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base';
 import { strings, cssClasses, type UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
@@ -12,6 +12,7 @@ import Cropper, { type CropperHandle } from '../cropper';
 import useLocale from '../locale/use-locale';
 import Modal from '../modal';
 import type { ShowTooltip } from '../typography';
+import { UploadContext } from './context';
 import FileCard from './file-card';
 import type { FileItem, RenderFileItemProps, UploadListType, PromptPositionType, BeforeUploadProps, AfterUploadProps, OnChangeProps, UploadCustomRequestArgs, CustomError, RenderPictureCloseProps, RenderFileListTitleProps, CropProps, UploadCropModalProps } from './interface';
 
@@ -192,7 +193,7 @@ class UploadRuntime {
     }
 }
 
-type FileCardSharedProps = Pick<RenderFileItemProps, 'showRetry' | 'showReplace' | 'previewFile' | 'listType' | 'className' | 'style' | 'disabled' | 'showPicInfo' | 'renderPicInfo' | 'renderPicPreviewIcon' | 'renderPicClose' | 'renderFileOperation' | 'renderThumbnail' | 'picWidth' | 'picHeight' | 'showTooltip'>;
+type FileCardSharedProps = Pick<RenderFileItemProps, 'showRetry' | 'showReplace' | 'previewFile' | 'listType' | 'disabled' | 'showPicInfo' | 'renderPicInfo' | 'renderPicPreviewIcon' | 'renderPicClose' | 'renderFileOperation' | 'renderThumbnail' | 'picWidth' | 'picHeight' | 'showTooltip'>;
 
 interface ListedFileCardProps extends FileCardSharedProps {
     file: FileItem;
@@ -322,9 +323,10 @@ function Upload(rawProps: UploadProps) {
     const [addAreaHasName, setAddAreaHasName] = useState(true);
     let addContent: ReactNode = null;
 
+    const partsContext = useMemo(() => ({ classNames, styles }), [classNames, styles]);
     const addAreaRole = addAreaHasControl ? undefined : 'button';
     const required = ariaRequired === true || ariaRequired === 'true';
-    const cardShared: FileCardSharedProps = { showRetry, showReplace, previewFile, listType, className: classNames?.item, style: styles?.item, disabled, showPicInfo, renderPicInfo, renderPicPreviewIcon, renderPicClose, renderFileOperation, renderThumbnail, picWidth, picHeight, showTooltip };
+    const cardShared: FileCardSharedProps = { showRetry, showReplace, previewFile, listType, disabled, showPicInfo, renderPicInfo, renderPicPreviewIcon, renderPicClose, renderFileOperation, renderThumbnail, picWidth, picHeight, showTooltip };
 
     // wrappers keep the runtime out of a ref position, which the React Compiler would treat as a ref
     const setInput = useCallback((node: HTMLInputElement | null) => runtime.setInput(node), [runtime]);
@@ -458,10 +460,14 @@ function Upload(rawProps: UploadProps) {
     const renderFileListPic = (): ReactNode => {
         const showAddTriggerInList = limit === undefined || limit > fileList.length;
         const dragAreaBaseCls = `${prefixCls}-drag-area`;
-        const uploadAddCls = clsx(`${prefixCls}-add`, {
-            [`${prefixCls}-picture-add`]: true,
-            [`${prefixCls}-picture-add-disabled`]: disabled,
-        });
+        const uploadAddCls = clsx(
+            `${prefixCls}-add`,
+            {
+                [`${prefixCls}-picture-add`]: true,
+                [`${prefixCls}-picture-add-disabled`]: disabled,
+            },
+            classNames?.trigger
+        );
         const addContent = (
             <div
                 className={
@@ -471,7 +477,7 @@ function Upload(rawProps: UploadProps) {
                           })
                         : uploadAddCls
                 }
-                style={{ height: picHeight, width: picWidth }}
+                style={{ height: picHeight, width: picWidth, ...styles?.trigger }}
                 role={addAreaRole}
                 {...addAreaProps}
                 onClick={openFileDialog}
@@ -488,7 +494,7 @@ function Upload(rawProps: UploadProps) {
 
         // The wrappers stay when the list is empty, so adding the first file keeps the add button mounted and focused
         return (
-            <div className={clsx(`${prefixCls}-file-list`, `${prefixCls}-picture-file-list`)} onBlur={untrackFocus} onFocus={trackFocus}>
+            <div className={clsx(`${prefixCls}-file-list`, `${prefixCls}-picture-file-list`, classNames?.list)} style={styles?.list} onBlur={untrackFocus} onFocus={trackFocus}>
                 <div className={`${prefixCls}-file-list-main`}>
                     {showAddTriggerInList && hotSpotLocation === 'start' && addContent}
                     {/* a list owns only its items, so the add button sits beside it; display: contents keeps the
@@ -518,7 +524,7 @@ function Upload(rawProps: UploadProps) {
                 <>
                     <span className={`${titleCls}-choosen`}>{fileListTitle || locale.selectedFiles}</span>
                     {showClear && !disabled && (
-                        <button type="button" className={`${titleCls}-clear`} onClick={foundation.handleClear}>
+                        <button type="button" className={clsx(`${titleCls}-clear`, classNames?.clear)} style={styles?.clear} onClick={foundation.handleClear}>
                             {locale.clear}
                         </button>
                     )}
@@ -526,8 +532,12 @@ function Upload(rawProps: UploadProps) {
             );
         }
         return (
-            <div className={`${prefixCls}-file-list`} onBlur={untrackFocus} onFocus={trackFocus}>
-                {Boolean(showTitle) && <div className={titleCls}>{titleContent}</div>}
+            <div className={clsx(`${prefixCls}-file-list`, classNames?.list)} style={styles?.list} onBlur={untrackFocus} onFocus={trackFocus}>
+                {Boolean(showTitle) && (
+                    <div className={clsx(titleCls, classNames?.listTitle)} style={styles?.listTitle}>
+                        {titleContent}
+                    </div>
+                )}
                 <div ref={setList} className={`${prefixCls}-file-list-main`} aria-label={locale.fileList} role="list">
                     {fileList.map(renderFile)}
                 </div>
@@ -537,22 +547,26 @@ function Upload(rawProps: UploadProps) {
 
     const renderDragArea = (): ReactNode => {
         const dragAreaBaseCls = `${prefixCls}-drag-area`;
-        const dragAreaCls = clsx(dragAreaBaseCls, {
-            [`${dragAreaBaseCls}-legal`]: dragAreaStatus === strings.DRAG_AREA_LEGAL,
-            [`${dragAreaBaseCls}-custom`]: children,
-        });
+        const dragAreaCls = clsx(
+            dragAreaBaseCls,
+            {
+                [`${dragAreaBaseCls}-legal`]: dragAreaStatus === strings.DRAG_AREA_LEGAL,
+                [`${dragAreaBaseCls}-custom`]: children,
+            },
+            classNames?.trigger
+        );
         return (
-            <div className={dragAreaCls} role={addAreaRole} {...addAreaProps} {...dragHandlers} onClick={openFileDialog}>
+            <div className={dragAreaCls} style={styles?.trigger} role={addAreaRole} {...addAreaProps} {...dragHandlers} onClick={openFileDialog}>
                 {children || (
                     <>
-                        <div className={`${dragAreaBaseCls}-icon`} x-semi-prop="dragIcon">
+                        <div className={clsx(`${dragAreaBaseCls}-icon`, classNames?.dragIcon)} style={styles?.dragIcon} x-semi-prop="dragIcon">
                             {dragIcon || <IconUpload size="extra-large" />}
                         </div>
                         <div className={`${dragAreaBaseCls}-text`}>
-                            <div className={`${dragAreaBaseCls}-main-text`} x-semi-prop="dragMainText">
+                            <div className={clsx(`${dragAreaBaseCls}-main-text`, classNames?.dragMainText)} style={styles?.dragMainText} x-semi-prop="dragMainText">
                                 {dragMainText || locale.mainText}
                             </div>
-                            <div className={`${dragAreaBaseCls}-sub-text`} x-semi-prop="dragSubText">
+                            <div className={clsx(`${dragAreaBaseCls}-sub-text`, classNames?.dragSubText)} style={styles?.dragSubText} x-semi-prop="dragSubText">
                                 {dragSubText}
                             </div>
                             <div className={`${dragAreaBaseCls}-tips`}>{dragAreaStatus === strings.DRAG_AREA_LEGAL && <span className={`${dragAreaBaseCls}-tips-legal`}>{locale.legalTips}</span>}</div>
@@ -577,7 +591,7 @@ function Upload(rawProps: UploadProps) {
         addContent = draggable ? (
             renderDragArea()
         ) : (
-            <div className={`${prefixCls}-add`} role={addAreaRole} {...addAreaProps} onClick={openFileDialog}>
+            <div className={clsx(`${prefixCls}-add`, classNames?.trigger)} style={styles?.trigger} role={addAreaRole} {...addAreaProps} onClick={openFileDialog}>
                 {children}
             </div>
         );
@@ -621,16 +635,16 @@ function Upload(rawProps: UploadProps) {
             <input ref={setReplaceInput} type="file" className={`${prefixCls}-hidden-input-replace`} tabIndex={-1} autoComplete="off" multiple={false} accept={accept} onChange={handleReplaceChange} />
             {addContent}
             {Boolean(prompt) && (
-                <div className={`${prefixCls}-prompt`} x-semi-prop="prompt">
+                <div className={clsx(`${prefixCls}-prompt`, classNames?.prompt)} style={styles?.prompt} x-semi-prop="prompt">
                     {prompt}
                 </div>
             )}
             {Boolean(validateMessage) && (
-                <div className={`${prefixCls}-validate-message`} x-semi-prop="validateMessage">
+                <div className={clsx(`${prefixCls}-validate-message`, classNames?.validateMessage)} style={styles?.validateMessage} x-semi-prop="validateMessage">
                     {validateMessage}
                 </div>
             )}
-            {fileListNode}
+            <UploadContext value={partsContext}>{fileListNode}</UploadContext>
             <Modal
                 {...restModalProps}
                 style={{ height: 500, ...modalStyle }}

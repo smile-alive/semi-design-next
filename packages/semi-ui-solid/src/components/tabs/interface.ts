@@ -37,19 +37,17 @@ export interface TabBarProps extends ElementProps<'div'> {
     /** Names the tablist */
     'aria-label'?: string;
     'aria-labelledby'?: string;
-    /** Only `visibleTabs` is read: the scroll wrapper that holds the visible tabs */
-    classNames?: Partial<Record<'visibleTabs', string>>;
+    /** The bar reads every key except the ones TabItem and TabPane read from the Tabs context (`item*`, `pane`, `content`) */
+    classNames?: Partial<Record<TabsPart, string>>;
     collapsible?: boolean | 'auto';
     list?: PlainTab[];
     onTabClick?: (activeKey: string, event: MouseEvent | KeyboardEvent) => void;
     showRestInDropdown?: boolean;
     size?: TabSize;
-    styles?: Partial<Record<'visibleTabs', JSX.CSSProperties | string>>;
+    styles?: Partial<Record<TabsPart, JSX.CSSProperties | string>>;
     tabBarExtraContent?: JSX.Element;
     tabPosition?: TabPosition;
     type?: TabType;
-    dropdownClassName?: string;
-    dropdownStyle?: JSX.CSSProperties | string;
     deleteTabItem?: (tabKey: string, event: MouseEvent) => void;
     handleKeyDown?: (event: KeyboardEvent, itemKey: string, closable: boolean) => void;
     more?: TabsMore;

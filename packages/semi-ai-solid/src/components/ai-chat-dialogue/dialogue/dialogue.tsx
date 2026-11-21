@@ -41,9 +41,9 @@ export default function Dialogue(props: DialogueProps) {
     const action = () => <DialogueAction isLastChat={props.isLastChat} message={props.message} />;
 
     return (
-        <div class={clsx(`${prefixCls}-wrapper`, { [`${prefixCls}-wrapper-selected`]: view().selecting && props.isSelected })}>
+        <div class={clsx(`${prefixCls}-wrapper`, { [`${prefixCls}-wrapper-selected`]: view().selecting && props.isSelected }, view().classNames?.item)} style={view().styles?.item}>
             <Show when={view().selecting}>
-                <div class={`${prefixCls}-checkbox`}>
+                <div class={clsx(`${prefixCls}-checkbox`, view().classNames?.itemCheckbox)} style={view().styles?.itemCheckbox}>
                     <Checkbox aria-label={locale().locale.selectMessage} checked={props.isSelected} onChange={(e) => selectChange(Boolean(e.target.checked), props.message.id)} />
                 </div>
             </Show>

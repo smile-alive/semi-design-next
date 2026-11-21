@@ -16,10 +16,10 @@
 <template>
     <div :class="cssClasses.PREFIX" :role="namedRole($attrs)">
         <slot name="topSlot" />
-        <ColorChooseArea :handleSize="20" :height="view.height" :hsva="view.currentColor.hsva" :width="view.width" @change="foundation.handleAreaChange" />
-        <ColorSlider class="colorSliderWrapper" :handleSize="18" :height="10" :hue="view.currentColor.hsva.h" :width="view.width" @change="foundation.handleHueChange" />
-        <AlphaSlider v-if="view.alpha" :handleSize="18" :height="10" :hsva="view.currentColor.hsva" :width="view.width" @change="foundation.handleAlphaChange" />
-        <DataPart :alpha="view.alpha" :currentColor="view.currentColor" :defaultFormat="view.defaultFormat" :eyeDropper="view.eyeDropper" :width="view.width" @alphaChange="foundation.handleAlphaChange" @change="foundation.handleChange" />
+        <ColorChooseArea :classNames="view.classNames" :handleSize="20" :height="view.height" :hsva="view.currentColor.hsva" :styles="view.styles" :width="view.width" @change="foundation.handleAreaChange" />
+        <ColorSlider class="colorSliderWrapper" :classNames="view.classNames" :handleSize="18" :height="10" :hue="view.currentColor.hsva.h" :styles="view.styles" :width="view.width" @change="foundation.handleHueChange" />
+        <AlphaSlider v-if="view.alpha" :classNames="view.classNames" :handleSize="18" :height="10" :hsva="view.currentColor.hsva" :styles="view.styles" :width="view.width" @change="foundation.handleAlphaChange" />
+        <DataPart :alpha="view.alpha" :classNames="view.classNames" :currentColor="view.currentColor" :defaultFormat="view.defaultFormat" :eyeDropper="view.eyeDropper" :styles="view.styles" :width="view.width" @alphaChange="foundation.handleAlphaChange" @change="foundation.handleChange" />
         <slot name="bottomSlot" />
     </div>
 </template>

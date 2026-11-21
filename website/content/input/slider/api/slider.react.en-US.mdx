@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-labelledby | The id of the labelling element, used as the handle's accessible name. In `range` mode each handle's name is that label plus its start or end text. | `string` | - |
 | aria-valuetext | A user-friendly name for the current value. `getAriaValueText` takes precedence when set. | `string` | - |
 | className | Class name of the `.semi-slider-wrapper` element. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `rail`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `rail`, `track`, `handle`, `dot`, `mark` and `dropdown`; merged with the built-in classes. `dropdown` is the tip popup that shows the current value on hover, drag or focus. | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
 | defaultValue | Initial value when uncontrolled. Defaults to `min`. | `number \| number[]` | - |
 | disabled | Whether the slider is disabled. | `boolean` | `false` |
 | getAriaValueText | Provides a user-friendly name for the current value, called with the handle's value and its index. Takes precedence over `aria-valuetext`. | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |

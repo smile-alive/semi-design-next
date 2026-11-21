@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | Whether the Select takes focus after mounting. | `boolean` | `false` |
 | borderless | Whether the Select has no border. | `boolean` | `false` |
 | changeWithObject | A boolean attribute, not an event: when true, change, update:modelValue, modelValue and defaultValue use option objects, which must contain value and label. | `WithObject` | `undefined` |
-| classNames | Class names of the inner parts, keyed by dropdown (the dropdown popup); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Select", "classNames")` |
+| classNames | Class names of the inner parts, keyed by prefix, suffix, content, placeholder, input, search, tag, clear, arrow, dropdown, list, empty, groupLabel, item, itemIcon and itemContent; values take any class binding and merge with the built-in classes. content is the selection area in the middle of the trigger, input is the root element of the search field inside the trigger (unlike input of Input, which is the native input), search is the search area at the top of the dropdown when searchPosition="dropdown", dropdown is the outermost layer of the popup, and list is the option list. item, itemIcon and itemContent apply to every option and come before the classNames of SelectOption; they do not apply to options drawn by the optionItem or createItem slot. | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Select", "classNames")` |
 | clickToHide | Whether clicking the select box closes an open dropdown. | `boolean` | `false` |
 | defaultActiveFirstOption | Whether opening the dropdown highlights the first enabled option when nothing is selected (press Enter to select it). With a selected value, the first selected option is always highlighted. | `boolean` | `true` |
 | defaultOpen | Whether the dropdown is open when mounted. | `boolean` | `false` |
@@ -44,7 +44,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size: small, default or large. | `Size` | `undefined` |
 | spacing | The distance between the popup and the select box, in pixels. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Select", "spacing")` |
 | stopPropagation | Whether click events inside the popup stop propagating. | `boolean` | `true` |
-| styles | Inline styles of the inner parts, keyed like classNames, for example width on dropdown. The style on the root element does not reach the popup. | <ApiType detail={"Partial\u003cRecord\u003c\"dropdown\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Select", "styles")` |
+| styles | Inline styles of the inner parts, keyed like classNames, for example width on dropdown. The style on the root element does not reach the popup. | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Select", "styles")` |
 | validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Select", "validateStatus")` |
 | virtualize | Turns on list virtualization for many options. itemSize is the height of every row and is required; height defaults to 270 and width to 100%. | `SelectVirtualize` | `semiGlobalDefault("Select", "virtualize")` |
 

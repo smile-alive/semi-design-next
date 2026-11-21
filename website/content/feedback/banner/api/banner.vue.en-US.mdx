@@ -1,11 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                                   | Type         | Default     |
-| -------- | ------------------------------------------------------------- | ------------ | ----------- |
-| bordered | Whether to show a border. Only takes effect in non-full mode. | `boolean`    | `false`     |
-| fullMode | Whether the banner is in full mode.                           | `boolean`    | `true`      |
-| title    | Plain-text title. The title slot wins when both are given.    | `string`     | `undefined` |
-| type     | Type: info, success, danger or warning.                       | `BannerType` | `"info"`    |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bordered | Whether to show a border. Only takes effect in non-full mode. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by `icon`, `title`, `description`, `close` and `extra`; merged with the built-in classes. `extra` is the area that holds the default slot. | <ApiType detail={"Partial\u003cRecord\u003cBannerPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Banner", "classNames")` |
+| fullMode | Whether the banner is in full mode. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cBannerPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Banner", "styles")` |
+| title | Plain-text title. The title slot wins when both are given. | `string` | `undefined` |
+| type | Type: info, success, danger or warning. | `BannerType` | `"info"` |
 
 **Events**
 

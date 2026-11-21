@@ -2,6 +2,14 @@
     "pagination": {
         "source": "packages/semi-ui-solid/src/components/pagination/pagination.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 list、total、prev、next、item、ellipsis、sizeChanger、sizeChangerDropdown、quickJumper、dropdown，与组件自带的类名合并。item 也作用于省略号按钮，dropdown 是省略号与 small 型页码悬浮弹出的页码列表浮层。",
+                "en-US": "Class names of the inner parts, keyed by list, total, prev, next, item, ellipsis, sizeChanger, sizeChangerDropdown, quickJumper and dropdown; merged with the built-in classes. item also reaches the ellipsis button, and dropdown is the popup listing pages that opens from the ellipsis and the small size."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
+            },
             "total": { "zh-CN": "总条数。", "en-US": "Total number of items." },
             "showTotal": {
                 "zh-CN": "是否显示总页数，size 为 small 时不显示。",

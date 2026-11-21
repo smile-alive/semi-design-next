@@ -7,8 +7,8 @@
                 "en-US": "Class name of the root element."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `wrapper`（scroll 模式下的滚动 wrapper），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `wrapper` (the scroll wrapper in scroll mode); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `wrapper`（scroll 模式下的滚动容器）、`item`（collapse 模式下每个可见项的外层 div）、`overflow`（collapse 模式下放置溢出内容的 div），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `wrapper` (the scroll wrapper in scroll mode), `item` (the div around each visible item in collapse mode) and `overflow` (the div holding the overflow content in collapse mode); merged with the built-in classes."
             },
             "collapseFrom": {
                 "zh-CN": "collapse 模式的折叠方向，可选 `start` 或 `end`。",

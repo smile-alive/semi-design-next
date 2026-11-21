@@ -47,6 +47,21 @@ describe('AvatarGroup', () => {
         });
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const props = { maxCount: 4, classNames: { more: 'c-more' }, styles: { more: { opacity: 0.5 } } };
+        const { container, unmount } = render(() => <Group {...props} />);
+        const more = container.querySelector(`.${prefixCls}-item-more`);
+        expect(more).toHaveClass('c-more');
+        expect(more).toHaveStyle({ opacity: '0.5' });
+        expect(getAvatars(container)[0]).not.toHaveClass('c-more');
+        unmount();
+
+        const { container: custom } = render(() => <Group {...props} renderMore={(count) => <Avatar>{`+${count}`}</Avatar>} />);
+        const last = getAvatars(custom)[4];
+        expect(last).toHaveClass('c-more');
+        expect(last).toHaveStyle({ opacity: '0.5' });
+    });
+
     it('头像渲染为列表项', () => {
         const { container } = render(() => <Group maxCount={3} />);
         const items = within(screen.getByRole('list')).getAllByRole('listitem');

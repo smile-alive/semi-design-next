@@ -28,10 +28,13 @@ afterEach(() => {
 
 describe('Image', () => {
     it('classNames 与 styles 按部位落到对应元素', () => {
-        const { container } = render(() => <Image styles={{ img: { 'max-width': '300px' } }} classNames={{ img: 'custom-img-cls' }} src={src} />);
+        const { container } = render(() => <Image styles={{ img: { 'max-width': '300px' }, overlay: { order: 2 } }} classNames={{ img: 'custom-img-cls', overlay: 'custom-overlay-cls' }} src={src} />);
         const img = thumb(container);
         expect(img).toHaveClass('custom-img-cls');
         expect(img).toHaveStyle({ maxWidth: '300px' });
+        const overlay = container.querySelector(`.${prefixCls}-overlay`);
+        expect(overlay).toHaveClass('custom-overlay-cls');
+        expect(overlay).toHaveStyle({ order: '2' });
     });
 
     it('根元素与 img 结构：width、height、class、style、alt、crossOrigin', () => {

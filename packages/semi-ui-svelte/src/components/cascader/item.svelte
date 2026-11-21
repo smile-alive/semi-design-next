@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+    import type { ClassValue } from 'svelte/elements';
+    import { cssClasses, numbers, strings, type CascaderPart } from '@fibrae/semi-foundation/components/cascader/constants';
     import CascaderFoundation, { type BasicData } from '@fibrae/semi-foundation/components/cascader/foundation';
     import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
     import { IconChevronRight, IconTick } from '@fibrae/semi-icons-svelte';
@@ -46,6 +47,8 @@
         onItemHover: (event: MouseEvent, item: CascaderEntity) => void;
         onItemCheckboxClick: (item: CascaderEntity | SearchData) => void;
         onListScroll: (event: Event, level: number) => void;
+        classNames?: Partial<Record<CascaderPart, ClassValue>>;
+        styles?: Partial<Record<CascaderPart, string>>;
     }
 
     let {
@@ -76,6 +79,8 @@
         onItemHover,
         onItemCheckboxClick,
         onListScroll,
+        classNames,
+        styles,
     }: ItemProps = $props();
 
     const config = useConfig();
@@ -124,6 +129,7 @@
                 [`${prefix}-select`]: selectedKeys.has(item.key) && !multiple,
                 [`${prefix}-focused`]: item.key === keyboardKey,
             },
+            classNames?.item,
         ];
     };
 
@@ -164,12 +170,13 @@
         })}
     {:else}
         <!-- the combobox handles the keys: it points at this option with aria-activedescendant -->
-        <li {...resultAttrs(item, rowStyle)} class={resultClass(item)} onclick={(event) => handleClick(event, item)}>
-            <span class={`${prefix}-label`}>
+        <!-- the row's style last: the virtual row's position must win over the caller's style -->
+        <li {...resultAttrs(item, rowStyle)} class={resultClass(item)} style={[styles?.item, rowStyle].filter(Boolean).join(';') || undefined} onclick={(event) => handleClick(event, item)}>
+            <span class={[`${prefix}-label`, classNames?.itemContent]} style={styles?.itemContent}>
                 {#if multiple}
                     {@render checkbox(item)}
                 {:else}
-                    <span aria-hidden="true" class={[`${prefix}-icon`, `${prefix}-icon-empty`]}></span>
+                    <span aria-hidden="true" class={[`${prefix}-icon`, `${prefix}-icon-empty`, classNames?.itemIcon]} style={styles?.itemIcon}></span>
                 {/if}
                 {#each highlightParts(item.searchText, keyword, separator) as part, index (index)}
                     {#if part.match}
@@ -187,7 +194,7 @@
 {#if isEmpty}
     <div class={[`${prefix}-lists`, `${prefix}-lists-empty`]} {id}>
         {#if emptyContent !== null}
-            <div class={[prefix, `${prefix}-empty`]}>
+            <div class={[prefix, `${prefix}-empty`, classNames?.empty]} style={styles?.empty}>
                 <span class={`${prefix}-label`} x-semi-prop="emptyContent">
                     {#if emptyContent}
                         {@render emptyContent()}
@@ -205,7 +212,7 @@
                 <VirtualList
                     bind:this={virtualList}
                     height={virtualize.height ?? numbers.LIST_HEIGHT}
-                    innerAttrs={{ class: `${prefix}-list`, role: 'none' }}
+                    innerAttrs={{ class: [`${prefix}-list`, classNames?.list], style: styles?.list, role: 'none' }}
                     innerTag="ul"
                     itemCount={results.length}
                     itemKey={(index) => results[index]?.key ?? index}
@@ -221,7 +228,7 @@
                     {/snippet}
                 </VirtualList>
             {:else}
-                <ul class={`${prefix}-list`} role="none">
+                <ul class={[`${prefix}-list`, classNames?.list]} role="none" style={styles?.list}>
                     {#each results as item (item.key)}
                         {@render result(item)}
                     {/each}
@@ -233,7 +240,7 @@
                 carry the hierarchy. Owning the next list as a group (aria-owns) would make it part of the branch's name.
             -->
             {#each columns as column (column.items[0].key)}
-                <ul class={`${prefix}-list`} role="none" onscroll={(event) => onListScroll(event, column.level)}>
+                <ul class={[`${prefix}-list`, classNames?.list]} role="none" style={styles?.list} onscroll={(event) => onListScroll(event, column.level)}>
                     {#each column.items as item, index (item.key)}
                         {@const rowState = CascaderFoundation.getTreeItemState(item.key, sets, multiple, isBranch(item))}
                         <!-- the combobox handles the keys: it points at this option with aria-activedescendant -->
@@ -254,19 +261,21 @@
                                     [`${prefix}-disabled`]: item.data.disabled,
                                     [`${prefix}-focused`]: item.key === keyboardKey,
                                 },
+                                classNames?.item,
                             ]}
                             id={optionId(item.key)}
                             role="treeitem"
+                            style={styles?.item}
                             onclick={(event) => handleClick(event, item)}
                             onmouseenter={(event) => handleHover(event, item)}
                         >
-                            <span class={`${prefix}-label`}>
+                            <span class={[`${prefix}-label`, classNames?.itemContent]} style={styles?.itemContent}>
                                 {#if multiple}
                                     {@render checkbox(item)}
                                 {:else if rowState.selected}
-                                    <IconTick class={[`${prefix}-icon`, `${prefix}-icon-active`]} />
+                                    <IconTick class={[`${prefix}-icon`, `${prefix}-icon-active`, classNames?.itemIcon]} style={styles?.itemIcon} />
                                 {:else}
-                                    <span aria-hidden="true" class={[`${prefix}-icon`, `${prefix}-icon-empty`]}></span>
+                                    <span aria-hidden="true" class={[`${prefix}-icon`, `${prefix}-icon-empty`, classNames?.itemIcon]} style={styles?.itemIcon}></span>
                                 {/if}
                                 <span>
                                     {#if label}
@@ -283,7 +292,7 @@
                                 {:else if expandIcon}
                                     {@render expandIcon()}
                                 {:else}
-                                    <IconChevronRight class={[`${prefix}-icon`, `${prefix}-icon-expand`, `${prefix}-icon-left`]} />
+                                    <IconChevronRight class={[`${prefix}-icon`, `${prefix}-icon-expand`, `${prefix}-icon-left`, classNames?.itemIcon]} style={styles?.itemIcon} />
                                 {/if}
                             {/if}
                         </li>

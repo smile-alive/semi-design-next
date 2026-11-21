@@ -6,11 +6,11 @@
 
     let { message, role }: { message: Message; role?: Metadata } = $props();
 
-    const { snippets } = getAIChatDialogueContext();
+    const { view, snippets } = getAIChatDialogueContext();
 </script>
 
 {#snippet defaultTitle()}
-    <span class="{cssClasses.PREFIX}-title">{role?.name}</span>
+    <span class={[`${cssClasses.PREFIX}-title`, view.classNames?.itemTitle]} style={view.styles?.itemTitle}>{role?.name}</span>
 {/snippet}
 
 {#if snippets.title}

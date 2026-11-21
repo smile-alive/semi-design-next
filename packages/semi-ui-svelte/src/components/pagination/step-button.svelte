@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-foundation/components/pagination/constants';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
     import { observeMutations, type SlotKind, getSlotKind } from '../../utils/index.js';
@@ -9,10 +10,12 @@
         label: string;
         disabled: boolean;
         text?: string | Snippet;
+        class?: ClassValue;
+        style?: string;
         onclick: () => void;
     }
 
-    let { kind, label, disabled, text, onclick }: StepButtonProps = $props();
+    let { kind, label, disabled, text, class: className, style, onclick }: StepButtonProps = $props();
 
     let contentKind = $state<SlotKind>();
 
@@ -25,7 +28,7 @@
     const trackContent = observeMutations((button: HTMLButtonElement) => (contentKind = getSlotKind(button)), { childList: true, characterData: true, subtree: true });
 </script>
 
-<button {@attach typeof text === 'function' && trackContent} aria-label={namedByContent ? undefined : label} class={[`${prefix}-item`, `${prefix}-${kind}`, { [`${prefix}-item-disabled`]: disabled }]} {disabled} type="button" x-semi-prop={`${kind}Text`} {onclick}>
+<button {@attach typeof text === 'function' && trackContent} aria-label={namedByContent ? undefined : label} class={[`${prefix}-item`, `${prefix}-${kind}`, { [`${prefix}-item-disabled`]: disabled }, className]} {disabled} {style} type="button" x-semi-prop={`${kind}Text`} {onclick}>
     {#if typeof text === 'function'}
         {@render text()}
     {:else if text}

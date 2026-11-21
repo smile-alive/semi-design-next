@@ -6,12 +6,14 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | avatarShape | 头像标签中头像的形状，可选 square 或 circle。 | `AvatarShape` | `"square"` |
 | avatarSrc | 头像资源地址，设置后生成头像标签。 | `string` | `semiGlobalDefault("Tag", "avatarSrc")` |
+| classNames | 内部各部位的类名，键为 `prefix`、`avatar`、`content`、`suffix`、`close`，与组件自带的类名合并；`avatar` 落在头像的根元素上。 | <ApiType detail={"Partial\u003cRecord\u003cTagPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Tag", "classNames")` |
 | closable | 标签是否可以关闭。 | `boolean` | `false` |
 | color | 标签颜色，可选色板中的 16 种颜色和 white。 | <ApiType detail={"\"amber\" \u007c \"blue\" \u007c \"cyan\" \u007c \"green\" \u007c \"grey\" \u007c \"indigo\" \u007c \"light-blue\" \u007c \"light-green\" \u007c \"lime\" \u007c \"orange\" \u007c \"pink\" \u007c \"purple\" \u007c \"red\" \u007c \"teal\" \u007c \"violet\" \u007c \"white\" \u007c \"yellow\""}>Type</ApiType> | `"grey"` |
 | colorful | 是否为多彩标签。 | `boolean` | `false` |
 | gradient | 多彩标签是否为渐变色，需 colorful 为 true。 | `boolean` | `false` |
 | shape | 标签形状，可选 square 或 circle。 | `TagShape` | `"square"` |
 | size | 标签尺寸，可选 small、default 或 large。 | `"default" \| "large" \| "small"` | `"default"` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTagPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Tag", "styles")` |
 | tabindex | 标签的 tabindex；可交互的标签缺省为 0。 | `number` | `semiGlobalDefault("Tag", "tabindex")` |
 | tagKey | 标签的唯一标识，作为 close 事件的第二个参数。 | `string \| number` | `semiGlobalDefault("Tag", "tagKey")` |
 | type | 样式类型，可选 light、ghost 或 solid。 | `"ghost" \| "light" \| "solid"` | `"light"` |

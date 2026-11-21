@@ -8,7 +8,7 @@
     import type { AvatarGroupProps } from './interface.js';
 
     const defaults = useDefaultProps('AvatarGroup');
-    let { size = defaults('size', 'medium'), shape = defaults('shape', 'circle'), overlapFrom = defaults('overlapFrom', 'start'), maxCount = defaults('maxCount'), items = [], item, more, ...rest }: AvatarGroupProps = $props();
+    let { size = defaults('size', 'medium'), shape = defaults('shape', 'circle'), overlapFrom = defaults('overlapFrom', 'start'), maxCount = defaults('maxCount'), classNames = defaults('classNames'), styles = defaults('styles'), items = [], item, more, ...rest }: AvatarGroupProps = $props();
 
     const locale = useLocale('Avatar');
 
@@ -34,7 +34,7 @@
         <Avatar {...entry} children={item ? content : entry.children} class={[entry.class, `${prefix}-item-${overlapFrom}-${index}`]} role="listitem" {shape} {size} />
     {/each}
     {#if overflow.length > 0}
-        <AvatarGroupMore itemClass={overlapClass} {shape} {size}>
+        <AvatarGroupMore itemClass={[overlapClass, classNames?.more]} itemStyle={styles?.more} {shape} {size}>
             {#if more}
                 {@render more({ restNumber: overflow.length, restAvatars: overflow })}
             {:else}

@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | addonBefore | Snippet of the leading addon. | `Snippet` | - |
 | autofocus | Focuses the input after mount. | `boolean` | - |
 | borderless | Borderless mode. | `boolean` | - |
-| classNames | Class names of the inner parts, keyed by input (the native input element); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by input (the native input element), prefix (also holds insetLabel), suffix, clear (the clear button), addonBefore, addonAfter, actions (the step button group), upButton and downButton; values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Snippet of the custom clear button icon; valid when showClear is true. | `Snippet` | - |
 | composition | Whether to enable composition mode. When enabled, onChange is not called during IME composition and is called once after it ends. | `boolean` | - |
 | currency | Currency, such as CNY, EUR or USD. When true, uses defaultCurrency, or the currency of the locale pack when that is not set; a bare currency attribute equals true. | `boolean \| string` | - |

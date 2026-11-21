@@ -14,6 +14,10 @@
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `indicator`、`content`，与组件自带的类名合并。`indicator` 是滑块，加载中时是加载图标；`content` 是选中或未选中时显示的文字。",
+                "en-US": "Class names of the inner parts, keyed by `indicator` and `content`; merged with the built-in classes. `indicator` is the knob, or the loading icon while loading; `content` is the checked or unchecked text."
+            },
             "defaultChecked": {
                 "zh-CN": "非受控时的初始选中状态，只在首次渲染时读取。",
                 "en-US": "Initial checked state when uncontrolled. Read only once, on the first render."
@@ -57,6 +61,10 @@
             "style": {
                 "zh-CN": "根元素的样式。",
                 "en-US": "Style of the root element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "tabIndex": {
                 "zh-CN": "原生 input 的 tabIndex。",

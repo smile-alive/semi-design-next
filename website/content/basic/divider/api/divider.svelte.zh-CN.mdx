@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性     | 说明                                                         | 类型                            | 默认值         |
-| -------- | ------------------------------------------------------------ | ------------------------------- | -------------- |
-| align    | 带内容时内容的对齐方式，可选 left、center、right。           | `'center' \| 'left' \| 'right'` | `"center"`     |
-| children | 水平分割线的内容；垂直分割线不显示内容。                     | `Snippet`                       | -              |
-| dashed   | 是否为虚线。                                                 | `boolean`                       | -              |
-| layout   | 分割线方向，可选 horizontal 或 vertical。                    | `'horizontal' \| 'vertical'`    | `"horizontal"` |
-| margin   | 分割线上下 margin，垂直方向时为左右 margin；数字按像素处理。 | `number \| string`              | -              |
+| 属性       | 说明                                                                                                                                       | 类型                                                                                  | 默认值         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | -------------- |
+| align      | 带内容时内容的对齐方式，可选 left、center、right。                                                                                         | `'center' \| 'left' \| 'right'`                                                       | `"center"`     |
+| children   | 水平分割线的内容；垂直分割线不显示内容。                                                                                                   | `Snippet`                                                                             | -              |
+| classNames | 内部各部位的类名，键为 content（包裹内容的文字容器，传入 children 时渲染），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cDividerPart, ClassValue>>"}>Type</ApiType> | -              |
+| dashed     | 是否为虚线。                                                                                                                               | `boolean`                                                                             | -              |
+| layout     | 分割线方向，可选 horizontal 或 vertical。                                                                                                  | `'horizontal' \| 'vertical'`                                                          | `"horizontal"` |
+| margin     | 分割线上下 margin，垂直方向时为左右 margin；数字按像素处理。                                                                               | `number \| string`                                                                    | -              |
+| styles     | 内部各部位的内联样式（字符串），键同 classNames。                                                                                          | <ApiType detail={"Partial\u003cRecord\u003cDividerPart, string>>"}>Type</ApiType>     | -              |

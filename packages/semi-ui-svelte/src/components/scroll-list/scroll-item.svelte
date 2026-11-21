@@ -14,7 +14,18 @@
     const defaults = useDefaultProps('ScrollItem');
 
     // No fallback on `selectedIndex`: it is bindable, see Switch
-    let { cycled = defaults('cycled', false), list: listProp = defaults('list') as T[] | undefined, mode = defaults('mode', wheelMode), motion = defaults('motion', true), selectedIndex = $bindable(), transform = defaults('transform'), onSelect, ...rest }: ScrollItemProps<T> = $props();
+    let {
+        classNames = defaults('classNames'),
+        cycled = defaults('cycled', false),
+        list: listProp = defaults('list') as T[] | undefined,
+        mode = defaults('mode', wheelMode),
+        motion = defaults('motion', true),
+        selectedIndex = $bindable(),
+        styles = defaults('styles'),
+        transform = defaults('transform'),
+        onSelect,
+        ...rest
+    }: ScrollItemProps<T> = $props();
 
     const uid = $props.id();
     let root = $state<HTMLDivElement>();
@@ -107,9 +118,9 @@
 </script>
 
 {#snippet listboxList()}
-    <ul bind:this={listbox} {...attrs.control} {@attach handleListClick} aria-activedescendant={list[current] ? optionId(current) : undefined} aria-multiselectable="false" role="listbox" tabindex="0" onkeydown={foundation.handleKeyDown}>
+    <ul bind:this={listbox} {...attrs.control} {@attach handleListClick} aria-activedescendant={list[current] ? optionId(current) : undefined} aria-multiselectable="false" class={classNames?.list} role="listbox" style={styles?.list} tabindex="0" onkeydown={foundation.handleKeyDown}>
         {#each options as option (option.key)}
-            <li aria-disabled={option.disabled} aria-hidden={option.copy || undefined} aria-selected={option.selected} class={option.class} id={option.id} role="option" onclick={option.clickable ? () => foundation.selectIndex(option.index) : undefined}>
+            <li aria-disabled={option.disabled} aria-hidden={option.copy || undefined} aria-selected={option.selected} class={[option.class, classNames?.option]} id={option.id} role="option" style={styles?.option} onclick={option.clickable ? () => foundation.selectIndex(option.index) : undefined}>
                 {option.text}
             </li>
         {/each}
@@ -119,7 +130,7 @@
 <div bind:this={root} {...attrs.root} class={[isWheel ? `${prefix}-item-wheel` : `${prefix}-item`, rest.class]}>
     {#if isWheel}
         <div class={[`${prefix}-shade`, `${prefix}-shade-pre`]}></div>
-        <div bind:this={selector} class={`${prefix}-selector`}></div>
+        <div bind:this={selector} class={[`${prefix}-selector`, classNames?.selector]} style={styles?.selector}></div>
         <div class={[`${prefix}-shade`, `${prefix}-shade-post`]}></div>
         <div bind:this={outer} class={[`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !cycled }]} onscroll={foundation.handleScroll}>
             {@render listboxList()}

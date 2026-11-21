@@ -3,6 +3,14 @@
         "source": "packages/semi-ui-svelte/src/components/list/list.svelte",
         "props": {
             "bordered": { "zh-CN": "是否显示边框。", "en-US": "Whether to show a border." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `header`、`footer`、`empty`、`item`、`itemHeader`、`itemMain`、`itemExtra`，与组件自带的类名合并；`item` 落在每个 `li` 上，`item*` 键作用到全部 ListItem，且在列表项自己的 classNames 之前。",
+                "en-US": "Class names of the inner parts, keyed by `header`, `footer`, `empty`, `item`, `itemHeader`, `itemMain` and `itemExtra`; merged with the built-in classes. `item` lands on every `li`; the `item*` keys apply to every ListItem, before the item's own classNames."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，值为 CSS 文本。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; the values are CSS text."
+            },
             "dataSource": {
                 "zh-CN": "列表数据源；每一项通过 item snippet 渲染。",
                 "en-US": "Data source of the list; each entry is rendered through the item snippet."
@@ -52,6 +60,14 @@
     "list-item": {
         "source": "packages/semi-ui-svelte/src/components/list/item.svelte",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `header`、`main`、`extra`，与组件自带的类名合并，在 List 的 `item*` 类名之后。",
+                "en-US": "Class names of the inner parts, keyed by `header`, `main` and `extra`; merged with the built-in classes, after the `item*` class names of the List."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，值为 CSS 文本，后于 List 的 `item*` 样式写入。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; the values are CSS text, applied after the `item*` styles of the List."
+            },
             "align": {
                 "zh-CN": "header 与 main 的垂直对齐方式，可选 flex-start、flex-end、center、baseline 或 stretch，未传时为 flex-start。",
                 "en-US": "Vertical alignment of header and main: flex-start, flex-end, center, baseline or stretch; flex-start when omitted."

@@ -6,6 +6,7 @@ import { errorMessages, type FieldError } from '@fibrae/semi-foundation/componen
 import '@fibrae/semi-foundation/components/form/form.scss';
 import { IconAlertTriangle, IconAlertCircle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/index';
+import { useFieldBridgeContext } from './context';
 
 const prefix = cssClasses.PREFIX;
 
@@ -31,6 +32,7 @@ export interface ErrorMessageInternalProps extends ErrorMessageProps {
 function ErrorMessage(props: ErrorMessageProps) {
     const { error, className, style, validateStatus, helpText, showValidateIcon, isInInputGroup, errorMessageId, helpTextId, ref, ...rest } = props as ErrorMessageInternalProps;
 
+    const form = useFieldBridgeContext()?.getFormProps(['classNames', 'styles']);
     const messages = errorMessages(error);
     const failed = Boolean(error?.length);
 
@@ -39,6 +41,7 @@ function ErrorMessage(props: ErrorMessageProps) {
             [prefix + '-field-error-message']: failed,
             [prefix + '-field-help-text']: helpText,
         },
+        form?.classNames?.help,
         className
     );
 
@@ -53,7 +56,7 @@ function ErrorMessage(props: ErrorMessageProps) {
     }
 
     return (
-        <div {...rest} ref={ref} className={cls} style={style}>
+        <div {...rest} ref={ref} className={cls} style={{ ...form?.styles?.help, ...style }}>
             {showValidateIcon && icon}
             {text}
         </div>

@@ -18,6 +18,11 @@
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `prefix`、`avatar`、`content`、`suffix`、`close`，与组件自带的类名合并；`avatar` 落在头像的根元素上。",
+                "en-US": "Class names of the inner parts, keyed by `prefix`, `avatar`, `content`, `suffix` and `close`; merged with the built-in classes. `avatar` lands on the root element of the avatar."
+            },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "closable": {
                 "zh-CN": "标签是否可以关闭。可关闭的标签也可以通过 Backspace 或 Delete 键关闭。",
                 "en-US": "Whether the tag can be closed. A closable tag can also be closed with the Backspace or Delete key."

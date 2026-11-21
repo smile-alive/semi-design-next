@@ -16,7 +16,7 @@
     import { useDefaultProps, useFoundation } from '@fibrae/semi-ui-svelte/base';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
-    import { setAIChatDialogueContext } from './context.js';
+    import { setAIChatDialogueContext, setCodePartContext } from './context.js';
     import DialogueHint from './dialogue/dialogue-hint.svelte';
     import Dialogue from './dialogue/dialogue.svelte';
     import type { AIChatDialogueProps } from './interface.js';
@@ -108,10 +108,25 @@
     const streaming = $derived(isUnfinishedStatus(currentChats.at(-1)?.status));
     const prefix = cssClasses.PREFIX;
 
+    setCodePartContext({
+        get class() {
+            return classNames?.code;
+        },
+        get style() {
+            return styles?.code;
+        },
+    });
+
     setAIChatDialogueContext({
         view: {
             get align() {
                 return align;
+            },
+            get classNames() {
+                return classNames;
+            },
+            get styles() {
+                return styles;
             },
             get disabledFileItemClick() {
                 return disabledFileItemClick;
@@ -196,17 +211,17 @@
 </script>
 
 <div {...rest} class={[prefix, rest.class]} role={namedRole(rest)}>
-    <div aria-busy={streaming} aria-label={locale().locale.messages} bind:this={list} class="{prefix}-list" role="log" tabindex="-1" onscroll={foundation.containerScroll}>
+    <div aria-busy={streaming} aria-label={locale().locale.messages} bind:this={list} class={[`${prefix}-list`, classNames?.messages]} role="log" style={styles?.messages} tabindex="-1" onscroll={foundation.containerScroll}>
         {#each currentChats as chat, index (chat.id)}
             <Dialogue isLastChat={index === currentChats.length - 1} isSelected={states().selectedIds.has(chat.id)} message={chat} role={roleConfig[chat.role]} />
         {/each}
         {#if currentHints.length > 0}
-            <DialogueHint class={classNames?.hint} {hintBox} hints={currentHints} onHintClick={foundation.handleHintClick} {selecting} style={styles?.hint} />
+            <DialogueHint class={classNames?.hint} {hintBox} hints={currentHints} itemClass={classNames?.hintItem} itemStyle={styles?.hintItem} onHintClick={foundation.handleHintClick} {selecting} style={styles?.hint} />
         {/if}
     </div>
     {#if states().backBottomVisible}
         <span {@attach handoverBackBottomFocus} class="{prefix}-backBottom">
-            <Button aria-label={locale().locale.backToBottom} class="{prefix}-backBottom-button" type="tertiary" onclick={foundation.scrollToBottomWithAnimation}>
+            <Button aria-label={locale().locale.backToBottom} class={[`${prefix}-backBottom-button`, classNames?.backBottom]} style={styles?.backBottom} type="tertiary" onclick={foundation.scrollToBottomWithAnimation}>
                 {#snippet icon()}
                     <IconChevronDown size="extra-large" />
                 {/snippet}

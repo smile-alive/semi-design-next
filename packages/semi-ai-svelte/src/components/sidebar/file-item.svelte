@@ -9,7 +9,7 @@
     import type { FileItemProps } from './interface.js';
     import MenuBar from './menu-bar.svelte';
 
-    let { name, content, editable = true, extensions = [], imgUploadProps, onContentChange, ...rest }: FileItemProps = $props();
+    let { name, content, classNames, styles, editable = true, extensions = [], imgUploadProps, onContentChange, ...rest }: FileItemProps = $props();
 
     let editor = $state.raw<Editor>();
 
@@ -78,7 +78,7 @@
 
 <div {...rest} class={[prefix, rest.class]}>
     {#if editable && editor}
-        <MenuBar {canUpload} {editor} />
+        <MenuBar {canUpload} class={classNames?.menuBar} {editor} style={styles?.menuBar} />
     {/if}
-    <div {@attach mountEditor} class={`${prefix}-editor`}></div>
+    <div {@attach mountEditor} class={[`${prefix}-editor`, classNames?.editor]} style={styles?.editor}></div>
 </div>

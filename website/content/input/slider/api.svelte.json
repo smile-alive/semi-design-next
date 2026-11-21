@@ -3,8 +3,8 @@
         "source": "packages/semi-ui-svelte/src/components/slider/slider.svelte",
         "props": {
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 rail，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by rail; values take anything class takes (string, array or object) and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `rail`、`track`、`handle`、`dot`、`mark`、`dropdown`，值的写法同 class（字符串、数组或对象），与组件自带的类名合并；`dropdown` 是悬停、拖动或聚焦手柄时显示当前值的提示弹出层。",
+                "en-US": "Class names of the inner parts, keyed by `rail`, `track`, `handle`, `dot`, `mark` and `dropdown`; values take anything class takes (string, array or object) and merge with the built-in classes. `dropdown` is the tip popup that shows the current value on hover, drag or focus."
             },
             "aria-label": {
                 "zh-CN": "手柄的可访问名称；range 模式下两个手柄在其后分别追加语言包中的起点、终点。",
@@ -74,8 +74,8 @@
             },
             "showMarkLabel": { "zh-CN": "是否显示刻度标签。", "en-US": "Whether to show the mark labels." },
             "styles": {
-                "zh-CN": "内部各部位的样式字符串，键为 rail。",
-                "en-US": "Style strings of the inner parts, keyed by rail."
+                "zh-CN": "内部各部位的样式字符串，键同 `classNames`。",
+                "en-US": "Style strings of the inner parts, keyed like `classNames`."
             },
             "step": { "zh-CN": "步长，从 min 起计算。", "en-US": "Step, counted from min." },
             "tip": {

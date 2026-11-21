@@ -416,6 +416,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         dropPosition: null,
         renderLabel: local.renderLabel,
         renderFullLabel: local.renderFullLabel,
+        classNames: { empty: local.classNames?.empty, item: local.classNames?.item, itemTitle: local.classNames?.itemTitle, itemSwitcher: local.classNames?.itemSwitcher },
+        styles: { empty: local.styles?.empty, item: local.styles?.item, itemTitle: local.styles?.itemTitle, itemSwitcher: local.styles?.itemSwitcher },
     }));
 
     const triggerRenderKeys = createMemo(() => TreeSelectFoundation.getTriggerKeys(props, state()));
@@ -726,7 +728,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         } as const;
     };
 
-    const searchClass = () => clsx({ [`${prefixTree}-input`]: isDropdownPositionSearch(), [`${prefix}-inputTrigger`]: !isDropdownPositionSearch() });
+    const searchClass = () => clsx({ [`${prefixTree}-input`]: isDropdownPositionSearch(), [`${prefix}-inputTrigger`]: !isDropdownPositionSearch() }, !isDropdownPositionSearch() && local.classNames?.input);
 
     const searchPlaceholder = () => (isDropdownPositionSearch() ? local.searchPlaceholder || locale().locale.searchPlaceholder : '');
 
@@ -787,11 +789,15 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
     const SearchInput = () => (
         <Show when={local.searchRender !== false}>
             <div
-                class={clsx({
-                    [`${prefixTree}-search-wrapper`]: isDropdownPositionSearch(),
-                    [`${prefix}-triggerSingleSearch-wrapper`]: !isDropdownPositionSearch() && !local.multiple,
-                    [`${prefix}-triggerSingleSearch-upper`]: !isDropdownPositionSearch() && state().inputTriggerFocus,
-                })}
+                class={clsx(
+                    {
+                        [`${prefixTree}-search-wrapper`]: isDropdownPositionSearch(),
+                        [`${prefix}-triggerSingleSearch-wrapper`]: !isDropdownPositionSearch() && !local.multiple,
+                        [`${prefix}-triggerSingleSearch-upper`]: !isDropdownPositionSearch() && state().inputTriggerFocus,
+                    },
+                    isDropdownPositionSearch() && local.classNames?.search
+                )}
+                style={isDropdownPositionSearch() ? local.styles?.search : undefined}
             >
                 <Show
                     keyed
@@ -802,6 +808,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                             {...searchAttrs()}
                             inputRef={setSearchInput}
                             class={searchClass()}
+                            style={isDropdownPositionSearch() ? undefined : local.styles?.input}
                             placeholder={searchPlaceholder()}
                             value={state().inputValue}
                             preventScroll={local.preventScroll}
@@ -833,6 +840,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             ref={setTagInput}
             aria-autocomplete="list"
             autofocus={local.searchAutoFocus}
+            class={local.classNames?.input}
+            style={local.styles?.input}
             disabled={local.disabled}
             placeholder={local.placeholder}
             value={triggerRenderKeys()}
@@ -868,7 +877,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             <Show when={rendered()}>
                 {(result) => (
                     <Show when={result().isRenderInTag} fallback={result().content}>
-                        <Tag class={clsx(`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: local.disabled })} closable={closable()} color="white" size={tagSize()} onClose={closeTag(itemProps.itemKey)}>
+                        <Tag class={clsx(`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: local.disabled }, local.classNames?.tag)} closable={closable()} color="white" size={tagSize()} style={local.styles?.tag} onClose={closeTag(itemProps.itemKey)}>
                             {result().content}
                         </Tag>
                     </Show>
@@ -891,7 +900,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             return undefined;
         }
         return isRenderInTag ? (
-            <Tag closable={TreeSelectFoundation.isTagClosable(key, props, state())} color="white" visible size={tagSize()} onClose={onClose}>
+            <Tag class={local.classNames?.tag} closable={TreeSelectFoundation.isTagClosable(key, props, state())} color="white" visible size={tagSize()} style={local.styles?.tag} onClose={onClose}>
                 {content}
             </Tag>
         ) : (
@@ -909,10 +918,15 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         return (
             <span
                 id={singleSearchTextId}
-                class={clsx(`${prefix}-selection-TriggerSearchItem`, {
-                    [`${prefix}-selection-TriggerSearchItem-placeholder`]: (state().inputTriggerFocus || !isShownText(singleText())) && !local.disabled,
-                    [`${prefix}-selection-TriggerSearchItem-disabled`]: local.disabled,
-                })}
+                class={clsx(
+                    `${prefix}-selection-TriggerSearchItem`,
+                    {
+                        [`${prefix}-selection-TriggerSearchItem-placeholder`]: (state().inputTriggerFocus || !isShownText(singleText())) && !local.disabled,
+                        [`${prefix}-selection-TriggerSearchItem-disabled`]: local.disabled,
+                    },
+                    !isShownText(singleText()) && local.classNames?.placeholder
+                )}
+                style={isShownText(singleText()) ? undefined : local.styles?.placeholder}
                 onClick={foundation.onClickSingleTriggerSearchItem}
             >
                 <Show when={isShownText(singleText())} fallback={local.placeholder}>
@@ -925,7 +939,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
     const SingleSelection = () => {
         const singleText = createSingleText();
         return (
-            <span class={clsx(`${prefix}-selection-content`, { [`${prefix}-selection-placeholder`]: !isShownText(singleText()) })}>
+            <span class={clsx(`${prefix}-selection-content`, { [`${prefix}-selection-placeholder`]: !isShownText(singleText()) }, !isShownText(singleText()) && local.classNames?.placeholder)} style={isShownText(singleText()) ? undefined : local.styles?.placeholder}>
                 <Show when={isShownText(singleText())} fallback={local.placeholder}>
                     {singleText()}
                 </Show>
@@ -963,25 +977,35 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             <Show when={labelKind()}>
                 <div
                     id={prefixId()}
-                    class={clsx(`${prefix}-prefix`, {
-                        [`${prefix}-inset-label`]: insetLabelKind(),
-                        [`${prefix}-prefix-text`]: labelKind() === 'text',
-                        [`${prefix}-prefix-icon`]: labelKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefix}-prefix`,
+                        {
+                            [`${prefix}-inset-label`]: insetLabelKind(),
+                            [`${prefix}-prefix-text`]: labelKind() === 'text',
+                            [`${prefix}-prefix-icon`]: labelKind() === 'icon',
+                        },
+                        local.classNames?.prefix
+                    )}
+                    style={local.styles?.prefix}
                     x-semi-prop="prefix,insetLabel"
                 >
                     {prefixKind() ? prefixNode() : insetLabelNode()}
                 </div>
             </Show>
-            <div class={`${prefix}-selection`}>
+            <div class={clsx(`${prefix}-selection`, local.classNames?.content)} style={local.styles?.content}>
                 <SelectContent />
             </div>
             <Show when={suffixKind()}>
                 <div
-                    class={clsx(`${prefix}-suffix`, {
-                        [`${prefix}-suffix-text`]: suffixKind() === 'text',
-                        [`${prefix}-suffix-icon`]: suffixKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefix}-suffix`,
+                        {
+                            [`${prefix}-suffix-text`]: suffixKind() === 'text',
+                            [`${prefix}-suffix-icon`]: suffixKind() === 'icon',
+                        },
+                        local.classNames?.suffix
+                    )}
+                    style={local.styles?.suffix}
                     x-semi-prop="suffix"
                 >
                     {suffixNode()}
@@ -991,7 +1015,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                 <button
                     ref={setClearButton}
                     type="button"
-                    class={`${prefix}-clearbtn`}
+                    class={clsx(`${prefix}-clearbtn`, local.classNames?.clear)}
+                    style={local.styles?.clear}
                     aria-label={locale().locale.clear}
                     onClick={(e) => {
                         handleClear(e);
@@ -1005,7 +1030,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                 </button>
             </Show>
             <Show when={arrowIcon() === undefined || hasContent(arrowIcon())}>
-                <div class={`${prefix}-arrow`} x-semi-prop="arrowIcon">
+                <div class={clsx(`${prefix}-arrow`, local.classNames?.arrow)} style={local.styles?.arrow} x-semi-prop="arrowIcon">
                     <Show when={arrowIcon() !== undefined} fallback={<IconChevronDown />}>
                         {arrowIcon()}
                     </Show>
@@ -1047,9 +1072,9 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                             when={!noData()}
                             fallback={
                                 // the combobox's aria-controls needs an element while there is no tree
-                                <div id={treeId} class={clsx(listClass(), local.classNames?.optionList)} style={local.styles?.optionList} role="none">
+                                <div id={treeId} class={clsx(listClass(), local.classNames?.list)} style={local.styles?.list} role="none">
                                     <Show when={emptyContent() !== null}>
-                                        <ul class={clsx(`${prefixTree}-option`, `${prefixTree}-option-empty`)}>
+                                        <ul class={clsx(`${prefixTree}-option`, `${prefixTree}-option-empty`, local.classNames?.empty)} style={local.styles?.empty}>
                                             <li class={clsx(`${prefixTree}-option-label`, `${prefixTree}-option-label-empty`)} x-semi-prop="emptyContent">
                                                 {hasContent(emptyContent()) ? emptyContent() : treeLocale().locale.emptyText}
                                             </li>
@@ -1058,7 +1083,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                                 </div>
                             }
                         >
-                            <div id={treeId} class={clsx(listClass(), local.classNames?.optionList)} style={local.styles?.optionList} aria-label={name()['aria-label']} aria-labelledby={name()['aria-labelledby']} aria-multiselectable={Boolean(local.multiple)} role="tree">
+                            <div id={treeId} class={clsx(listClass(), local.classNames?.list)} style={local.styles?.list} aria-label={name()['aria-label']} aria-labelledby={name()['aria-labelledby']} aria-multiselectable={Boolean(local.multiple)} role="tree">
                                 <NodeList
                                     flattenList={state().cachedFlattenNodes as FlattenNode[] | undefined}
                                     flattenNodes={rows()}

@@ -590,12 +590,26 @@ describe('OverflowList', () => {
         expect(overflow.mock.calls.slice(-1)[0][1].map((entry) => entry.id)).toEqual(['b', 'c']);
     });
 
-    it('classNames 与 styles 按部位落到对应元素', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
         stubIntersectionObserver();
         const view = renderList({ renderMode: 'scroll', classNames: { wrapper: 'my-wrapper' }, styles: { wrapper: 'order: 3' } }, { itemKind: 'div' });
         const wrapper = scrollWrapper(view.container);
         expect(wrapper).toHaveClass('my-wrapper');
         expect(wrapper).toHaveStyle({ order: '3' });
+
+        const resize = stubResizeObserver();
+        const collapse = renderList({ classNames: { item: 'my-item', overflow: 'my-overflow' }, styles: { item: 'order: 1', overflow: 'order: 2' } }, { itemKind: 'div', overflowKind: 'plus' });
+        await measure(resize, collapse.container, 300);
+        await resize(getList(collapse.container), 120);
+        const collapseItems = getItems(collapse.container);
+        expect(collapseItems).not.toHaveLength(0);
+        for (const item of collapseItems) {
+            expect(item).toHaveClass('my-item');
+            expect(item).toHaveStyle({ order: '1' });
+        }
+        const overflow = overflowNode(collapse.container);
+        expect(overflow).toHaveClass('my-overflow');
+        expect(overflow).toHaveStyle({ order: '2' });
     });
 
     it('scroll: wrapperProps 落在 wrapper 上', () => {

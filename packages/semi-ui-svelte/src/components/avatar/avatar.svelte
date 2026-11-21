@@ -30,6 +30,8 @@
         bottomSlot = defaults('bottomSlot'),
         border = defaults('border'),
         contentMotion = defaults('contentMotion'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         onError = defaults('onError'),
         onMouseEnter,
         onMouseLeave,
@@ -97,8 +99,9 @@
         return root;
     });
 
-    const borderClass = $derived([`${prefix}-additionalBorder`, `${prefix}-additionalBorder-${size}`, `${prefix}-${shape}`]);
-    const borderColor = $derived(typeof border === 'object' ? border.color : undefined);
+    const borderClass = $derived([`${prefix}-additionalBorder`, `${prefix}-additionalBorder-${size}`, `${prefix}-${shape}`, classNames?.border]);
+    const borderStyle = $derived([typeof border === 'object' && border.color && `border-color: ${border.color}`, styles?.border].filter(Boolean).join('; ') || undefined);
+    const rootStyle = $derived([more?.itemStyle, rest.style].filter(Boolean).join('; ') || undefined);
 
     setAvatarGroupMoreContext(undefined);
 
@@ -118,7 +121,8 @@
         alt,
         ...imgAttr,
         ...focusAttrs,
-        class: [imgAttr?.class, focusAttrs.class],
+        class: [imgAttr?.class, focusAttrs.class, classNames?.image],
+        style: [imgAttr?.style, styles?.image].filter(Boolean).join('; ') || undefined,
         onerror: (event: Event) => {
             (imgAttr?.onerror as ((event: Event) => void) | null | undefined)?.(event);
             foundation.handleImgLoadError(event);
@@ -176,7 +180,7 @@
             },
         ]}
         role={(rootAttrs.role as string | undefined) ?? (more ? 'listitem' : undefined)}
-        style={outer ? rest.style : undefined}
+        style={outer ? rootStyle : undefined}
         style:height={outer && !isPresetSize ? size : undefined}
         style:width={outer && !isPresetSize ? size : undefined}
         onmouseenter={outer ? handleEnter : undefined}
@@ -186,7 +190,7 @@
             <img {...imgProps} />
         {:else if isText}
             <span bind:this={contentEl} class="{prefix}-content" style:transform="scale({states().scale})">
-                <span aria-label={alt ?? text} bind:this={labelEl} role="img" {...focusAttrs} class={[`${prefix}-label`, focusAttrs.class]}>
+                <span aria-label={alt ?? text} bind:this={labelEl} role="img" {...focusAttrs} class={[`${prefix}-label`, focusAttrs.class, classNames?.label]} style={styles?.label}>
                     {@render children?.()}
                 </span>
             </span>
@@ -198,19 +202,19 @@
             {@render children?.()}
         {/if}
         {#if states().hovered && hoverMask}
-            <div class="{prefix}-hover">{@render hoverMask()}</div>
+            <div class={[`${prefix}-hover`, classNames?.mask]} style={styles?.mask}>{@render hoverMask()}</div>
         {/if}
     </span>
 {/snippet}
 
 {#if wrapped}
-    <span class="{prefix}-wrapper" style={rest.style} style:height={isPresetSize ? undefined : size} style:width={isPresetSize ? undefined : size} onmouseenter={handleEnter} onmouseleave={handleLeave}>
+    <span class="{prefix}-wrapper" style={rootStyle} style:height={isPresetSize ? undefined : size} style:width={isPresetSize ? undefined : size} onmouseenter={handleEnter} onmouseleave={handleLeave}>
         {#if border}
             <div style="position: relative" style:height={isPresetSize ? undefined : size} style:width={isPresetSize ? undefined : size}>
                 {@render body(false)}
-                <span class={borderClass} style:border-color={borderColor}></span>
+                <span class={borderClass} style={borderStyle}></span>
                 {#if typeof border === 'object' && border.motion}
-                    <span class={[borderClass, `${prefix}-additionalBorder-animated`]} style:border-color={borderColor}></span>
+                    <span class={[borderClass, `${prefix}-additionalBorder-animated`]} style={borderStyle}></span>
                 {/if}
             </div>
         {:else}

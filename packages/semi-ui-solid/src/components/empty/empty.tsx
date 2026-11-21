@@ -5,7 +5,7 @@ import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/empty/empty.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
 import { useThemeMode } from '../../primitives/index';
-import { hasContent, isMarkup } from '../../utils/index';
+import { hasContent, isMarkup, mergeStyles } from '../../utils/index';
 import Typography from '../typography';
 
 const prefixCls = cssClasses.PREFIX;
@@ -87,8 +87,8 @@ export default function Empty(rawProps: EmptyProps) {
                     <Typography.Title
                         // a fixed heading level would break the page outline
                         component="div"
-                        class={`${prefixCls}-title`}
-                        style={hasContent(image()) ? undefined : { 'font-weight': '400' }}
+                        class={clsx(`${prefixCls}-title`, local.classNames?.title)}
+                        style={mergeStyles(hasContent(image()) ? undefined : { 'font-weight': '400' }, local.styles?.title)}
                         heading={hasContent(image()) ? 4 : 6}
                         x-semi-prop="title"
                     >
@@ -96,12 +96,12 @@ export default function Empty(rawProps: EmptyProps) {
                     </Typography.Title>
                 </Show>
                 <Show when={hasContent(description())}>
-                    <div class={`${prefixCls}-description`} x-semi-prop="description">
+                    <div class={clsx(`${prefixCls}-description`, local.classNames?.description)} style={local.styles?.description} x-semi-prop="description">
                         {description()}
                     </div>
                 </Show>
                 <Show when={hasContent(footer())}>
-                    <div class={`${prefixCls}-footer`} x-semi-prop="children">
+                    <div class={clsx(`${prefixCls}-footer`, local.classNames?.footer)} style={local.styles?.footer} x-semi-prop="children">
                         {footer()}
                     </div>
                 </Show>

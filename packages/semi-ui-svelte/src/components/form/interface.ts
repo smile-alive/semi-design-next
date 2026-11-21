@@ -1,6 +1,7 @@
 import type { Component, ComponentProps, Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLFieldsetAttributes, HTMLFormAttributes, HTMLLabelAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes, HTMLFieldsetAttributes, HTMLFormAttributes, HTMLLabelAttributes } from 'svelte/elements';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
+import type { FormLabelPart, FormPart, FormSectionPart } from '@fibrae/semi-foundation/components/form/constants';
 import type { FieldError } from '@fibrae/semi-foundation/components/form/errors';
 import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { arrayState, JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
@@ -33,6 +34,8 @@ export interface LabelProps extends Omit<HTMLLabelAttributes, 'children'> {
     extra?: Snippet;
     /** Shown in a Tooltip by a help button beside the label, which is not part of the field's name */
     tooltip?: Snippet | string | number;
+    classNames?: Partial<Record<FormLabelPart, ClassValue>>;
+    styles?: Partial<Record<FormLabelPart, string>>;
 }
 
 /** A label configured by data; nodes go in the `fieldLabel` and `labelExtra` snippets */
@@ -47,6 +50,8 @@ export interface FieldLabel {
     required?: boolean;
     optional?: boolean;
     width?: number | string;
+    classNames?: LabelProps['classNames'];
+    styles?: LabelProps['styles'];
 }
 
 export interface FormRenderProps<Values extends Record<string, any> = any, Output = Values> {
@@ -62,6 +67,8 @@ export interface AllFormProps<Values extends Record<string, any> = any, Output =
     /** Initial values of the fields, copied once when the Form is created; may leave out any part of the values */
     initValues?: DeepPartial<Values>;
     layout?: 'horizontal' | 'vertical';
+    classNames?: Partial<Record<FormPart, ClassValue>>;
+    styles?: Partial<Record<FormPart, string>>;
     labelPosition?: 'top' | 'left' | 'inset';
     labelWidth?: number | string;
     labelAlign?: 'left' | 'right';
@@ -239,6 +246,8 @@ export interface SectionProps extends Omit<HTMLFieldsetAttributes, 'children'> {
     /** Shown below the title and describes the fieldset */
     extraText?: Snippet;
     children?: Snippet;
+    classNames?: Partial<Record<FormSectionPart, ClassValue>>;
+    styles?: Partial<Record<FormSectionPart, string>>;
 }
 
 export interface SlotProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {

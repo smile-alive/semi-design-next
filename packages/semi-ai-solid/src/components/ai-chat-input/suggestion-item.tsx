@@ -8,6 +8,8 @@ const prefixCls = cssClasses.PREFIX;
 interface SuggestionItemProps {
     suggestion: Suggestion;
     active: boolean;
+    partClass?: string;
+    partStyle?: JSX.CSSProperties;
     id: string;
     renderSuggestionItem?: (props: RenderSuggestionItemProps) => JSX.Element;
     onClick: (suggestion: Suggestion) => void;
@@ -15,7 +17,7 @@ interface SuggestionItemProps {
 }
 
 export default function SuggestionItem(props: SuggestionItemProps) {
-    const className = () => clsx(`${prefixCls}-suggestion-item`, { [`${prefixCls}-suggestion-item-active`]: props.active });
+    const className = () => clsx(`${prefixCls}-suggestion-item`, { [`${prefixCls}-suggestion-item-active`]: props.active }, props.partClass);
 
     const handleClick = () => props.onClick(props.suggestion);
 
@@ -44,7 +46,7 @@ export default function SuggestionItem(props: SuggestionItemProps) {
             when={props.renderSuggestionItem}
             keyed
             fallback={
-                <div id={props.id} class={className()} aria-selected={props.active} role="option" onClick={handleClick} onMouseEnter={handleMouseEnter}>
+                <div id={props.id} class={className()} style={props.partStyle} aria-selected={props.active} role="option" onClick={handleClick} onMouseEnter={handleMouseEnter}>
                     {typeof props.suggestion === 'string' ? props.suggestion : props.suggestion?.content}
                 </div>
             }

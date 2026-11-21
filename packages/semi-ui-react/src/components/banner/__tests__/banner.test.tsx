@@ -12,6 +12,20 @@ const prefix = `${BASE_CLASS_PREFIX}-banner`;
 const getRoot = (container) => container.querySelector(`.${prefix}`);
 
 describe('Banner', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['icon', 'title', 'description', 'close', 'extra'] as const;
+        const { container } = render(
+            <Banner classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} title="t" description="d">
+                extra
+            </Banner>
+        );
+        for (const part of parts) {
+            const el = container.querySelector(`.${prefix}-${part}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
     it('用键盘关闭后焦点交给文档顺序里的下一个可聚焦元素', async () => {
         render(
             <>

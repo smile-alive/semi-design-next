@@ -5,14 +5,14 @@ import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import CardGroup from '../card-group.svelte';
 import Card from '../card.svelte';
-import type { CardProps } from '../interface';
+import type { CardProps, MetaProps } from '../interface';
 import CardFixture from './card-fixture.svelte';
 import type { Parts } from './fixture-parts';
 
 const prefixCls = 'semi-card';
 
-function setup(props: CardProps = {}, parts: Parts = { body: true }) {
-    const store = createStore({ props, parts });
+function setup(props: CardProps = {}, parts: Parts = { body: true }, metaProps: MetaProps = {}) {
+    const store = createStore({ props, parts, metaProps });
     const view = render(CardFixture, { props: { store } });
     const root = () => view.container.firstElementChild as HTMLElement;
     const find = (selector: string) => view.container.querySelector<HTMLElement>(selector);
@@ -163,6 +163,24 @@ describe('Svelte CardMeta', () => {
         expect(find(`.${prefixCls}-meta-wrapper-title`)).toHaveTextContent('meta title');
         expect(find(`.${prefixCls}-meta-wrapper-description`)).toHaveTextContent('description');
         expect(find(`.${prefixCls}-meta-avatar`)).toBeNull();
+    });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['avatar', 'section', 'title', 'description'] as const;
+        const selectors = { avatar: 'avatar', section: 'wrapper', title: 'wrapper-title', description: 'wrapper-description' };
+        const { find } = setup(
+            {},
+            { meta: true, metaAvatar: true },
+            {
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            }
+        );
+        for (const part of parts) {
+            const el = find(`.${prefixCls}-meta-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 });
 

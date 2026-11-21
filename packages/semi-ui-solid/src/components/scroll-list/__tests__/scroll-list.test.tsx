@@ -657,4 +657,33 @@ describe('ScrollItem 行为', () => {
         await userEvent.keyboard('{ArrowDown}');
         expect(onSelect).toHaveBeenLastCalledWith({ value: 0, index: 0 });
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'body', 'footer'] as const;
+        const selectors = { header: 'header', title: 'header-title', body: 'body', footer: 'footer' };
+        const { container } = render(() => (
+            <ScrollList classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]))} header="h" footer="f" bodyHeight={100}>
+                body
+            </ScrollList>
+        ));
+        for (const part of parts) {
+            const el = container.querySelector(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+        expect(container.querySelector(`.${prefix}-body`)).toHaveStyle({ height: '100px' });
+    });
+
+    it('ScrollList.Item 的 classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['list', 'option', 'selector'] as const;
+        const { container } = render(() => <ScrollItem list={numbers(2)} classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]))} />);
+        const selectors = { list: 'ul[role="listbox"]', option: 'li[role="option"]', selector: `.${prefix}-selector` };
+        for (const part of parts) {
+            for (const el of container.querySelectorAll(selectors[part])) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+            expect(container.querySelector(selectors[part])).not.toBeNull();
+        }
+    });
 });

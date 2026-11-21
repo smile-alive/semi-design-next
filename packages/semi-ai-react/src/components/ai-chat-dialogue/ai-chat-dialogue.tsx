@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useImperativeHandle, useRef } from 'react';
+import { useImperativeHandle, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
@@ -9,6 +9,7 @@ import { IconChevronDown } from '@fibrae/semi-icons-react';
 import { useDefaultProps, useFoundation } from '@fibrae/semi-ui-react/base';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useFocusHandover, useLocale } from '@fibrae/semi-ui-react/hooks';
+import { CodePartContext } from './context';
 import DialogueItem from './dialogue/dialogue';
 import Hint from './dialogue/dialogue-hint';
 import type { AIChatDialogueHandle, AIChatDialogueProps } from './interface';
@@ -100,6 +101,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: R
 
     const chats = chatsProp ?? EMPTY_CHATS;
     const hints = hintsProp ?? EMPTY_HINTS;
+    const codePart = useMemo(() => ({ className: classNames?.code, style: styles?.code }), [classNames?.code, styles?.code]);
 
     // a busy log defers announcements, so a streamed reply is read once it settles, not chunk by chunk
     const streaming = isUnfinishedStatus(chats.at(-1)?.status);
@@ -116,49 +118,53 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: R
     );
 
     return (
-        <div role={namedRole(rest)} {...rest} className={clsx(prefix, className)} style={style}>
-            <div ref={containerRef} className={`${prefix}-list`} aria-busy={streaming} aria-label={locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
-                {chats.map((chat, index) => (
-                    <DialogueItem
-                        key={chat.id}
-                        role={roleConfig[chat.role]}
-                        align={align}
-                        // not exposed: no use case for hiding the avatar and title of follow-up messages yet
-                        continueSend={false}
-                        dialogueRenderConfig={dialogueRenderConfig}
-                        disabledFileItemClick={disabledFileItemClick}
-                        escapeHtml={escapeHtml}
-                        isLastChat={index === chats.length - 1}
-                        isSelected={selectedIds.has(chat.id)}
-                        markdownRenderProps={markdownRenderProps}
-                        message={chat}
-                        mode={mode}
-                        selecting={selecting}
-                        showReference={showReference}
-                        showReset={showReset}
-                        messageEditRender={messageEditRender}
-                        renderDialogueContentItem={renderDialogueContentItem}
-                        onAnnotationClick={onAnnotationClick}
-                        onFileClick={onFileClick}
-                        onImageClick={onImageClick}
-                        onMessageBadFeedback={foundation.dislikeMessage}
-                        onMessageCopy={onMessageCopy}
-                        onMessageDelete={foundation.deleteMessage}
-                        onMessageEdit={foundation.editMessage}
-                        onMessageGoodFeedback={foundation.likeMessage}
-                        onMessageReset={foundation.resetMessage}
-                        onMessageShare={onMessageShare}
-                        onReferenceClick={onReferenceClick}
-                        onSelectChange={foundation.handleSelectOrRemove}
-                    />
-                ))}
-                {hints.length > 0 && <Hint className={classNames?.hint} style={styles?.hint} hints={hints} selecting={selecting} renderHintBox={renderHintBox} onHintClick={foundation.handleHintClick} />}
+        <CodePartContext value={codePart}>
+            <div role={namedRole(rest)} {...rest} className={clsx(prefix, className)} style={style}>
+                <div ref={containerRef} className={clsx(`${prefix}-list`, classNames?.messages)} style={styles?.messages} aria-busy={streaming} aria-label={locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
+                    {chats.map((chat, index) => (
+                        <DialogueItem
+                            key={chat.id}
+                            classNames={classNames}
+                            styles={styles}
+                            role={roleConfig[chat.role]}
+                            align={align}
+                            // not exposed: no use case for hiding the avatar and title of follow-up messages yet
+                            continueSend={false}
+                            dialogueRenderConfig={dialogueRenderConfig}
+                            disabledFileItemClick={disabledFileItemClick}
+                            escapeHtml={escapeHtml}
+                            isLastChat={index === chats.length - 1}
+                            isSelected={selectedIds.has(chat.id)}
+                            markdownRenderProps={markdownRenderProps}
+                            message={chat}
+                            mode={mode}
+                            selecting={selecting}
+                            showReference={showReference}
+                            showReset={showReset}
+                            messageEditRender={messageEditRender}
+                            renderDialogueContentItem={renderDialogueContentItem}
+                            onAnnotationClick={onAnnotationClick}
+                            onFileClick={onFileClick}
+                            onImageClick={onImageClick}
+                            onMessageBadFeedback={foundation.dislikeMessage}
+                            onMessageCopy={onMessageCopy}
+                            onMessageDelete={foundation.deleteMessage}
+                            onMessageEdit={foundation.editMessage}
+                            onMessageGoodFeedback={foundation.likeMessage}
+                            onMessageReset={foundation.resetMessage}
+                            onMessageShare={onMessageShare}
+                            onReferenceClick={onReferenceClick}
+                            onSelectChange={foundation.handleSelectOrRemove}
+                        />
+                    ))}
+                    {hints.length > 0 && <Hint className={classNames?.hint} itemClassName={classNames?.hintItem} itemStyle={styles?.hintItem} style={styles?.hint} hints={hints} selecting={selecting} renderHintBox={renderHintBox} onHintClick={foundation.handleHintClick} />}
+                </div>
+                {backBottomVisible && (
+                    <span ref={handoverBackBottomFocus} className={`${prefix}-backBottom`}>
+                        <Button type="tertiary" className={clsx(`${prefix}-backBottom-button`, classNames?.backBottom)} style={styles?.backBottom} aria-label={locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
+                    </span>
+                )}
             </div>
-            {backBottomVisible && (
-                <span ref={handoverBackBottomFocus} className={`${prefix}-backBottom`}>
-                    <Button type="tertiary" className={`${prefix}-backBottom-button`} aria-label={locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
-                </span>
-            )}
-        </div>
+        </CodePartContext>
     );
 }

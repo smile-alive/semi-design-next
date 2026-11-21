@@ -480,11 +480,11 @@ export default function DatePicker(rawProps: DatePickerProps) {
         onChange: foundation.handleInputChange,
         onEnterPress: foundation.handleInputComplete,
         block: true,
-        get inputClassName() {
-            return local.classNames?.input;
+        get classNames() {
+            return local.classNames;
         },
-        get inputStyle() {
-            return local.styles?.input;
+        get styles() {
+            return local.styles;
         },
         get showClear() {
             return local.showClear;
@@ -562,7 +562,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
     // null without presets: MonthsGrid sizes the panel by whether a side column exists
     const renderQuickControls = () => (
         <Show when={hasPresets()}>
-            <QuickControl type={local.type} insetInput={local.insetInput} locale={locale().locale} presetPosition={local.presetPosition} presets={local.presets} onPresetClick={foundation.handlePresetClick} />
+            <QuickControl class={local.classNames?.presets} style={local.styles?.presets} type={local.type} insetInput={local.insetInput} locale={locale().locale} presetPosition={local.presetPosition} presets={local.presets} onPresetClick={foundation.handlePresetClick} />
         </Show>
     );
 
@@ -592,6 +592,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const renderMonthGrid = () => (
         <MonthsGrid
+            classNames={local.classNames}
+            styles={local.styles}
             ref={(handle) => {
                 monthGrid = handle;
                 onCleanup(() => {
@@ -663,7 +665,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const renderFooter = () => (
         <Show when={isConfirmNeeded()}>
-            <Footer disabledConfirm={isRangeType(local.type) && !isRangeValueComplete(state().cachedSelectedValue)} locale={locale().locale} prefixCls={cssClasses.PREFIX} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />
+            <Footer class={local.classNames?.footer} style={local.styles?.footer} disabledConfirm={isRangeType(local.type) && !isRangeValueComplete(state().cachedSelectedValue)} locale={locale().locale} prefixCls={cssClasses.PREFIX} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />
         </Show>
     );
 

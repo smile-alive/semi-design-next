@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { strings, TagPart } from '@fibrae/semi-foundation/components/tag/constants';
 import type { AvatarShape } from '../avatar/interface.js';
 import type { PopoverProps } from '../popover/index.js';
 
@@ -11,6 +11,8 @@ export type TagShape = 'circle' | 'square';
 export type TagCloseEvent = MouseEvent | KeyboardEvent;
 
 export interface TagProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'color'> {
+    classNames?: Partial<Record<TagPart, ClassValue>>;
+    styles?: Partial<Record<TagPart, string>>;
     tagKey?: string | number;
     size?: TagSize;
     color?: TagColor;

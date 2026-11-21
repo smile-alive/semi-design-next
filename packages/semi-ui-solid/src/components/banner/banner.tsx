@@ -1,7 +1,7 @@
 import { children, Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/banner/constants';
+import { cssClasses, type BannerPart } from '@fibrae/semi-foundation/components/banner/constants';
 import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/components/banner/foundation';
 import { findFocusAfter } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/banner/banner.scss';
@@ -19,7 +19,9 @@ export type BannerType = 'info' | 'danger' | 'warning' | 'success';
 
 export interface BannerProps extends ElementProps<'div', 'title' | 'onClose'> {
     type?: BannerType;
+    classNames?: Partial<Record<BannerPart, string>>;
     fullMode?: boolean;
+    styles?: Partial<Record<BannerPart, JSX.CSSProperties | string>>;
     title?: JSX.Element;
     description?: JSX.Element;
     /** Replaces the icon of `type`; `null` removes the icon */
@@ -47,7 +49,7 @@ const iconMap = {
 
 export default function Banner(rawProps: BannerProps) {
     const props = useDefaultProps('Banner', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['bordered', 'children', 'class', 'closeIcon', 'description', 'fullMode', 'icon', 'onClose', 'style', 'title', 'type']);
+    const [local, rest] = splitProps(props, ['bordered', 'children', 'class', 'classNames', 'closeIcon', 'description', 'fullMode', 'icon', 'onClose', 'style', 'styles', 'title', 'type']);
 
     const locale = useLocale('Banner');
 
@@ -96,7 +98,7 @@ export default function Banner(rawProps: BannerProps) {
                 <div ref={handoverFocus} class={`${prefixCls}-content-wrapper`}>
                     <div class={`${prefixCls}-content`}>
                         <Show when={showIcon()}>
-                            <div class={`${prefixCls}-icon`} x-semi-prop="icon">
+                            <div class={clsx(`${prefixCls}-icon`, local.classNames?.icon)} style={local.styles?.icon} x-semi-prop="icon">
                                 <Show when={icon() === undefined} fallback={icon()}>
                                     <Dynamic component={iconMap[local.type]} aria-label={locale().locale[local.type]} size="large" />
                                 </Show>
@@ -104,12 +106,12 @@ export default function Banner(rawProps: BannerProps) {
                         </Show>
                         <div class={`${prefixCls}-content-body`}>
                             <Show when={hasContent(title())}>
-                                <Typography.Title component="div" class={`${prefixCls}-title`} heading={5} x-semi-prop="title">
+                                <Typography.Title component="div" class={clsx(`${prefixCls}-title`, local.classNames?.title)} style={local.styles?.title} heading={5} x-semi-prop="title">
                                     {title()}
                                 </Typography.Title>
                             </Show>
                             <Show when={hasContent(description())}>
-                                <Typography.Paragraph component="div" class={`${prefixCls}-description`} x-semi-prop="description">
+                                <Typography.Paragraph component="div" class={clsx(`${prefixCls}-description`, local.classNames?.description)} style={local.styles?.description} x-semi-prop="description">
                                     {description()}
                                 </Typography.Paragraph>
                             </Show>
@@ -118,7 +120,8 @@ export default function Banner(rawProps: BannerProps) {
                     <Show when={closeIcon() !== null}>
                         <IconButton
                             type="tertiary"
-                            class={`${prefixCls}-close`}
+                            class={clsx(`${prefixCls}-close`, local.classNames?.close)}
+                            style={local.styles?.close}
                             aria-label={locale().locale.close}
                             size="small"
                             theme="borderless"
@@ -132,7 +135,7 @@ export default function Banner(rawProps: BannerProps) {
                     </Show>
                 </div>
                 <Show when={hasContent(extra())}>
-                    <div class={`${prefixCls}-extra`} x-semi-prop="children">
+                    <div class={clsx(`${prefixCls}-extra`, local.classNames?.extra)} style={local.styles?.extra} x-semi-prop="children">
                         {extra()}
                     </div>
                 </Show>

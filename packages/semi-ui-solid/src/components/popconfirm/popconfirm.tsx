@@ -26,6 +26,8 @@ export interface PopconfirmProps extends PopoverProps {
     classNames?: Partial<Record<PopconfirmPart, string>>;
     /** On the card (`.semi-popconfirm`), not the popup */
     style?: JSX.CSSProperties | string;
+    /** `arrow` is the arrow color config of Popover, the other keys are inline styles */
+    styles?: Partial<Record<Exclude<PopconfirmPart, 'arrow'>, JSX.CSSProperties | string>> & Pick<NonNullable<PopoverProps['styles']>, 'arrow'>;
     defaultVisible?: boolean;
     disabled?: boolean;
     /** `null` or `false` shows no icon; left out, the warning icon */
@@ -107,6 +109,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
         'cancelType',
         'children',
         'class',
+        'classNames',
         'content',
         'defaultVisible',
         'disabled',
@@ -121,6 +124,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
         'ref',
         'showCloseIcon',
         'style',
+        'styles',
         'title',
         'visible',
     ]);
@@ -207,29 +211,29 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             // hides in-card clicks from document click listeners whatever stopPropagation says; Tooltip uses mousedown
             <div class={clsx(prefixCls, local.class)} style={local.style} onClick={(event) => event.stopImmediatePropagation()}>
                 <div class={`${prefixCls}-inner`}>
-                    <div class={`${prefixCls}-header`}>
+                    <div class={clsx(`${prefixCls}-header`, local.classNames?.header)} style={local.styles?.header}>
                         <Show when={hasIcon()}>
-                            <i class={`${prefixCls}-header-icon`} x-semi-prop="icon">
+                            <i class={clsx(`${prefixCls}-header-icon`, local.classNames?.icon)} style={local.styles?.icon} x-semi-prop="icon">
                                 {icon()}
                             </i>
                         </Show>
                         <div class={`${prefixCls}-header-body`}>
                             <Show when={showTitle()}>
-                                <div id={titleId} class={`${prefixCls}-header-title`} x-semi-prop="title">
+                                <div id={titleId} class={clsx(`${prefixCls}-header-title`, local.classNames?.title)} style={local.styles?.title} x-semi-prop="title">
                                     {title()}
                                 </div>
                             </Show>
                         </div>
                         <Show when={local.showCloseIcon}>
-                            <Button type={local.cancelType} class={`${prefixCls}-btn-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={handleCancel} />
+                            <Button type={local.cancelType} class={clsx(`${prefixCls}-btn-close`, local.classNames?.close)} style={local.styles?.close} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={handleCancel} />
                         </Show>
                     </div>
                     <Show when={showContent()}>
-                        <div id={contentId} class={clsx(`${prefixCls}-body`, { [`${prefixCls}-body-withIcon`]: hasIcon() })} x-semi-prop="content">
+                        <div id={contentId} class={clsx(`${prefixCls}-body`, { [`${prefixCls}-body-withIcon`]: hasIcon() }, local.classNames?.body)} style={local.styles?.body} x-semi-prop="content">
                             {body()}
                         </div>
                     </Show>
-                    <div ref={(node) => (footer = node)} class={`${prefixCls}-footer`}>
+                    <div ref={(node) => (footer = node)} class={clsx(`${prefixCls}-footer`, local.classNames?.footer)} style={local.styles?.footer}>
                         <FooterButton kind="cancel" own={local.cancelButtonProps} type={local.cancelType} pending={state().cancelLoading} onPress={handleCancel}>
                             {local.cancelText || locale().locale.cancel}
                         </FooterButton>
@@ -275,6 +279,8 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             {...rest}
             ref={(instance) => (popover = instance)}
             class={cssClasses.POPOVER}
+            classNames={{ content: local.classNames?.content, arrow: local.classNames?.arrow }}
+            styles={{ content: local.styles?.content, arrow: local.styles?.arrow }}
             aria-describedby={describedBy()}
             aria-labelledby={labelledBy()}
             content={renderCard}

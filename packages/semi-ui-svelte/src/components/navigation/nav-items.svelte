@@ -18,7 +18,7 @@
 
     let { items, level, subDropdownProps, icon, text, toggleIcon, expandIcon }: NavItemsProps = $props();
 
-    const ITEM_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'link', 'linkOptions', 'tooltipShowDelay', 'tooltipHideDelay']);
+    const ITEM_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'classNames', 'styles', 'link', 'linkOptions', 'tooltipShowDelay', 'tooltipHideDelay']);
     const SUB_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'classNames', 'styles', 'dropdownProps']);
     const LI_KEYS = new Set(['class', 'style', 'onmouseenter', 'onmouseleave']);
 

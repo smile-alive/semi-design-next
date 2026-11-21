@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
 import type { ModalPart } from '@fibrae/semi-foundation/components/modal/constants';
-import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
+import type { strings, UploadFileCardPart } from '@fibrae/semi-foundation/components/upload/constants';
 import type { BaseFileItem, AfterUploadResult as FoundationAfterUploadResult, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ModalProps } from '../modal';
 import type { ShowTooltip } from '../typography/interface';
@@ -73,8 +73,10 @@ export interface RenderFileItemProps extends FileItem {
     showRetry?: boolean;
     showReplace?: boolean;
     class?: string;
+    classNames?: Partial<Record<UploadFileCardPart, string>>;
     /** Merged with `picWidth` and `picHeight` in the picture wall, so only an object */
     style?: JSX.CSSProperties;
+    styles?: Partial<Record<UploadFileCardPart, JSX.CSSProperties>>;
     disabled?: boolean;
     onPreviewClick?: () => void;
     picWidth?: string | number;

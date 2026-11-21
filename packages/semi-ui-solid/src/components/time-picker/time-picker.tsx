@@ -32,7 +32,7 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     borderless?: boolean;
     /** On the root element */
     class?: string;
-    /** `dropdown` is the panel card; `input` is the Input's root element */
+    /** `dropdown` is the panel card; `input` is the Input's root element; `header`, `content` and `footer` are the panel's ScrollList header, body and footer; `item` is every time option */
     classNames?: Partial<Record<TimePickerPart, string>>;
     styles?: Partial<Record<TimePickerPart, JSX.CSSProperties | string>>;
     clearIcon?: JSX.Element;
@@ -390,6 +390,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
                     const disabledFns = createMemo(() => TimePickerFoundation.getDisabledTimeFns(props, state().value, index === 1 ? 'right' : 'left', isRange()));
                     return (
                         <Combobox
+                            classNames={local.classNames}
                             // an empty range starts its end panel in the afternoon
                             defaultIsAM={index === 0}
                             disabledHours={disabledFns().disabledHours}
@@ -404,6 +405,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
                             prefixCls={`${prefixCls}-panel`}
                             scrollItemProps={local.scrollItemProps}
                             secondStep={local.secondStep}
+                            styles={local.styles}
                             timeStampValue={state().value[index]}
                             use12Hours={local.use12Hours}
                             onChange={(value) => foundation.handlePanelChange(value, index)}

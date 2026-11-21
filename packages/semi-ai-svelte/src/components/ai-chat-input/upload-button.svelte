@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount, type Snippet } from 'svelte';
+    import type { ClassValue } from 'svelte/elements';
     import { omit } from 'es-toolkit';
     import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
     import { Tooltip } from '@fibrae/semi-ui-svelte/tooltip/index';
@@ -12,6 +13,8 @@
         attachments: Attachment[];
         tipProps?: AIChatInputProps['uploadTipProps'];
         hidden: boolean;
+        buttonClass?: ClassValue;
+        buttonStyle?: string;
         uploadButton?: Snippet<[AIChatInputUploadButtonSnippetProps]>;
         uploadTip?: Snippet;
         /** Hands the owner a way to add files; the returned function withdraws it. The owner may mount several buttons */
@@ -19,7 +22,7 @@
         onChange: (props: UploadOnChangeProps) => void;
     }
 
-    let { uploadProps, attachments, tipProps, hidden, uploadButton, uploadTip, register, onChange }: UploadButtonProps = $props();
+    let { uploadProps, attachments, tipProps, hidden, buttonClass, buttonStyle, uploadButton, uploadTip, register, onChange }: UploadButtonProps = $props();
 
     let upload = $state<ReturnType<typeof Upload>>();
 
@@ -38,14 +41,14 @@
 </script>
 
 {#snippet defaultNode()}
-    <UploadIcon {disabled} />
+    <UploadIcon class={buttonClass} {disabled} style={buttonStyle} />
 {/snippet}
 
 {#snippet trigger()}
     {#if uploadButton}
         {@render uploadButton(slotProps)}
     {:else}
-        <UploadIcon {disabled} />
+        <UploadIcon class={buttonClass} {disabled} style={buttonStyle} />
     {/if}
 {/snippet}
 

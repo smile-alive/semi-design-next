@@ -1,10 +1,10 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { cssClasses, type DropdownItemPart } from '@fibrae/semi-foundation/components/dropdown/constants';
 import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { IconTick } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../../base/index';
-import { callHandler, hasContent, mergeRefs } from '../../utils/index';
+import { callHandler, hasContent, mergeRefs, mergeStyles } from '../../utils/index';
 import { menuItems, useDropdownContext } from './context';
 
 export type Type = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';
@@ -14,6 +14,8 @@ export interface DropdownItemProps extends ElementProps<'li', 'type'> {
     type?: Type;
     active?: boolean;
     icon?: JSX.Element;
+    classNames?: Partial<Record<DropdownItemPart, string>>;
+    styles?: Partial<Record<DropdownItemPart, JSX.CSSProperties | string>>;
     /** Only outside a Dropdown: inside one, the Dropdown's showTick decides */
     showTick?: boolean;
     forwardRef?: (element: HTMLLIElement) => void;
@@ -22,7 +24,7 @@ export interface DropdownItemProps extends ElementProps<'li', 'type'> {
 const prefix = cssClasses.PREFIX;
 
 export default function DropdownItem(props: DropdownItemProps) {
-    const [local, rest] = splitProps(props, ['children', 'class', 'disabled', 'type', 'active', 'icon', 'showTick', 'forwardRef', 'ref', 'onClick', 'onMouseDown', 'onMouseEnter', 'onMouseLeave', 'onContextMenu', 'onKeyDown']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'style', 'classNames', 'styles', 'disabled', 'type', 'active', 'icon', 'showTick', 'forwardRef', 'ref', 'onClick', 'onMouseDown', 'onMouseEnter', 'onMouseLeave', 'onContextMenu', 'onKeyDown']);
 
     const context = useDropdownContext();
 
@@ -56,12 +58,18 @@ export default function DropdownItem(props: DropdownItemProps) {
             {...rest}
             // registered before the consumer's ref, which a Dropdown triggered by this item reads it from
             ref={mergeRefs((node: HTMLLIElement) => menuItems.set(node, disabled), local.forwardRef, local.ref)}
-            class={clsx(local.class, `${prefix}-item`, {
-                [`${prefix}-item-disabled`]: local.disabled,
-                [`${prefix}-item-withTick`]: showTick(),
-                [`${prefix}-item-${local.type}`]: local.type,
-                [`${prefix}-item-active`]: local.active,
-            })}
+            class={clsx(
+                local.class,
+                `${prefix}-item`,
+                {
+                    [`${prefix}-item-disabled`]: local.disabled,
+                    [`${prefix}-item-withTick`]: showTick(),
+                    [`${prefix}-item-${local.type}`]: local.type,
+                    [`${prefix}-item-active`]: local.active,
+                },
+                context?.view().classNames?.item
+            )}
+            style={mergeStyles(context?.view().styles?.item, local.style)}
             role={role()}
             aria-checked={role() === 'menuitem' ? undefined : Boolean(local.active)}
             aria-disabled={Boolean(local.disabled)}
@@ -78,7 +86,9 @@ export default function DropdownItem(props: DropdownItemProps) {
                 <IconTick style={local.active ? undefined : { color: 'transparent' }} />
             </Show>
             <Show when={hasContent(icon())}>
-                <div class={`${prefix}-item-icon`}>{icon()}</div>
+                <div class={clsx(`${prefix}-item-icon`, context?.view().classNames?.itemIcon, local.classNames?.icon)} style={mergeStyles(context?.view().styles?.itemIcon, local.styles?.icon)}>
+                    {icon()}
+                </div>
             </Show>
             {local.children}
         </li>

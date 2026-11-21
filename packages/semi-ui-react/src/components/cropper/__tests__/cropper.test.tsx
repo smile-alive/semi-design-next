@@ -170,12 +170,20 @@ describe('Cropper', () => {
 
     it('classNames 与 styles 按部位落到对应元素，裁剪框以其计算尺寸为准', () => {
         const { container } = renderLoaded({
-            classNames: { cropperBox: 'my-box' },
-            styles: { cropperBox: { outlineColor: 'red', width: 10 } },
+            classNames: { cropperBox: 'my-box', mask: 'my-mask', handle: 'my-handle' },
+            styles: { cropperBox: { outlineColor: 'red', width: 10 }, mask: { order: 2 }, handle: { order: 3 } },
         });
         expect(getBox(container)).toHaveClass('semi-cropper-box', 'my-box');
         expect(getBox(container).style.outlineColor).toBe('red');
         expect(getBox(container).style.width).toBe('300px');
+        expect(getMask(container)).toHaveClass('semi-cropper-mask', 'my-mask');
+        expect(getMask(container).style.order).toBe('2');
+        const handles = container.querySelectorAll<HTMLElement>('.semi-cropper-box-corner');
+        expect(handles).toHaveLength(8);
+        for (const handle of handles) {
+            expect(handle).toHaveClass('my-handle');
+            expect(handle.style.order).toBe('3');
+        }
     });
 
     it('从 semiGlobal.config.overrideDefaultProps 读取默认值', () => {

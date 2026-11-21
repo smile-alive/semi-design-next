@@ -1,7 +1,7 @@
 import { children, createMemo, For, Show, splitProps, untrack, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { pick } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+import { cssClasses, type ListPart } from '@fibrae/semi-foundation/components/list/constants';
 import { namedRole, shallowEqualObjects, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/list/list.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
@@ -27,6 +27,9 @@ export interface ListProps<T> extends ElementProps<'div', 'onClick'> {
     grid?: Grid;
     loading?: boolean;
     loadMore?: JSX.Element;
+    /** `item*` keys apply to every List.Item, before the item's own classNames */
+    classNames?: Partial<Record<ListPart, string>>;
+    styles?: Partial<Record<ListPart, JSX.CSSProperties | string>>;
     onClick?: ListItemEventHandler;
     onRightClick?: ListItemEventHandler;
 }
@@ -43,7 +46,7 @@ const defaultProps = {
 
 function List<T = any>(rawProps: ListProps<T>) {
     const props = useDefaultProps('List', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['bordered', 'children', 'class', 'dataSource', 'emptyContent', 'footer', 'grid', 'header', 'layout', 'loadMore', 'loading', 'onClick', 'onRightClick', 'renderItem', 'size', 'split']);
+    const [local, rest] = splitProps(props, ['bordered', 'children', 'class', 'classNames', 'dataSource', 'emptyContent', 'footer', 'grid', 'header', 'layout', 'loadMore', 'loading', 'onClick', 'onRightClick', 'renderItem', 'size', 'split', 'styles']);
 
     const locale = useLocale('List');
 
@@ -52,7 +55,7 @@ function List<T = any>(rawProps: ListProps<T>) {
     const loadMore = children(() => local.loadMore);
 
     // content equality: props spread from a signal object notify every key, which must not hand the items a new value
-    const context = createMemo(() => ({ grid: local.grid, onClick: local.onClick, onRightClick: local.onRightClick }), undefined, { equals: shallowEqualObjects });
+    const context = createMemo(() => ({ grid: local.grid, onClick: local.onClick, onRightClick: local.onRightClick, classNames: local.classNames, styles: local.styles }), undefined, { equals: shallowEqualObjects });
     const renderItem = createMemo(() => local.renderItem);
 
     // Rendered inside the provider, because the items a consumer passes as children read the context when they are created
@@ -84,8 +87,15 @@ function List<T = any>(rawProps: ListProps<T>) {
             <Show
                 when={!showEmpty()}
                 fallback={
-                    <Show when={hasContent(emptyContent())} fallback={<div class={`${prefixCls}-empty`}>{locale().locale.emptyText}</div>}>
-                        <div class={`${prefixCls}-empty`} x-semi-prop="emptyContent">
+                    <Show
+                        when={hasContent(emptyContent())}
+                        fallback={
+                            <div class={clsx(`${prefixCls}-empty`, local.classNames?.empty)} style={local.styles?.empty}>
+                                {locale().locale.emptyText}
+                            </div>
+                        }
+                    >
+                        <div class={clsx(`${prefixCls}-empty`, local.classNames?.empty)} style={local.styles?.empty} x-semi-prop="emptyContent">
                             {emptyContent()}
                         </div>
                     </Show>
@@ -122,7 +132,7 @@ function List<T = any>(rawProps: ListProps<T>) {
             })}
         >
             <Show when={hasContent(header())}>
-                <div class={`${prefixCls}-header`} x-semi-prop="header">
+                <div class={clsx(`${prefixCls}-header`, local.classNames?.header)} style={local.styles?.header} x-semi-prop="header">
                     {header()}
                 </div>
             </Show>
@@ -132,7 +142,7 @@ function List<T = any>(rawProps: ListProps<T>) {
                 </Spin>
             </ListContext.Provider>
             <Show when={hasContent(footer())}>
-                <div class={`${prefixCls}-footer`} x-semi-prop="footer">
+                <div class={clsx(`${prefixCls}-footer`, local.classNames?.footer)} style={local.styles?.footer} x-semi-prop="footer">
                     {footer()}
                 </div>
             </Show>

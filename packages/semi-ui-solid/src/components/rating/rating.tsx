@@ -1,6 +1,6 @@
 import { type JSX, For, Show, children, createMemo, mergeProps, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+import { cssClasses, type RatingPart } from '@fibrae/semi-foundation/components/rating/constants';
 import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/rating/rating.scss';
@@ -23,6 +23,8 @@ export type { RatingState };
  * would reach and its `blur()` releases a focused star
  */
 export interface RatingProps extends ElementProps<'ul', 'defaultValue' | 'onChange' | 'onClick' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'children'> {
+    classNames?: Partial<Record<RatingPart, string>>;
+    styles?: Partial<Record<RatingPart, JSX.CSSProperties | string>>;
     disabled?: boolean;
     value?: number;
     defaultValue?: number;
@@ -67,6 +69,8 @@ export default function Rating(rawProps: RatingProps) {
         'name',
         'tabIndex',
         'class',
+        'classNames',
+        'styles',
         'ref',
         'disabled',
         'value',
@@ -204,6 +208,8 @@ export default function Rating(rawProps: RatingProps) {
                     const item = (liProps?: JSX.HTMLAttributes<HTMLLIElement>) => (
                         <Item
                             liProps={liProps}
+                            partClass={local.classNames?.item}
+                            partStyle={local.styles?.item}
                             disabled={Boolean(props.disabled)}
                             value={value()}
                             allowHalf={props.allowHalf}
@@ -225,7 +231,7 @@ export default function Rating(rawProps: RatingProps) {
                     return (
                         <Show when={local.tooltips} fallback={item()}>
                             {/* the rating drives this tip, which Escape cannot hide, so the key goes on to the layer below */}
-                            <Tooltip closeOnEsc={false} content={local.tooltips?.[index] ?? ''} trigger="custom" visible={RatingFoundation.isTipVisible(index, state().hoverValue, state().focusVisibleStar, local.tooltips?.[index])}>
+                            <Tooltip class={local.classNames?.dropdown} closeOnEsc={false} style={local.styles?.dropdown} content={local.tooltips?.[index] ?? ''} trigger="custom" visible={RatingFoundation.isTipVisible(index, state().hoverValue, state().focusVisibleStar, local.tooltips?.[index])}>
                                 {/* null hands the description to the star's radios, which Item reads from context */}
                                 {(getTriggerProps) => item(getTriggerProps({ 'aria-describedby': null, tabIndex: null }))}
                             </Tooltip>

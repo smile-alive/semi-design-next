@@ -1,7 +1,7 @@
 import { type JSX, For, Show, Suspense, batch, children, createEffect, createMemo, createSignal, on, createUniqueId, lazy, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
+import { cssClasses, type TagInputPart } from '@fibrae/semi-foundation/components/tag-input/constants';
 import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState, type TagInputValidateStatus, type TagSortIds } from '@fibrae/semi-foundation/components/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
@@ -33,7 +33,10 @@ export type { TagInputValidateStatus };
 /** Focus entering or leaving the whole TagInput; focus moving among its input, tags and buttons does not fire it */
 type TagInputFocusEvent = FocusEvent & { currentTarget: HTMLDivElement; target: Element };
 
+type Style = JSX.CSSProperties | string;
+
 export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'onKeyDown' | 'placeholder'> {
+    classNames?: Partial<Record<TagInputPart, string>>;
     clearIcon?: JSX.Element;
     defaultValue?: string[];
     disabled?: boolean;
@@ -70,6 +73,7 @@ export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultVa
     showClear?: boolean;
     size?: TagInputSize;
     split?: (originString: string, separators: string | string[] | null) => string[];
+    styles?: Partial<Record<TagInputPart, Style>>;
     suffix?: JSX.Element;
     validateStatus?: TagInputValidateStatus;
     /** The tags; `null` means controlled with no tags */
@@ -165,6 +169,7 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         'aria-required',
         'autofocus',
         'class',
+        'classNames',
         'clearIcon',
         'disabled',
         'draggable',
@@ -186,6 +191,7 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         'showRestTagsPopover',
         'size',
         'style',
+        'styles',
         'suffix',
         // the root is a group, not a focus target; a tabIndex (Tooltip injects 0) belongs on the input
         'tabIndex',
@@ -341,11 +347,16 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         const defaultTag = () => (
             <Tag
                 type="light"
-                class={clsx(`${prefixCls}-wrapper-tag`, {
-                    [`${prefixCls}-wrapper-tag-size-${local.size}`]: local.size,
-                    // the handle's wrapper carries the start padding; without a handle (the Sortable still loading) the tag does
-                    [`${prefixCls}-wrapper-tag-icon`]: showIconHandler() && !DragHandle,
-                })}
+                class={clsx(
+                    `${prefixCls}-wrapper-tag`,
+                    {
+                        [`${prefixCls}-wrapper-tag-size-${local.size}`]: local.size,
+                        // the handle's wrapper carries the start padding; without a handle (the Sortable still loading) the tag does
+                        [`${prefixCls}-wrapper-tag-icon`]: showIconHandler() && !DragHandle,
+                    },
+                    local.classNames?.tag
+                )}
+                style={local.styles?.tag}
                 // only the closable tag is a button that takes a name; a disabled one is static text.
                 aria-label={local.disabled ? undefined : formatLocale(tagLocale().locale.closableTag, { tag: itemProps.value })}
                 closable={!local.disabled}
@@ -479,11 +490,16 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
             <Show when={labelKind()}>
                 <div
                     id={labelId()}
-                    class={clsx(`${prefixCls}-prefix`, {
-                        [`${prefixCls}-inset-label`]: insetLabelKind(),
-                        [`${prefixCls}-prefix-text`]: labelKind() === 'text',
-                        [`${prefixCls}-prefix-icon`]: labelKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefixCls}-prefix`,
+                        {
+                            [`${prefixCls}-inset-label`]: insetLabelKind(),
+                            [`${prefixCls}-prefix-text`]: labelKind() === 'text',
+                            [`${prefixCls}-prefix-icon`]: labelKind() === 'icon',
+                        },
+                        local.classNames?.prefix
+                    )}
+                    style={local.styles?.prefix}
                     x-semi-prop="prefix"
                     onClick={foundation.handleClickPrefixOrSuffix}
                     onMouseDown={(e) => e.preventDefault()}
@@ -491,7 +507,7 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                     {prefixKind() ? prefix() : insetLabel()}
                 </div>
             </Show>
-            <div ref={(node) => (wrapper = node)} class={`${prefixCls}-wrapper`}>
+            <div ref={(node) => (wrapper = node)} class={clsx(`${prefixCls}-wrapper`, local.classNames?.content)} style={local.styles?.content}>
                 <Show when={sortable()} fallback={<PlainTags />}>
                     <SortableTags />
                 </Show>
@@ -499,7 +515,8 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                     inputRef={(node) => (input = node)}
                     id={local.id}
                     name={local.name}
-                    class={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${local.size}`)}
+                    class={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${local.size}`, local.classNames?.input)}
+                    style={local.styles?.input}
                     aria-activedescendant={local['aria-activedescendant']}
                     aria-autocomplete={local['aria-autocomplete']}
                     aria-controls={local['aria-controls']}
@@ -537,7 +554,8 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                     <button
                         ref={setClearButton}
                         type="button"
-                        class={`${prefixCls}-clearBtn`}
+                        class={clsx(`${prefixCls}-clearBtn`, local.classNames?.clear)}
+                        style={local.styles?.clear}
                         aria-label={locale().locale.clear}
                         onClick={(e) => {
                             foundation.handleClearBtn(e);
@@ -552,10 +570,15 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
             </Show>
             <Show when={suffixKind()}>
                 <div
-                    class={clsx(`${prefixCls}-suffix`, {
-                        [`${prefixCls}-suffix-text`]: suffixKind() === 'text',
-                        [`${prefixCls}-suffix-icon`]: suffixKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefixCls}-suffix`,
+                        {
+                            [`${prefixCls}-suffix-text`]: suffixKind() === 'text',
+                            [`${prefixCls}-suffix-icon`]: suffixKind() === 'icon',
+                        },
+                        local.classNames?.suffix
+                    )}
+                    style={local.styles?.suffix}
                     x-semi-prop="suffix"
                     onClick={foundation.handleClickPrefixOrSuffix}
                     onMouseDown={(e) => e.preventDefault()}

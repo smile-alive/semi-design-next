@@ -87,6 +87,19 @@ describe('Carousel', () => {
         expect(getIndicatorItems(container)).toHaveLength(3);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['content', 'indicators', 'indicator', 'arrows', 'prevArrow', 'nextArrow'] as const;
+        const selectors = { content: 'content', indicators: 'indicator[role="tablist"]', indicator: 'indicator-item', arrows: 'arrow', prevArrow: 'arrow-prev', nextArrow: 'arrow-next' };
+        const { container } = render(getCarousel({ classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) }));
+        for (const part of parts) {
+            for (const el of container.querySelectorAll(`.${BASE_CLASS_PREFIX}-carousel-${selectors[part]}`)) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+            expect(container.querySelectorAll(`.my-${part}`)).toHaveLength(part === 'indicator' ? 3 : 1);
+        }
+    });
+
     it('自定义 className 与 style 的 Carousel', () => {
         const { container } = render(getCarousel({ className: 'test', style: { color: 'red' } }));
         const carousel = container.querySelector(`.${BASE_CLASS_PREFIX}-carousel`);

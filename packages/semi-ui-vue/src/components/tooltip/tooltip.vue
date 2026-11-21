@@ -125,7 +125,7 @@
                 </PopupLayerProvider>
             </div>
             <slot v-if="props.showArrow" name="arrow">
-                <TriangleArrow :class="`${prefixCls}-icon-arrow`" :style="arrowStyle($attrs.style)" :vertical="vertical" />
+                <TriangleArrow :class="[`${prefixCls}-icon-arrow`, props.classNames?.arrow]" :style="[arrowStyle($attrs.style), props.styles?.arrow]" :vertical="vertical" />
             </slot>
         </div>
     </Teleport>

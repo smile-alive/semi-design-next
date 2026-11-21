@@ -424,8 +424,10 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             renderLabel,
             renderFullLabel,
             labelEllipsis: typeof labelEllipsis === 'undefined' ? virtualize : labelEllipsis,
+            classNames: { empty: classNames?.empty, item: classNames?.item, itemTitle: classNames?.itemTitle, itemSwitcher: classNames?.itemSwitcher },
+            styles: { empty: styles?.empty, item: styles?.item, itemTitle: styles?.itemTitle, itemSwitcher: styles?.itemSwitcher },
         }),
-        [loadData, disabled, expandAction, foundation, multiple, renderLabel, renderFullLabel, labelEllipsis, virtualize]
+        [loadData, disabled, expandAction, foundation, multiple, renderLabel, renderFullLabel, labelEllipsis, virtualize, classNames, styles]
     );
 
     // a callback, so passing it to a user searchRender is not a ref access during render
@@ -465,10 +467,13 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     };
 
     const renderInput = () => {
-        const inputcls = clsx({
-            [`${prefixTree}-input`]: isDropdownPositionSearch,
-            [`${prefixcls}-inputTrigger`]: !isDropdownPositionSearch,
-        });
+        const inputcls = clsx(
+            {
+                [`${prefixTree}-input`]: isDropdownPositionSearch,
+                [`${prefixcls}-inputTrigger`]: !isDropdownPositionSearch,
+            },
+            !isDropdownPositionSearch && classNames?.input
+        );
         const baseInputProps = {
             value: inputValue,
             className: inputcls,
@@ -502,17 +507,20 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                   // the input is empty until typing, so the selected text is exposed as the description
                   'aria-describedby': describedby,
               } as const);
-        const wrapperCls = clsx({
-            [`${prefixTree}-search-wrapper`]: isDropdownPositionSearch,
-            [`${prefixcls}-triggerSingleSearch-wrapper`]: !isDropdownPositionSearch && !multiple,
-            [`${prefixcls}-triggerSingleSearch-upper`]: !isDropdownPositionSearch && inputTriggerFocus,
-        });
+        const wrapperCls = clsx(
+            {
+                [`${prefixTree}-search-wrapper`]: isDropdownPositionSearch,
+                [`${prefixcls}-triggerSingleSearch-wrapper`]: !isDropdownPositionSearch && !multiple,
+                [`${prefixcls}-triggerSingleSearch-upper`]: !isDropdownPositionSearch && inputTriggerFocus,
+            },
+            isDropdownPositionSearch && classNames?.search
+        );
         if (searchRender === false) {
             return null;
         }
         const inputPlaceholder = isDropdownPositionSearch ? searchPlaceholder || locale.searchPlaceholder : '';
         return (
-            <div className={wrapperCls}>
+            <div className={wrapperCls} style={isDropdownPositionSearch ? styles?.search : undefined}>
                 {typeof searchRender === 'function' ? (
                     searchRender({
                         ...inputA11yProps,
@@ -523,7 +531,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     })
                 ) : (
                     // global Input defaults must not add a clear button or adornments; realInputProps sets the dropdown's own
-                    <Input ref={setInputRef} {...inputA11yProps} placeholder={inputPlaceholder} addonAfter={null} addonBefore={null} insetLabel={null} showClear={false} prefix={null} suffix={null} {...baseInputProps} {...realInputProps} />
+                    <Input ref={setInputRef} {...inputA11yProps} style={isDropdownPositionSearch ? undefined : styles?.input} placeholder={inputPlaceholder} addonAfter={null} addonBefore={null} insetLabel={null} showClear={false} prefix={null} suffix={null} {...baseInputProps} {...realInputProps} />
                 )}
             </div>
         );
@@ -532,12 +540,16 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const renderSingleTriggerSearchItem = () => {
         const renderText = getRenderTextInSingle();
         const shown = isShownText(renderText);
-        const spanCls = clsx(`${prefixcls}-selection-TriggerSearchItem`, {
-            [`${prefixcls}-selection-TriggerSearchItem-placeholder`]: (inputTriggerFocus || !shown) && !disabled,
-            [`${prefixcls}-selection-TriggerSearchItem-disabled`]: disabled,
-        });
+        const spanCls = clsx(
+            `${prefixcls}-selection-TriggerSearchItem`,
+            {
+                [`${prefixcls}-selection-TriggerSearchItem-placeholder`]: (inputTriggerFocus || !shown) && !disabled,
+                [`${prefixcls}-selection-TriggerSearchItem-disabled`]: disabled,
+            },
+            !shown && classNames?.placeholder
+        );
         return (
-            <span id={singleSearchTextId} className={spanCls} onClick={foundation.onClickSingleTriggerSearchItem}>
+            <span id={singleSearchTextId} className={spanCls} style={shown ? undefined : styles?.placeholder} onClick={foundation.onClickSingleTriggerSearchItem}>
                 {shown ? renderText : placeholder}
             </span>
         );
@@ -548,7 +560,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             return null;
         }
         return (
-            <div className={clsx(`${prefixcls}-arrow`)} x-semi-prop="arrowIcon">
+            <div className={clsx(`${prefixcls}-arrow`, classNames?.arrow)} style={styles?.arrow} x-semi-prop="arrowIcon">
                 {arrowIcon}
             </div>
         );
@@ -620,14 +632,14 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     {!outerTopSlot && filterTreeNode && isDropdownPositionSearch && renderInput()}
                     {noData ? (
                         // the combobox's aria-controls needs an element while there is no tree
-                        <div id={treeId} className={clsx(listCls, classNames?.optionList)} style={styles?.optionList} role="none">
+                        <div id={treeId} className={clsx(listCls, classNames?.list)} style={styles?.list} role="none">
                             {renderEmpty()}
                         </div>
                     ) : (
                         <div
                             id={treeId}
-                            className={clsx(listCls, classNames?.optionList)}
-                            style={styles?.optionList}
+                            className={clsx(listCls, classNames?.list)}
+                            style={styles?.list}
                             // the combobox's name source, never the combobox itself: accname would read its value
                             {...nameProps}
                             aria-multiselectable={Boolean(multiple)}
@@ -691,6 +703,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                 visible: true,
                 onClose,
                 size: size === 'small' ? 'small' : 'large',
+                className: classNames?.tag,
+                style: styles?.tag,
             };
             if (isRenderInTag) {
                 tagList.push(
@@ -710,9 +724,13 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         if (!item) {
             return null;
         }
-        const tagCls = clsx(`${prefixcls}-selection-tag`, {
-            [`${prefixcls}-selection-tag-disabled`]: disabled,
-        });
+        const tagCls = clsx(
+            `${prefixcls}-selection-tag`,
+            {
+                [`${prefixcls}-selection-tag-disabled`]: disabled,
+            },
+            classNames?.tag
+        );
         const onClose = (_tagChildren: React.ReactNode, e: React.MouseEvent | React.KeyboardEvent) => {
             e.preventDefault();
             removeTag(key);
@@ -721,6 +739,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             size: size === 'small' ? 'small' : 'large',
             color: 'white',
             className: tagCls,
+            style: styles?.tag,
             closable: TreeSelectFoundation.isTagClosable(key, props, view),
             onClose,
         };
@@ -743,6 +762,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         <TagInput
             ref={tagInputRef}
             {...comboboxProps}
+            className={classNames?.input}
+            style={styles?.input}
             aria-autocomplete="list"
             autoFocus={isTriggerPositionSearch ? searchAutoFocus : undefined}
             disabled={disabled}
@@ -783,10 +804,18 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         if (!multiple || !hasValue) {
             const renderText = getRenderTextInSingle();
             const shown = isShownText(renderText);
-            const spanCls = clsx(`${prefixcls}-selection-content`, {
-                [`${prefixcls}-selection-placeholder`]: !shown,
-            });
-            return <span className={spanCls}>{shown ? renderText : placeholder}</span>;
+            const spanCls = clsx(
+                `${prefixcls}-selection-content`,
+                {
+                    [`${prefixcls}-selection-placeholder`]: !shown,
+                },
+                !shown && classNames?.placeholder
+            );
+            return (
+                <span className={spanCls} style={shown ? undefined : styles?.placeholder}>
+                    {shown ? renderText : placeholder}
+                </span>
+            );
         }
         return <TagGroup maxTagCount={maxTagCount} mode="custom" popoverProps={restTagsPopoverProps} showPopover={showRestTagsPopover} size={size === 'small' ? 'small' : 'large'} tagList={renderTagList(triggerRenderKeys)} />;
     };
@@ -799,7 +828,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             <button
                 ref={clearHandover}
                 type="button"
-                className={`${prefixcls}-clearbtn`}
+                className={clsx(`${prefixcls}-clearbtn`, classNames?.clear)}
+                style={styles?.clear}
                 aria-label={locale.clear}
                 onClick={(e) => {
                     handleClear(e);
@@ -852,11 +882,13 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             inner = <Trigger disabled={disabled} placeholder={placeholder} value={triggerRenderKeys.map(getNodeData).filter(Boolean)} componentProps={componentProps} inputValue={inputValue} triggerRender={triggerRender} onClear={handleClear} onRemove={removeTag} onSearch={search} />;
         } else {
             inner = [
-                <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId)}</Fragment>,
+                <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId, classNames?.prefix, styles?.prefix)}</Fragment>,
                 <Fragment key="selection">
-                    <div className={`${prefixcls}-selection`}>{renderSelectContent(triggerRenderKeys)}</div>
+                    <div className={clsx(`${prefixcls}-selection`, classNames?.content)} style={styles?.content}>
+                        {renderSelectContent(triggerRenderKeys)}
+                    </div>
                 </Fragment>,
-                <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode)}</Fragment>,
+                <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode, classNames?.suffix, styles?.suffix)}</Fragment>,
                 <Fragment key="clearBtn">{renderClearBtn()}</Fragment>,
                 <Fragment key="arrow">{renderArrow()}</Fragment>,
             ];

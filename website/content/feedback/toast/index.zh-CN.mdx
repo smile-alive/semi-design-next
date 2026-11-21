@@ -190,18 +190,20 @@ import { Toast } from '@fibrae/semi-ui-solid';
 
 <Framework only="react">
 
-| 属性         | 说明                                                         | 类型              | 默认值 |
-| ------------ | ------------------------------------------------------------ | ----------------- | ------ |
-| content      | 提示内容                                                     | ReactNode         | ''     |
-| icon         | 自定义图标                                                   | ReactNode         |        |
-| showClose    | 是否展示关闭按钮                                             | boolean           | true   |
-| textMaxWidth | 内容的最大宽度                                               | number \| string  | 450    |
-| onClose      | toast 关闭的回调函数                                         | () => void        |        |
-| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠 | boolean \| number | false  |
-| id           | 自定义 ToastId                                               | string            |        |
-| motion       | 是否开启进出场动画                                           | boolean           | true   |
-| className    | 类名                                                         | string            |        |
-| style        | 样式                                                         | CSSProperties     |        |
+| 属性         | 说明                                                                                                                                               | 类型                                        | 默认值 |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | ------ |
+| content      | 提示内容                                                                                                                                           | ReactNode                                   | ''     |
+| icon         | 自定义图标                                                                                                                                         | ReactNode                                   |        |
+| showClose    | 是否展示关闭按钮                                                                                                                                   | boolean                                     | true   |
+| textMaxWidth | 内容的最大宽度                                                                                                                                     | number \| string                            | 450    |
+| onClose      | toast 关闭的回调函数                                                                                                                               | () => void                                  |        |
+| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠                                                                                       | boolean \| number                           | false  |
+| id           | 自定义 ToastId                                                                                                                                     | string                                      |        |
+| motion       | 是否开启进出场动画                                                                                                                                 | boolean                                     | true   |
+| className    | 类名                                                                                                                                               | string                                      |        |
+| style        | 样式                                                                                                                                               | CSSProperties                               |        |
+| classNames   | 内部各部位的类名，键为 `content`、`icon`、`text`、`close`，与组件自带的类名合并；`content` 是带背景的气泡本体，`icon` 只作用于类型图标和 Semi 图标 | `Partial<Record<ToastPart, string>>`        |        |
+| styles       | 内部各部位的内联样式，键同 `classNames`                                                                                                            | `Partial<Record<ToastPart, CSSProperties>>` |        |
 
 `className`、`style` 与未声明的选项（如 `data-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
 
@@ -209,18 +211,20 @@ import { Toast } from '@fibrae/semi-ui-solid';
 
 <Framework only="vue">
 
-| 属性         | 说明                                                         | 类型                                  | 默认值 |
-| ------------ | ------------------------------------------------------------ | ------------------------------------- | ------ |
-| content      | 提示内容；函数在 Toast 内部作为函数式组件渲染，可以 `inject` | string \| VNode \| (() => VNodeChild) | ''     |
-| icon         | 自定义图标                                                   | string \| VNode \| (() => VNodeChild) |        |
-| showClose    | 是否展示关闭按钮                                             | boolean                               | true   |
-| textMaxWidth | 内容的最大宽度                                               | number \| string                      | 450    |
-| onClose      | toast 关闭的回调函数                                         | () => void                            |        |
-| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠 | boolean \| number                     | false  |
-| id           | 自定义 ToastId                                               | string                                |        |
-| motion       | 是否开启进出场动画                                           | boolean                               | true   |
-| class        | 类名                                                         | string \| object \| array             |        |
-| style        | 样式                                                         | StyleValue                            |        |
+| 属性         | 说明                                                                                                                                               | 类型                                     | 默认值 |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ------ |
+| content      | 提示内容；函数在 Toast 内部作为函数式组件渲染，可以 `inject`                                                                                       | string \| VNode \| (() => VNodeChild)    | ''     |
+| icon         | 自定义图标                                                                                                                                         | string \| VNode \| (() => VNodeChild)    |        |
+| showClose    | 是否展示关闭按钮                                                                                                                                   | boolean                                  | true   |
+| textMaxWidth | 内容的最大宽度                                                                                                                                     | number \| string                         | 450    |
+| onClose      | toast 关闭的回调函数                                                                                                                               | () => void                               |        |
+| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠                                                                                       | boolean \| number                        | false  |
+| id           | 自定义 ToastId                                                                                                                                     | string                                   |        |
+| motion       | 是否开启进出场动画                                                                                                                                 | boolean                                  | true   |
+| class        | 类名                                                                                                                                               | string \| object \| array                |        |
+| style        | 样式                                                                                                                                               | StyleValue                               |        |
+| classNames   | 内部各部位的类名，键为 `content`、`icon`、`text`、`close`，与组件自带的类名合并；`content` 是带背景的气泡本体，`icon` 只作用于类型图标和 Semi 图标 | `Partial<Record<ToastPart, ClassValue>>` |        |
+| styles       | 内部各部位的内联样式，键同 `classNames`                                                                                                            | `Partial<Record<ToastPart, StyleValue>>` |        |
 
 未声明的选项（如 `data-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
 
@@ -228,18 +232,20 @@ import { Toast } from '@fibrae/semi-ui-solid';
 
 <Framework only="solid">
 
-| 属性         | 说明                                                                                                                    | 类型                                 | 默认值  |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------- |
-| content      | 提示内容，可传元素或返回元素的函数；函数在 Toast 渲染处调用，用 `Toast.useToast()` 时可以读取 holder 所在位置的 context | `JSX.Element \| (() => JSX.Element)` | `''`    |
-| icon         | 自定义图标，可传元素或返回元素的函数，替换 `type` 对应的图标；未自带尺寸的 Semi 图标取 large                            | `JSX.Element \| (() => JSX.Element)` | -       |
-| showClose    | 是否展示关闭按钮                                                                                                        | `boolean`                            | `true`  |
-| textMaxWidth | 内容的最大宽度，数字单位为 px                                                                                           | `number \| string`                   | `450`   |
-| onClose      | Toast 关闭的回调函数                                                                                                    | `() => void`                         | -       |
-| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠                                                            | `boolean \| number`                  | `false` |
-| id           | 自定义 ToastId，相同 id 的 Toast 会被更新                                                                               | `string`                             | -       |
-| motion       | 是否开启进出场动画                                                                                                      | `boolean`                            | `true`  |
-| class        | 类名                                                                                                                    | `string`                             | -       |
-| style        | 样式                                                                                                                    | `JSX.CSSProperties \| string`        | -       |
+| 属性         | 说明                                                                                                                                                     | 类型                                                      | 默认值  |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------- |
+| content      | 提示内容，可传元素或返回元素的函数；函数在 Toast 渲染处调用，用 `Toast.useToast()` 时可以读取 holder 所在位置的 context                                  | `JSX.Element \| (() => JSX.Element)`                      | `''`    |
+| icon         | 自定义图标，可传元素或返回元素的函数，替换 `type` 对应的图标；未自带尺寸的 Semi 图标取 large                                                             | `JSX.Element \| (() => JSX.Element)`                      | -       |
+| showClose    | 是否展示关闭按钮                                                                                                                                         | `boolean`                                                 | `true`  |
+| textMaxWidth | 内容的最大宽度，数字单位为 px                                                                                                                            | `number \| string`                                        | `450`   |
+| onClose      | Toast 关闭的回调函数                                                                                                                                     | `() => void`                                              | -       |
+| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠                                                                                             | `boolean \| number`                                       | `false` |
+| id           | 自定义 ToastId，相同 id 的 Toast 会被更新                                                                                                                | `string`                                                  | -       |
+| motion       | 是否开启进出场动画                                                                                                                                       | `boolean`                                                 | `true`  |
+| class        | 类名                                                                                                                                                     | `string`                                                  | -       |
+| style        | 样式                                                                                                                                                     | `JSX.CSSProperties \| string`                             | -       |
+| classNames   | 内部各部位的类名，键为 `content`、`icon`、`text`、`close`，与组件自带的类名合并；`content` 是带背景的气泡本体，`icon` 作用于类型图标和自定义的 Semi 图标 | `Partial<Record<ToastPart, string>>`                      | -       |
+| styles       | 内部各部位的内联样式，键同 `classNames`；`icon` 的样式只作用于类型图标                                                                                   | `Partial<Record<ToastPart, JSX.CSSProperties \| string>>` | -       |
 
 `class`、`style` 与未声明的选项（如 `data-*`、`aria-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
 
@@ -247,18 +253,20 @@ import { Toast } from '@fibrae/semi-ui-solid';
 
 <Framework only="svelte">
 
-| 属性         | 说明                                                         | 类型                      | 默认值 |
-| ------------ | ------------------------------------------------------------ | ------------------------- | ------ |
-| content      | 提示内容，字符串或 snippet；snippet 在 Toast 渲染处执行      | string \| Snippet         | ''     |
-| icon         | 自定义图标，字符串或 snippet，替换 `type` 对应的图标         | string \| Snippet         |        |
-| showClose    | 是否展示关闭按钮                                             | boolean                   | true   |
-| textMaxWidth | 内容的最大宽度                                               | number \| string          | 450    |
-| onClose      | toast 关闭的回调函数                                         | () => void                |        |
-| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠 | boolean \| number         | false  |
-| id           | 自定义 ToastId，相同 id 的 Toast 会被更新                    | string                    |        |
-| motion       | 是否开启进出场动画                                           | boolean                   | true   |
-| class        | 类名                                                         | string \| object \| array |        |
-| style        | 样式，只接受字符串                                           | string                    |        |
+| 属性         | 说明                                                                                                                                   | 类型                                     | 默认值 |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ------ |
+| content      | 提示内容，字符串或 snippet；snippet 在 Toast 渲染处执行                                                                                | string \| Snippet                        | ''     |
+| icon         | 自定义图标，字符串或 snippet，替换 `type` 对应的图标                                                                                   | string \| Snippet                        |        |
+| showClose    | 是否展示关闭按钮                                                                                                                       | boolean                                  | true   |
+| textMaxWidth | 内容的最大宽度                                                                                                                         | number \| string                         | 450    |
+| onClose      | toast 关闭的回调函数                                                                                                                   | () => void                               |        |
+| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠                                                                           | boolean \| number                        | false  |
+| id           | 自定义 ToastId，相同 id 的 Toast 会被更新                                                                                              | string                                   |        |
+| motion       | 是否开启进出场动画                                                                                                                     | boolean                                  | true   |
+| class        | 类名                                                                                                                                   | string \| object \| array                |        |
+| style        | 样式，只接受字符串                                                                                                                     | string                                   |        |
+| classNames   | 内部各部位的类名，键为 `content`、`icon`、`text`、`close`，与组件自带的类名合并；`content` 是带背景的气泡本体，`icon` 只作用于类型图标 | `Partial<Record<ToastPart, ClassValue>>` |        |
+| styles       | 内部各部位的内联样式，键同 `classNames`，只接受字符串                                                                                  | `Partial<Record<ToastPart, string>>`     |        |
 
 `class`、`style` 与未声明的选项（如 `data-*`、`aria-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
 

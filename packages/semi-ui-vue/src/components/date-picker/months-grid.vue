@@ -133,11 +133,13 @@
                     </div>
                     <div v-if="isRange || !isYearOrTime(detailOf(panelType))" :ref="(node) => attach('wrap', panelType, node)" :style="isRange && isYearOrTime(detailOf(panelType)) ? { visibility: 'hidden', position: 'absolute', pointerEvents: 'none' } : undefined">
                         <Navigation
+                            :class="props.classNames?.header"
                             :density="props.density"
                             :locale="props.locale"
                             :monthText="MonthsGridFoundation.formatMonthText(props.locale, detailOf(panelType).pickerDate)"
                             :panelType="panelType"
                             :shouldBimonthSwitch="isRange && props.syncSwitchMonth"
+                            :style="props.styles?.header"
                             :titleId="`${titleId}-${panelType}-title`"
                             @monthClick="foundation.showYearPicker(panelType)"
                             @nextMonth="foundation.nextMonth(panelType)"
@@ -146,6 +148,7 @@
                             @prevYear="foundation.prevYear(panelType)"
                         />
                         <Month
+                            :classNames="props.classNames"
                             :disabledDate="props.disabledDate"
                             :focusRecords="props.focusRecords"
                             :hoverDay="state.hoverDay"
@@ -159,6 +162,7 @@
                             :rangeInputFocus="props.rangeInputFocus"
                             :rangeStart="state.rangeStart"
                             :selected="state.selected"
+                            :styles="props.styles"
                             :timeZone="props.timeZone"
                             :weekStartsOn="props.weekStartsOn"
                             @dayClick="foundation.handleDayClick($event, panelType)"
@@ -174,7 +178,7 @@
                             </template>
                         </Month>
                     </div>
-                    <div v-if="props.type.includes('Time') && !props.insetInput" :ref="(node) => attach('switch', panelType, node)" :class="`${prefix}-switch`">
+                    <div v-if="props.type.includes('Time') && !props.insetInput" :ref="(node) => attach('switch', panelType, node)" :class="[`${prefix}-switch`, props.classNames?.switch]" :style="props.styles?.switch">
                         <button :aria-label="props.locale.switchToDate" :class="[`${prefix}-switch-date`, { [`${prefix}-switch-date-active`]: !detailOf(panelType).isTimePickerOpen }]" type="button" @click="foundation.showDatePanel(panelType)">
                             <IconCalendar v-if="props.density === 'default'" />
                             <span :class="`${prefix}-switch-text`">{{ switchTexts(panelType).date }}</span>

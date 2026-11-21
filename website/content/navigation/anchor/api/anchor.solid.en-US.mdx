@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | autoCollapse | Whether child links are shown dynamically: only the branch that holds the highlighted link is expanded. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by `rail`, `indicator`, `list`, `item` and `itemTitle`; merged with the built-in classes. `rail` is the track on the left, `indicator` is the bar on it that follows the highlighted link, and `item` and `itemTitle` apply to every link. | <ApiType detail={"Partial\u003cRecord\u003cAnchorPart, string>>"}>Type</ApiType> | - |
 | defaultAnchor | Link highlighted on mount. It does not call onChange or onClick. | `string` | `""` |
 | getContainer | Returns the scrolling container, window when omitted. Returning null also falls back to window. | <ApiType detail={"() => HTMLElement \u007c Window \u007c null"}>Type</ApiType> | <ApiType detail={"() => window"}>Type</ApiType> |
 | maxHeight | max-height of the component, with a scrollbar when exceeded. This prop overrides max-height in style. | `string \| number` | `"750px"` |
@@ -18,4 +19,5 @@ import ApiType from '#/components/ApiType.astro';
 | scrollMotion | Whether scrolling after a click is animated (behavior is smooth). | `boolean` | `false` |
 | showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `false` |
 | size | Size of the anchor: small or default. | `'default' \| 'small'` | `"default"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cAnchorPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `0` |

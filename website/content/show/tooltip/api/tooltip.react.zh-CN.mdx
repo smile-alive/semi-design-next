@@ -13,7 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
 | children | 触发元素，应为真实 DOM 元素，或把 props 与 `ref` 透传到根 DOM 节点的函数式组件；文本等其他内容会被包进一个 span 作为触发元素。 | `React.ReactNode` | - |
 | className | 弹出层的样式名。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `wrapper`（触发元素需要被 span 包裹时的该 span），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `wrapper`（触发元素需要被 span 包裹时的该 span）、`arrow`（默认箭头，传入自定义箭头节点时不生效），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, string>>"}>Type</ApiType> | - |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭弹出层。 | `boolean` | - |
 | clickTriggerToHide | 点击触发元素时是否关闭已打开的弹出层。 | `boolean` | - |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；`trigger` 为 `custom` 时只调用 `onEscKeyDown`，由使用方决定是否关闭。 | `boolean` | `true` |

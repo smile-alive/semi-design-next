@@ -2,6 +2,14 @@
     "typography-text": {
         "source": "packages/semi-ui-vue/src/components/typography/text.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 icon（图标容器）、expand（展开或收起按钮）、copy（复制按钮，外层 span 仍用 copyable.class），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by icon (icon container), expand (expand or collapse button) and copy (copy button; the wrapping span still takes copyable.class); values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
             "component": {
                 "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认 span。",
@@ -71,6 +79,14 @@
     "typography-title": {
         "source": "packages/semi-ui-vue/src/components/typography/title.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 expand（展开或收起按钮）、copy（复制按钮，外层 span 仍用 copyable.class），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by expand (expand or collapse button) and copy (copy button; the wrapping span still takes copyable.class); values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "component": {
                 "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认由 heading 决定（h1 到 h6）。",
                 "en-US": "Element to render: a tag name or a Vue component. Defaults to h1 to h6 by heading."
@@ -135,6 +151,14 @@
     "typography-paragraph": {
         "source": "packages/semi-ui-vue/src/components/typography/paragraph.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 expand（展开或收起按钮）、copy（复制按钮，外层 span 仍用 copyable.class），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by expand (expand or collapse button) and copy (copy button; the wrapping span still takes copyable.class); values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "component": {
                 "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认 p。",
                 "en-US": "Element to render: a tag name or a Vue component. Defaults to p."
@@ -199,6 +223,14 @@
     "typography-numeral": {
         "source": "packages/semi-ui-vue/src/components/typography/numeral.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 icon（图标容器），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by icon (icon container); values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
             "component": {
                 "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认 span；内容含 p 等块级元素时使用 div。",

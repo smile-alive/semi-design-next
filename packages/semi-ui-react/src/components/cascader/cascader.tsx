@@ -11,7 +11,7 @@ import { type Bivariant, type ByMultiple, type ElementProps, useDefaultProps, us
 import { useFocusHandover, useUnwrappedLazy } from '../../hooks/index';
 import type { VirtualListHandle } from '../../internal/index';
 import Trigger from '../../internal/trigger';
-import { hasContent, renderTriggerPrefix, renderTriggerSuffix } from '../../utils/index';
+import { hasContent, isSemiIcon, isText } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
 import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import Input, { type InputHandle } from '../input/index';
@@ -393,9 +393,13 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     const renderTagItem = (nodeKey: string, idx: number) => {
         if (keyEntities[nodeKey]) {
             const isDisabled = !CascaderFoundation.isTagClosable(nodeKey, props, view);
-            const tagCls = clsx(`${prefixcls}-selection-tag`, {
-                [`${prefixcls}-selection-tag-disabled`]: isDisabled,
-            });
+            const tagCls = clsx(
+                `${prefixcls}-selection-tag`,
+                {
+                    [`${prefixcls}-selection-tag-disabled`]: isDisabled,
+                },
+                classNames?.tag
+            );
             if (typeof displayRender === 'function') {
                 return displayRender(keyEntities[nodeKey], idx);
             }
@@ -403,6 +407,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 <Tag
                     key={`tag-${nodeKey}-${idx}`}
                     className={tagCls}
+                    style={styles?.tag}
                     closable={!isDisabled}
                     color="white"
                     size={size === 'default' ? 'large' : size}
@@ -445,7 +450,8 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     const renderTagInput = () => (
         <TagInput
             ref={tagInputRef}
-            className={clsx(`${prefixcls}-tagInput-wrapper`)}
+            className={clsx(`${prefixcls}-tagInput-wrapper`, classNames?.input)}
+            style={styles?.input}
             {...comboboxProps}
             aria-autocomplete="list"
             disabled={disabled}
@@ -478,21 +484,25 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
             [`${prefixcls}-search-wrapper-${size}`]: size !== 'default',
         });
         const displayText = renderDisplayText();
-        const spanCls = clsx({
-            [`${prefixcls}-selection-placeholder`]: !displayText,
-            [`${prefixcls}-selection-text-hide`]: showInput && inputValue,
-            [`${prefixcls}-selection-text-inactive`]: showInput && !inputValue,
-        });
+        const spanCls = clsx(
+            {
+                [`${prefixcls}-selection-placeholder`]: !displayText,
+                [`${prefixcls}-selection-text-hide`]: showInput && inputValue,
+                [`${prefixcls}-selection-text-inactive`]: showInput && !inputValue,
+            },
+            !displayText && classNames?.placeholder
+        );
         return (
             <div className={wrappercls}>
-                <span id={selectionTextId} className={spanCls}>
+                <span id={selectionTextId} className={spanCls} style={displayText ? undefined : styles?.placeholder}>
                     {displayText || inputPlaceHolder}
                 </span>
                 {/* the trigger draws its own clear button and adornments: global Input defaults must not add them */}
                 {showInput && (
                     <Input
                         ref={inputRef}
-                        className={clsx(`${prefixcls}-input`)}
+                        className={clsx(`${prefixcls}-input`, classNames?.input)}
+                        style={styles?.input}
                         addonAfter={null}
                         addonBefore={null}
                         insetLabel={null}
@@ -536,6 +546,8 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 {topSlot}
                 <Item
                     id={popupId}
+                    classNames={classNames}
+                    styles={styles}
                     multiple={multiple}
                     activeKeys={activeKeys}
                     checkedKeys={listCheckedKeys}
@@ -607,15 +619,21 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         }
         if (multiple) {
             if (checkedKeys.size === 0) {
-                return <span className={`${prefixcls}-selection-placeholder`}>{placeholder}</span>;
+                return (
+                    <span className={clsx(`${prefixcls}-selection-placeholder`, classNames?.placeholder)} style={styles?.placeholder}>
+                        {placeholder}
+                    </span>
+                );
             }
             return renderMultipleTags();
         }
         const displayText = renderDisplayText();
-        const spanCls = clsx({
-            [`${prefixcls}-selection-placeholder`]: !displayText,
-        });
-        return <span className={spanCls}>{displayText || placeholder}</span>;
+        const spanCls = clsx({ [`${prefixcls}-selection-placeholder`]: !displayText }, !displayText && classNames?.placeholder);
+        return (
+            <span className={spanCls} style={displayText ? undefined : styles?.placeholder}>
+                {displayText || placeholder}
+            </span>
+        );
     };
 
     const renderCustomTrigger = () => {
@@ -639,7 +657,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
             return null;
         }
         return (
-            <div className={clsx(`${prefixcls}-arrow`)} x-semi-prop="arrowIcon">
+            <div className={clsx(`${prefixcls}-arrow`, classNames?.arrow)} style={styles?.arrow} x-semi-prop="arrowIcon">
                 {arrowIcon}
             </div>
         );
@@ -653,7 +671,8 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
             <button
                 ref={clearHandover}
                 type="button"
-                className={`${prefixcls}-clearbtn`}
+                className={clsx(`${prefixcls}-clearbtn`, classNames?.clear)}
+                style={styles?.clear}
                 aria-label={locale.clear}
                 onClick={(e) => {
                     handleClear(e);
@@ -687,17 +706,53 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                   [`${prefixcls}-with-prefix`]: hasPrefix,
                   [`${prefixcls}-with-suffix`]: hasContent(suffix),
               });
-        const sectionCls = clsx(`${prefixcls}-selection`, {
-            [`${prefixcls}-selection-multiple`]: multiple && checkedKeys.size > 0,
-        });
+        const sectionCls = clsx(
+            `${prefixcls}-selection`,
+            {
+                [`${prefixcls}-selection-multiple`]: multiple && checkedKeys.size > 0,
+            },
+            classNames?.content
+        );
+        const labelNode = hasContent(prefixNode) ? prefixNode : insetLabelNode;
+        const prefixCls = clsx(
+            {
+                [`${prefixcls}-prefix`]: true,
+                [`${prefixcls}-inset-label`]: hasContent(insetLabelNode),
+                [`${prefixcls}-prefix-text`]: isText(labelNode),
+                [`${prefixcls}-prefix-icon`]: isSemiIcon(labelNode),
+            },
+            classNames?.prefix
+        );
+        const suffixCls = clsx(
+            {
+                [`${prefixcls}-suffix`]: true,
+                [`${prefixcls}-suffix-text`]: isText(suffixNode),
+                [`${prefixcls}-suffix-icon`]: isSemiIcon(suffixNode),
+            },
+            classNames?.suffix
+        );
         const inner = useCustomTrigger
             ? renderCustomTrigger()
             : [
-                  <Fragment key="prefix">{hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId)}</Fragment>,
-                  <Fragment key="selection">
-                      <div className={sectionCls}>{renderSelectContent()}</div>
+                  <Fragment key="prefix">
+                      {hasPrefix && (
+                          <div id={prefixId} className={prefixCls} style={styles?.prefix} x-semi-prop="prefix,insetLabel">
+                              {labelNode}
+                          </div>
+                      )}
                   </Fragment>,
-                  <Fragment key="suffix">{hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode)}</Fragment>,
+                  <Fragment key="selection">
+                      <div className={sectionCls} style={styles?.content}>
+                          {renderSelectContent()}
+                      </div>
+                  </Fragment>,
+                  <Fragment key="suffix">
+                      {hasContent(suffix) && (
+                          <div className={suffixCls} style={styles?.suffix} x-semi-prop="suffix">
+                              {suffixNode}
+                          </div>
+                      )}
+                  </Fragment>,
                   <Fragment key="clearbtn">{renderClearBtn()}</Fragment>,
                   <Fragment key="arrow">{renderArrow()}</Fragment>,
               ];

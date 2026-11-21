@@ -8,6 +8,7 @@ import type { ItemKey, Mode, NavProps, OnClickData, OnOpenChangeData, OnSelected
  * changes, not on every selection or open change.
  */
 export interface NavView {
+    classNames: NavProps['classNames'];
     isCollapsed: boolean;
     isInSubNav: boolean;
     limitIndent: boolean;
@@ -17,6 +18,7 @@ export interface NavView {
     renderWrapper: NavProps['renderWrapper'];
     selectedKeys: ItemKey[];
     selectedKeysIsControlled: boolean;
+    styles: NavProps['styles'];
     subNavCloseDelay: number;
     subNavMotion: boolean;
     subNavOpenDelay: number;

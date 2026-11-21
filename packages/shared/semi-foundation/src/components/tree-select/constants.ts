@@ -7,7 +7,7 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type TreeSelectPart = 'dropdown' | 'optionList';
+export type TreeSelectPart = 'prefix' | 'suffix' | 'content' | 'placeholder' | 'input' | 'search' | 'tag' | 'clear' | 'arrow' | 'dropdown' | 'list' | 'empty' | 'item' | 'itemTitle' | 'itemSwitcher';
 
 export const strings = {
     SIZE_SET: ['small', 'large', 'default'],

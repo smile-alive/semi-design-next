@@ -14,6 +14,10 @@
                 "zh-CN": "非受控时的初始选中状态，只在首次渲染时读取。",
                 "en-US": "Initial checked state when uncontrolled. Read only once, on the first render."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `indicator`、`content`，与组件自带的类名合并。`indicator` 是滑块，加载中时是加载图标；`content` 是选中或未选中时显示的文字。",
+                "en-US": "Class names of the inner parts, keyed by `indicator` and `content`; merged with the built-in classes. `indicator` is the knob, or the loading icon while loading; `content` is the checked or unchecked text."
+            },
             "disabled": {
                 "zh-CN": "是否禁用。",
                 "en-US": "Whether the switch is disabled."
@@ -41,6 +45,10 @@
             "size": {
                 "zh-CN": "开关尺寸，可选 large、default 或 small。",
                 "en-US": "Switch size: large, default or small."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "uncheckedText": {
                 "zh-CN": "未选中时展示的内容，size 为 small 时不显示。",

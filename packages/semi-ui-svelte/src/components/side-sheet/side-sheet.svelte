@@ -227,12 +227,12 @@
                     <div class={`${prefix}-content`}>
                         <div class={[`${prefix}-header`, classNames?.header]} style={styles?.header}>
                             {#if hasTitle}
-                                <div aria-level="2" class={`${prefix}-title`} id={`${uid}-title`} role="heading" x-semi-prop="title">
+                                <div aria-level="2" class={[`${prefix}-title`, classNames?.title]} id={`${uid}-title`} role="heading" style={styles?.title} x-semi-prop="title">
                                     {#if typeof title === 'string'}{title}{:else}{@render title?.()}{/if}
                                 </div>
                             {/if}
                             {#if closable}
-                                <IconButton aria-label={locale().locale.close} class={`${prefix}-close`} size="small" theme="borderless" type="tertiary" onclick={onClose}>
+                                <IconButton aria-label={locale().locale.close} class={[`${prefix}-close`, classNames?.close]} size="small" style={styles?.close} theme="borderless" type="tertiary" onclick={onClose}>
                                     {#snippet icon()}
                                         {#if closeIcon}{@render closeIcon()}{:else}<IconClose />{/if}
                                     {/snippet}

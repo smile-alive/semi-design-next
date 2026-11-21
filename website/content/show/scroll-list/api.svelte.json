@@ -4,6 +4,10 @@
         "props": {
             "bodyHeight": { "zh-CN": "列表主体的高度。", "en-US": "Height of the list body." },
             "children": { "zh-CN": "列表中的 ScrollItem，写在标签内。", "en-US": "The ScrollItem columns, written inside the tag." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 header、title、body、footer，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by header, title, body and footer; values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
             "footer": {
                 "zh-CN": "底部内容，字符串或 snippet；传了就渲染。",
                 "en-US": "Footer content, a string or a snippet; rendered whenever given."
@@ -11,12 +15,20 @@
             "header": {
                 "zh-CN": "头部内容，字符串或 snippet；传了就渲染。",
                 "en-US": "Header content, a string or a snippet; rendered whenever given."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             }
         }
     },
     "scroll-item": {
         "source": "packages/semi-ui-svelte/src/components/scroll-list/scroll-item.svelte",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 list、option、selector（仅 wheel 模式渲染），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by list, option and selector (wheel mode only); values take anything class takes (string, array or object) and merge with the built-in classes."
+            },
             "cycled": {
                 "zh-CN": "是否无限循环。wheel 模式下列表首尾相接地无限滚动；两种模式下方向键都在首尾循环。",
                 "en-US": "Whether the column cycles. In wheel mode the list scrolls without end; in both modes the arrow keys wrap around."
@@ -31,6 +43,10 @@
             "selectedIndex": {
                 "zh-CN": "选中项的索引，可用 `bind:selectedIndex` 绑定；选中时写回新索引。",
                 "en-US": "Index of the selected item; bind it with `bind:selectedIndex`. A selection writes the new index back."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "transform": {
                 "zh-CN": "对选中项文案的变换，没有 text 的项参数为 undefined；未传时显示 text，没有 text 时显示 value。数据项自带的 transform 优先。",

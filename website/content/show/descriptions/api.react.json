@@ -11,6 +11,10 @@
                 "en-US": "Rendered when `data` is empty, usually `Descriptions.Item` elements."
             },
             "className": { "zh-CN": "根元素（`div`）的类名。", "en-US": "Class name of the root element (`div`)." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `itemKey`、`itemValue`，分别作用到全部条目的键与值，与组件自带的类名合并，排在条目自己的 `classNames` 之前。",
+                "en-US": "Class names of the inner parts, keyed by `itemKey` and `itemValue`, applied to the key and value of every item and merged with the built-in classes; they come before the item's own `classNames`."
+            },
             "column": { "zh-CN": "横向布局下每行的总列数。", "en-US": "Total number of columns per row in the horizontal layout." },
             "data": {
                 "zh-CN": "列表显示的数据；为空时渲染 `children`。",
@@ -26,7 +30,11 @@
                 "zh-CN": "双行显示时的尺寸，可选 `small`、`medium` 或 `large`。",
                 "en-US": "Size in two-row mode: `small`, `medium` or `large`."
             },
-            "style": { "zh-CN": "根元素（`div`）的样式。", "en-US": "Style of the root element (`div`)." }
+            "style": { "zh-CN": "根元素（`div`）的样式。", "en-US": "Style of the root element (`div`)." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`；条目自己的 `styles` 后写。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; the item's own `styles` are applied after."
+            }
         }
     },
     "descriptions-item": {
@@ -41,8 +49,8 @@
                 "en-US": "Class name of the outer wrapper `tr` in vertical layout; ignored in horizontal layout."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `key`，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `key`; merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `key`、`value`，与组件自带的类名合并，排在父级 `Descriptions` 的 `itemKey`、`itemValue` 之后。",
+                "en-US": "Class names of the inner parts, keyed by `key` and `value`; merged with the built-in classes and placed after the `itemKey` and `itemValue` of the parent `Descriptions`."
             },
             "hidden": { "zh-CN": "是否隐藏该项。", "en-US": "Whether to hide the item." },
             "itemKey": { "zh-CN": "键，可以是 `ReactNode`。", "en-US": "Key, a `ReactNode`." },

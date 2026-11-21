@@ -1,8 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property   | Description                                                     | Type                | Default |
-| ---------- | --------------------------------------------------------------- | ------------------- | ------- |
-| bodyHeight | Height of the list body.                                        | `number \| string`  | -       |
-| children   | The ScrollItem columns, written inside the tag.                 | `Snippet`           | -       |
-| footer     | Footer content, a string or a snippet; rendered whenever given. | `Snippet \| string` | -       |
-| header     | Header content, a string or a snippet; rendered whenever given. | `Snippet \| string` | -       |
+| Property   | Description                                                                                                                                                              | Type                                                                                     | Default |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | ------- |
+| bodyHeight | Height of the list body.                                                                                                                                                 | `number \| string`                                                                       | -       |
+| children   | The ScrollItem columns, written inside the tag.                                                                                                                          | `Snippet`                                                                                | -       |
+| classNames | Class names of the inner parts, keyed by header, title, body and footer; values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, ClassValue>>"}>Type</ApiType> | -       |
+| footer     | Footer content, a string or a snippet; rendered whenever given.                                                                                                          | `Snippet \| string`                                                                      | -       |
+| header     | Header content, a string or a snippet; rendered whenever given.                                                                                                          | `Snippet \| string`                                                                      | -       |
+| styles     | Style strings of the inner parts, keyed like classNames.                                                                                                                 | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, string>>"}>Type</ApiType>     | -       |

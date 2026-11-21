@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by list, total, prev, next, item, ellipsis, sizeChanger, sizeChangerDropdown, quickJumper and dropdown; values take any class binding and merge with the built-in classes. item also reaches the ellipsis button, and dropdown is the popup listing pages that opens from the ellipsis and the small size. | <ApiType detail={"Partial\u003cRecord\u003cPaginationPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Pagination", "classNames")` |
 | currentPage | Current page, bound with v-model:currentPage. Once set the pagination is controlled; when undefined the component manages the page itself. | `number` | `semiGlobalDefault("Pagination", "currentPage")` |
 | defaultCurrentPage | Initial page when not controlled. | `number` | `1` |
 | disabled | Whether disabled. | `boolean` | `false` |
@@ -17,6 +18,7 @@ import ApiType from '#/components/ApiType.astro';
 | showSizeChanger | Whether to show the size changer; has no effect when size is small. When it is shown, hideOnSinglePage no longer takes effect. | `boolean` | `false` |
 | showTotal | Whether to show the total number of pages; not shown when size is small. | `boolean` | `false` |
 | size | Size: default or small. | `"default" \| "small"` | `"default"` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cPaginationPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Pagination", "styles")` |
 | total | Total number of items. | `number` | `1` |
 
 **Events**

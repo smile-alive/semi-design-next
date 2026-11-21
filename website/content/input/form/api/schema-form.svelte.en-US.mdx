@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | allowEmpty | Whether a field whose value became empty keeps its key in values. The same prop on a field takes precedence. | `boolean` | - |
 | autoScrollToError | Whether to scroll to the failing field when submit or formApi.validate fails; an object is passed on as options of scroll-into-view-if-needed. | `boolean \| ScrollOptions` | - |
 | children | Content rendered after the fields, with the same parameter as the children of Form; a good place for the submit button. | <ApiType detail={"Snippet\u003c[FormRenderProps\u003cValues, Output>]>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `label`, `labelText`, `labelExtra`, `labelTooltip`, `content`, `help` and `extra`; they apply to the labels, content areas, help texts and extra texts of every field in the form and are merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cFormPart, ClassValue>>"}>Type</ApiType> | - |
 | disabled | The disabled applied to every field; the disabled of a field takes precedence. | `boolean` | - |
 | extraTextPosition | Position of extraText applied to every field: middle puts it between the Label and the control, bottom after the control. The same prop on a field takes precedence. | `'bottom' \| 'middle'` | - |
 | form | The formApi returned by useForm, to control the form from outside the Form. | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | - |
@@ -34,6 +35,7 @@ import ApiType from '#/components/ApiType.astro';
 | showValidateIcon | Whether the icon of the status shows before the validation message. | `boolean` | - |
 | stopPropagation | Whether the submit and reset events stop bubbling, to keep a nested Form from triggering the outer Form. | `{ submit?: boolean; reset?: boolean }` | - |
 | stopValidateWithError | Whether validation with rules stops at the first failing rule. The same prop on a field takes precedence. | `boolean` | - |
+| styles | Inline styles (CSS strings) of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cFormPart, string>>"}>Type</ApiType> | - |
 | trigger | When fields validate: change, blur, mount, custom or an array of them. The same prop on a field takes precedence. | `FieldValidateTriggerType` | - |
 | validator | Form-level validation, called by submit and formApi.validate; it may return a Promise and excludes `schema`. Once set, the validator and rules of the fields no longer apply. An empty value or object means valid; on failure return an error object shaped like the values, each error a string or a string array. | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | - |
 | wrapperCol | Control grid layout applied to every field, with the span, offset and other props of Col; set it together with labelCol. | `ColProps` | - |

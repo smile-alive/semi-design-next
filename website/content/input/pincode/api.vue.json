@@ -11,6 +11,10 @@
                 "en-US": "The v-model modifiers, passed by Vue for v-model.trim and the like; declaring them keeps the modifiers off the root element."
             },
             "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when uncontrolled." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `input`，与组件自带的类名合并。`input` 作用到每个输入格的根元素，不是原生 input。",
+                "en-US": "Class names of the inner parts, keyed by `input`; merged with the built-in classes. `input` lands on the root element of every cell, not the native input."
+            },
             "count": { "zh-CN": "验证码位数。", "en-US": "Number of digits." },
             "format": {
                 "zh-CN": "单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。",
@@ -24,6 +28,10 @@
             "size": {
                 "zh-CN": "输入框大小，可选 large、default、small。",
                 "en-US": "Input size: large, default or small."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "validateStatus": {
                 "zh-CN": "校验状态，传给每个输入框；error 时显示错误样式。",

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, DEFAULT_CONTROLS_LIST, DEFAULT_PLAYBACK_RATE, numbers, strings, type VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
+import { cssClasses, DEFAULT_CONTROLS_LIST, DEFAULT_PLAYBACK_RATE, numbers, strings, type VideoControl, type VideoPlayerPart } from '@fibrae/semi-foundation/components/video-player/constants';
 import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerState } from '@fibrae/semi-foundation/components/video-player/foundation';
 import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
@@ -41,6 +41,8 @@ export interface VideoPlayerProps extends ElementProps<'div', MediaEventKeys> {
     autoPlay?: boolean;
     captionsSrc?: string;
     className?: string;
+    /** `progressBuffered` and `progressPlayed` apply to every marker segment */
+    classNames?: Partial<Record<VideoPlayerPart, string>>;
     clickToPlay?: boolean;
     controlsList?: VideoControl[];
     crossOrigin?: React.MediaHTMLAttributes<HTMLVideoElement>['crossOrigin'];
@@ -68,6 +70,7 @@ export interface VideoPlayerProps extends ElementProps<'div', MediaEventKeys> {
     seekTime?: number;
     src?: string;
     style?: React.CSSProperties;
+    styles?: Partial<Record<VideoPlayerPart, React.CSSProperties>>;
     theme?: VideoPlayerTheme;
     volume?: number;
     width?: number | string;
@@ -122,6 +125,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
         autoPlay,
         captionsSrc,
         className,
+        classNames,
         clickToPlay,
         controlsList,
         crossOrigin,
@@ -148,6 +152,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
         seekTime,
         src: srcProp,
         style,
+        styles,
         theme,
         volume: volumeProp,
         width,
@@ -165,6 +170,8 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
             controlsList.includes(name) && (
                 <Dropdown
                     className={`${controlsCls}-popup-menu`}
+                    classNames={{ content: classNames?.dropdown }}
+                    styles={{ content: styles?.dropdown }}
                     position="top"
                     render={
                         <Dropdown.Menu>
@@ -193,7 +200,8 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
     const renderVolume = () =>
         controlsList.includes(strings.VOLUME) && (
             <Popover
-                className={`${controlsCls}-popover`}
+                className={clsx(`${controlsCls}-popover`, classNames?.volumeDropdown)}
+                style={styles?.volumeDropdown}
                 // the popup holds an interactive range, which a tooltip may not contain
                 aria-label={locale.volume}
                 role="dialog"
@@ -229,6 +237,8 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
             <div className={clsx(`${prefixCls}-wrapper`, { [`${prefixCls}-wrapper-${theme}`]: theme })}>
                 <video
                     ref={mergedVideoRef}
+                    className={clsx(`${prefixCls}-video`, classNames?.video)}
+                    style={styles?.video}
                     autoPlay={autoPlay}
                     controls={false}
                     crossOrigin={crossOrigin}
@@ -254,20 +264,25 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
             </div>
             {!isPlaying && poster && (
                 <img
-                    className={clsx(`${prefixCls}-poster`, {
-                        [`${prefixCls}-poster-hide`]: currentTime > 0 && currentTime < totalTime,
-                    })}
+                    className={clsx(
+                        `${prefixCls}-poster`,
+                        {
+                            [`${prefixCls}-poster-hide`]: currentTime > 0 && currentTime < totalTime,
+                        },
+                        classNames?.poster
+                    )}
+                    style={styles?.poster}
                     alt={locale.poster}
                     src={poster}
                 />
             )}
             {!isPlaying && !isError && (
-                <div className={`${prefixCls}-pause`}>
+                <div className={clsx(`${prefixCls}-pause`, classNames?.playIcon)} style={styles?.playIcon}>
                     <IconPlayCircle />
                 </div>
             )}
             {isError && (
-                <div className={clsx(`${prefixCls}-error`, { [`${prefixCls}-error-${theme}`]: theme })} role="alert">
+                <div className={clsx(`${prefixCls}-error`, { [`${prefixCls}-error-${theme}`]: theme }, classNames?.error)} style={styles?.error} role="alert">
                     <div className={`${prefixCls}-error-svg`}>
                         <ErrorSVG />
                     </div>
@@ -275,15 +290,21 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                 </div>
             )}
             {/* a live region announces changes only once it exists, so it stays while the notification comes and goes */}
-            <div role="status">{showNotification && notificationContent && <div className={`${prefixCls}-notification`}>{notificationContent}</div>}</div>
-            <div className={clsx(controlsCls, { [`${controlsCls}-hide`]: !showControls })}>
-                <VideoProgress max={totalTime} step={seekTime} value={currentTime} bufferedValue={bufferedValue} markers={markers} onChange={foundation.handleTimeChange} />
+            <div role="status">
+                {showNotification && notificationContent && (
+                    <div className={clsx(`${prefixCls}-notification`, classNames?.notification)} style={styles?.notification}>
+                        {notificationContent}
+                    </div>
+                )}
+            </div>
+            <div className={clsx(controlsCls, { [`${controlsCls}-hide`]: !showControls }, classNames?.controls)} style={styles?.controls}>
+                <VideoProgress classNames={classNames} styles={styles} max={totalTime} step={seekTime} value={currentTime} bufferedValue={bufferedValue} markers={markers} onChange={foundation.handleTimeChange} />
                 <div className={`${controlsCls}-menu`}>
                     <div className={`${controlsCls}-menu-left`}>
                         {renderIconButton(isPlaying ? <IconPause /> : <IconPlay />, foundation.handlePlayOrPause, strings.PLAY, isPlaying ? locale.pause : locale.play)}
                         {onNext && renderIconButton(<IconRestart rotate={180} />, onNext, strings.NEXT, locale.next)}
                         {controlsList.includes(strings.TIME) && (
-                            <div className={`${controlsCls}-time`}>
+                            <div className={clsx(`${controlsCls}-time`, classNames?.time)} style={styles?.time}>
                                 {formatTime(currentTime)} / {formatTime(totalTime)}
                             </div>
                         )}

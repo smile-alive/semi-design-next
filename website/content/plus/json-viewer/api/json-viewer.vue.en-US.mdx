@@ -4,11 +4,13 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `editor`, `searchTrigger`, `searchBox`, `searchInput`, `searchOptions` and `replaceInput`; values take any class binding and merge with the built-in classes. `editor` is the element the editor mounts in; the search panel parts exist only while the panel is open. | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("JsonViewer", "classNames")` |
 | height | Height. A number is taken as px; a string is used as is. | `string \| number` | `400` |
 | limitSearchButtonBounds | Whether to limit the search button drag bounds within the component container. | `boolean` | `false` |
 | modelValue | Text of the editor, used with v-model. A value different from the editor's current content re-creates the editor; echoing the current content back keeps the caret. Without it the editor starts empty. | `string` | `undefined` |
 | options | Editor options; see JsonViewerOptions for the fields. The defaults of ariaLabel, readOnly and autoWrap merge per key, so passing some fields keeps the defaults of the others. A deep change re-creates the editor; mutating a nested object such as formatOptions or customRenderRule in place goes unnoticed, so replace it with a new object. | `JsonViewerOptions` | `semiGlobalDefault("JsonViewer", "options")` |
 | showSearch | Whether to show the search button. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("JsonViewer", "styles")` |
 | width | Width. A number is taken as px; a string is used as is. | `string \| number` | `400` |
 
 **Events**

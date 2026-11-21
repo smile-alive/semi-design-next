@@ -18,6 +18,8 @@ export interface NavContextType {
     subNavCloseDelay?: NavProps['subNavCloseDelay'];
     subNavOpenDelay?: NavProps['subNavOpenDelay'];
     renderWrapper?: NavProps['renderWrapper'];
+    classNames?: NavProps['classNames'];
+    styles?: NavProps['styles'];
     tooltipShowDelay?: number;
     tooltipHideDelay?: number;
     onSelect?: NavProps['onSelect'];

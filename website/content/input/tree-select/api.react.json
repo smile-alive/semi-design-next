@@ -71,8 +71,8 @@
                 "en-US": "Strict disabling: when a node is disabled, its checked state cannot be changed through its parent or child nodes."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `dropdown`（下拉面板）、`optionList`（选项列表，即 `role=\"tree\"` 元素），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown panel) and `optionList` (the option list, the `role=\"tree\"` element); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`dropdown`、`list`、`empty`、`item`、`itemTitle`、`itemSwitcher`，与组件自带的类名合并。`content` 是触发器中间的已选内容区；`input` 是 `searchPosition=\"trigger\"` 时触发器内的搜索框（多选时为 TagInput）；`search` 是下拉层顶部的搜索区域；`list` 是 `role=\"tree\"` 元素；`item`、`itemTitle`、`itemSwitcher` 作用到下拉里的每个节点。",
+                "en-US": "Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `placeholder`, `input`, `search`, `tag`, `clear`, `arrow`, `dropdown`, `list`, `empty`, `item`, `itemTitle` and `itemSwitcher`; merged with the built-in classes. `content` is the selection area in the middle of the trigger; `input` is the search box inside the trigger when `searchPosition=\"trigger\"` (the TagInput when `multiple`); `search` is the search area at the top of the dropdown; `list` is the `role=\"tree\"` element; `item`, `itemTitle` and `itemSwitcher` apply to every node in the dropdown."
             },
             "dropdownMatchSelectWidth": {
                 "zh-CN": "下拉面板的最小宽度是否与选择框相同。",

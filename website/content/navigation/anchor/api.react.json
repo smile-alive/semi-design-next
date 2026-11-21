@@ -18,6 +18,10 @@
                 "zh-CN": "根导航元素的类名。",
                 "en-US": "Class name of the root navigation element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `rail`、`indicator`、`list`、`item`、`itemTitle`，与组件自带的类名合并。`rail` 是左侧的轨道，`indicator` 是轨道上跟随高亮链接移动的指示条，`item`、`itemTitle` 作用到每个链接。",
+                "en-US": "Class names of the inner parts, keyed by `rail`, `indicator`, `list`, `item` and `itemTitle`; merged with the built-in classes. `rail` is the track on the left, `indicator` is the bar on it that follows the highlighted link, and `item` and `itemTitle` apply to every link."
+            },
             "defaultAnchor": {
                 "zh-CN": "挂载后默认高亮并滚动到该锚点，不触发 onChange 与 onClick。",
                 "en-US": "Link highlighted and scrolled to after mounting. It does not call onChange or onClick."
@@ -78,6 +82,10 @@
                 "zh-CN": "根导航元素的样式。",
                 "en-US": "Style of the root navigation element."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "targetOffset": {
                 "zh-CN": "锚点滚动结束时，目标距离容器顶部的偏移量。",
                 "en-US": "Distance between the target and the top of the container when scrolling ends."
@@ -95,6 +103,10 @@
                 "zh-CN": "链接项的类名，落在最外层的 div 上。",
                 "en-US": "Class name of the link item, on its outermost div."
             },
+            "classNames": {
+                "zh-CN": "链接内部各部位的类名，键为 `title`，与组件自带的类名合并，写在 `Anchor` 的 `itemTitle` 类名之后。",
+                "en-US": "Class names of the inner parts of the link, keyed by `title`; merged with the built-in classes, after the `itemTitle` class name of Anchor."
+            },
             "disabled": {
                 "zh-CN": "是否禁用，禁用后不响应点击跳转。",
                 "en-US": "Whether the link is disabled and ignores clicks."
@@ -110,6 +122,10 @@
             "style": {
                 "zh-CN": "链接项的样式，落在最外层的 div 上。",
                 "en-US": "Style of the link item, on its outermost div."
+            },
+            "styles": {
+                "zh-CN": "链接内部各部位的内联样式，键同 `classNames`，写在 `Anchor` 的 `styles` 之后。",
+                "en-US": "Inline styles of the inner parts of the link, keyed like `classNames`, after `styles` of Anchor."
             },
             "title": {
                 "zh-CN": "链接的文字内容，可以是节点；未开启 showTooltip 且为非空字符串时同时作为原生 title。",

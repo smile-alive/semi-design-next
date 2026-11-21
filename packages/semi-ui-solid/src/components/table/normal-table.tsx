@@ -335,12 +335,12 @@ export default function NormalTable(props: TableProps) {
     // rather than state: a window drag resizes the table every frame
     const syncTableWidth = () => rootWrap?.style.setProperty('--semi-table-section-width', `${amendTableWidth(rootWrap.getBoundingClientRect().width)}px`);
 
-    const tablePagination = () => <Show when={pagination() ? mergedPagination() : null}>{(merged) => <TablePagination info={paginationInfo()} pagination={merged()} prefixCls={prefixCls} renderPagination={local.renderPagination} />}</Show>;
+    const tablePagination = () => <Show when={pagination() ? mergedPagination() : null}>{(merged) => <TablePagination class={local.classNames?.pagination} style={local.styles?.pagination} info={paginationInfo()} pagination={merged()} prefixCls={prefixCls} renderPagination={local.renderPagination} />}</Show>;
 
     const emptySlot = () => (
         <Show when={!state().dataSource?.length}>
             <div class={`${prefixCls}-placeholder`}>
-                <div class={`${prefixCls}-empty`} x-semi-prop="empty">
+                <div class={clsx(`${prefixCls}-empty`, local.classNames?.empty)} style={local.styles?.empty} x-semi-prop="empty">
                     {local.empty || locale().locale.emptyText}
                 </div>
             </div>
@@ -407,7 +407,7 @@ export default function NormalTable(props: TableProps) {
                     >
                         <Show when={['top', 'both'].includes(paginationPosition())}>{tablePagination()}</Show>
                         <Show when={hasContent(titleNode())}>
-                            <div id={titleNamesTable() ? titleId : undefined} class={`${prefixCls}-title`} x-semi-prop="title">
+                            <div id={titleNamesTable() ? titleId : undefined} class={clsx(`${prefixCls}-title`, local.classNames?.title)} style={local.styles?.title} x-semi-prop="title">
                                 {titleNode()}
                             </div>
                         </Show>
@@ -417,7 +417,7 @@ export default function NormalTable(props: TableProps) {
                             </Show>
                             <Body ref={(node) => (bodyWrap = node)} columns={columns()} emptySlot={emptySlot()} headerRef={(node) => (headerWrap = node)} includeHeader={!headerApart()} />
                             <Show when={hasContent(footerNode())}>
-                                <div class={`${prefixCls}-footer`} x-semi-prop="footer">
+                                <div class={clsx(`${prefixCls}-footer`, local.classNames?.footer)} style={local.styles?.footer} x-semi-prop="footer">
                                     {footerNode()}
                                 </div>
                             </Show>

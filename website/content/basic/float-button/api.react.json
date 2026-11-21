@@ -4,6 +4,10 @@
         "props": {
             "badge": { "zh-CN": "徽章参数，同 Badge 的 props，作用于包裹按钮内容的 Badge。", "en-US": "Badge props, same as Badge. Applied to the Badge that wraps the button content." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `body`，与组件自带的类名合并；`body` 是按钮的可见主体，图标放在其中。",
+                "en-US": "Class names of the inner parts, keyed by `body`; merged with the built-in classes. `body` is the visible body of the button, holding the icon."
+            },
             "colorful": { "zh-CN": "多彩悬浮按钮。", "en-US": "Colorful float button." },
             "disabled": {
                 "zh-CN": "禁用状态。禁用的链接会去掉 `href`，并设置 `role` 为 `link`。",
@@ -20,6 +24,7 @@
             "shape": { "zh-CN": "形状，可选 `round`、`square`。", "en-US": "Shape: `round` or `square`." },
             "size": { "zh-CN": "尺寸，可选 `default`、`small`、`large`。", "en-US": "Size: `default`, `small` or `large`." },
             "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "target": { "zh-CN": "指定在何处显示链接的 URL，仅在设置 `href` 时生效。", "en-US": "Where to display the linked URL. Only takes effect with `href`." }
         }
     },
@@ -27,6 +32,10 @@
         "source": "packages/semi-ui-react/src/components/float-button/float-button-group.tsx",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`，与组件自带的类名合并；`item` 是每个按钮，单个子项自己的类名排在其后。",
+                "en-US": "Class names of the inner parts, keyed by `item`; merged with the built-in classes. `item` is each button; an item's own class name comes after it."
+            },
             "disabled": { "zh-CN": "禁用全部子项。", "en-US": "Disables every item." },
             "items": { "zh-CN": "子项列表，类型见下方 `FloatButtonGroupItem`。", "en-US": "List of items, typed as `FloatButtonGroupItem` below." },
             "onClick": {
@@ -34,7 +43,8 @@
                 "en-US": "Called when an enabled item is clicked, with that item's `value` (`undefined` when unset) and a `React.MouseEvent`. The item's own `onClick` runs first."
             },
             "ref": { "zh-CN": "根元素（`role=\"group\"`）的引用。", "en-US": "Reference to the root element (`role=\"group\"`)." },
-            "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." }
+            "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`；单个子项自己的样式后写。", "en-US": "Inline styles of the inner parts, keyed like `classNames`; an item's own style is applied after it." }
         }
     }
 }

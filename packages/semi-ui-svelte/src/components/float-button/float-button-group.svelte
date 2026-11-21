@@ -7,7 +7,7 @@
     import type { FloatButtonGroupItem, FloatButtonGroupProps } from './interface.js';
 
     const defaults = useDefaultProps('FloatButtonGroup');
-    let { disabled = defaults('disabled', false), items, onClick, badgeCount, content, icon, ...rest }: FloatButtonGroupProps = $props();
+    let { classNames = defaults('classNames'), disabled = defaults('disabled', false), items, onClick, styles = defaults('styles'), badgeCount, content, icon, ...rest }: FloatButtonGroupProps = $props();
 
     const prefix = cssClassesGroup.PREFIX;
     const buttonPrefix = cssClasses.PREFIX;
@@ -19,6 +19,7 @@
             ...attrs,
             class: [
                 `${prefix}-item`,
+                classNames?.item,
                 item.class,
                 {
                     [`${buttonPrefix}-${shape}`]: shape,
@@ -27,6 +28,7 @@
                     [`${prefix}-item-disabled`]: itemDisabled,
                 },
             ],
+            style: [styles?.item, item.style].filter(Boolean).join(';') || undefined,
             'data-value': value,
             disabled: itemDisabled,
             onclick: (event: MouseEvent) => {

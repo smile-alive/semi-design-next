@@ -92,13 +92,62 @@ describe('Dropdown', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        renderDD({ classNames: { content: 'my-content', wrapper: 'my-wrapper' }, styles: { content: { order: 2 }, wrapper: { order: 3 } }, trigger: 'custom', visible: true });
-        const menu = getElement(`.${BASE_CLASS_PREFIX}-dropdown`);
-        expect(menu).toHaveClass('my-content');
-        expect(menu.style.order).toBe('2');
-        const wrapper = getElement(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
-        expect(wrapper).toHaveClass('my-wrapper');
-        expect(wrapper.style.order).toBe('3');
+        const parts = ['wrapper', 'content', 'menu', 'item', 'itemIcon'] as const;
+        const selectors = { wrapper: `.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`, content: `.${BASE_CLASS_PREFIX}-dropdown`, menu: `.${BASE_CLASS_PREFIX}-dropdown-menu`, item: itemSelector, itemIcon: `${itemSelector}-icon` };
+        renderDD({ classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])), trigger: 'custom', visible: true }, () => (
+            <Dropdown.Menu>
+                <Dropdown.Item icon={<i />}>A</Dropdown.Item>
+            </Dropdown.Menu>
+        ));
+        for (const part of parts) {
+            const el = getElement(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el.style.order).toBe(String(parts.indexOf(part) + 1));
+        }
+    });
+
+    it('Dropdown 的 item、itemIcon 在子菜单里继续生效，Dropdown.Item 自己的 classNames 排在其后', () => {
+        render(() => (
+            <Dropdown
+                classNames={{ item: 'outer-item', itemIcon: 'outer-icon', menu: 'outer-menu' }}
+                styles={{ item: { order: 1 } }}
+                motion={false}
+                render={
+                    <Dropdown.Menu>
+                        <Dropdown
+                            classNames={{ item: 'inner-item' }}
+                            styles={{ item: { opacity: 0.5 } }}
+                            motion={false}
+                            render={
+                                <Dropdown.Menu>
+                                    <Dropdown.Item classNames={{ icon: 'own-icon' }} icon={<i />} style={{ order: 3 }} styles={{ icon: { order: 4 } }}>
+                                        Inner
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            }
+                            trigger="custom"
+                            visible
+                        >
+                            {(t) => <Dropdown.Item {...t()}>Parent</Dropdown.Item>}
+                        </Dropdown>
+                    </Dropdown.Menu>
+                }
+                trigger="custom"
+                visible
+            >
+                <button>owner</button>
+            </Dropdown>
+        ));
+        const custom = (el: Element) => [...el.classList].filter((c) => /^(outer|inner|own)-/.test(c));
+        const inner = item('Inner');
+        expect(custom(inner)).toEqual(['outer-item', 'inner-item']);
+        expect(inner.style.order).toBe('3');
+        expect(inner.style.opacity).toBe('0.5');
+        const icon = inner.querySelector<HTMLElement>(`${itemSelector}-icon`)!;
+        expect(custom(icon)).toEqual(['outer-icon', 'own-icon']);
+        expect(icon.style.order).toBe('4');
+        expect(custom(inner.parentElement!)).toEqual(['outer-menu']);
+        expect(custom(item('Parent'))).toEqual(['outer-item']);
     });
 
     it('Dropdown showTick', () => {

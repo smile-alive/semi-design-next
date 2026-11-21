@@ -51,9 +51,10 @@
     {...rest}
     aria-hidden={active ? 'false' : 'true'}
     aria-labelledby={getTabId(view.tabsId, itemKey)}
-    class={[cssClasses.TABS_PANE, rest.class, active ? cssClasses.TABS_PANE_ACTIVE : cssClasses.TABS_PANE_INACTIVE]}
+    class={[cssClasses.TABS_PANE, rest.class, active ? cssClasses.TABS_PANE_ACTIVE : cssClasses.TABS_PANE_INACTIVE, view.classNames?.pane]}
     id={getPanelId(view.tabsId, itemKey)}
     role="tabpanel"
+    style={[rest.style, view.styles?.pane].filter(Boolean).join('; ') || undefined}
     tabindex={rest.tabindex ?? 0}
     x-semi-prop="children"
 >

@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue';
 import { createContext } from '../../base/index';
-import type { RadioGroupButtonSize, RadioChangeEvent, RadioMode, RadioValue } from './interface';
+import type { RadioGroupButtonSize, RadioChangeEvent, RadioGroupProps, RadioMode, RadioValue } from './interface';
 
 export interface RadioGroupContextView {
     value?: RadioValue;
@@ -15,6 +15,8 @@ export interface RadioGroupContextView {
 
 export interface RadioGroupContext {
     view: ComputedRef<RadioGroupContextView>;
+    classNames: ComputedRef<RadioGroupProps['classNames']>;
+    styles: ComputedRef<RadioGroupProps['styles']>;
     onChange: (event: RadioChangeEvent) => void;
     register: (sync: () => void) => () => void;
     /** Asks every registered radio to write its rendered state back to its native input once rendering settles. */

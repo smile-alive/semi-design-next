@@ -1,8 +1,9 @@
+import type { ClassValue } from 'svelte/elements';
 import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { createContext } from '@fibrae/semi-ui-svelte/base';
 import type { AIChatDialogueProps } from './interface.js';
 
-export type AIChatDialogueView = Required<Pick<AIChatDialogueProps, 'align' | 'disabledFileItemClick' | 'escapeHtml' | 'mode' | 'selecting' | 'showReference' | 'showReset'>> & Pick<AIChatDialogueProps, 'markdownRenderProps'>;
+export type AIChatDialogueView = Required<Pick<AIChatDialogueProps, 'align' | 'disabledFileItemClick' | 'escapeHtml' | 'mode' | 'selecting' | 'showReference' | 'showReset'>> & Pick<AIChatDialogueProps, 'classNames' | 'markdownRenderProps' | 'styles'>;
 
 export type AIChatDialogueSnippets = Pick<AIChatDialogueProps, 'avatar' | 'title' | 'content' | 'action' | 'fullDialogue' | 'contentItem' | 'messageText' | 'messageEdit'>;
 
@@ -25,3 +26,12 @@ export interface AIChatDialogueContextValue {
 }
 
 export const [getAIChatDialogueContext, setAIChatDialogueContext] = createContext<AIChatDialogueContextValue>('AIChatDialogue');
+
+/** Read through getters, like `view` */
+export interface CodePart {
+    class?: ClassValue;
+    style?: string;
+}
+
+// The code block is a markdown component that the markdown renderer creates, and it also works outside the dialogue
+export const [getCodePartContext, setCodePartContext] = createContext<CodePart>('AIChatDialogue', { optional: true });

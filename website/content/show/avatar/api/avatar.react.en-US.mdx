@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | Bottom badge configuration: `shape`, `text`, `bgColor`, `textColor`, `className` and `style`; a `render` function replaces the whole badge. Shown only at the preset sizes from `extra-small` to `extra-large`. | <ApiType detail={"{ render?: () => React.ReactNode; shape?: 'circle' \u007c 'square'; text: React.ReactNode; bgColor?: string; textColor?: string; className?: string; style?: CSSProperties; }"}>Type</ApiType> | - |
 | children | Text or custom content inside the avatar. | `React.ReactNode` | - |
 | className | Class name of the avatar element (`.semi-avatar`); when a border or a top or bottom badge is used, it sits inside the outer wrapper. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `image`, `label`, `mask` and `border`; merged with the built-in classes. `image` is the picture, `label` the text of a text avatar, `mask` the hover overlay and `border` the additional border (the animated ring too when the border motion is on). | <ApiType detail={"Partial\u003cRecord\u003cAvatarPart, string>>"}>Type</ApiType> | - |
 | color | Preset background color: `amber`, `blue`, `cyan`, `green`, `grey`, `indigo`, `light-blue`, `light-green`, `lime`, `orange`, `pink`, `purple`, `red`, `teal`, `violet` or `yellow`; not used by image avatars. | `AvatarColor` | `"grey"` |
 | contentMotion | Enables animation in the avatar content area. | `boolean` | - |
 | gap | Space in pixels between the text and either side of the avatar. | `number` | `3` |
@@ -24,4 +25,5 @@ import ApiType from '#/components/ApiType.astro';
 | src | Image source URL. | `string` | - |
 | srcSet | Responsive image sources. | `string` | - |
 | style | Avatar style; when a border or a top or bottom badge is used, the style goes to the outer wrapper. | `CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cAvatarPart, CSSProperties>>"}>Type</ApiType> | - |
 | topSlot | Top badge configuration: `text`, `gradientStart`, `gradientEnd`, `textColor`, `className` and `style`; a `render` function replaces the whole badge. Shown only for circle avatars at the preset sizes from `extra-small` to `extra-large`; an unset gradient color uses `var(--semi-color-primary)`. | <ApiType detail={"{ render?: () => React.ReactNode; gradientStart?: string; gradientEnd?: string; text: React.ReactNode; textColor?: string; className?: string; style?: CSSProperties; }"}>Type</ApiType> | - |

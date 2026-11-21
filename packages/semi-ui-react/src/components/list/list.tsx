@@ -2,7 +2,7 @@ import type React from 'react';
 import { Children, cloneElement, isValidElement, useMemo } from 'react';
 import clsx from 'clsx';
 import { pick } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+import { cssClasses, type ListPart } from '@fibrae/semi-foundation/components/list/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import { namedRole, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/list/list.scss';
@@ -33,6 +33,9 @@ export interface ListProps<T> extends ElementProps<'div', 'onClick'> {
     loadMore?: React.ReactNode;
     onClick?: React.MouseEventHandler<HTMLLIElement>;
     onRightClick?: React.MouseEventHandler<HTMLLIElement>;
+    /** `item*` keys apply to every List.Item, before the item's own classNames */
+    classNames?: Partial<Record<ListPart, string>>;
+    styles?: Partial<Record<ListPart, React.CSSProperties>>;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;
 }
@@ -50,11 +53,11 @@ const defaultProps = {
 } satisfies Partial<ListProps<unknown>>;
 
 function List<T = any>(rawProps: ListProps<T>) {
-    const { ref, className, header, loading, onRightClick, onClick, footer, layout, grid, size, split, loadMore, bordered, dataSource, renderItem, emptyContent, children, ...rest } = useDefaultProps('List', rawProps, defaultProps);
+    const { ref, className, header, loading, onRightClick, onClick, footer, layout, grid, size, split, loadMore, bordered, dataSource, renderItem, emptyContent, children, classNames, styles, ...rest } = useDefaultProps('List', rawProps, defaultProps);
 
     let items: React.ReactNode;
 
-    const context = useMemo(() => ({ grid, onClick, onRightClick }), [grid, onClick, onRightClick]);
+    const context = useMemo(() => ({ grid, onClick, onRightClick, classNames, styles }), [grid, onClick, onRightClick, classNames, styles]);
     const showEmpty = !dataSource?.length && Children.toArray(children).length === 0;
 
     if (dataSource?.length) {
@@ -71,11 +74,17 @@ function List<T = any>(rawProps: ListProps<T>) {
         items = keyed;
     } else if (showEmpty) {
         items = hasContent(emptyContent) ? (
-            <div className={`${prefixCls}-empty`} x-semi-prop="emptyContent">
+            <div className={clsx(`${prefixCls}-empty`, classNames?.empty)} style={styles?.empty} x-semi-prop="emptyContent">
                 {emptyContent}
             </div>
         ) : (
-            <LocaleConsumer componentName="List">{(locale: Locale['List']) => <div className={`${prefixCls}-empty`}>{locale.emptyText}</div>}</LocaleConsumer>
+            <LocaleConsumer componentName="List">
+                {(locale: Locale['List']) => (
+                    <div className={clsx(`${prefixCls}-empty`, classNames?.empty)} style={styles?.empty}>
+                        {locale.emptyText}
+                    </div>
+                )}
+            </LocaleConsumer>
         );
     }
 
@@ -93,7 +102,7 @@ function List<T = any>(rawProps: ListProps<T>) {
             })}
         >
             {hasContent(header) && (
-                <div className={`${prefixCls}-header`} x-semi-prop="header">
+                <div className={clsx(`${prefixCls}-header`, classNames?.header)} style={styles?.header} x-semi-prop="header">
                     {header}
                 </div>
             )}
@@ -115,7 +124,7 @@ function List<T = any>(rawProps: ListProps<T>) {
                 </Spin>
             </ListContext>
             {hasContent(footer) && (
-                <div className={`${prefixCls}-footer`} x-semi-prop="footer">
+                <div className={clsx(`${prefixCls}-footer`, classNames?.footer)} style={styles?.footer} x-semi-prop="footer">
                     {footer}
                 </div>
             )}

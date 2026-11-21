@@ -18,4 +18,4 @@ export const strings = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type InputNumberPart = 'input';
+export type InputNumberPart = 'input' | 'prefix' | 'suffix' | 'clear' | 'addonBefore' | 'addonAfter' | 'actions' | 'upButton' | 'downButton';

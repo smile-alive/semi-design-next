@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | autoCollapse | Whether the next level of links is shown dynamically while scrolling. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by `rail`, `indicator`, `list`, `item` and `itemTitle`; merged with the built-in classes. `rail` is the track on the left, `indicator` is the bar on it that follows the highlighted link, and `item` and `itemTitle` apply to every link. A `links` item can carry its own `classNames` (key `title`), applied after `itemTitle`. | <ApiType detail={"Partial\u003cRecord\u003cAnchorPart, ClassValue>>"}>Type</ApiType> | - |
 | defaultAnchor | Link highlighted by default. | `string` | `""` |
 | getContainer | Returns the scrolling container, window when omitted. | <ApiType detail={"() => HTMLElement \u007c Window \u007c null"}>Type</ApiType> | - |
 | links | Link data. Each item is `{ href, title, disabled, children }`, and `children` nests the next level. An `href` starting with # is looked up by element id, anything else as a CSS selector; `title` is the plain-text title, also the native title when showTooltip is off; a `disabled` link ignores clicks. | `AnchorLinkItem[]` | `[]` |
@@ -19,5 +20,6 @@ import ApiType from '#/components/ApiType.astro';
 | scrollMotion | Whether scrolling after a click is animated. | `boolean` | `false` |
 | showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `false` |
 | size | Size of the anchor: small or default. | `'default' \| 'small'` | `"default"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`, as CSS text. The own `styles` of a `links` item come after them. | <ApiType detail={"Partial\u003cRecord\u003cAnchorPart, string>>"}>Type</ApiType> | - |
 | targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `0` |
 | title | Snippet that renders every link's title, with the parameter `{ item, level }`; `level` is the nesting depth, 1 at the top. It takes precedence over `title` in `links`. | <ApiType detail={"Snippet\u003c[AnchorTitleContext]>"}>Type</ApiType> | - |

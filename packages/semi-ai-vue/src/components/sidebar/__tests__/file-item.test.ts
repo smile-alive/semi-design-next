@@ -584,3 +584,40 @@ describe('Sidebar.FileContent', () => {
         await waitFor(() => expect(container.querySelector('.tiptap-image-slot input[type="file"]')).toHaveAttribute('accept', '.png'));
     });
 });
+
+describe('Sidebar 文件部位 classNames 与 styles', () => {
+    const partProps = (parts: readonly string[]) => ({
+        classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+        styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+    });
+
+    it('FileItem 的 classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['menuBar', 'editor'] as const;
+        const selectors = { menuBar: '.semi-sidebar-file-menu-bar', editor: '.semi-sidebar-file-editor' };
+        const { container } = render(FileItem, { props: { content: '<p>hello</p>', ...partProps(parts) } });
+        await screen.findByText('hello');
+        for (const part of parts) {
+            const el = container.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('FileContent 的 item 部位作用到每个面板', () => {
+        const parts = ['itemHeader', 'itemExpand'] as const;
+        const selectors = { itemHeader: '.semi-sidebar-collapse-header-content', itemExpand: '.semi-sidebar-collapse-header-expand-btn' };
+        const files = [
+            { key: 'a', name: 'a.md', content: '<p>file a</p>' },
+            { key: 'b', name: 'b.md', content: '<p>file b</p>' },
+        ];
+        const { container } = render(FileContent, { props: { files, onExpand: () => {}, ...partProps(parts) } });
+        for (const part of parts) {
+            const els = container.querySelectorAll(selectors[part]);
+            expect(els).toHaveLength(2);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
+});

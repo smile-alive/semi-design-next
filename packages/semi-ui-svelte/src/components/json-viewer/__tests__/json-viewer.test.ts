@@ -429,6 +429,23 @@ describe('Svelte JsonViewer', () => {
         expect(trigger()).toBeInTheDocument();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['editor', 'searchTrigger', 'searchBox', 'searchInput', 'searchOptions', 'replaceInput'] as const;
+        const selectors = { editor: prefixCls, searchTrigger: `${prefixCls}-search-bar-trigger`, searchBox: `${prefixCls}-search-bar-container`, searchInput: `${prefixCls}-search-bar-input`, searchOptions: `${prefixCls}-search-options`, replaceInput: `${prefixCls}-replace-bar-input` };
+        setup({ classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) });
+        const check = (part: (typeof parts)[number]) => {
+            const el = query(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        };
+        check('editor');
+        check('searchTrigger');
+        await openBar();
+        for (const part of parts.slice(2)) {
+            check(part);
+        }
+    });
+
     it('showSearch 为 false 时隐藏搜索按钮', () => {
         setup({ showSearch: false });
         expect(trigger()).toBeNull();

@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | className | Custom class name. In popup mode it lands on the popover card; in modal mode it lands on the outer element of the dialog. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `cover`, `body`, `title`, `description`, `progress`, `indicators` and `footer`; merged with the built-in classes. `progress` is the step counter text such as 1/3. `indicators` is the dot indicator container below the cover and exists only in modal mode when the step has a cover. In popup mode `body` also wraps `footer`; in modal mode `footer` sits outside `body`. | <ApiType detail={"Partial\u003cRecord\u003cUserGuidePart, string>>"}>Type</ApiType> | - |
 | current | Index of the current step, starting at 0. When set, the parent controls the step and writes it back with onChange; when not set, the guide starts at step 0 and the component keeps the step itself. | `number` | - |
 | finishText | Text of the finish button on the last step. When not set, the text from the locale pack is used. | `string` | - |
 | getPopupContainer | In modal mode the dialog is rendered into this DOM node. In popup mode body scrolling is not locked when it points to an element other than body. The popover card sits in the top layer and is not affected. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
@@ -23,6 +24,7 @@ import ApiType from '#/components/ApiType.astro';
 | spotlightPadding | Extra space in pixels around the highlighted area. A step's own spotlightPadding overrides it; 5 when neither is set. | `number` | - |
 | steps | Data of the guide steps, required. The title, description and cover of each step can be ReactNode. | `StepItem[]` | - |
 | style | Custom style. In popup mode it lands on the popover card; in modal mode it lands on .semi-modal. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cUserGuidePart, React.CSSProperties>>"}>Type</ApiType> | - |
 | theme | Theme of the popup mode. A step's own theme overrides it. | `'default' \| 'primary'` | `"default"` |
 | visible | Whether the guide is shown. | `boolean` | `false` |
 | zIndex | The z-index of the mask in popup mode and of the dialog in modal mode. The popover card sits in the top layer, always above the mask. | `number` | `1030` |

@@ -60,16 +60,17 @@
         v-bind="{ ...$attrs, ...ids, ...getTabKeyAttrs(props.itemKey) }"
         :aria-disabled="props.disabled ? 'true' : 'false'"
         :aria-selected="props.selected ? 'true' : 'false'"
-        :class="[prefix, `${prefix}-${type}`, `${prefix}-${tabPosition}`, `${prefix}-single`, { [cssClasses.TABS_TAB_ACTIVE]: props.selected, [cssClasses.TABS_TAB_DISABLED]: props.disabled, [`${prefix}-small`]: size === 'small', [`${prefix}-medium`]: size === 'medium' }]"
+        :class="[prefix, `${prefix}-${type}`, `${prefix}-${tabPosition}`, `${prefix}-single`, { [cssClasses.TABS_TAB_ACTIVE]: props.selected, [cssClasses.TABS_TAB_DISABLED]: props.disabled, [`${prefix}-small`]: size === 'small', [`${prefix}-medium`]: size === 'medium' }, ctx?.view.value.classNames?.item]"
         role="tab"
+        :style="ctx?.view.value.styles?.item"
         :tabindex="props.selected || props.itemKey === ctx?.view.value.tabbableKey ? 0 : -1"
         @click="onClick"
         @keydown="onKeydown"
     >
-        <span v-if="hasSlotContent($slots.icon)" :class="`${cssClasses.TABS_BAR}-icon`">
+        <span v-if="hasSlotContent($slots.icon)" :class="[`${cssClasses.TABS_BAR}-icon`, ctx?.view.value.classNames?.itemIcon]" :style="ctx?.view.value.styles?.itemIcon">
             <slot name="icon" />
         </span>
         <slot name="tab" />
-        <IconClose v-if="props.closable" :aria-label="locale.locale.close" :class="`${prefix}-icon-close`" role="button" @click.stop="onClose" />
+        <IconClose v-if="props.closable" :aria-label="locale.locale.close" :class="[`${prefix}-icon-close`, ctx?.view.value.classNames?.itemClose]" role="button" :style="ctx?.view.value.styles?.itemClose" @click.stop="onClose" />
     </div>
 </template>

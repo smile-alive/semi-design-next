@@ -121,6 +121,7 @@
                     {#if isRange || !isYearOrTime(detail)}
                         <div bind:this={nodes.wrap[panelType]} style={isRange && isYearOrTime(detail) ? 'visibility: hidden; position: absolute; pointer-events: none' : undefined}>
                             <Navigation
+                                class={props.classNames?.header}
                                 density={props.density}
                                 locale={props.locale}
                                 monthText={MonthsGridFoundation.formatMonthText(props.locale, detail.pickerDate)}
@@ -131,9 +132,11 @@
                                 onPrevYear={() => foundation.prevYear(panelType)}
                                 {panelType}
                                 shouldBimonthSwitch={isRange && props.syncSwitchMonth}
+                                style={props.styles?.header}
                                 titleId={`${titleId}-${panelType}-title`}
                             />
                             <Month
+                                classNames={props.classNames}
                                 date={props.date}
                                 disabledDate={props.disabledDate}
                                 focusRecords={props.focusRecords ?? { rangeStart: false, rangeEnd: false }}
@@ -153,13 +156,14 @@
                                 rangeInputFocus={props.rangeInputFocus ?? false}
                                 rangeStart={states().rangeStart}
                                 selected={states().selected}
+                                styles={props.styles}
                                 timeZone={props.timeZone}
                                 weekStartsOn={props.weekStartsOn ?? 0}
                             />
                         </div>
                     {/if}
                     {#if hasTime && !props.insetInput}
-                        <div bind:this={nodes.switch[panelType]} class={`${prefix}-switch`}>
+                        <div bind:this={nodes.switch[panelType]} class={[`${prefix}-switch`, props.classNames?.switch]} style={props.styles?.switch}>
                             <button aria-label={props.locale.switchToDate} class={[`${prefix}-switch-date`, { [`${prefix}-switch-date-active`]: !detail.isTimePickerOpen }]} type="button" onclick={() => foundation.showDatePanel(panelType)}>
                                 {#if props.density !== 'compact'}<IconCalendar />{/if}
                                 <span class={`${prefix}-switch-text`}>{switchTexts(panelType).date}</span>

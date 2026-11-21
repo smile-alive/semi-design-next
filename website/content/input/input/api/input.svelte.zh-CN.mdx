@@ -2,47 +2,47 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性                    | 说明                                                                                                                 | 类型                                                                                | 默认值      |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------- |
-| addonAfter              | 后置标签。内容仅为文本或 Semi 图标时自动带上左右间隔。                                                               | `Snippet`                                                                           | -           |
-| addonBefore             | 前置标签。内容仅为文本或 Semi 图标时自动带上左右间隔。                                                               | `Snippet`                                                                           | -           |
-| autofocus               | 挂载时自动获取焦点（使用 preventScroll）。                                                                           | `boolean`                                                                           | -           |
-| borderless              | 无边框模式。                                                                                                         | `boolean`                                                                           | `false`     |
-| classNames              | 内部各部位的类名，键为 input（原生 input 元素），值的写法同 class，与组件自带的类名合并。                            | <ApiType detail={"Partial\u003cRecord\u003cInputPart, ClassValue>>"}>Type</ApiType> | -           |
-| clearIcon               | 自定义清除按钮的图标，showClear 为 true 时有效。                                                                     | `Snippet`                                                                           | -           |
-| composition             | 是否开启输入法模式，开启后输入法组合期间不调用 onChange，组合结束后调用一次。                                        | `boolean`                                                                           | `false`     |
-| disabled                | 是否禁用。                                                                                                           | `boolean`                                                                           | -           |
-| getValueLength          | 自定义计算字符串长度，搭配 maxlength、minlength 使用。                                                               | <ApiType detail={"(value: string) => number"}>Type</ApiType>                        | -           |
-| hideSuffix              | 清除按钮显示时隐藏后缀，默认两者并列。                                                                               | `boolean`                                                                           | `false`     |
-| insetLabel              | 输入框内的标签。                                                                                                     | `Snippet`                                                                           | -           |
-| insetLabelId            | insetLabel 所在元素的 id，供 aria-labelledby 引用。                                                                  | `string`                                                                            | -           |
-| maxlength               | 最大长度。传入 getValueLength 时按它计算长度并截断，否则使用原生属性。                                               | `number`                                                                            | -           |
-| minlength               | 最小长度。传入 getValueLength 时按它换算，否则使用原生属性。                                                         | `number`                                                                            | -           |
-| mode                    | 输入框模式，可选 password，显示密码显隐按钮。                                                                        | `InputMode`                                                                         | -           |
-| onBlur                  | 焦点离开组件时调用。事件为外层元素的 focusout。                                                                      | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType>                      | -           |
-| onChange                | 内容变化时调用，参数为新值与事件；输入法模式下组合结束后调用一次。这是 Input 自己的回调，不是原生 change。           | <ApiType detail={"(value: string, event: InputChangeEvent) => void"}>Type</ApiType> | -           |
-| onClear                 | 点击清除按钮时调用。                                                                                                 | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType>                      | -           |
-| onCompositionEnd        | 输入法组合结束时调用。                                                                                               | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType>                | -           |
-| onCompositionStart      | 输入法组合开始时调用。                                                                                               | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType>                | -           |
-| onCompositionUpdate     | 输入法组合更新时调用。                                                                                               | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType>                | -           |
-| onEnterPress            | 按下回车时调用（keydown），输入法组合中的回车不调用。                                                                | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType>                   | -           |
-| onFocus                 | 焦点进入组件时调用；焦点在输入框与组件内按钮之间移动不调用。事件为外层元素的 focusin。                               | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType>                      | -           |
-| onInput                 | 原生 input 事件。                                                                                                    | <ApiType detail={"(event: Event) => void"}>Type</ApiType>                           | -           |
-| onKeyDown               | 原生 keydown 事件。                                                                                                  | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType>                   | -           |
-| onKeyUp                 | 原生 keyup 事件。                                                                                                    | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType>                   | -           |
-| placeholder             | 输入框为空时显示的提示文字。                                                                                         | `string \| number`                                                                  | -           |
-| prefix                  | 前缀。内容仅为文本或 Semi 图标时自动带上左右间隔。                                                                   | `Snippet`                                                                           | -           |
-| preventScroll           | 聚焦时是否阻止浏览器滚动文档以显示新聚焦的元素，作用于组件内的聚焦。                                                 | `boolean`                                                                           | -           |
-| readonly                | 是否只读，同时隐藏清除按钮。                                                                                         | `boolean`                                                                           | `false`     |
-| readOnly                | 是否只读，只锁定输入，清除按钮仍可用（选择器类组件依赖它）。                                                         | `boolean`                                                                           | -           |
-| showClear               | 有内容且悬停或焦点位于组件内时展示清除按钮。                                                                         | `boolean`                                                                           | `false`     |
-| showClearIgnoreDisabled | 内部属性，供 DatePicker 使用：禁用时仍可清除。                                                                       | `boolean`                                                                           | -           |
-| size                    | 输入框大小，可选 large、default、small。                                                                             | `InputSize`                                                                         | -           |
-| styles                  | 内部各部位的样式字符串，键同 classNames。                                                                            | <ApiType detail={"Partial\u003cRecord\u003cInputPart, string>>"}>Type</ApiType>     | -           |
-| suffix                  | 后缀。内容仅为文本或 Semi 图标时自动带上左右间隔。                                                                   | `Snippet`                                                                           | -           |
-| type                    | 原生 input 的 type。                                                                                                 | `string`                                                                            | `"text"`    |
-| validateStatus          | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。                                                  | `ValidateStatus`                                                                    | `"default"` |
-| value                   | 输入框内容，可用 `bind:value` 绑定。只传值时作为初始内容，之后由组件自己维护；`bind:value={get, set}` 使其完全受控。 | `string \| number`                                                                  | -           |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| addonAfter | 后置标签。内容仅为文本或 Semi 图标时自动带上左右间隔。 | `Snippet` | - |
+| addonBefore | 前置标签。内容仅为文本或 Semi 图标时自动带上左右间隔。 | `Snippet` | - |
+| autofocus | 挂载时自动获取焦点（使用 preventScroll）。 | `boolean` | - |
+| borderless | 无边框模式。 | `boolean` | `false` |
+| classNames | 内部各部位的类名，键为 input（原生 input 元素）、prefix（前缀与 insetLabel）、suffix、clear（清除按钮）、visibilityToggle（密码可见性切换按钮）、addonBefore、addonAfter，值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cInputPart, ClassValue>>"}>Type</ApiType> | - |
+| clearIcon | 自定义清除按钮的图标，showClear 为 true 时有效。 | `Snippet` | - |
+| composition | 是否开启输入法模式，开启后输入法组合期间不调用 onChange，组合结束后调用一次。 | `boolean` | `false` |
+| disabled | 是否禁用。 | `boolean` | - |
+| getValueLength | 自定义计算字符串长度，搭配 maxlength、minlength 使用。 | <ApiType detail={"(value: string) => number"}>Type</ApiType> | - |
+| hideSuffix | 清除按钮显示时隐藏后缀，默认两者并列。 | `boolean` | `false` |
+| insetLabel | 输入框内的标签。 | `Snippet` | - |
+| insetLabelId | insetLabel 所在元素的 id，供 aria-labelledby 引用。 | `string` | - |
+| maxlength | 最大长度。传入 getValueLength 时按它计算长度并截断，否则使用原生属性。 | `number` | - |
+| minlength | 最小长度。传入 getValueLength 时按它换算，否则使用原生属性。 | `number` | - |
+| mode | 输入框模式，可选 password，显示密码显隐按钮。 | `InputMode` | - |
+| onBlur | 焦点离开组件时调用。事件为外层元素的 focusout。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | 内容变化时调用，参数为新值与事件；输入法模式下组合结束后调用一次。这是 Input 自己的回调，不是原生 change。 | <ApiType detail={"(value: string, event: InputChangeEvent) => void"}>Type</ApiType> | - |
+| onClear | 点击清除按钮时调用。 | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| onCompositionEnd | 输入法组合结束时调用。 | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType> | - |
+| onCompositionStart | 输入法组合开始时调用。 | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType> | - |
+| onCompositionUpdate | 输入法组合更新时调用。 | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType> | - |
+| onEnterPress | 按下回车时调用（keydown），输入法组合中的回车不调用。 | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onFocus | 焦点进入组件时调用；焦点在输入框与组件内按钮之间移动不调用。事件为外层元素的 focusin。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onInput | 原生 input 事件。 | <ApiType detail={"(event: Event) => void"}>Type</ApiType> | - |
+| onKeyDown | 原生 keydown 事件。 | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onKeyUp | 原生 keyup 事件。 | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| placeholder | 输入框为空时显示的提示文字。 | `string \| number` | - |
+| prefix | 前缀。内容仅为文本或 Semi 图标时自动带上左右间隔。 | `Snippet` | - |
+| preventScroll | 聚焦时是否阻止浏览器滚动文档以显示新聚焦的元素，作用于组件内的聚焦。 | `boolean` | - |
+| readonly | 是否只读，同时隐藏清除按钮。 | `boolean` | `false` |
+| readOnly | 是否只读，只锁定输入，清除按钮仍可用（选择器类组件依赖它）。 | `boolean` | - |
+| showClear | 有内容且悬停或焦点位于组件内时展示清除按钮。 | `boolean` | `false` |
+| showClearIgnoreDisabled | 内部属性，供 DatePicker 使用：禁用时仍可清除。 | `boolean` | - |
+| size | 输入框大小，可选 large、default、small。 | `InputSize` | - |
+| styles | 内部各部位的样式字符串，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cInputPart, string>>"}>Type</ApiType> | - |
+| suffix | 后缀。内容仅为文本或 Semi 图标时自动带上左右间隔。 | `Snippet` | - |
+| type | 原生 input 的 type。 | `string` | `"text"` |
+| validateStatus | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。 | `ValidateStatus` | `"default"` |
+| value | 输入框内容，可用 `bind:value` 绑定。只传值时作为初始内容，之后由组件自己维护；`bind:value={get, set}` 使其完全受控。 | `string \| number` | - |
 
 **Methods**
 

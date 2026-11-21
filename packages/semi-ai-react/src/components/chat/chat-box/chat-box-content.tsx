@@ -1,4 +1,5 @@
-import { type ReactNode, useMemo } from 'react';
+import { type CSSProperties, type ReactNode, useMemo } from 'react';
+import clsx from 'clsx';
 import { cssClasses, strings, type ChatMode } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import { getFileType } from '@fibrae/semi-ai-foundation/utils';
@@ -19,11 +20,13 @@ interface ChatBoxContentProps {
     message?: Message;
     customRenderFunc?: (props: RenderContentProps) => ReactNode;
     markdownRenderProps?: MarkdownRenderProps;
+    className?: string;
+    style?: CSSProperties;
 }
 
-export default function ChatBoxContent({ message = {}, customRenderFunc, role: roleInfo, customMarkDownComponents, mode, markdownRenderProps, escapeHtml }: ChatBoxContentProps) {
+export default function ChatBoxContent({ message = {}, customRenderFunc, role: roleInfo, customMarkDownComponents, mode, markdownRenderProps, escapeHtml, className, style }: ChatBoxContentProps) {
     const { content, role, status } = message;
-    const wrapCls = ChatFoundation.getContentClass(role, status, mode);
+    const wrapCls = clsx(ChatFoundation.getContentClass(role, status, mode), className);
     const markdownComponents = useMemo(() => ChatFoundation.mergeMarkdownComponents({ code: Code, SemiFile: FileAttachment, img: ImageAttachment }, customMarkDownComponents), [customMarkDownComponents]);
 
     const node = useMemo<ReactNode>(() => {
@@ -63,5 +66,9 @@ export default function ChatBoxContent({ message = {}, customRenderFunc, role: r
         });
     }
 
-    return <div className={wrapCls}>{node}</div>;
+    return (
+        <div className={wrapCls} style={style}>
+            {node}
+        </div>
+    );
 }

@@ -396,7 +396,7 @@
 <svelte:document onfocusin={(event) => foundation.handleDocumentFocusIn(event, root)} />
 
 {#snippet quickControls()}
-    <QuickControl {insetInput} locale={locale().locale} onPresetClick={foundation.handlePresetClick} {presetPosition} {presets} {type} />
+    <QuickControl class={classNames?.presets} {insetInput} locale={locale().locale} onPresetClick={foundation.handlePresetClick} {presetPosition} {presets} style={styles?.presets} {type} />
 {/snippet}
 
 {#snippet insetDateInputSnippet()}
@@ -453,6 +453,7 @@
                     <MonthsGrid
                         {autoSwitchDate}
                         bind:this={monthsGrid}
+                        {classNames}
                         {date}
                         {dateFnsLocale}
                         dateInput={insetInput ? insetDateInputSnippet : undefined}
@@ -481,6 +482,7 @@
                         selectionControlled={DatePickerFoundation.isSelectionControlled({ type, needConfirm, value })}
                         {startDateOffset}
                         {startYear}
+                        {styles}
                         {syncSwitchMonth}
                         {timePickerOpts}
                         timeZone={zone}
@@ -501,7 +503,7 @@
             {/if}
         </div>
         {#if confirmNeeded}
-            <Footer disabledConfirm={confirmDisabled} locale={locale().locale} onCancel={foundation.handleCancel} onConfirm={foundation.handleConfirm} />
+            <Footer class={classNames?.footer} disabledConfirm={confirmDisabled} locale={locale().locale} onCancel={foundation.handleCancel} onConfirm={foundation.handleConfirm} style={styles?.footer} />
         {/if}
     </div>
 {/snippet}
@@ -548,6 +550,7 @@
                         autofocus={states().autofocus}
                         bind:this={triggerInput}
                         borderless={isRangeType(type) ? false : borderless}
+                        {classNames}
                         {clearIcon}
                         controlAttrs={{
                             ...attrs.control,
@@ -561,9 +564,7 @@
                         {defaultPickerValue}
                         disabled={inputDisabled}
                         {format}
-                        inputClassName={classNames?.input}
                         inputReadOnly={inputReadOnly || Boolean(insetInput)}
-                        inputStyle={styles?.input}
                         inputValue={states().inputValue}
                         {insetLabel}
                         {insetLabelId}
@@ -581,6 +582,7 @@
                         {showClear}
                         showClearIgnoreDisabled={Boolean(insetInput)}
                         {size}
+                        {styles}
                         {type}
                         {validateStatus}
                         value={states().value}

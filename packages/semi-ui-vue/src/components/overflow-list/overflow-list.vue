@@ -149,13 +149,13 @@
         </template>
         <template v-else>
             <template v-for="(nodes, n) in [overflowNodes()]" :key="n">
-                <MeasuredBox v-if="props.collapseFrom === 'start' && nodes.length" :class="`${prefix}-overflow`" @resize="onOverflowResize">
+                <MeasuredBox v-if="props.collapseFrom === 'start' && nodes.length" :class="[`${prefix}-overflow`, props.classNames?.overflow]" :style="props.styles?.overflow" @resize="onOverflowResize">
                     <component :is="node" v-for="[node, key] in nodes" :key="key" />
                 </MeasuredBox>
-                <MeasuredBox v-for="entry in collapseItems" :key="entry.key ?? entry.index" :class="`${prefix}-item`" @resize="onItemResize($event, entry.key)">
+                <MeasuredBox v-for="entry in collapseItems" :key="entry.key ?? entry.index" :class="[`${prefix}-item`, props.classNames?.item]" :style="props.styles?.item" @resize="onItemResize($event, entry.key)">
                     <slot :index="entry.index" :item="entry.item" name="item" />
                 </MeasuredBox>
-                <MeasuredBox v-if="props.collapseFrom === 'end' && nodes.length" :class="`${prefix}-overflow`" @resize="onOverflowResize">
+                <MeasuredBox v-if="props.collapseFrom === 'end' && nodes.length" :class="[`${prefix}-overflow`, props.classNames?.overflow]" :style="props.styles?.overflow" @resize="onOverflowResize">
                     <component :is="node" v-for="[node, key] in nodes" :key="key" />
                 </MeasuredBox>
             </template>

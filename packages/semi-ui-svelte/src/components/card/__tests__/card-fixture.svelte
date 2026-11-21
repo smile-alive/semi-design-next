@@ -1,10 +1,10 @@
 <script lang="ts">
     import Card from '../card.svelte';
-    import type { CardProps } from '../interface';
+    import type { CardProps, MetaProps } from '../interface';
     import CardMeta from '../meta.svelte';
     import type { Parts } from './fixture-parts';
 
-    let { store }: { store: { props: CardProps; parts: Parts } } = $props();
+    let { store }: { store: { props: CardProps; parts: Parts; metaProps?: MetaProps } } = $props();
 </script>
 
 {#snippet titleNode()}<em>node title</em>{/snippet}
@@ -17,6 +17,7 @@
 {#snippet action1()}{@render actionNode(1)}{/snippet}
 {#snippet bodyNode()}<p>body</p>{/snippet}
 {#snippet metaDescription()}<span>description</span>{/snippet}
+{#snippet metaAvatar()}<span>avatar</span>{/snippet}
 
 <Card
     {...store.props}
@@ -31,6 +32,6 @@
         {@render bodyNode()}
     {/if}
     {#if store.parts.meta}
-        <CardMeta description={metaDescription} title="meta title" />
+        <CardMeta {...store.metaProps} avatar={store.parts.metaAvatar ? metaAvatar : undefined} description={metaDescription} title="meta title" />
     {/if}
 </Card>

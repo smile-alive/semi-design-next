@@ -347,6 +347,56 @@ describe('Svelte VideoPlayer', () => {
         expect(video.play).toHaveBeenCalledTimes(1);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['video', 'poster', 'playIcon', 'error', 'notification', 'controls', 'progress', 'progressBuffered', 'progressPlayed', 'progressHandle', 'time', 'volumeDropdown', 'dropdown'] as const;
+        const selectors: Record<(typeof parts)[number], string> = {
+            video: 'video',
+            poster: 'poster',
+            playIcon: 'pause',
+            error: 'error',
+            notification: 'notification',
+            controls: 'controls',
+            progress: 'progress',
+            progressBuffered: 'progress-slider-buffered',
+            progressPlayed: 'progress-slider-played',
+            progressHandle: 'progress-handle',
+            time: 'controls-time',
+            volumeDropdown: 'controls-popover',
+            // the menu surface inside the popup wrapper that carries `controls-popup-menu`
+            dropdown: 'controls-popup-menu .semi-dropdown',
+        };
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`]));
+        const expectPart = (part: (typeof parts)[number]) => {
+            const els = document.querySelectorAll(`.${prefixCls}-${selectors[part]}`);
+            expect(els.length).toBeGreaterThan(0);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+        const markers = [
+            { start: 0, title: 'a' },
+            { start: 20, title: 'b' },
+        ];
+        const { container, unmount } = renderPlayer({ classNames, defaultQuality: '1080p', markers, poster: 'https://example.com/p.png', qualityList: [{ label: '1080P', value: '1080p' }], styles });
+        const video = getVideo(container);
+        await loadDuration(video);
+        await mediaEvent(video, 'stalled');
+        expect(document.querySelectorAll(`.${prefixCls}-progress-slider-played`)).toHaveLength(2);
+        buttonWith(container, 'volume_2').focus();
+        await waitFor(() => expect(document.querySelector(`.${prefixCls}-controls-popover`)).toBeInTheDocument());
+        await openMenu(container, '1080P');
+        for (const part of parts.filter((p) => p !== 'error')) {
+            expectPart(part);
+        }
+        unmount();
+
+        const { container: errorContainer } = renderPlayer({ classNames, styles });
+        await mediaEvent(getVideo(errorContainer), 'error');
+        expectPart('error');
+    });
+
     it('卡顿通知在收到 progress 后消失', async () => {
         const { container } = renderPlayer();
         const video = getVideo(container);

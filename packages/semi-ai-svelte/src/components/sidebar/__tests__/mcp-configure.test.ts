@@ -449,3 +449,33 @@ describe('Svelte MCPConfigure 搜索', () => {
         expect(labels()).toEqual(['Mine', 'Other', 'Third']);
     });
 });
+
+describe('Svelte MCPConfigure classNames 与 styles', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'close', 'content', 'toolbar', 'count', 'search', 'list', 'item', 'itemIcon', 'itemTitle', 'itemDescription', 'itemAction'] as const;
+        const selectors = {
+            header: '.semi-sidebar-container-header',
+            title: '.semi-sidebar-container-header-title',
+            close: '.semi-sidebar-container-header-closeBtn',
+            content: '.semi-sidebar-container-content',
+            toolbar: `.${prefix}-header`,
+            count: `.${prefix}-header-count`,
+            search: `.${prefix}-search`,
+            list: `.${prefix}-item-container`,
+            item: `.${prefix}-item`,
+            itemIcon: `.${prefix}-item-sign`,
+            itemTitle: `.${prefix}-item-content-label`,
+            itemDescription: `.${prefix}-item-content-desc`,
+            itemAction: `.${prefix}-item-button`,
+        };
+        setup({
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+        });
+        for (const part of parts) {
+            const el = $(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+});

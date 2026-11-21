@@ -22,6 +22,8 @@
     // No fallback on `value`: a bound `undefined` (form reset) would throw with one
     let {
         value = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         count = defaults('count', 5),
         allowHalf = defaults('allowHalf', false),
         allowClear = defaults('allowClear', true),
@@ -170,6 +172,8 @@
         displayValue={states().hoverValue === undefined ? shown : states().hoverValue}
         firstTabStop={index === 0 && !onRadio}
         {index}
+        itemClass={classNames?.item}
+        itemStyle={styles?.item}
         onPick={(event) => foundation.handleClick(event, index)}
         onPreview={(event) => foundation.handleHover(event, index)}
         onRadioFocus={(event) => handleStarFocus(event, index)}
@@ -187,7 +191,7 @@
     {#each starIndexes as index (index)}
         <!-- Escape cannot hide the tip the rating drives, so closeOnEsc is off and the key goes on to the layer below -->
         {#if tooltips}
-            <Tooltip closeOnEsc={false} trigger="custom" visible={tipVisible(index)}>
+            <Tooltip class={[classNames?.dropdown]} closeOnEsc={false} style={styles?.dropdown} trigger="custom" visible={tipVisible(index)}>
                 {#snippet child({ props })}
                     {@render star(index, props)}
                 {/snippet}

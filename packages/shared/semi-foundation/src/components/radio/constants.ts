@@ -20,4 +20,7 @@ export const strings = {
 } as const;
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type RadioPart = 'addon';
+export type RadioPart = 'icon' | 'label' | 'extra';
+
+/** Keys of `RadioGroup`'s `classNames` and `styles`; `item*` keys apply to every Radio in the group */
+export type RadioGroupPart = 'item' | 'itemIcon' | 'itemLabel' | 'itemExtra';

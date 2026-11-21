@@ -6,6 +6,10 @@
                 "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
                 "en-US": "Id of the addon node, which aria-labelledby points to. Generated when omitted."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 icon（勾选框本体）、label（标签文字）、extra（补充说明），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by icon (the box), label (the label text) and extra (the supplementary text); values take any class binding and merge with the built-in classes."
+            },
             "defaultChecked": {
                 "zh-CN": "初始是否选中，非受控使用；在 CheckboxGroup 中使用时无效。",
                 "en-US": "Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup."
@@ -26,6 +30,10 @@
             "preventScroll": {
                 "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。",
                 "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the focus method."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
             },
             "type": {
                 "zh-CN": "样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。",
@@ -64,6 +72,10 @@
     "checkbox-group": {
         "source": "packages/semi-ui-vue/src/components/checkbox/checkbox-group.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 item（每个 Checkbox 的根元素）、itemIcon、itemLabel、itemExtra，作用于组内全部 Checkbox，值的写法同 class，与 Checkbox 自己的 classNames 合并，组的类名在前。",
+                "en-US": "Class names of the inner parts, keyed by item (the root of every Checkbox), itemIcon, itemLabel and itemExtra. They apply to every Checkbox in the group; values take any class binding and merge with each Checkbox's own classNames, the group's first."
+            },
             "defaultValue": {
                 "zh-CN": "非受控时组内默认选中的值，与 Checkbox 的 value 匹配。",
                 "en-US": "Values selected by default when uncontrolled, matched against each Checkbox's value."
@@ -84,6 +96,10 @@
             "options": {
                 "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style }`。",
                 "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style }`."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames，Checkbox 自己的 styles 后写。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; each Checkbox's own styles are applied after them."
             },
             "type": {
                 "zh-CN": "组内所有 Checkbox 的样式类型，可选 default、card、pureCard。",

@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性      | 说明                                                       | 类型                 | 默认值      |
-| --------- | ---------------------------------------------------------- | -------------------- | ----------- |
-| activeKey | 当前展开的代码面板 key，配合 v-model:activeKey 使用。      | `string \| string[]` | `undefined` |
-| codes     | 代码条目列表，每项为 CodeItem 的属性加用于标识面板的 key。 | `CodeItemData[]`     | `[]`        |
+| 属性       | 说明                                                                                                        | 类型                                                                                             | 默认值      |
+| ---------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------- |
+| activeKey  | 当前展开的代码面板 key，配合 v-model:activeKey 使用。                                                       | `string \| string[]`                                                                             | `undefined` |
+| classNames | 内部各部位的类名，键为 itemHeader、itemExpand，作用于每个代码面板，与组件自带的类名合并，值的写法同 class。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarCodeContentPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| codes      | 代码条目列表，每项为 CodeItem 的属性加用于标识面板的 key。                                                  | `CodeItemData[]`                                                                                 | `[]`        |
+| styles     | 内部各部位的内联样式，键同 classNames。                                                                     | <ApiType detail={"Partial\u003cRecord\u003cSidebarCodeContentPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

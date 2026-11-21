@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { cssClasses as css } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { cssClasses as css, type DropdownItemPart } from '@fibrae/semi-foundation/components/dropdown/constants';
 import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { IconTick } from '@fibrae/semi-icons-react';
 import type { ElementProps, BaseProps } from '../../base/index';
@@ -19,6 +19,8 @@ export interface DropdownItemProps extends BaseProps, ElementProps<'li'> {
     type?: Type;
     active?: boolean;
     icon?: React.ReactNode;
+    classNames?: Partial<Record<DropdownItemPart, string>>;
+    styles?: Partial<Record<DropdownItemPart, React.CSSProperties>>;
     showTick?: boolean;
     /** Attached to the li */
     ref?: React.Ref<HTMLLIElement>;
@@ -26,7 +28,7 @@ export interface DropdownItemProps extends BaseProps, ElementProps<'li'> {
 
 const prefixCls = css.PREFIX;
 
-function DropdownItem({ ref, children, disabled = false, className, forwardRef, type, active, icon, onClick, onMouseEnter, onMouseLeave, onContextMenu, onKeyDown, onMouseDown, showTick, ...rest }: DropdownItemProps) {
+function DropdownItem({ ref, children, disabled = false, className, style, classNames, styles, forwardRef, type, active, icon, onClick, onMouseEnter, onMouseLeave, onContextMenu, onKeyDown, onMouseDown, showTick, ...rest }: DropdownItemProps) {
     const context = useDropdownContext();
 
     let events: React.DOMAttributes<HTMLLIElement> = { onMouseDown };
@@ -36,13 +38,17 @@ function DropdownItem({ ref, children, disabled = false, className, forwardRef, 
     const realShowTick = context.showTick ?? showTick;
     const role = getItemRole(context.selectionMode, realShowTick);
 
-    const itemclass = clsx(className, {
-        [`${prefixCls}-item`]: true,
-        [`${prefixCls}-item-disabled`]: disabled,
-        [`${prefixCls}-item-withTick`]: realShowTick,
-        [`${prefixCls}-item-${type}`]: type,
-        [`${prefixCls}-item-active`]: active,
-    });
+    const itemclass = clsx(
+        className,
+        {
+            [`${prefixCls}-item`]: true,
+            [`${prefixCls}-item-disabled`]: disabled,
+            [`${prefixCls}-item-withTick`]: realShowTick,
+            [`${prefixCls}-item-${type}`]: type,
+            [`${prefixCls}-item-active`]: active,
+        },
+        context.classNames?.item
+    );
 
     if (!disabled) {
         events = { onMouseEnter, onMouseLeave, onContextMenu, onMouseDown };
@@ -74,9 +80,13 @@ function DropdownItem({ ref, children, disabled = false, className, forwardRef, 
     }
 
     return (
-        <li {...rest} aria-checked={role === 'menuitem' ? undefined : Boolean(active)} aria-disabled={disabled} role={role} tabIndex={-1} {...events} ref={itemRef} className={itemclass} onKeyDown={onKeyDown}>
+        <li {...rest} aria-checked={role === 'menuitem' ? undefined : Boolean(active)} aria-disabled={disabled} role={role} tabIndex={-1} {...events} ref={itemRef} className={itemclass} style={{ ...context.styles?.item, ...style }} onKeyDown={onKeyDown}>
             {tick}
-            {Boolean(icon) && <div className={`${prefixCls}-item-icon`}>{icon}</div>}
+            {Boolean(icon) && (
+                <div className={clsx(`${prefixCls}-item-icon`, context.classNames?.itemIcon, classNames?.icon)} style={{ ...context.styles?.itemIcon, ...styles?.icon }}>
+                    {icon}
+                </div>
+            )}
             {children}
         </li>
     );

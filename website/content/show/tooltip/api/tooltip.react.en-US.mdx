@@ -13,7 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
 | children | The trigger. Use a DOM element, or a function component that forwards its props and `ref` to its root DOM node. Text and other content is wrapped in a span that serves as the trigger. | `React.ReactNode` | - |
 | className | Class name of the popup. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed) and `arrow` (the default arrow, not applied to a custom arrow node); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTooltipPart, string>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click on the popup or anything inside it closes the popup. | `boolean` | - |
 | clickTriggerToHide | Whether a click on the trigger closes an open popup. | `boolean` | - |
 | closeOnEsc | Whether Esc closes the open popup. With `trigger` set to `custom`, only `onEscKeyDown` is called and the caller decides whether to close. | `boolean` | `true` |

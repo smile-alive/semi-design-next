@@ -70,6 +70,14 @@ describe('Svelte BackTop', () => {
         expect(getRoot(container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const { container } = setup({ classNames: { body: 'my-body' }, styles: { body: 'order: 1' }, visibilityHeight: -1 });
+        await frame();
+        const body = container.querySelector('.semi-backtop .semi-floatButton-body');
+        expect(body).toHaveClass('my-body');
+        expect(body).toHaveStyle({ order: '1' });
+    });
+
     it('窗口滚动超过 visibilityHeight 后显示，低于该值后隐藏', async () => {
         const { container } = setup();
         await frame();

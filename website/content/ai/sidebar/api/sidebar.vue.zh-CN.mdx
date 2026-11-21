@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | activeKey | 主视图中当前选中的选项 key，配合 v-model:activeKey 使用。 | `string` | `semiGlobalDefault("Sidebar", "activeKey")` |
+| classNames | 内部各部位的类名，键为 header、title、close、copy、content、options、option、mainContent，与组件自带的类名合并，值的写法同 class。详情视图下 header、title、close 落在详情头部，close 是返回主视图的按钮，copy 是复制内容的按钮。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Sidebar", "classNames")` |
 | closeOnEsc | 按下 Esc 键时是否触发 cancel。 | `boolean` | `semiGlobalDefault("Sidebar", "closeOnEsc")` |
 | defaultSize | 初始宽高，仅在 resizable 为 true 时生效。 | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Sidebar", "defaultSize")` |
 | detailContent | code 与 file 模式显示的条目，为 CodeItem 或 FileItem 的属性加 key；key 变化时重新挂载该条目。file 模式下其中的 editable 与 imgUploadProps 不生效，由 fileEditable 与 imgUploadProps 决定。 | `SideBarDetailContent` | `semiGlobalDefault("Sidebar", "detailContent")` |
@@ -17,6 +18,7 @@ import ApiType from '#/components/ApiType.astro';
 | options | 主视图顶部的选项按钮，每项包含 name 与 key；图标使用 optionIcon 插槽。 | `SideBarOption[]` | `semiGlobalDefault("Sidebar", "options")` |
 | resizable | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean` | `semiGlobalDefault("Sidebar", "resizable")` |
 | showClose | 是否显示头部的关闭按钮。 | `boolean` | `semiGlobalDefault("Sidebar", "showClose")` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Sidebar", "styles")` |
 | title | 主视图的纯文本标题；传入 title 插槽时以插槽为准。详情视图使用内置的详情头部。 | `string` | `semiGlobalDefault("Sidebar", "title")` |
 | visible | 是否显示，配合 v-model:visible 使用。 | `boolean` | `semiGlobalDefault("Sidebar", "visible")` |
 

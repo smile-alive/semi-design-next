@@ -4,7 +4,7 @@
     import type { MetaProps } from './interface.js';
 
     // A static subcomponent: it reads no global defaults, as in React.
-    const { title, avatar, description, ...rest }: MetaProps = $props();
+    const { classNames, styles, title, avatar, description, ...rest }: MetaProps = $props();
 
     const prefixCls = cssClasses.PREFIX;
     const hasTitle = $derived(typeof title === 'function' || Boolean(title));
@@ -12,12 +12,12 @@
 
 <div {...rest} class={[`${prefixCls}-meta`, rest.class]}>
     {#if avatar}
-        <div class={`${prefixCls}-meta-avatar`}>{@render avatar()}</div>
+        <div class={[`${prefixCls}-meta-avatar`, classNames?.avatar]} style={styles?.avatar}>{@render avatar()}</div>
     {/if}
     {#if hasTitle || description}
-        <div class={`${prefixCls}-meta-wrapper`}>
+        <div class={[`${prefixCls}-meta-wrapper`, classNames?.section]} style={styles?.section}>
             {#if hasTitle}
-                <div class={`${prefixCls}-meta-wrapper-title`}>
+                <div class={[`${prefixCls}-meta-wrapper-title`, classNames?.title]} style={styles?.title}>
                     {#if typeof title === 'function'}
                         {@render title()}
                     {:else}
@@ -26,7 +26,7 @@
                 </div>
             {/if}
             {#if description}
-                <div class={`${prefixCls}-meta-wrapper-description`}>{@render description()}</div>
+                <div class={[`${prefixCls}-meta-wrapper-description`, classNames?.description]} style={styles?.description}>{@render description()}</div>
             {/if}
         </div>
     {/if}

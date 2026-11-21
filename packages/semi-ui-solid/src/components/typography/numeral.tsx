@@ -1,4 +1,5 @@
 import { type JSX, children, createMemo, splitProps } from 'solid-js';
+import type { TypographyNumeralPart } from '@fibrae/semi-foundation/components/typography/constants';
 import FormatNumeral from '@fibrae/semi-foundation/components/typography/format-numeral';
 import type { ElementProps } from '../../base/index';
 import Base, { type BaseTypographyProps } from './base';
@@ -11,6 +12,8 @@ export interface NumeralProps extends ElementProps<'span', OmitTypographyProps>,
     parser?: (value: string) => string;
     code?: boolean;
     icon?: TypographyIcon;
+    classNames?: Partial<Record<TypographyNumeralPart, string>>;
+    styles?: Partial<Record<TypographyNumeralPart, JSX.CSSProperties | string>>;
     size?: TypographyBaseSize;
 }
 

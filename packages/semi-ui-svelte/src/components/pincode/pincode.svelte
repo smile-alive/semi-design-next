@@ -17,7 +17,22 @@
     const defaults = useDefaultProps('PinCode');
 
     // No fallback on `value`: a bound `undefined` (form reset) would throw with one
-    let { value = $bindable(), count = defaults('count', 6), format = defaults('format', 'number'), autofocus = defaults('autofocus', false), disabled = defaults('disabled'), size = defaults('size'), validateStatus = defaults('validateStatus'), onChange, onComplete, onFocus, onBlur, ...rest }: PinCodeProps = $props();
+    let {
+        value = $bindable(),
+        count = defaults('count', 6),
+        format = defaults('format', 'number'),
+        autofocus = defaults('autofocus', false),
+        disabled = defaults('disabled'),
+        size = defaults('size'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
+        validateStatus = defaults('validateStatus'),
+        onChange,
+        onComplete,
+        onFocus,
+        onBlur,
+        ...rest
+    }: PinCodeProps = $props();
 
     const locale = useLocale('PinCode');
     const config = getConfigContext();
@@ -108,11 +123,13 @@
             autofocus={autofocus && index === 0}
             bind:this={inputs[index]}
             bind:value={() => states().valueList[index] ?? '', () => {}}
+            class={classNames?.input}
             composition
             {disabled}
             inputmode={format === 'number' ? 'numeric' : 'text'}
             showClear={false}
             {size}
+            style={styles?.input}
             {validateStatus}
             {...cellAttrs(index)}
             onChange={(text, event) => handleCellChange(index, text, event)}

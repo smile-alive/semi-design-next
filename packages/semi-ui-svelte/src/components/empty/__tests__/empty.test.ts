@@ -67,6 +67,23 @@ describe('Svelte Empty', () => {
         expect(image).toHaveClass('my-image');
         expect(image).toHaveStyle({ order: '3' });
         expect(root()).not.toHaveClass('my-image');
+
+        const parts = ['image', 'title', 'description', 'footer'] as const;
+        const all = setup({
+            props: {
+                image: 'abc',
+                title: 't',
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p, i) => [p, `order: ${i + 1}`])),
+            },
+            description: true,
+            footer: true,
+        });
+        for (const [index, part] of parts.entries()) {
+            const el = all.root()?.querySelector(`.semi-empty-${part}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(index + 1) });
+        }
     });
 
     it('image 的 snippet、URL 与 styles.image', () => {

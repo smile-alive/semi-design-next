@@ -114,7 +114,7 @@ export default function ImagePreview(rawProps: PreviewProps) {
             <div {...rest} ref={untrack(() => mergeRefs(local.ref, (node: HTMLDivElement) => (group = node)))} role={namedRole(rest)} class={clsx(`${prefixCls}-preview-group`, local.class)} style={local.style}>
                 {local.children}
             </div>
-            <PreviewInner {...inner} class={local.classNames?.preview} style={local.styles?.preview} currentIndex={currentIndex()} src={list().srcList} visible={visible()} onVisibleChange={foundation.handleVisibleChange} />
+            <PreviewInner {...inner} classNames={local.classNames} styles={local.styles} currentIndex={currentIndex()} src={list().srcList} visible={visible()} onVisibleChange={foundation.handleVisibleChange} />
         </PreviewContext.Provider>
     );
 }

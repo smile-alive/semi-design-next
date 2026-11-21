@@ -1,4 +1,6 @@
 import type { Snippet } from 'svelte';
+import type { ClassValue } from 'svelte/elements';
+import type { UserGuidePart } from '@fibrae/semi-foundation/components/user-guide/constants';
 import type { ButtonProps } from '../button/index.js';
 import type { Position } from '../tooltip/index.js';
 
@@ -34,6 +36,8 @@ export interface UserGuideProps {
     class?: string;
     /** On the Popover card or the Modal's outer element */
     style?: string;
+    classNames?: Partial<Record<UserGuidePart, ClassValue>>;
+    styles?: Partial<Record<UserGuidePart, string>>;
     /** Bindable. Undefined lets the component keep it; a bound or function-bound value makes the guide follow it. */
     current?: number;
     finishText?: string;

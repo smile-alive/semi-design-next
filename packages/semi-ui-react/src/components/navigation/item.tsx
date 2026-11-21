@@ -2,7 +2,7 @@ import type React from 'react';
 import { isValidElement } from 'react';
 import clsx from 'clsx';
 import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+import { cssClasses, strings, type NavItemPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
 import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils';
@@ -21,6 +21,7 @@ type Adapter = ItemAdapter<FoundationProps>;
 const clsPrefix = `${cssClasses.PREFIX}-item`;
 const dropdownItemPrefix = `${dropdownClasses.PREFIX}-item`;
 export interface NavItemProps extends ItemProps, Omit<BaseProps, 'children'>, ElementProps<'li', 'onClick' | 'children'> {
+    classNames?: Partial<Record<NavItemPart, string>>;
     disabled?: boolean;
     forwardRef?: (ele: HTMLLIElement) => void;
     icon?: React.ReactNode;
@@ -28,6 +29,7 @@ export interface NavItemProps extends ItemProps, Omit<BaseProps, 'children'>, El
     level?: number;
     link?: string;
     linkOptions?: React.AnchorHTMLAttributes<HTMLAnchorElement>;
+    styles?: Partial<Record<NavItemPart, React.CSSProperties>>;
     tabIndex?: number;
     text?: React.ReactNode;
     toggleIcon?: React.ReactNode;
@@ -61,7 +63,31 @@ interface NavItemShellProps extends NavItemProps {
 type FoundationProps = NavItemProps & { itemConfig?: NavItemType };
 
 export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...props }: NavItemShellProps): React.ReactNode {
-    const { text, icon: rawIcon, toggleIcon: rawToggleIcon, className, isSubNav = false, style, indent = false, onMouseEnter, onMouseLeave, link, linkOptions, disabled = false, level = 0, tabIndex, itemKey, isCollapsed: isCollapsedProp, forwardRef, onClick, tooltipHideDelay, tooltipShowDelay, ...rest } = props;
+    const {
+        text,
+        icon: rawIcon,
+        toggleIcon: rawToggleIcon,
+        className,
+        classNames,
+        isSubNav = false,
+        style,
+        styles,
+        indent = false,
+        onMouseEnter,
+        onMouseLeave,
+        link,
+        linkOptions,
+        disabled = false,
+        level = 0,
+        tabIndex,
+        itemKey,
+        isCollapsed: isCollapsedProp,
+        forwardRef,
+        onClick,
+        tooltipHideDelay,
+        tooltipShowDelay,
+        ...rest
+    } = props;
 
     const context = useNavContext();
     const icon = useUnwrappedLazy(rawIcon);
@@ -89,7 +115,11 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
         context
     );
 
-    const { mode, isInSubNav, limitIndent, toggleIconPosition, renderWrapper } = context;
+    const { mode, isInSubNav, limitIndent, toggleIconPosition, renderWrapper, classNames: navClassNames, styles: navStyles } = context;
+
+    // a sub nav styles its own root (subNav), so only a leaf item takes the item part
+    const itemPartCls = isSubNav ? undefined : navClassNames?.item;
+    const rootStyle = isSubNav ? style : { ...navStyles?.item, ...style };
     const isCollapsed = isCollapsedProp || Boolean(context.isCollapsed);
     const selected = Boolean(context.selectedKeys?.includes(itemKey));
     const setItemRef = useMergedRef(forwardRef, ref);
@@ -97,7 +127,8 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
 
     const handleClick = (e: React.MouseEvent) => foundation.handleClick(e.nativeEvent);
 
-    const renderIcon = (iconNode: React.ReactNode, pos: string, isToggleIcon: boolean, key: number | string) => {
+    // the blank indent slots are not the icon, so they take no icon part
+    const renderIcon = (iconNode: React.ReactNode, pos: string, isToggleIcon: boolean, key: number | string, isPlaceholder = false) => {
         if (isSubNav) {
             return null;
         }
@@ -108,13 +139,18 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
 
         const iconSize = pos === strings.ICON_POS_RIGHT ? 'default' : 'large';
 
-        const iconCls = clsx(`${clsPrefix}-icon`, {
-            [`${clsPrefix}-icon-toggle-${toggleIconPosition}`]: isToggleIcon,
-            [`${clsPrefix}-icon-info`]: !isToggleIcon,
-        });
+        const iconCls = clsx(
+            `${clsPrefix}-icon`,
+            {
+                [`${clsPrefix}-icon-toggle-${toggleIconPosition}`]: isToggleIcon,
+                [`${clsPrefix}-icon-info`]: !isToggleIcon,
+            },
+            !isPlaceholder && (isToggleIcon ? [navClassNames?.itemToggleIcon, classNames?.toggleIcon] : [navClassNames?.itemIcon, classNames?.icon])
+        );
+        const iconStyle = isPlaceholder ? undefined : isToggleIcon ? { ...navStyles?.itemToggleIcon, ...styles?.toggleIcon } : { ...navStyles?.itemIcon, ...styles?.icon };
 
         return (
-            <i key={key} className={iconCls}>
+            <i key={key} className={iconCls} style={iconStyle}>
                 {fitNavIcon(iconNode, iconSize)}
             </i>
         );
@@ -123,13 +159,19 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
     if (itemContent != null) {
         itemChildren = itemContent;
     } else {
-        const placeholderIcons = Array.from({ length: countPlaceholderIcons({ mode, limitIndent, isCollapsed, hasIcon: Boolean(icon), indent, level }) }, (_, index) => renderIcon(null, strings.ICON_POS_RIGHT, false, index));
+        const placeholderIcons = Array.from({ length: countPlaceholderIcons({ mode, limitIndent, isCollapsed, hasIcon: Boolean(icon), indent, level }) }, (_, index) => renderIcon(null, strings.ICON_POS_RIGHT, false, index, true));
         itemChildren = (
             <>
                 {placeholderIcons}
                 {toggleIconPosition === strings.TOGGLE_ICON_LEFT && renderIcon(toggleIcon, strings.ICON_POS_RIGHT, true, 'key-toggle-pos-right')}
                 {Boolean(icon || indent || isInSubNav) && renderIcon(icon, strings.ICON_POS_LEFT, false, 'key-position-left')}
-                {text != null ? <span className={`${cssClasses.PREFIX}-item-text`}>{text}</span> : ''}
+                {text != null ? (
+                    <span className={clsx(`${cssClasses.PREFIX}-item-text`, navClassNames?.itemText, classNames?.text)} style={{ ...navStyles?.itemText, ...styles?.text }}>
+                        {text}
+                    </span>
+                ) : (
+                    ''
+                )}
                 {toggleIconPosition === strings.TOGGLE_ICON_RIGHT && renderIcon(toggleIcon, strings.ICON_POS_RIGHT, true, 'key-toggle-pos-right')}
             </>
         );
@@ -146,14 +188,14 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
             <li
                 {...rest}
                 ref={setItemRef}
-                className={clsx(className, clsPrefix, `${clsPrefix}-sub`, dropdownItemPrefix, {
+                className={clsx(itemPartCls, className, clsPrefix, `${clsPrefix}-sub`, dropdownItemPrefix, {
                     [`${clsPrefix}-selected`]: selected,
                     [`${clsPrefix}-collapsed`]: isCollapsed,
                     [`${clsPrefix}-disabled`]: disabled,
                     [`${dropdownItemPrefix}-disabled`]: disabled,
                     [`${dropdownItemPrefix}-active`]: selected,
                 })}
-                style={style}
+                style={rootStyle}
                 role="none"
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
@@ -182,7 +224,19 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
         };
 
         itemDom = (
-            <Dropdown.Item {...rest} ref={ref} className={clsx(className, popoverItemCls)} style={style} aria-current={selected && !isSubNav ? 'page' : undefined} disabled={disabled} active={selected} forwardRef={forwardRef} onClick={handlePopupClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+            <Dropdown.Item
+                {...rest}
+                ref={ref}
+                className={clsx(itemPartCls, className, popoverItemCls)}
+                style={rootStyle}
+                aria-current={selected && !isSubNav ? 'page' : undefined}
+                disabled={disabled}
+                active={selected}
+                forwardRef={forwardRef}
+                onClick={handlePopupClick}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+            >
                 {/* the li is the menuitem, so the link inside is not a focus target of its own */}
                 {hasLink ? (
                     <a tabIndex={-1} href={link} {...linkOptions} className={clsx(`${cssClasses.PREFIX}-item-link`, linkOptions?.className)}>
@@ -194,7 +248,7 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
             </Dropdown.Item>
         );
     } else {
-        const itemCls = clsx(`${className || `${clsPrefix}-normal`}`, {
+        const itemCls = clsx(itemPartCls, `${className || `${clsPrefix}-normal`}`, {
             [clsPrefix]: true,
             [`${clsPrefix}-sub`]: isSubNav,
             [`${clsPrefix}-selected`]: selected && !isSubNav,
@@ -248,7 +302,7 @@ export function NavItemShell({ ref, itemContent, wrapperProps, itemConfig, ...pr
         }
 
         itemDom = (
-            <li {...liProps} ref={setItemRef} className={itemCls} style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+            <li {...liProps} ref={setItemRef} className={itemCls} style={rootStyle} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
                 {content}
             </li>
         );

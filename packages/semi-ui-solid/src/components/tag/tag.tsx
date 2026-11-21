@@ -27,7 +27,7 @@ const defaultProps = {
 
 export default function Tag(rawProps: TagProps) {
     const props = useDefaultProps('Tag', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['tagKey', 'children', 'size', 'color', 'closable', 'visible', 'onClose', 'onClick', 'onKeyDown', 'class', 'type', 'shape', 'avatarSrc', 'avatarShape', 'tabIndex', 'prefixIcon', 'suffixIcon', 'colorful', 'gradient']);
+    const [local, rest] = splitProps(props, ['tagKey', 'children', 'size', 'color', 'closable', 'visible', 'onClose', 'onClick', 'onKeyDown', 'class', 'classNames', 'styles', 'type', 'shape', 'avatarSrc', 'avatarShape', 'tabIndex', 'prefixIcon', 'suffixIcon', 'colorful', 'gradient']);
 
     const locale = useLocale('Tag');
 
@@ -124,18 +124,24 @@ export default function Tag(rawProps: TagProps) {
             onKeyDown={handleKeyDown}
         >
             <Show when={hasContent(prefixIcon())}>
-                <div class={`${prefixCls}-prefix-icon`}>{prefixIcon()}</div>
+                <div class={clsx(`${prefixCls}-prefix-icon`, local.classNames?.prefix)} style={local.styles?.prefix}>
+                    {prefixIcon()}
+                </div>
             </Show>
             <Show when={local.avatarSrc}>
-                <Avatar alt="" shape={local.avatarShape} src={local.avatarSrc} />
+                <Avatar alt="" class={local.classNames?.avatar} shape={local.avatarShape} src={local.avatarSrc} style={local.styles?.avatar} />
             </Show>
-            <div class={clsx(`${prefixCls}-content`, `${prefixCls}-content-${text() === undefined ? 'center' : 'ellipsis'}`)}>{resolved()}</div>
+            <div class={clsx(`${prefixCls}-content`, `${prefixCls}-content-${text() === undefined ? 'center' : 'ellipsis'}`, local.classNames?.content)} style={local.styles?.content}>
+                {resolved()}
+            </div>
             <Show when={hasContent(suffixIcon())}>
-                <div class={`${prefixCls}-suffix-icon`}>{suffixIcon()}</div>
+                <div class={clsx(`${prefixCls}-suffix-icon`, local.classNames?.suffix)} style={local.styles?.suffix}>
+                    {suffixIcon()}
+                </div>
             </Show>
             <Show when={local.closable}>
                 {/* a pointer shortcut only: keyboard users close with Backspace / Delete and the label says Closable. A native listener so stopPropagation also keeps the click from the tag's own and its trigger's handlers */}
-                <div class={`${prefixCls}-close`} aria-hidden="true" on:click={close}>
+                <div class={clsx(`${prefixCls}-close`, local.classNames?.close)} style={local.styles?.close} aria-hidden="true" on:click={close}>
                     <IconClose size="small" />
                 </div>
             </Show>

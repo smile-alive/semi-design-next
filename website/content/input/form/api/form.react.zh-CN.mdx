@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoScrollToError | 提交或调用 `formApi.validate()` 校验失败时，是否自动滚动到出错的字段；传对象时作为 scroll-into-view-if-needed 的选项。 | `boolean \| ScrollIntoViewOptions` | `false` |
 | children | 表单内容。传入函数时，参数为 `{ formState, values, formApi }`，用于声明表单控件。 | <ApiType detail={"React.ReactNode \u007c ((internalProps: FormFCChild\u003cValues, Output>) => React.ReactNode)"}>Type</ApiType> | - |
 | className | form 元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `label`、`labelText`、`labelExtra`、`labelTooltip`、`content`、`help`、`extra`，作用到表单内全部字段的标签、内容区、帮助文字与附加说明，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cFormPart, string>>"}>Type</ApiType> | - |
 | component | 用于声明表单控件的组件，以 `formState`、`values`、`formApi` 作为 props 渲染；不可与 `render`、`children` 同时使用。 | <ApiType detail={"React.ComponentType\u003cany>"}>Type</ApiType> | - |
 | disabled | 统一应用在每个字段上的 disabled，字段自身的 disabled 优先。 | `boolean` | - |
 | extraTextPosition | 统一应用在每个字段上的 extraText 位置，`middle` 在 Label 与控件之间，`bottom` 在控件之后。未设置时为 `bottom`，字段上的同名属性优先。 | `'bottom' \| 'middle'` | - |
@@ -37,6 +38,7 @@ import ApiType from '#/components/ApiType.astro';
 | stopPropagation | 是否阻止 submit、reset 事件冒泡，可传 `{ submit, reset }` 分别设置，用于嵌套 Form 时避免触发外层 Form 的事件。未设置时不阻止冒泡。 | `{ submit?: boolean; reset?: boolean; }` | - |
 | stopValidateWithError | 使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。 | `boolean` | - |
 | style | form 元素的内联样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cFormPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | trigger | 统一应用在每个字段上的校验时机，可选 `change`、`blur`、`mount`、`custom` 或其数组。字段上的同名属性优先。 | `FieldValidateTriggerType` | - |
 | validator | Form 级别的校验函数，submit 与 `formApi.validate()` 时调用，可返回 Promise，与 `schema` 互斥。设置后字段自身的 validator 与 rules 不再生效。返回空值或空对象表示通过，失败时返回与 values 结构相同的错误对象，每个错误是字符串或字符串数组。 | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | - |
 | wrapperCol | 统一应用在每个字段上的控件栅格布局，同 Col 的 span、offset 等属性，需与 labelCol 一起设置。 | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |

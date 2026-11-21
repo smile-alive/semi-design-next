@@ -1,5 +1,6 @@
 import type { ClassValue, StyleValue, VNode } from 'vue';
 import type { Locale as DateFnsLocale } from 'date-fns';
+import type { DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { DisabledTimeType, PresetType, Type, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInputValue, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { FocusRecords, MonthDayInfo } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
@@ -54,6 +55,8 @@ export interface DatePickerQuickControlEmits {
 }
 
 export interface DatePickerMonthProps {
+    classNames?: Partial<Record<DatePickerPart, ClassValue>>;
+    styles?: Partial<Record<DatePickerPart, StyleValue>>;
     month: Date;
     weekStartsOn: WeekStartNumber;
     locale: DatePickerLocale;
@@ -120,6 +123,8 @@ export interface DatePickerYearAndMonthHandle {
 }
 
 export interface DatePickerMonthsGridProps {
+    classNames?: Partial<Record<DatePickerPart, ClassValue>>;
+    styles?: Partial<Record<DatePickerPart, StyleValue>>;
     type: Type;
     locale: DatePickerLocale;
     dateFnsLocale?: DateFnsLocale;
@@ -197,8 +202,8 @@ export interface DatePickerDateInputProps {
     showClear?: boolean;
     showClearIgnoreDisabled?: boolean;
     inputReadOnly?: boolean;
-    inputClassName?: ClassValue;
-    inputStyle?: StyleValue;
+    classNames?: Partial<Record<DatePickerPart, ClassValue>>;
+    styles?: Partial<Record<DatePickerPart, StyleValue>>;
     insetLabelId?: string;
     validateStatus?: ValidateStatus;
     borderless?: boolean;

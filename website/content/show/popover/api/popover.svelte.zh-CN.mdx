@@ -13,7 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
 | child | 直接渲染触发元素的 snippet，参数 `{ props }` 必须整体展开到触发元素上；传了 `child` 时 `children` 不再生效。 | `TooltipProps['child']` | - |
 | children | 触发元素的 snippet，会被包进 Tooltip 自己的 span，由该 span 接收触发属性。 | `TooltipProps['children']` | - |
-| class | 弹出层的类名。 | `string` | - |
+| class | 弹出层的类名。 | `ClassValue` | - |
 | classNames | 内部各部位的类名，键为 `content`（内容卡片）、`arrow`（箭头），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cPopoverPart, ClassValue>>"}>Type</ApiType> | - |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭弹出层。 | `boolean` | - |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只调用 onEscKeyDown，由使用方决定是否关闭。 | `boolean` | `true` |

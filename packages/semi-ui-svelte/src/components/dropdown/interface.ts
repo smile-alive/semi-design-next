@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
-import type { DropdownPart } from '@fibrae/semi-foundation/components/dropdown/constants';
+import type { DropdownItemPart, DropdownPart } from '@fibrae/semi-foundation/components/dropdown/constants';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import type { TooltipProps, TooltipTriggerProps } from '../tooltip/index.js';
 
@@ -61,6 +61,8 @@ export interface DropdownItemProps extends HTMLAttributes<HTMLLIElement> {
     showTick?: boolean;
     type?: 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';
     icon?: Snippet;
+    classNames?: Partial<Record<DropdownItemPart, ClassValue>>;
+    styles?: Partial<Record<DropdownItemPart, string>>;
 }
 
 export interface DropdownTitleProps extends HTMLAttributes<HTMLLIElement> {}

@@ -62,6 +62,7 @@
 - Svelte：RadioGroup、PinCode、Slider、InputGroup、TagInput 上传的 `onfocusin`、`onfocusout`、`onmouseenter`、`onmouseleave` 与组件自身的处理同时生效，不再被覆盖。
 - 破坏性（类型）：Semi 组件之间传递的内部属性移出公开 Props 类型，API 表不再列出。React 与 Solid：TextArea 的 `disabledEnterStartNewLine`，Input（及继承它的 InputNumber）的 `showClearIgnoreDisabled`，OverflowList 的 `overflowRenderDirection`，FormErrorMessage 的 `errorMessageId`、`helpTextId`、`isInInputGroup`；React 另有 Breadcrumb.Item 的 `active`、`shouldRenderSeparator`、`route`，Select.Option 的 `current`；Solid 另有 ScrollList 的 `x-semi-header-alias`、`x-semi-footer-alias`。React 删除 Tooltip、Popover、Dropdown（及继承它的 AIChatInput `Mcp`）、Popconfirm、Button、Row、Col、Layout、Layout.Sider、Skeleton 各子组件、InputNumber、Rating、Steps、TimePicker、ScrollList、Table 的 `prefixCls`，类名固定为组件默认前缀，自定义前缀改用构建插件的 `prefixCls`。React 另删 Radio、RadioGroup、Checkbox、CheckboxGroup、DatePicker 与 Steps 各子项的 `prefixCls`；Radio、Checkbox 不再读全局默认值里的 `prefixCls`，foundation 的 Radio、Checkbox、DatePicker 类型随之去掉该字段。Solid 删除 Row、Col、Layout 及其 Header、Footer、Content、Sider、Skeleton 各子组件、InputNumber、Rating、Radio、RadioGroup、Checkbox、CheckboxGroup、DatePicker、TimePicker、Popover、Popconfirm、Dropdown、ScrollList、Table、Steps 及各 Step 的 `prefixCls`，Tooltip 的 `prefixCls` 拆入 `TooltipInternalProps`，由 Popover、Dropdown 使用。Vue 与 Svelte 删除 Row、Col、Layout 及其各部件、Skeleton 各子组件、Steps、Rating、Table、Radio、RadioGroup、Checkbox、CheckboxGroup、Popover、Popconfirm、Dropdown、Tooltip 的 `prefixCls`（Vue 另删 Select.Option 的），Popover、Dropdown 给 Tooltip 的前缀改经内部 context 传入（Vue 的 AutoComplete 给 Select.Option 同理）。四个图标包的 `Icon` 删除 `prefixCls`，类名前缀固定为 `semi`。
 - 破坏性：删除 React、Solid 的 Input（及 InputNumber）的 `onlyBorder` 与 `semi-input-only_border` 类名；各框架删除 ScrollList.Item 的 `type`（`onSelect` 的参数不再带 `type`），删除 Layout.Header、Layout.Footer、Layout.Content 的 `type`。React 的 Cascader、Image、UserGuide 的 Props 类型去掉未渲染的 `children`。Solid 的 TimePicker、PinCode 在类型中声明 `autofocus`。
+- 所有带内部元素的组件都支持 `classNames`、`styles`，按部位名设置内部元素的类名与内联样式，部位清单见各组件 API 文档中 `classNames` 的说明。复合组件的父组件用 `item` 开头的键作用到全部子项（如 Collapse 的 `itemHeader`），子项组件自己的 `classNames` 用不带前缀的键（如 `Collapse.Panel` 的 `header`），写在父级之后。
 
 ### 构建与宿主
 
@@ -153,6 +154,7 @@
 
 ### Banner
 
+- 新增 `classNames`、`styles` 部位：`icon`、`title`、`description`、`close`、`extra`。
 - 破坏性：根元素不再固定 `role="alert"`，默认不设 `role`，传入的 `role` 落在根元素上。依赖读屏立即播报的场景要自己传 `role="alert"`。
 - 删除已废弃的 `target` 属性，传入时作为未声明属性落到根 DOM。
 - Vue：`onClose` 改为 `close` 事件；没有 `showIcon`、`closable`，用 `#icon`、`#closeIcon`、`#title`、`#description` 插槽，`#icon`、`#closeIcon` 为空时不显示图标或关闭按钮。
@@ -161,6 +163,7 @@
 
 ### Input、TextArea
 
+- 新增 `classNames`、`styles` 部位：Input 为 `prefix`、`suffix`、`clear`、`visibilityToggle`、`addonBefore`、`addonAfter`；TextArea 为 `clear`、`counter`。
 - 破坏性：Input 删除 `inputStyle`，改用 `classNames.input`、`styles.input`，落在原生 input；TextArea 删除 `textareaStyle`、`lineNumberClassName`、`lineNumberStyle`，改用 `classNames`、`styles` 的 `textarea`、`lineNumber` 键，`styles.textarea` 与 `autosize`、`resize`、`rows` 产生的尺寸样式冲突时以后者为准。
 - 破坏性：ref 改为 `InputHandle { focus, blur, select, setSelectionRange, input, nativeElement }` 与 `TextAreaHandle`（以 `textarea` 替代 `input`），原生节点读 `ref.current.input` 或 `ref.current.textarea`。
 - `onEnterPress` 改在 `keydown` 触发，不再声明 `onKeyPress`，TextArea 删除从未生效的 `onPressEnter`。清除按钮改为原生 `button`，删除类名 `semi-input-clearbtn-hidden`；`readonly` 时不显示清除按钮。
@@ -195,6 +198,7 @@
 
 ### InputNumber
 
+- 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`clear`、`addonBefore`、`addonAfter`（转发到内层 Input 的同名部位）、`actions`、`upButton`、`downButton`（落在步进按钮组及上下按钮上）。
 - 破坏性：删除 `inputStyle`，改用 `classNames.input`、`styles.input`，落在内部原生 input。
 - 破坏性：ref 改为 `InputNumberHandle`（形状同 `InputHandle`）。`localeCode` 与 `currency={true}` 的货币优先级为「自身属性 > 全局 `overrideDefaultProps.InputNumber` > 语言包」。
 - 挂载和 `value` 变化从不触发 `onChange`、`onNumberChange`，FormInputNumber 不再在挂载时被标为 touched。
@@ -210,6 +214,8 @@
 
 ### DatePicker
 
+- 新增 `classNames`、`styles` 部位：`suffix`、`clear`、`separator`、`header`、`body`、`item`、`presets`、`switch`、`footer`。单输入框的 `suffix`、`clear` 落在内部 Input 的对应部位，范围输入落在 DatePicker 自己渲染的元素；范围类型下 `header`、`body` 在左右两个面板上都有。
+- 破坏性：`triggerRender` 收到的 props 中 `inputClassName`、`inputStyle` 改为 `classNames`、`styles`。
 - 破坏性：删除 `dropdownClassName`、`dropdownStyle`、`inputStyle`，改用 `classNames`、`styles` 的 `dropdown`（面板）、`input`（输入框外层，范围模式下两个输入框都有）键。
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`dropdownMargin`，面板在 top layer。ref 改为 `DatePickerHandle { open, close, focus, blur }`，删除 `BaseDatePicker` 导出；受控 `open` 时 `open()`、`close()` 不改变可见性。
 - 破坏性：删除 `onChangeWithDateFirst`，`onChange` 固定为 `(date, dateString)`；React 删除 `locale`、`localeCode`、`dateFnsLocale` 属性，改经 `LocaleProvider`、`ConfigProvider` 设置。
@@ -246,6 +252,7 @@
 
 ### Tooltip、Popover
 
+- Tooltip 新增 `classNames`、`styles` 部位 `arrow`，落在默认箭头 `.semi-tooltip-icon-arrow` 上。
 - 破坏性：Popover 删除 `contentClassName`、`arrowStyle`，改用 `classNames`、`styles` 的 `content`（内容卡片）、`arrow` 键，`styles.arrow` 仍是 `borderColor`、`backgroundColor`、`borderOpacity` 这组箭头颜色；Tooltip 删除 `wrapperClassName`，改用 `classNames.wrapper`，新增 `styles.wrapper`，作用在触发元素被包裹时的 span 上。
 - 破坏性：弹层改用 Popover API 进入 top layer，Portal 到触发元素所在根节点，不受祖先 `overflow`、`transform`、`z-index` 影响，也不在触发元素 DOM 内。位置按视口计算，`x-placement` 是自动翻转后的方位；放得下视口的弹层夹在视口内，触发器滚出或被裁出可见区域时弹层隐藏；打开期间随滚动、窗口 resize、触发器或弹层的尺寸变化重新定位，只随触发器所在区域的滚动重算，同一帧内的多个弹层一起重算；触发器只因别处布局变化而移动时也会跟随，但晚一帧。Tooltip、Popover、Dropdown 与 Select 的 ref 都提供 `rePosition()`（Popover 的 `PopoverHandle` 为新增），立即按触发器当前位置重新定位，一般无需调用。Tooltip 左右两侧边角方位（`leftTop`、`leftBottom`、`rightTop`、`rightBottom`）的箭头离弹层角 1px 更远，与 Popover 和上下方位一致，`arrowPointAtCenter` 时正对触发器中心。
 - 新增：页面有固定顶栏时，在 `:root` 上设 CSS 变量 `--semi-tooltip-viewport-inset-top`（顶栏高度，可写 `calc()`、`var()`），所有基于 Tooltip 的弹层把视口顶部这一段当作不可用：翻转与夹取都避开它，触发器整个落在顶栏下方时弹层隐藏。top layer 不受 `z-index` 影响，顶栏无法靠层级盖住弹层。打开时读取一次，打开期间修改要到下次打开才生效。
@@ -283,6 +290,7 @@
 
 ### Modal、SideSheet
 
+- 新增 `classNames`、`styles` 部位：Modal 为 `title`、`icon`（标题前的图标容器）、`close`（右上角关闭按钮），SideSheet 为 `title`、`close`；`Modal.confirm` 与 `useModal` 同样支持。
 - 破坏性：Modal 删除 `bodyStyle`、`maskStyle`，SideSheet 删除 `bodyStyle`、`headerStyle`、`maskStyle`，改用 `classNames`、`styles`，部位为 `mask`、`content`（`role="dialog"` 元素）、`header`、`body`、`footer`；Modal 的 `header` 部位只在默认标题头时存在。`Modal.info` 等静态方法与 `useModal` 的选项同样使用 `classNames`、`styles`。
 - 破坏性：`Modal.info`、`success`、`error`、`warning`、`confirm`、`useModal`、`destroyAll` 改由 `modal/index` 挂载，深导入 `modal/modal` 的组件不再带这些静态方法；`cancelButtonProps.onClick`、`okButtonProps.onClick` 不再替换内置处理，先于 `onCancel`、`onOk` 调用，需替换的改在这两个回调里处理。
 - 行为变化：SideSheet 关闭时与 Modal 一致，等离场动画结束（无动画时立即）才解除页面 inert、Tab 陷阱与 body 滚动锁，并把焦点还给打开前的元素（四个框架一致）。
@@ -303,6 +311,7 @@
 
 ### Table
 
+- 新增 `classNames`、`styles` 部位：`title`、`row`、`cell`、`footer`、`pagination`、`empty`；`row`、`cell` 只作用于数据行和数据单元格，不含分组行与展开行。
 - 破坏性：删除 `headerStyle`，改用 `classNames.header`、`styles.header`，落在每个表头 `th` 上（含固定表头），列的 `onHeaderCell` 返回的样式优先。
 - 破坏性：表格语义改为 `role="table"`、`role="cell"`，删除 `aria-colcount`、`aria-colindex` 等；默认筛选图标、排序按钮（`.semi-table-column-sorter-wrapper`）、展开按钮（`.semi-table-expand-icon`）改为原生 `button`，排序方向改用表头 `aria-sort`；依赖旧角色、属性或 DOM 的选择器需调整。
 - 破坏性：列宽拖动不再依赖 react-resizable，手柄类名 `.react-resizable-handle` 改为 `.semi-table-resize-handle`，宽度不小于 20px，`resizable` 只对 `columns` 写法生效；固定列阴影改用 `scroll-state` 容器查询，删除 `semi-table-scroll-position-*` 类名；`Table.Column` 的静态 `elementType` 改为 `'Table.Column'`；未声明的 `rowSpan` 不再影响表头行合并，改用 `onHeaderCell` 返回 `rowSpan`；`getVirtualizedListRef` 的 `ref.current` 只有 `scrollTo(offset)`、`scrollToItem(index, align)`；`virtualized` 只读取 `itemSize`、`onScroll`、`overscanCount`（Vue、Svelte 的 `virtualized` 没有 `onScroll`，改用 `scroll` 事件、顶层 `onScroll`），滚动回调只在纵向偏移变化时调用。
@@ -339,6 +348,7 @@
 
 ### Checkbox、Switch
 
+- 新增 `classNames`、`styles` 部位：Checkbox 为 `icon`、`label`、`extra`；Switch 为 `indicator`（滑块，加载中时是加载图标）、`content`（选中或未选中时显示的文字）。
 - 破坏性（样式钩子）：删除 `semi-switch-focus`（及 `cssClasses.FOCUS`）、`semi-checkbox-focus`、`semi-checkbox-focus-border`，焦点环改由 CSS `:has(input:focus-visible)` 绘制；`SwitchState.nativeControlChecked` 改名 `checked`；Switch 的 `checked` 与 `defaultChecked` 同传时取 `checked`。
 - 行为变化：Checkbox、Radio 的 `id` 落在原生 input 上（用 `#id` 选根元素的写法需改选 input 的父级），input 带 `value`；Checkbox 不再响应 Enter 切换（仅空格）；`onClick` 在切换前调用；Switch 的 `loading` 期间切换被忽略且不通知 `onChange`；Switch 的全部 `aria-*` 落在 `role="switch"` 的 input 上，不再有任何 `aria-*` 落在根元素。
 - CheckboxGroup 内没有 `value` 的 Checkbox 不参与分组取值，也不再继承分组的 `aria-invalid`、`aria-errormessage`。
@@ -353,7 +363,8 @@
 
 ### RadioGroup、CheckboxGroup
 
-- 破坏性：Radio 与 RadioGroup 删除 `addonClassName`、`addonStyle`，`options` 项删除 `addonClassName`（Vue、Solid、Svelte 为 `addonClass`）、`addonStyle`，改用 `classNames.addon`、`styles.addon`，落在 addon 容器上；`options` 项上的同名字段由 RadioGroup 下发给 Radio。
+- 破坏性：Radio 与 RadioGroup 删除 `addonClassName`、`addonStyle`，`options` 项删除 `addonClassName`（Vue、Solid、Svelte 为 `addonClass`）、`addonStyle`，改用 `classNames.label`、`styles.label`，落在 label（原 addon）容器上；`options` 项上的同名字段由 RadioGroup 下发给 Radio。
+- 新增 `classNames`、`styles` 部位：Radio 与 RadioGroup 的 `options` 项新增 `icon`、`extra`；CheckboxGroup 与 RadioGroup 为 `item`、`itemIcon`、`itemLabel`、`itemExtra`，作用于组内全部 Checkbox、Radio，写在子项自己的 `classNames`、`styles` 之前。
 - 破坏性：Radio `mode="advanced"` 的 input 由 `type="checkbox"` 改回 `type="radio"`，按 `checkbox` 查询的测试需改为 `radio`；Checkbox、Radio 的 `onChange` 事件 `target` 在四个框架都只有 `{ checked, value, name, disabled }`，不再展开组件 props（原 Semi 为全部 props 加 `checked`）；删除 `semi-radio-focus`、`semi-radio-focus-border` 等焦点与悬停类名，改用 CSS `:focus-visible`、`:hover`。
 - 破坏性（类型）：CheckboxGroup 的 `options` 收窄为 `Array<string | CheckboxOptionItem>`，`value`、`defaultValue`、`onChange` 参数收窄为 `Array<string | number | boolean>`，新增 `CheckboxOptionItem`；`RadioInnerProps` 不再含 `style`、`className`、`children`、`preventScroll`，新增 `id`、`value`。未传 `name` 时每组生成唯一 name，RadioGroup 内没有 `value` 的 Radio 在组值为 `undefined` 时不再判为选中。
 - 行为变化：Radio 的 `checked` 与 `defaultChecked` 同传时取 `checked`，`checked={false}` 时内部状态不再被 `defaultChecked` 置为选中。
@@ -378,6 +389,7 @@
 
 ### Pagination
 
+- 新增 `classNames`、`styles` 部位：`list`、`total`、`prev`、`next`、`item`、`ellipsis`、`sizeChanger`、`sizeChangerDropdown`、`quickJumper`、`dropdown`；省略号按钮新增内置类 `semi-page-item-ellipsis`。
 - 破坏性：DOM 改为 `nav > ul > li > button`：根元素是带名称的 `nav`（默认名称来自语言包 `Pagination.label`，传入 `aria-label` 时优先），`class`、`style`、`ref` 与未声明的属性落在 `nav` 上，`nav` 带 `semi-page-wrapper` 类，`semi-page`、`semi-page-small`、`semi-page-disabled` 留在内层 `ul` 上；上一页、下一页、页码、「…」是 `li` 内的原生 `button`，类名（`semi-page-item`、`semi-page-prev` 等）从 `li` 移到 button，总数、每页条数、快速跳转改为 `li`，`PaginationProps.ref` 为 `Ref<HTMLElement>`；按旧结构写的选择器需调整。删除 `popoverZIndex`。
 - 行为变化：`prevText`、`nextText` 只有文字时以可见文字命名按钮；快速跳转的小数页码向下取整；`size="small"` 时 `showSizeChanger` 不生效；`total` 或 `currentPage` 变化不再重置用户选的页大小，`onPageSizeChange` 回写相同 `pageSize` 不再回到第 1 页；`popoverPosition` 传 `null` 与不传相同。
 - Vue：用 `v-model:currentPage`、`v-model:pageSize`，`onPageChange`、`onPageSizeChange`、`onChange` 改为 `pageChange`、`pageSizeChange`、`change` 事件；`prevText`、`nextText` 改为同名插槽；`class`、`style`、`aria-*` 落在根 `nav`。
@@ -389,6 +401,7 @@
 
 ### Notification
 
+- 每条通知的选项新增 `classNames`、`styles` 部位：`icon`、`title`、`content`、`close`。
 - 破坏性：默认导出 `Notification` 由组件改为普通对象，只承载静态方法与 `useNotification`，删除未文档化的 `<Notification />` 树内渲染（改用 `useNotification` 的 `contextHolder`）；删除 `NotificationListHandle`、`NoticeHandle`、`NoticeProps.onHookClose`、`NoticeState.visible`；`ConfigProps` 删除 `direction`，`NoticeInstance` 删除 `motion`；选项类型不再含 `close`、`ref`、`onAnimationEnd`、`onAnimationStart`。
 - 新增 `Notification.resetConfig()` 与 `stack?: boolean | number`（`true` 为 3，同位置通知超过阈值时堆叠，悬停展开）及类型 `NotificationHookOptions`；悬停或键盘聚焦列表时全部通知暂停自动关闭；`useNotification` 的通知有进场、离场动画，并读取 `overrideDefaultProps.Notification`；`.semi-notification-notice` 上方 margin 改由 `.semi-notification-list` 的 `padding-block-start` 提供，覆盖过上方 margin 的需改覆盖列表 padding。
 - 样式：堆叠中的 `.semi-notification-notice-stack-item` 改为单行 grid，展开收起由 `grid-template-rows` 过渡，覆盖其 `height` 的样式不再生效；不支持 `interpolate-size` 的浏览器在进出场动画期间给通知写内联 `height`。
@@ -402,6 +415,7 @@
 
 ### FloatButton、FloatButtonGroup
 
+- 新增 `classNames`、`styles` 部位：FloatButton 为 `body`（按钮的可见主体）；FloatButtonGroup 为 `item`（每个按钮），单个子项自己的 `className`（Vue、Solid、Svelte 为 `class`）与 `style` 排在其后。
 - 每一项渲染为原生 `<button type="button">`，有 `href` 时为 `<a>`（新增 `rel`），`ref` 类型为 `React.Ref<HTMLButtonElement | HTMLAnchorElement>`，`href` 不再经 `window.open` 跳转；纯图标按钮与子项需传 `aria-label`；FloatButtonGroup 的 `disabled` 真正禁用每一项，子项的 `href`、`disabled`、`onClick`、`shape`、`size`、`colorful` 生效。
 - 破坏性（类型）：`FloatButtonProps`、`FloatButtonGroupProps` 不再接受 `children`；`FloatButtonProps` 不再含 `type` 与 `form*` 属性。Vue：`onClick` 改为 `click` 事件（FloatButton 载荷 `(event)`，Group 为 `(value, event)`），`icon` 为 `#icon` 插槽，节点型 `badge.count` 用 `#badgeCount`；Group 的 `items` 中 `className` 改 `class`，`icon`、`content`、`badge.count` 改为作用域插槽 `#icon`、`#content`、`#badgeCount`（参数 `{ item, index }`），不支持 item 的 `ref`。
 - Svelte：FloatButton 的 `onClick` 改为原生 `onclick`（参数 `(event)`），与 Button 一致；有 `href` 时根元素为 `<a>`，否则为 `<button>`，不支持 ref；`icon`、`badgeCount` 是 snippet。
@@ -421,6 +435,7 @@
 
 ### Toast
 
+- 每条提示的选项新增 `classNames`、`styles` 部位：`content`、`icon`、`text`、`close`。
 - 与 Notification 相同的变化：新增 `Toast.resetConfig()`，悬停或聚焦时暂停全部 Toast 自动关闭，每次调用都应用 `zIndex`。`stack` 类型改为 `boolean | number`，`true` 为 3，收起时只显示最前 3 层。
 - 破坏性：`Toast.defaultOpts`（及 `ToastFactory.create()` 返回实例上的同名属性）改为只读，整体赋值会抛错，修改默认值用 `config()`、`resetConfig()`。
 - 破坏性（类型）：`useToast` 返回元组 `[toast, contextHolder]`，方法参数不含 `type`、`id`，`content`、`icon` 只接受 ReactNode；静态方法与 `useToast` 选项类型不含 `close`，`useToast` 另不含 `zIndex`、`getPopupContainer`；`getPopupContainer` 改为 `() => HTMLElement`；删除 `ToastListHandle`、`ToastHandle`，新增 `ToastHookApi`。
@@ -441,6 +456,7 @@
 
 ### ColorPicker
 
+- 新增 `classNames`、`styles` 部位：`area`、`hue`、`alpha`、`handle`、`preview`、`input`、`format`、`trigger`、`dropdown`；根元素仍用 `className` 与 `style`。
 - 输入区的间距改为逻辑属性，RTL 下镜像。
 - `usePopover` 时弹层打开后焦点进入面板（第一个可聚焦控件），关闭后回到触发器（APG dialog）。
 - 破坏性：`usePopover` 时弹层默认 trigger 由 `hover` 改为 `click`（`popoverProps.trigger` 优先）。`alpha` 默认为 true；受控 `value` 为 `null` 是受控的空值，变回 `undefined` 时回到 `defaultValue`。
@@ -452,6 +468,7 @@
 
 ### Calendar
 
+- 新增 `classNames`、`styles` 部位：`header`、`headerCell`、`allDay`、`timeColumn`、`timeLabel`、`day`、`event`、`currentTimeLine`、`currentTimeDot`、`more`、`dropdown`；部位随视图出现，`day` 在时间视图是一天的时间列，在月视图是日期格。
 - 破坏性（类型）：React、Solid 的 `dateGridRender` 两个参数改为必填。
 - 破坏性（深路径导入，类型）：foundation `calendar/foundation`、`calendar/event-util` 的 `weekStartsOnEnum` 改名 `WeekStartsOn`（与 Vue、Svelte 的同名类型一致）。
 - 破坏性（类型）：`onClose` 参数改为 `React.MouseEvent | KeyboardEvent | null`（点击外部关闭为 `null`）；`CalendarProps` 不再包含 `children`；`DayColProps.events` 收紧为 `DailyEventLayout[]`。
@@ -467,6 +484,8 @@
 
 ### Navigation
 
+- 新增 `classNames`、`styles` 部位：Nav 为 `list`、`item`、`itemIcon`、`itemText`、`itemToggleIcon`、`subNav`、`subNavTitle`、`subNavList`、`subNavDropdown`，其中 `item*` 作用到全部导航项（图标、文字、展开箭头同时作用到子导航标题），`subNav*` 作用到全部子导航；Nav.Item 为 `icon`、`text`、`toggleIcon`；Nav.Sub 为 `title`、`icon`、`text`、`toggleIcon`、`list`、`dropdown`；Nav.Header 为 `logo`、`text`、`link`；Nav.Footer 为 `collapseButton`。
+- 类名以 Nav 的部位类名在前、子项自己的在后，样式则子项后写。行为变化：Sub 的 `styles.dropdown` 与 `dropdownProps.style` 按属性合并，不再整体替换。
 - 破坏性：删除 `bodyStyle` 与 Sub 的 `dropdownStyle`，改用 `classNames`、`styles`：Navigation 的 `body` 落在列表容器上，Sub 的 `dropdown` 落在下拉浮层 `.semi-dropdown` 上；`items` 配置项同样使用 `classNames`、`styles`。
 - 破坏性：删除 `getPopupContainer`（改用 `subDropdownProps` 或 Sub 的 `dropdownProps`）与 `Navigation`、`Navigation.Header` 的 `prefixCls`，类名前缀固定为 `semi-navigation`；公开的 `Nav.Item` 不再渲染 children；`toggleIconPosition` 收窄为 `'left' | 'right'`；删除 `NavState`（改用 foundation 的 `NavigationState`）。
 - 破坏性：根元素由 `div` 改为 `<nav>`，`ref` 类型改为 `Ref<HTMLElement>`；导航项不再是 `menuitem`，内部渲染原生 `button` 或 `<a href>`，按 `menuitem` 查询的测试改为 `link` 或 `button`。`onSelect`、`onClick` 的 `domEvent` 由 React 合成事件改为原生事件，读 `domEvent.nativeEvent` 的代码直接用 `domEvent`。
@@ -490,6 +509,7 @@
 
 ### Transfer
 
+- 新增 `classNames`、`styles` 部位：`source`、`selected`、`filter`、`header`、`title`、`action`、`list`、`groupTitle`、`item`、`itemDragHandle`、`itemRemove`、`empty`。
 - 破坏性（类型）：删除 `DraggableResolvedDataItem`、`DataItem`/`FullPathItem` 的 `style`、`BasicDataItem` 的 `className`、`style` 与 `ResolvedDataItem._optionKey`；`RenderSelectedItemProps.sortableHandle` 改为 `SortableHandle`；`treeProps` 类型去掉 `value`、`ref`、`onChange`、`keyMaps`、`treeData` 等，运行时也忽略。
 - 新增 blur 事件（React `onBlur`、Vue `blur`、Solid `onBlur`、Svelte `onBlur`），焦点从 Transfer 内部移到外部时触发一次，参数为 FocusEvent；在搜索框、复选框、列表项、移除按钮、拖拽手柄之间移动不触发；窗口失焦（`relatedTarget` 为空）也触发，与 TreeSelect 一致。行为变化（React）：根元素不再直接透传使用方的 `onBlur`（原为内部任一控件的 focusout 冒泡都会触发），改为上述语义。
 - 受控值（Vue `modelValue`）从数组变回 `undefined` 时，已选项重置为 `defaultValue`（未设置则清空），不再残留转为受控之前的非受控选择（表单 reset 后右侧仍显示旧选项）。
@@ -507,6 +527,8 @@
 
 ### Tree
 
+- 新增 `classNames`、`styles` 部位：`list`、`empty`、`item`、`itemSwitcher`、`itemCheckbox`、`itemIcon`、`itemTitle`；`item*` 作用到每个节点，`itemIcon` 只作用于 `directory` 的内置图标，自定义 `expandIcon` 只带 `itemSwitcher` 的类名。
+- 破坏性（类型）：Svelte 的 `expandIcon` snippet 与 `search` snippet 参数里的 `class` 类型改为 `ClassValue`。
 - 破坏性：删除 `searchClassName`、`searchStyle`，改用 `classNames.search`、`styles.search`，落在搜索框容器上。
 - 行为变化：Tree 与 TreeSelect 的派生状态由同一份 `deriveTreeState` 计算。`treeData`、`treeDataSimpleJson` 异步到达或结构变化后，Tree 不再按 `value` 自动展开到所在节点，保留原有展开状态（与 TreeSelect、rc-tree 一致）；非受控单选在节点删除后不再残留 `selectedKeys`；非受控 `defaultValue` 在 `treeData` 晚到时不再丢失；`onChangeWithObject` 下对象值首次渲染能展开到父节点。
 - 破坏性（样式钩子）：节点数据的 `active` 字段不再生成 `-active` 类，`BasicTreeNodeProps.active` 与 `&-active` 规则删除。`TreeProps.expandIcon` 放宽为 `ReactNode | ((props) => ReactNode)`；删除 `preventScroll`；拖拽回调的 `event` 改为 `DragEvent`；ref 改为 `TreeHandle { search, scrollTo }`。
@@ -525,6 +547,7 @@
 
 ### Dropdown
 
+- 新增 `classNames`、`styles` 部位：`menu`（菜单列表 `ul`）、`item`（菜单项 `li`）、`itemIcon`（菜单项图标容器），对子菜单同样生效；Dropdown.Item 新增 `classNames`、`styles`，键为 `icon`。
 - 破坏性：删除 `contentClassName`、`wrapperClassName`，改用 `classNames`、`styles` 的 `content`（菜单容器）、`wrapper`（文本或多节点触发器外的 span）键。
 - 行为变化：hover 菜单与嵌套子菜单，鼠标斜着移向已打开的子菜单时，途经兄弟项不再关闭它或打开兄弟项的子菜单（指针宽限，见 Tooltip、Popover 一节）。
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`margin`、`rePosKey`；Dropdown.Divider 渲染为 `li role="separator"`，Dropdown.Title 为 `li role="presentation"`，Props 元素类型改为 `ElementProps<'li'>`；`menu` 数组项类型不再含 `children`；删除 `DropdownItemProps.selected`（用 `active`）与内部 `hover` 属性。
@@ -543,6 +566,7 @@
 
 ### ImagePreview
 
+- 新增 `classNames`、`styles` 部位：Image 为 `overlay`（加载占位与失败兜底所在的覆盖层）；ImagePreview 与 Image 的 `preview` 对象为 `header`、`title`、`close`、`img`（预览中放大显示的图片）、`prev`、`next`、`footer`、`page`、`action`（作用到底部工具栏全部按钮）。
 - 破坏性：Image 删除 `imgCls`、`imgStyle`，改用 `classNames.img`、`styles.img`，落在内部 img 上；ImagePreview 与 Image 的 `preview` 对象删除 `previewCls`、`previewStyle`，改用 `classNames.preview`、`styles.preview`，落在预览层 `role="dialog"` 元素上。
 - 破坏性：删除 `@fibrae/semi-ui-react/image` 的 `PreviewInner` 导出、静态标记 `isSemiImage` 与 `ImageProps.imageID`（分组位置由缩略图文档顺序决定）。破坏性（类型）：单图 `preview` 改为 `ImagePreviewProps`（不含 `lazyLoad`、`children`、`className`、`style` 等，预览层样式用 `classNames.preview`、`styles.preview`）；`PreviewImageProps` 删除 `clickZoom`、`setRatio`、`style`；`onLoad`、`onError` 参数改为 `React.SyntheticEvent<HTMLImageElement>`；`renderLeftIcon`、`renderRightIcon` 返回类型收紧为 `ReactElement`。分组改为注册式：封装组件内部的 Image 也加入分组；Image 的 ref 指向 `img`，未声明属性落在缩略图分组元素上；预览图 `max-width: none` 写在 `.semi-image-preview-image-img`。
 - 行为变化：受控 `currentIndex={0}`、`visible={false}` 首次渲染时不再被 `defaultCurrentIndex`、`defaultVisible` 覆盖。
@@ -559,6 +583,7 @@
 
 ### Popconfirm
 
+- 新增 `classNames`、`styles` 部位：`header`、`icon`、`title`、`close`、`body`（内容区）、`footer`；`content` 是外层 `.semi-popover` 卡片，`styles.arrow` 仍是箭头颜色配置。
 - 破坏性：删除 `contentClassName`、`arrowStyle`，改用 `classNames`、`styles` 的 `content`、`arrow` 键，转发给内部 Popover；确认卡片的类名与样式仍用 `className`、`style`。
 - 破坏性（类型）：`onConfirm`、`onCancel` 参数改为原生 `MouseEvent`；ref 为 `PopconfirmHandle { focusTrigger }`。`okButtonProps`、`cancelButtonProps` 的 `onClick` 改为追加调用（先调用使用方的，再执行内置确认、取消流程，原来替换内置流程）；`icon` 接受任意 ReactNode。
 - 行为变化：`visible` 受控时 `trigger` 不再强制为 `custom`，点击、悬停调用 `onVisibleChange(true)` 请求打开，点击外部与 Esc 调用 `onVisibleChange(false)`，由使用方回写；使用方自行改变 `visible` 不再上报。确认框真正关闭时才把焦点还给触发元素；所有触发方式的弹层都是 `role="dialog"`，以标题命名。
@@ -572,6 +597,7 @@
 
 ### Rating
 
+- 新增 `classNames`、`styles` 部位：`item`（单颗星）、`dropdown`（设置 `tooltips` 后出现的提示弹出层）。
 - 破坏性：`tabIndex` 不再是声明的属性，传入的值（含 Tooltip 注入）被丢弃，只有选中的 radio 是 Tab 停靠点。破坏性（样式钩子）：删除 `semi-rating-focus` 类名，焦点环改由 `:focus-visible` 绘制。
 - 键盘按 APG radio group：下、右方向键选中下一个，上、左选中上一个（原来上增下减，与文档相反），RTL 只镜像左右；空格选中未选中的星，已选中的星上不再清除；Enter 由被按下的 radio 决定值。`onFocus`、`onBlur` 只在焦点进入或离开整个控件时触发；`onHoverChange` 参数改为 `number | undefined`；配置 `tooltips` 时星距与不配置一致（默认 30px，原来 24px）。
 - Vue：`value` 改为 `modelValue`（`update:modelValue`、`change(value)`）；`onHoverChange`、`onClick`、`onFocus`、`onBlur`、`onKeyDown` 改为 `hoverChange`、`click(event, index)`、`focus`、`blur`、`keydown` 事件；`character` 改 `#character` 插槽；`autoFocus` 改 `autofocus`；列表 `tabindex` 固定 -1，`name` 被丢弃。
@@ -581,7 +607,8 @@
 
 ### TreeSelect
 
-- 破坏性：删除 `dropdownClassName`、`dropdownStyle`、`optionListStyle`，改用 `classNames`、`styles` 的 `dropdown`（下拉面板）、`optionList`（选项列表，原来只能设样式）键。
+- 破坏性：删除 `dropdownClassName`、`dropdownStyle`、`optionListStyle`，改用 `classNames`、`styles` 的 `dropdown`（下拉面板）、`list`（选项列表，原来只能设样式）键。
+- 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`empty`、`item`、`itemTitle`、`itemSwitcher`。
 - `expandAction="click"` 加 `loadData` 时，点击 `isLeaf` 节点不再调用 `loadData`。
 - 行为变化：`searchPosition="dropdown"` 时，焦点在触发器上按 ArrowUp、ArrowDown 不再把焦点送进下拉里的搜索框，React、Vue 与 Solid、Svelte 一致（焦点留在触发器，方向键在树里移动）。
 - 行为变化：触发器上带 Ctrl、Meta 的按键，以及 Alt 加 ArrowDown、ArrowUp 以外的按键（如 Ctrl+Enter、Alt+Enter）交给浏览器，不再开合下拉、不再 `preventDefault`；Alt+ArrowDown、Alt+ArrowUp 照旧打开下拉（APG combobox），Alt+Tab（Safari 的 Option+Tab）与 Tab 一样处理。
@@ -607,6 +634,7 @@
 
 ### Cascader
 
+- 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`content`、`placeholder`、`input`、`tag`、`clear`、`arrow`、`list`、`empty`、`item`、`itemContent`、`itemIcon`；`item*` 作用于每个选项。
 - 破坏性：删除 `dropdownClassName`、`dropdownStyle`，改用 `classNames.dropdown`、`styles.dropdown`，落在下拉菜单元素上，类名排在自带类名之后（原来在前）。
 - 多选选项的 checkbox 只在结束一侧留 8px 间距（原来两侧各 8px，RTL 样式漏到了 LTR），LTR 下 checkbox 起始侧少 8px。
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`dropdownMargin`；不再读取未声明的 `open`（改用 `defaultOpen`）。破坏性（类型）：`CascaderProps` 改为泛型 `CascaderProps<Multiple>`；单选 `displayRender` 参数改为 `ReactNode[]`；`triggerRender` 的 `inputValue` 改为 `ReactNode` 并删除 `onChange`（改用 `onSearch`）；`filterSorter` 参数改为路径数组 `CascaderData[]`；`checkRelation`、`searchPosition` 收窄为字面量联合；`virtualizeInSearch.height` 收紧为 `number`；删除 `mouseEnterDelay`、`mouseLeaveDelay`。
@@ -661,6 +689,8 @@
 
 ### AudioPlayer、VideoPlayer
 
+- AudioPlayer 新增 `classNames`、`styles` 部位：`controls`、`playButton`、`cover`、`title`、`error`、`sliderTrack`、`sliderProgress`、`sliderThumb`、`toolbar`、`speed`、`volumeDropdown`、`speedDropdown`；`slider*` 同时作用于进度条与音量条。
+- VideoPlayer 新增 `classNames`、`styles` 部位：`video`、`poster`、`playIcon`、`error`、`notification`、`controls`、`progress`、`progressBuffered`、`progressPlayed`、`progressHandle`、`time`、`volumeDropdown`、`dropdown`；`video` 元素新增类名 `semi-videoPlayer-video`。
 - 破坏性（类型）：Props 不再接受 `onTimeUpdate`、`onEnded` 等 23 个 React 媒体事件回调及 Capture 变体（从不触发）；VideoPlayer 的 `controlsList` 收窄为 `VideoControl[]`，`theme` 收窄为 `'dark' | 'light'`；删除无效的 `forwardRef`，改用 `ref`。
 - VideoPlayer 进度条手柄用 `translate` 居中，`VideoProgressFoundation.getHandleLeft` 返回纯百分比（原 `calc(<百分比> - 8px)`）。
 - 破坏性（深路径导入）：删除 `semi-ui-react/video-player/utils`，改从 `@fibrae/semi-foundation/video-player/utils` 导入。
@@ -676,6 +706,7 @@
 
 ### TimePicker
 
+- 新增 `classNames`、`styles` 部位：`header`、`content`（各列所在区域）、`item`（每个时间选项）、`footer`；范围模式下左右面板同时生效。
 - 破坏性：删除 `inputStyle`、`popupClassName`、`popupStyle`，改用 `classNames`、`styles` 的 `input`、`dropdown` 键；`styles.dropdown` 落在面板卡片上，原 `popupStyle` 落在外层定位元素。
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`dropdownMargin`（面板在 top layer）、`onChangeWithDateFirst`（`onChange` 固定为 `(value, valueString)`）、无效的 `clearText`。
 - 破坏性（类型）：`TimePickerProps` 改为类型别名（`interface X extends TimePickerProps` 改交叉类型），`onChange` 按 `type` 判别为 `(Date, string)` 或 `(Date[], string[])`；删除无效的 `locale`、`localeCode`、`dateFnsLocale`（改用 `LocaleProvider`、`ConfigProvider`）；`scrollItemProps` 收窄为 `cycled`、`mode`、`motion`、`transform`；`triggerRender` 参数改为 `TimePickerTriggerRenderProps`；ref 为 `TimePickerHandle { focus, blur }`。
@@ -694,7 +725,9 @@
 
 ### Upload
 
-- 破坏性：删除 `itemStyle`，改用 `classNames.item`、`styles.item`，落在每个文件卡片上，图片墙里宽高以 `picWidth`、`picHeight` 为准；`Upload.FileCard` 与 `renderFileItem`、`fileItem` 插槽的参数新增类名（React 为 `className`，其余为 `class`），来自 `classNames.item`。`cropModalProps` 删除 `bodyStyle`，改用 `styles.body`，与内置的 400px 高度合并，使用方的值优先。
+- 新增 `classNames`、`styles` 部位：Upload 为 `trigger`、`prompt`、`validateMessage`、`dragIcon`、`dragMainText`、`dragSubText`、`list`、`listTitle`、`clear`、`item`、`itemThumbnail`、`itemName`、`itemProgress`、`itemValidateMessage`、`itemRetry`、`itemReplace`、`itemClose`，`item` 开头的键作用到全部文件项；`Upload.FileCard` 为 `thumbnail`、`name`、`progress`、`validateMessage`、`retry`、`replace`、`close`，父级类名在前、自己的在后，样式以自己的为准。
+- 破坏性：Upload 不再把 `item` 的类名与样式经 `className`、`style`（Vue、Svelte 为 `class`、`style` 与 `fileItem` 插槽参数）传给文件卡片，自定义 `renderFileItem`、`fileItem` 需渲染 `Upload.FileCard` 才能继承 `item` 的类名与样式。
+- 破坏性：删除 `itemStyle`，改用 `classNames.item`、`styles.item`，落在每个文件卡片上，图片墙里宽高以 `picWidth`、`picHeight` 为准。`cropModalProps` 删除 `bodyStyle`，改用 `styles.body`，与内置的 400px 高度合并，使用方的值优先。
 - 破坏性：`limit` 为 1 时选择文件不再调用 `onExceed`；`onDrop` 第一个参数改为原生 `DragEvent`；`accept` 中点开头的扩展名按完整后缀匹配（`.tar.gz` 要求以其结尾）；`addOnPasting` 只响应原生 `paste` 事件，`onPastingError` 改为粘贴文件读取失败时触发，参数收窄为 `Error`。
 - 破坏性（类型）：`FileItem`、`BaseFileItem` 删除 `[key: string]: any`（Chat 的 `attachment`、AIChatInput 的 `Attachment` 随之变化）；`RenderFileItemProps` 不再含 `key`；`transformFile` 改为 `(file: File) => File`；`cropModalProps` 收窄为 `UploadCropModalProps`；ref 为 `UploadHandle { insert, upload, openFileDialog }`。
 - React、Solid 破坏性（类型）：`upload` 深路径导出的 `customRequestArgs` 改名 `UploadCustomRequestArgs`，与包根导出同名。
@@ -716,6 +749,7 @@
 
 ### Cropper
 
+- 新增 `classNames`、`styles` 部位：`mask`（裁剪框外的遮罩层）、`handle`（全部缩放手柄）。
 - 破坏性：删除 `cropperBoxCls`、`cropperBoxStyle`，改用 `classNames.cropperBox`、`styles.cropperBox`，落在裁切框上，宽高与位移以组件计算值为准。
 - 裁剪框最小边长 10px 对指针拖拽同样生效；加载后改变 `aspectRatio`，裁剪框按新比例重排；滚轮缩放末步停在 `maxZoom`、`minZoom`；图片未加载时 `getCropperCanvas` 抛错；ref 为 `CropperHandle`，只有 `getCropperCanvas`。
 - Vue：`zoom` 用 `v-model:zoom`（或 `:zoom` 加 `@zoomChange`），`rotate` 只能单向绑定；`preview` 仍是返回宿主 DOM 的函数。
@@ -777,6 +811,7 @@
 
 ### Descriptions
 
+- 新增 `classNames`、`styles` 部位：Descriptions 为 `itemKey`、`itemValue`，作用到全部条目的键与值；Descriptions.Item（及 `data` 项）新增 `value`。父级类名在前、条目自己的在后，样式条目的后写。
 - 破坏性：`Descriptions.Item` 与 `data` 项删除 `keyStyle`，改用 `classNames.key`、`styles.key`，落在 key 的 span 上；`data` 项上的同名字段由 Descriptions 下发给 Item。
 - 横向布局只把 `Descriptions.Item`（含 Fragment 里的）当作列，非元素子节点不再占列位；`align="left"` 在 RTL 下镜像。
 - Vue：`data` 项的 `key`、`value` 只接受 `string | number`，自定义内容用作用域插槽 `#itemKey`、`#value`（参数 `{ item, index }`）。
@@ -786,6 +821,7 @@
 
 ### Card
 
+- Card.Meta 新增 `classNames`、`styles` 部位：`avatar`、`section`（标题与描述所在的文字区域）、`title`、`description`。
 - 破坏性：删除 `bodyStyle`、`headerStyle`、`footerStyle`，改用按部位分键的 `classNames` 与 `styles`，部位为 `header`、`title`、`extra`、`cover`、`body`、`actions`、`footer`；`classNames` 与组件自带的类名合并，根元素仍用 `className`（Vue、Solid、Svelte 为 `class`）与 `style`。`overrideDefaultProps` 里的 `classNames`、`styles` 是默认值，组件传入时整体替换，不逐键合并。
 - 字符串 `title` 渲染为 `div`（外观仍是 6 号标题），不再是 `h6`；`headerExtraContent` 在 DOM 中位于 title 之后；`header`、`cover`、`footer` 为 `0` 时渲染在各自容器内。
 - Vue：ReactNode 属性改为同名插槽 `title`、`headerExtraContent`、`header`、`cover`、`footer`、`actions`（`overrideDefaultProps` 不能再设置它们）；`title?: string` 与 `#title` 等价，插槽优先；根 div 用 `$el`。
@@ -802,6 +838,7 @@
 
 ### Slider
 
+- 新增 `classNames`、`styles` 部位：`track`、`handle`、`dot`、`mark`、`dropdown`（手柄的数值提示弹出层）。
 - 破坏性：删除 `railStyle`，改用 `classNames.rail`、`styles.rail`，落在轨道上。
 - 破坏性（类型）：`SliderState.focusPos` 改名 `activeHandle`；`tipFormatter` 参数为 `number`（每个手柄单独调用），删除类型 `tipFormatterBasicType`；`handleDot` 改为 `HandleDot | HandleDot[]`。
 - 每个手柄内改为视觉隐藏的原生 `input type="range"`（`.semi-slider-handle-input`）：`getByRole('slider')` 返回该 input，`aria-valuenow` 等不再输出，改读 `value`、`min`、`max`、`disabled`，`onKeyDown` 绑定在它上；新增 `name`；方向键由组件处理，各浏览器一致：`vertical` 时指向 `max` 一端的方向键（默认下，`verticalReverse` 时上）与右方向键增加值，水平 RTL 时左方向键增加值；Home、End 也由组件处理，设为最小值与最大值（Safari 原生垂直 range 会对调二者）；PageUp、PageDown 仍由原生 range 处理；foundation 的 `handleKeyDown` 改为 `(event, pos)`；步长网格从 `min` 起算；无 `value` 时初始位置为 `min`（原为 0）；指针按下轨道或手柄聚焦 input 时不显示键盘焦点环。
@@ -815,6 +852,7 @@
 
 ### Tag
 
+- 新增 `classNames`、`styles` 部位：`prefix`、`avatar`（头像根元素）、`content`、`suffix`、`close`，与组件自带的类名合并。
 - 破坏性（类型）：`TagGroupProps` 删除泛型参数 `T`，改为按 `mode` 判别的联合且 `tagList` 必填：`<TagGroup<'custom'> ...>` 改为 `<TagGroup mode="custom" ...>`，`TagGroupProps<'custom'>` 改为 `TagGroupProps`；`onClose`、`onTagClose` 事件参数改为 `React.MouseEvent | React.KeyboardEvent`。
 - 可点击 Tag 按 Enter、空格时对自身 `click()`，`onClick` 收到真实 click 事件；`visible={undefined}` 按非受控；TagGroup、SplitTagGroup 透传未声明属性到根 div（F2）。
 - Vue：内容及图标用默认插槽、`prefixIcon`、`suffixIcon`；`close(event, tagKey)`、`tagClose(event, tagKey)` 去掉 children 参数；`tagList[].children` 只收 `string | number`，自定义节点用 `#tag`，无 `mode="custom"`。
@@ -825,6 +863,7 @@
 
 ### Sidebar
 
+- Sidebar、Annotation、MCPConfigure 及其子组件 Container、FileContent、CodeContent、FileItem 新增 `classNames`、`styles`，部位见各组件 API 文档。
 - 破坏性（类型）：Props 删除无效的 `onChange`（选项切换走 `onActiveOptionChange`）；`DetailContent` 不再接受 `editable`、`imgUploadProps`、`onContentChange`（改用 Sidebar 的 `fileEditable`、`imgUploadProps`、`onFileContentChange`）；MCPConfigure 选项的 `value` 改为必填；`AnnotationItem` 的 `onClick` 参数改为 `React.MouseEvent<HTMLAnchorElement>`。
 - 破坏性：上传位 HTML 不再带 `accept`、`limit` 等属性，状态类名 `.uploading` 等改为 `.semi-sidebar-file-image-slot-<status>`；Annotation 条目改为 `<a href={url} target="_blank">`，不再调用 `window.open`；`getUploadImageSrc` 收到上传响应而非 props 对象。
 - 破坏性：文件编辑器菜单栏的代码块按钮与其他按钮一样只显示图标（`IconTerminal`），不再显示文字「CB」，删除其专用类名 `.semi-sidebar-file-menu-bar-btn-codeblock`。
@@ -852,6 +891,7 @@
 
 ### Anchor
 
+- 新增 `classNames`、`styles` 部位：Anchor 为 `rail`、`indicator`、`list`、`item`、`itemTitle`；Anchor.Link 为 `title`，写在父级 `itemTitle` 之后（Svelte 的 `links` 项同样可设置）。
 - 破坏性：根元素不再自动生成 `id="semi-anchor-xxx"`，改用 `.semi-anchor` 选择；滑轨与链接列表包在新容器 `.semi-anchor-rail-wrapper` 中，`.semi-anchor` 不再是 `position: relative`；`LinkProps` 删除无效的 `level`、`direction`；`onClick` 事件参数改为 `React.MouseEvent | React.KeyboardEvent`；删除 `strings.POSITION_SET`，改用 Tooltip 的 `POSITION_SET`。
 - Link 只响应 Enter 激活；以 `#` 开头的 `href` 按元素 id 查找而非 CSS 选择器；当前链接带 `aria-current="location"`（原 `aria-details="active"`）；新增 `scrollIntoViewOptions`；无激活链接时 `onChange` 收到 `''`（原 `undefined`）；`defaultAnchor` 只在首次挂载时应用，React `<Activity>` 重新显示时不再跳回它。
 - `autoCollapse` 下一次滚动跳进未展开的分支时，分支展开后再选一次高亮，落到其中的子链接，不停在父项（React、Vue、Solid；Svelte 本来如此）。React、Vue：Link 经 context 登记所在的父链接，经其他组件渲染的 Link（含 Anchor 的直接子组件渲染出的整组链接）同样让父项保持展开；React 的 `defaultAnchor` 指向这类 Link 下直接嵌套的折叠子项时也能展开。
@@ -862,6 +902,8 @@
 
 ### Breadcrumb
 
+- 新增 `classNames`、`styles` 部位：Breadcrumb 为 `list`、`item`、`itemLink`、`itemIcon`、`itemTitle`、`separator`、`more`；Breadcrumb.Item 为 `link`、`icon`、`title`、`separator`，写在父级 `item*` 之后（Svelte 的路由对象同样可设置）。
+- 破坏性（类型）：Svelte 的 `icon` snippet 的 `class` 参数由 `string` 改为 `ClassValue`，并新增 `style` 参数。
 - 破坏性：删除 `Breadcrumb.Item.isBreadcrumbItem`，改为声明 `elementType: 'Breadcrumb.Item'`；`onClick` 第一个参数类型改为 `BreadcrumbItemInfo | RouteProps`，children 写法下 `name` 是 `ReactNode`。
 - `maxItemCount` 小于 2 时首项与当前项仍显示；`activeIndex` 指向折叠区间内的项时，当前项保持可见，改为隐藏其前后较长的一段；没有 `href` 的项仅在有 `onClick` 时可聚焦；非 `Breadcrumb.Item` 的子节点各包一层 `li` 后渲染。
 - 破坏性：DOM 改为 APG 的 `nav > ol.semi-breadcrumb-list > li`，读屏报出项数。Breadcrumb.Item 的根元素与未声明属性的落点由 `span` 改为 `li`（React 的 `ref` 类型为 `HTMLLIElement`，Props 的原生属性随之按 `li` 声明）；`moreType="popover"` 弹层里的隐藏项包在 `ol` 中，分隔符是带 `aria-hidden` 的 `li`；React `renderMore`、Vue `#more` 收到的项节点是 `li`，自行渲染时放进 `ol` 或 `ul`。按 `.semi-breadcrumb-wrapper > .semi-breadcrumb-item-wrap` 写的选择器改为经过 `.semi-breadcrumb-list`。
@@ -876,6 +918,8 @@
 
 ### Tabs
 
+- 新增 `classNames`、`styles` 部位：`item`（标签）、`itemIcon`、`itemClose`、`pane`（标签页面板）、`extra`（`tabBarExtraContent` 容器）、`arrow`（折叠模式两端的翻页箭头）、`more`（「更多」按钮）、`dropdown`（箭头下拉与「更多」下拉浮层）。
+- 破坏性：自定义 `renderTabBar`、`tabBar` 插槽收到的标签栏属性中，`className`、`style`（Vue、Solid、Svelte 为 `class`、`style`）改为完整的 `classNames`、`styles`；React 与 Solid 的 TabBar 属性 `dropdownClassName`、`dropdownStyle` 删除，改用 `classNames.dropdown`、`styles.dropdown`。
 - 破坏性：删除 `tabBarClassName`、`tabBarStyle`、`contentStyle`、`visibleTabsStyle`，改用 `classNames`、`styles` 的 `tabBar`、`content`、`visibleTabs`（折叠模式下可见页签的滚动容器）键。
 - 破坏性（主题 token）：`$radius-tabs_tab_card_left` 由四值圆角改为单个半径值，使用处按逻辑角赋值；左侧卡片式页签的圆角在 RTL 下镜像，LTR 不变。
 - 破坏性：删除 `TabPane.isTabPane`，改为声明 `elementType: 'Tabs.TabPane'`；删除 `TabBarProps.closable`；`activeKey` 类型加入 `null`；`onTabClick` 事件参数为 `MouseEvent | KeyboardEvent`；非受控 Tabs 的当前 key 不在新列表中时回落到第一个启用的页签；children 写法只把 `TabPane` 当页签。
@@ -900,6 +944,7 @@
 
 ### UserGuide、Portal
 
+- UserGuide 新增 `classNames`、`styles` 部位：`cover`、`body`、`title`、`description`、`progress`、`indicators`、`footer`；popup 与 modal 两种模式共用同一组键，`indicators` 仅 modal 模式且步骤有封面时存在。
 - `StepItem.mask`、`className` 生效；步骤的 `theme` 优先于全局；`nextButtonProps`、`prevButtonProps` 的 `onClick` 先调用使用方的再执行内置处理（原为替换）；`target` 允许 `null`；popup 卡片在 top layer，不接收 `getPopupContainer`、`zIndex`。
 - 滚动锁只在 popup 模式且当前步骤显示遮罩时加锁（`mask` 为 false 不再锁页面）；Esc 等同「跳过」。
 - popup 模式切换到 `target` 解析为 null 的步骤时，开发环境 `console.warn` 一次（该步骤在目标出现前不显示）。
@@ -914,6 +959,9 @@
 
 ### OverflowList、Select
 
+- OverflowList 新增 `classNames`、`styles` 部位：`item`（collapse 模式下每个可见项的外层 div）、`overflow`（collapse 模式下放置溢出内容的 div）。
+- Select 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`list`、`empty`、`groupLabel`、`item`、`itemIcon`、`itemContent`；`input` 落在触发器内搜索框的根元素上，与 Input 的 `input`（原生输入框）不同。
+- `item`、`itemIcon`、`itemContent` 作用到全部选项，`Select.Option` 自己的 `classNames`、`styles`（键为 `icon`、`content`，Svelte 写在 `optionList` 条目上）在其后生效。
 - 破坏性：OverflowList 删除 `wrapperClassName`、`wrapperStyle`，改用 `classNames.wrapper`、`styles.wrapper`，落在滚动容器上。
 - 破坏性：Select 删除 `dropdownClassName`、`dropdownStyle`，改用 `classNames.dropdown`、`styles.dropdown`，落在弹出层元素上。
 - Select 开启 `ellipsisTrigger` 的多选可搜索时，打开后搜索框留在标签所在行、紧跟最后一个标签（原来折叠区占满整行，光标换到下一行），放不下时由标签折叠让出位置。
@@ -952,6 +1000,8 @@
 
 ### Form
 
+- Form 新增 `classNames`、`styles` 部位：`label`、`labelText`、`labelExtra`、`labelTooltip`、`content`、`help`、`extra`，作用到表单内全部字段、Form.Slot、Form.InputGroup 的标签、内容区、帮助文字与附加说明；字段自身的 `classNames` 仍交给被包装的控件。
+- Form.Section 新增 `classNames`、`styles`（`title`、`extra`）；Form.Label 新增 `classNames`、`styles`（`text`、`extra`、`tooltip`），Form 的 `label*` 键先于 Label 自己的 `classNames` 生效。
 - 破坏性：React、Solid、Svelte 的 `Form` 不再挂静态成员（`Form.Input` 等字段、`Form.Section`、`Form.Label`、`Form.ErrorMessage`、`Form.Slot`、`Form.InputGroup`、`Form.useForm`、`Form.SchemaField`），改用具名导出：字段 `FormInput` 至 `FormPinCode`，部件 `FormSection`、`FormLabel`、`FormErrorMessage`、`FormSlot`、`FormInputGroup`，以及 `useForm`、`SchemaField`；四个框架的导出一致（F17）。新增类型导出 `FormErrorMessageProps`。字段自身的子组件不变，仍写 `FormSelect.Option`。
 - 破坏性：删除字段属性 `validate`（只认 `validator`）与 Form 级 `validateFields`；`<form>` 默认带 `noValidate`，传 `noValidate={false}` 恢复浏览器原生校验。
 - 破坏性：`onErrorChange` 在 validate、submit、表单级 validator 失败与转为通过、reset 时各触发一次，字段注册、keepState 恢复、ArrayField 增删行不再单独触发。
@@ -1018,6 +1068,9 @@
 
 ### Carousel、Typography、ScrollList
 
+- Carousel 新增 `classNames`、`styles` 部位：`content`（幻灯片容器）、`indicators`（指示器 tablist）、`indicator`（单个指示点）、`arrows`（箭头容器）、`prevArrow`、`nextArrow`。
+- Typography 新增 `classNames`、`styles` 部位：Text 为 `icon`、`expand`、`copy`，Title 与 Paragraph 为 `expand`、`copy`，Numeral 为 `icon`；`copy` 落在复制按钮上，外层 span 仍由 `copyable` 的类名与样式控制。
+- ScrollList 新增 `classNames`、`styles` 部位：`header`、`title`、`body`、`footer`；ScrollList.Item 为 `list`、`option`、`selector`（仅 wheel 模式渲染）。
 - ScrollList：滚动列（TimePicker 的时间列同用）的键盘处理放行带 Alt、Ctrl、Meta 的按键（如 Alt+ArrowDown），不再 `preventDefault`、不改选中项。
 - Carousel：`ref.stop()` 后手动切换、焦点离开、幻灯片增加等都不再恢复自动播放，直到 `ref.play()`；`prefers-reduced-motion: reduce` 时不自动播放且无切换动画；键盘焦点进入时暂停自动播放；非当前幻灯片带 `inert`。
 - Carousel 箭头改为原生 `<button type="button">`（`arrowProps.*.props` 类型改为 `ButtonHTMLAttributes<HTMLButtonElement>`），指示点改为 `role="tab"` 的 button；新增语言包键 `Carousel.indicators`、`Carousel.slideN`、`Carousel.carousel`、`Carousel.slide`（自定义语言包需补齐）与主题变量 `$radius-carousel_arrow`，箭头高度由 39px 改为 32px。
@@ -1051,6 +1104,10 @@
 
 ### AutoComplete、TagInput、Avatar、PinCode
 
+- AutoComplete 新增 `classNames`、`styles` 部位：`input`（原生输入框）、`prefix`、`suffix`、`clear`（这四个转发给内部 Input 的同名部位）、`item`（单个候选项）。
+- TagInput 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`content`、`tag`、`input`、`clear`；`input` 落在内嵌 Input 的根元素，`tag` 只作用于默认标签，`renderTagItem`（Vue 为 `tag` 插槽、Svelte 为 `tag` snippet）自定义的节点不受影响。
+- Avatar 新增 `classNames`、`styles` 部位：`image`、`label`、`mask`、`border`；AvatarGroup 为 `more`（超出 `maxCount` 的「+N」头像，自定义 `renderMore` 时同样生效）。
+- PinCode 新增 `classNames`、`styles` 部位 `input`，作用到每个输入格的根元素（不是原生 input）。
 - 破坏性：AutoComplete 删除 `dropdownClassName`、`dropdownStyle`，改用 `classNames.dropdown`、`styles.dropdown`，落在 `role="listbox"` 元素上，样式与 `maxHeight` 合并且 `styles.dropdown` 优先。
 - PinCode：格子间距改为逻辑属性；ConfigProvider 的 `direction` 为 `rtl` 时左右方向键反向（ArrowLeft 移到下一格）。
 - 破坏性：AutoComplete 删除 `getPopupContainer`、`zIndex`、`AutoComplete.Option` 与 `children`（改用 `Select.Option`），删除深路径 `@fibrae/semi-ui-react/auto-complete/option`、`@fibrae/semi-foundation/auto-complete/optionFoundation`；`style.width` 不再复制为下拉最小宽度。
@@ -1088,6 +1145,10 @@
 
 ### Chat、AIChatInput、AIChatDialogue
 
+- Chat 新增 `classNames`、`styles` 部位：`messages`、`dropArea`、`item`、`itemAvatar`、`itemTitle`、`itemContent`、`itemActions`（`item*` 作用到每条消息）、`divider`、`hintItem`、`backBottom`、`stop`、`input`、`send`。
+- AIChatDialogue 新增 `classNames`、`styles` 部位：`messages`、`item`、`itemCheckbox`、`itemAvatar`、`itemTitle`、`itemContent`、`itemActions`、`reasoning`、`references`、`annotation`、`file`、`image`、`loading`、`code`、`hintItem`、`backBottom`。
+- AIChatInput 新增 `classNames`、`styles` 部位：`references`、`reference`、`attachments`、`attachment`、`editor`、`footer`、`configure`、`actions`、`upload`、`send`、`skills`、`skillItem`、`suggestions`、`suggestionItem`；`skills`、`suggestions` 的 `styles` 与默认最大高度合并。
+- 破坏性（类型）：Vue、Svelte 的 AIChatInput `actionArea` 回传的 class 类型改为 class 绑定值（含 `classNames.actions`）。
 - 破坏性：Chat 删除 `hintCls`、`hintStyle`、`inputBoxCls`、`inputBoxStyle`，AIChatDialogue 删除 `hintCls`、`hintStyle`，AIChatInput 删除 `templatesCls`、`templatesStyle`，改用 `classNames`、`styles` 的 `hint`、`inputBox`、`templates` 键；AIChatInput 的 `styles.templates` 合并在默认最大高度之后，`Mcp` 子组件沿用 Dropdown 的 `content`、`wrapper` 键。
 - 破坏性（类型）：AIChatInput 的 `uploadProps` 为 `Omit<UploadProps, 'fileList' | 'listType'>`，Chat 的为 `Omit<UploadProps, 'fileList' | 'defaultFileList'>`；`markdownRenderProps` 不再接受 `raw`、`ref`（Chat 还不接受 `components`，改用 `customMarkDownComponents`）；`ChatProps` 不再接受 `children`；`FileItem`、`BaseFileItem` 删除索引签名。
 - 破坏性（类型）：`onSkillChange`、`renderTemplate` 的 `skill` 加入 `undefined`，`getEditor` 返回 `Editor | null`；`getConfigureItem` 改为泛型且 `onChange` 为 `(value: unknown) => void`；`ResponseChunk` 改为按 `type` 区分的联合；两处 `Reference` 统一为 `id` 必填、`type` 可选；`Metadata.color` 收窄为 `AvatarProps['color']`；删除 `onSuggestClick`、`onTemplateVisibleChange`；`@fibrae/semi-ai-react/ai-chat-input/extension/status-extension` 迁到 `@fibrae/semi-ai-foundation/ai-chat-input/extension/status-extension`。
@@ -1130,6 +1191,7 @@
 
 ### Spin、Skeleton
 
+- Spin 新增 `classNames`、`styles` 部位：`indicator`（加载指示器，自定义 `indicator` 时为其外层包裹元素）、`tip`（提示文字）。Skeleton.Paragraph 新增 `classNames`、`styles` 部位 `row`，作用于段落的每一行 `li`。
 - Spin 的加载指示器由 `div` 改为 `<output>`；加载中被包裹内容带 `inert`（List、Table 的 `loading` 同样），不可聚焦；破坏性：删除 `wrapperClassName`（与根元素的 `className` 重复）和 `childStyle`，改用 `classNames.child`、`styles.child`，落在内容包裹元素上；破坏性（类型）：Skeleton 占位的 `size` 只接受 `extra-extra-small` 到 `extra-large`，`shape` 只接受 `circle`、`square`，`Skeleton.Paragraph` 不再声明 `type`，`GenericProps` 即 `AvatarProps`。Vue：Spin 的 `indicator`、`tip`、Skeleton 的 `placeholder` 改为同名插槽；`Skeleton.Image`、`Title`、`Button` 不接受 `size`、`shape`；类型改名为 `SkeletonBasicProps`、`SkeletonAvatarProps`、`SkeletonParagraphProps`，`GenericProps` 删除。
 - Svelte：Skeleton 的 `placeholder` 是 snippet，内容用 `children`；`Skeleton.Avatar`、`Title`、`Button`、`Image`、`Paragraph` 另有同一引用的具名导出 `SkeletonAvatar` 等。
 - 新增：Spin 的 `minDuration`，加载效果显示后至少保持的毫秒数（默认 `0`）。各框架的 hook 入口新增 `useSpinDelay`（行为同 spin-delay：默认 `delay` 500、`minDuration` 200，初始已在加载时立即显示，`ssr: false` 时每次挂载都等待 `delay`），与 Spin 共用一份逻辑。
@@ -1142,12 +1204,14 @@
 
 ### Divider
 
+- 新增 `classNames`、`styles` 部位 `content`（中间的文字容器，仅文本内容时渲染；Svelte 传入 `children` 即渲染）。
 - `children` 全是文本（含数字 `0`）时包进 `semi-divider_inner-text`；无文字内容时根元素带 `role="separator"`，可用 `role` 覆盖。Vue：内容用默认插槽，规则相同。
 - Svelte：`layout` 为 horizontal 且传了 `children` 时算带文字，内容一律包进 `semi-divider_inner-text`（不区分纯文本与元素）。
 - 破坏性（深路径导入）：`@fibrae/semi-foundation/divider/constants` 的 `cssClasses.PREFIX` 由 `semi` 改为 `semi-divider`。
 
 ### Progress
 
+- 新增 `classNames`、`styles` 部位：`rail`（底轨）、`track`（已完成部分）、`text`（百分比文字），条状与环形共用同一组键。
 - 破坏性：`stroke` 与 `strokeGradient` 颜色改由浏览器解析，色板名输出 `var(--semi-blue-5)` 形式，渐变中间色用 `color-mix`；逗号与斜杠混写的颜色（如 `hsla(125, 50%, 46% / 1)`）不再被接受，改为合法 CSS；`@fibrae/semi-foundation/progress/generates` 的 `generateColor` 改为输出 CSS 表达式；删除 `ProgressState` 子路径导出。
 - 破坏性（类型）：`ProgressProps` 不再接受 `children`，`motion` 收为 `boolean`；`type="circle"` 且 `size="large"` 按 default 渲染为 72px。Vue：`format` 改为 `#format="{ percent }"` 插槽；`percent` 为 NaN 时抛 `[Semi Progress]:percent can not be NaN`。
 - Svelte：`format` 是 snippet，参数 `{ percent }`；`percent` 为 NaN 时同样抛错。
@@ -1155,6 +1219,7 @@
 
 ### Empty
 
+- 新增 `classNames`、`styles` 部位：`title`、`description`、`footer`。
 - 破坏性：删除 `imageStyle`，改用 `classNames.image`、`styles.image`，落在占位图容器上。
 - 破坏性（类型）：`image`、`darkModeImage` 的对象形式只接受 `{ id: string }`；`image` 传空字符串视为无图片；插画 `alt` 为空，标题渲染为 `div`。Vue：`title`、`description`、`image`、`darkModeImage` 用同名插槽，默认插槽是底部操作区；暗色模式挂载后观察 `html` 元素的 `theme-mode`。
 - Solid：暗色模式同 Vue，每个实例挂载后观察 `html` 元素的 `theme-mode`，挂载后再传入的 `darkModeImage` 也随之切换。
@@ -1162,6 +1227,7 @@
 
 ### Feedback
 
+- `classNames`、`styles` 补全 `content`、`title`、`close`、`footer` 部位，并新增 `emoji`（表情评分的单个选项）；除 `emoji` 外的键透传给当前模式的 Modal 或 SideSheet。
 - 破坏性：删除 `bodyStyle`、`maskStyle`（Svelte 另有 `headerStyle`），改用 `classNames`、`styles` 的 `mask`、`header`、`body` 键，转发给当前模式的 Modal 或 SideSheet。
 - 破坏性（类型）：`FeedbackProps` 按 `mode` 判别（`FeedbackModalProps` 的 `mode` 必填为 `'modal'`，`FeedbackSideSheetProps` 为可选 `'popup'`），popup 下传 Modal 专属属性报类型错误；`onCancel` 参数为 `React.MouseEvent | KeyboardEvent`；checkbox 的 `onValueChange` 值为 `(string | number | boolean)[]`；popup 模式默认开启 `closeOnEsc`，按 Esc 触发 `onCancel`（原不响应）；表情选择改为 `role="radiogroup"` 的原生 radio，外层 `span` 改为 `label`；radio、checkbox 选项组需用 `radioGroupProps`、`checkboxGroupProps` 的 `aria-label` 命名。
 - 破坏性（类型）：`textAreaProps`、`radioGroupProps`、`checkboxGroupProps` 去掉 `value`（Vue 为 `modelValue`），传入也不再覆盖 Feedback 的值；其中的 `onChange` 仍在 Feedback 处理后调用。
@@ -1172,6 +1238,7 @@
 
 ### JsonViewer
 
+- 新增 `classNames`、`styles` 部位：`editor`、`searchTrigger`、`searchBox`、`searchInput`、`searchOptions`、`replaceInput`。
 - 破坏性（类型）：`JsonViewerProps` 不再接受 `children`、`dangerouslySetInnerHTML`，删除从未生效的 `renderTooltip`；`value`、`width`、`height` 改为可选；`ref` 为 `JsonViewerHandle` 而非类实例；`options` 默认值按键合并，只传部分选项时 `autoWrap` 仍为 `true`；`customRenderRule` 的 `render` 返回 `null`、`undefined`、`false` 时保留 token 原文。
 - 搜索栏容器由 `div` 改为原生 `search` 元素（类名不变，`div.semi-json-viewer-search-bar-container` 选择器需改），大小写、正则、全词选项改为按钮，自定义语言包需补 `JsonViewer.caseSensitive`、`JsonViewer.regex`、`JsonViewer.wholeWord`、`JsonViewer.replaceWith`；替换输入框的可访问名称改用 `replaceWith`（中文「替换为」、英文「Replace with」），不再与「替换」按钮同名。Vue：`value` 改名 `modelValue` 配合 `v-model`；`customRenderRule[].render` 改为 `#customRender="{ item, index, content }"` 插槽；`renderSearchButton` 改为 `#searchButton`。
 - 构建插件配置了 `prefixCls` 时，悬停字符串值同样触发 `hoverNode`（原来判断写死了 `semi-` 类名，自定义前缀下悬停字符串值没有反应）。
@@ -1188,6 +1255,7 @@
 
 ### Collapse
 
+- 新增 `classNames`、`styles` 部位：Collapse 为 `item`、`itemHeader`、`itemTitle`、`itemIcon`、`itemExtra`、`itemBody`，作用到全部面板；Collapse.Panel 为 `header`、`title`、`icon`、`extra`、`body`，与父级 `item*` 合并且面板自己的在后。头部 `extra` 的内层 span 新增类名 `semi-collapse-header-extra`。
 - 破坏性：删除 `reCalcKey`（Collapsible、Collapse.Panel）与静态方法 `Collapsible.getEntryInfo`；`onChange` 事件类型收窄为 `MouseEvent`，`activeKey` 类型加入 `null`（受控空值，`''` 与 `null` 收起全部面板）；Collapsible 的高度过渡改用 `calc-size(auto, size)`，外层不再有内联 `height`，改由 `--semi-collapsible-height` 写入。不支持 `calc-size()` 的浏览器（Firefox、Safari）同样播放高度动画，时长与曲线不变，`onMotionEnd` 在动画结束时调用。
 - 面板头部按 APG accordion 改为原生 `<button class="semi-collapse-header-button">`，`extra` 与展开箭头在按钮之外；`clickHeaderToExpand={false}` 时点击标题与箭头展开，点击 `extra` 不展开；收起内容带 `inert`。Vue：受控用 `v-model:activeKey`，`change` 载荷总是 `string[]`；`expandIcon`、`collapseIcon`、Panel 的 `header`、`extra` 改为插槽；`onMotionEnd` 改为 `motionEnd` 事件；Collapsible 的 `className` 改为 `class`。
 - Collapsible 使用方传入的 `onTransitionEnd` 不再被内部处理覆盖。
@@ -1199,6 +1267,7 @@
 
 ### BackTop
 
+- 新增 `classNames`、`styles` 部位 `body`（按钮内承载图标或内容的容器），转发给 FloatButton 的 `body`。
 - 破坏性（类型）：`BackTopProps` 收窄为实际接受的属性，不再含按钮的 `type` 与 `form*`；`target` 类型为 `() => Window | HTMLElement | null`；`ref` 指向 `HTMLButtonElement`。
 - 破坏性：基于 FloatButton 渲染为原生 `<button>`，新增 `icon`、`shape`、`size`、`colorful`、`badge`；`<BackTop><IconArrowUp /></BackTop>` 改为 `<BackTop icon={<IconArrowUp />} />`，宽高、圆角、背景色改用 `shape`、`size`、`colorful`，`.semi-backtop > .semi-button` 选择器改为 `button.semi-backtop`，覆盖定位需 `.semi-floatButton.semi-backtop` 的权重。Vue：`onClick` 改为 `click` 事件（经 `duration` 节流），`children` 为默认插槽，`icon` 为 `#icon`，`badge.count` 节点用 `#badgeCount`；`overrideDefaultProps.BackTop` 不能设置 `click`。
 - Svelte：BackTop 的 `onClick` 改为 `onclick`（经 `duration` 节流）；`children` 是静态内容的 snippet，`icon`、`badgeCount` 是 snippet；`overrideDefaultProps.BackTop` 不能设置 `onclick`。
@@ -1206,6 +1275,8 @@
 
 ### Timeline、List
 
+- Timeline 新增 `classNames`、`styles` 部位：`item`、`itemRail`、`itemIcon`、`itemContent`、`itemExtra`、`itemTime`，作用到全部节点；Timeline.Item 为 `rail`、`icon`、`content`、`extra`、`time`，在 Timeline 的 `item*` 之后生效（Svelte 的 `dataSource` 每项同样可设置）。
+- List 新增 `classNames`、`styles` 部位：`header`、`footer`、`empty`、`item`、`itemHeader`、`itemMain`、`itemExtra`，`item*` 作用到全部列表项；List.Item 为 `header`、`main`、`extra`，在 List 的 `item*` 之后生效。
 - 破坏性（类型）：List 的 `grid` 只接受 Row 与 Col 的指定属性，不再接受任意 div 属性（如 `id`）；Timeline `dataSource` 项的 `Data` 不再接受 `children`，改用 `content`。
 - 可点击的 List.Item 在 li 内渲染原生 `<button>` 作为唯一焦点目标，`tabIndex`、`aria-*` 落在按钮上，点击 `extra` 内元素不再触发 `onClick`，children 中的交互内容需移到 `extra`；新增类名 `semi-list-item-clickable`、`semi-list-item-button`；可点击的 Timeline.Item 的 children 外包一层 `role="button"` 的 `semi-timeline-item-content-main`；依赖 `.semi-list-items .semi-list-empty` 的选择器改为 `.semi-list-empty`；`children` 为空数组时显示空状态。
 - Vue：Timeline 的 `dataSource` 项 `content`、`time`、`extra` 只接受 `string | number`，自定义内容用 `#content`、`#dot`、`#time`、`#extra` 插槽；List 的 `renderItem` 改为 `#item="{ item, index }"`，`header`、`footer`、`emptyContent`、`loadMore` 改为同名插槽，`onClick`、`onRightClick` 是函数属性（写 `@click`、`@rightClick`），`grid` 里 `className` 改为 `class`。

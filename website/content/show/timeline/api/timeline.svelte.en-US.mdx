@@ -2,10 +2,12 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property   | Description                                                                                                                                                        | Type                                                                    | Default  |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- | -------- |
-| content    | Snippet for the content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.content.                                                   | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
-| dataSource | Data array the items are rendered from. See the item fields below; `dot` is the snippet of a custom dot for that item, and the default circle is drawn when unset. | `TimelineData[]`                                                        | -        |
-| extra      | Snippet for the extra content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.extra.                                               | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
-| mode       | Position of the timeline relative to the content: left, right, center or alternate.                                                                                | `TimelineMode`                                                          | `"left"` |
-| time       | Snippet for the time of each dataSource item, with the parameter `{ item, index }`. Defaults to item.time.                                                         | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `item`, `itemRail`, `itemIcon`, `itemContent`, `itemExtra` and `itemTime`; merged with the built-in classes. `item` lands on every `li`, `itemRail` is the connecting line and `itemIcon` holds the dot or the custom dot; the `item*` keys apply to every node. Each `dataSource` entry can also set `classNames`, keyed by `rail`, `icon`, `content`, `extra` and `time`, applied after the `item*` class names. | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, ClassValue>>"}>Type</ApiType> | - |
+| content | Snippet for the content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.content. | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | - |
+| dataSource | Data array the items are rendered from. See the item fields below; `dot` is the snippet of a custom dot for that item, and the default circle is drawn when unset. | `TimelineData[]` | - |
+| extra | Snippet for the extra content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.extra. | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | - |
+| mode | Position of the timeline relative to the content: left, right, center or alternate. | `TimelineMode` | `"left"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`; the values are CSS text. Each `dataSource` entry can also set `styles`, applied after the `item*` styles. | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, string>>"}>Type</ApiType> | - |
+| time | Snippet for the time of each dataSource item, with the parameter `{ item, index }`. Defaults to item.time. | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | - |

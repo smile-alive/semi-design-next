@@ -1,4 +1,6 @@
 import type { Snippet } from 'svelte';
+import type { ClassValue } from 'svelte/elements';
+import type { MCPConfigurePart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import type { MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
 import type { ContainerProps } from '../container/interface.js';
 
@@ -16,6 +18,8 @@ export interface MCPConfigureItemSnippetProps {
 }
 
 export interface MCPConfigureContentProps {
+    classNames?: Partial<Record<MCPConfigurePart, ClassValue>>;
+    styles?: Partial<Record<MCPConfigurePart, string>>;
     /** Bindable; switching an inner option writes the new list back before `onStatusChange` */
     options?: MCPConfigureOption[];
     /** Bindable; switching a custom option writes the new list back before `onStatusChange` */
@@ -35,4 +39,4 @@ export interface MCPConfigureContentProps {
 }
 
 // placeholder belongs to the search input
-export interface MCPConfigureProps extends Omit<ContainerProps, 'onsearch' | 'placeholder' | 'children'>, MCPConfigureContentProps {}
+export interface MCPConfigureProps extends Omit<ContainerProps, 'onsearch' | 'placeholder' | 'children' | 'classNames' | 'styles'>, MCPConfigureContentProps {}

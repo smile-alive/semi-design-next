@@ -65,6 +65,8 @@ export interface AIChatDialogueItemProps extends Omit<AIChatDialogueProps, 'role
 }
 
 export interface DialogueContentProps {
+    classNames?: AIChatDialogueProps['classNames'];
+    styles?: AIChatDialogueProps['styles'];
     mode?: 'bubble' | 'noBubble' | 'userBubble';
     children?: string;
     escapeHtml?: boolean;
@@ -98,6 +100,7 @@ export interface AIChatDialogueActionProps {
     role?: Metadata;
     showReset?: boolean;
     className?: string;
+    style?: React.CSSProperties;
 }
 
 export interface DialogueRenderConfig {

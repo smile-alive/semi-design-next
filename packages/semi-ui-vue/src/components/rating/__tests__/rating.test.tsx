@@ -172,6 +172,23 @@ describe('Rating', () => {
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-wrapper`)).toHaveTextContent(/^bad$/);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        renderRating({ size: 20, tooltips, classNames: { item: 'my-item', dropdown: 'my-dropdown' }, styles: { item: { order: 1 }, dropdown: { order: 2 } } });
+        const stars = document.querySelectorAll(`.${prefixCls}-star`);
+        expect(stars.length).toBeGreaterThan(0);
+        stars.forEach((star) => {
+            expect(star).toHaveClass('my-item');
+            expect(star).toHaveStyle({ order: '1' });
+        });
+        // the own inline size survives the part style
+        expect(stars[0]).toHaveStyle({ width: '20px' });
+        await fireEvent.mouseMove(getRadios()[1] as HTMLElement);
+        await screen.findByText('bad');
+        const dropdown = document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-wrapper`);
+        expect(dropdown).toHaveClass('my-dropdown');
+        expect(dropdown).toHaveStyle({ order: '2' });
+    });
+
     it('tooltips 在悬停移动时保持星星挂载', async () => {
         renderRating({ tooltips });
         const stars = getRadios();

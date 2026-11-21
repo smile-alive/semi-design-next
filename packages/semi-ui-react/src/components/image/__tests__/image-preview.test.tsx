@@ -162,6 +162,33 @@ describe('ImagePreview', () => {
         expect(getPreview().parentElement.style.zIndex).toBe('2000');
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['preview', 'header', 'title', 'close', 'img', 'prev', 'next', 'footer', 'page', 'action'] as const;
+        const selectors = {
+            preview: previewCls,
+            header: `${previewCls}-header`,
+            title: `${previewCls}-header-title`,
+            close: `${previewCls}-header-close`,
+            img: `${previewCls}-image-img`,
+            prev: `${previewCls}-prev`,
+            next: `${previewCls}-next`,
+            footer: `${previewCls}-footer`,
+            page: `${previewCls}-footer-page`,
+            action: `${previewCls}-footer-button`,
+        };
+        render(<Group classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} infinite previewTitle="t" />);
+        fireEvent.click(thumbs()[0]);
+        for (const part of parts) {
+            const els = document.querySelectorAll(`.${selectors[part]}`);
+            expect(els.length).toBeGreaterThan(0);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+        expect(document.querySelectorAll(`.${previewCls}-footer-button`).length).toBeGreaterThan(1);
+    });
+
     it('分组带 aria-label 或 aria-labelledby 时为 group 角色，没有名称时没有角色，使用方的 role 优先', () => {
         const named = render(<Group aria-label="gallery" />);
         expect(screen.getByRole('group', { name: 'gallery' })).toBe(named.container.firstElementChild);

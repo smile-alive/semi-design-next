@@ -476,7 +476,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
         }
         const Arrow = props.position.startsWith('left') || props.position.startsWith('right') ? TriangleArrowVertical : TriangleArrow;
         const style = props.style;
-        return <Arrow class={`${props.prefixCls}-icon-arrow`} style={{ color: typeof style === 'object' ? style['background-color'] : undefined, fill: 'currentColor' }} />;
+        return <Arrow class={clsx(`${props.prefixCls}-icon-arrow`, props.classNames?.arrow)} style={mergeStyles({ color: typeof style === 'object' ? style['background-color'] : undefined, fill: 'currentColor' }, props.styles?.arrow)} />;
     };
 
     // Native listeners: delegated handlers would also get events a Portal inside the trigger bubbles up through its

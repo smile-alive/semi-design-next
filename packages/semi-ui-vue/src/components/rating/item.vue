@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, useAttrs, useTemplateRef } from 'vue';
+    import { computed, useAttrs, useTemplateRef, type ClassValue, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
     import RatingFoundation from '@fibrae/semi-foundation/components/rating/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale';
@@ -18,6 +18,8 @@
             /** The value the star fill shows: the hovered value while hovering, else `value` */
             displayValue: number;
             index: number;
+            itemClass?: ClassValue;
+            itemStyle?: StyleValue;
             prefixCls: string;
             allowHalf: boolean;
             disabled: boolean;
@@ -29,7 +31,7 @@
             /** No radio stands for the value: this star's first radio is the Tab stop */
             firstTabStop?: boolean;
         }>(),
-        { unit: undefined, preventScroll: undefined, firstTabStop: false }
+        { itemClass: undefined, itemStyle: undefined, unit: undefined, preventScroll: undefined, firstTabStop: false }
     );
 
     const emit = defineEmits<{
@@ -60,6 +62,7 @@
             [`${props.prefixCls}-full`]: model.value.isFull,
             [`${props.prefixCls}-${props.size}`]: !isCustomSize.value,
         },
+        props.itemClass,
     ]);
 
     const sizeStyle = computed(() => {
@@ -123,7 +126,7 @@
 </script>
 
 <template>
-    <li ref="li" :class="starClass" role="none" :style="sizeStyle">
+    <li ref="li" :class="starClass" role="none" :style="[sizeStyle, itemStyle]">
         <div :class="[`${props.prefixCls}-wrapper`, { [`${props.prefixCls}-disabled`]: props.disabled }]" role="presentation" @click="onClick" @keydown="onKeydown" @mousemove="onMousemove">
             <div
                 v-if="props.allowHalf && !isEmpty"

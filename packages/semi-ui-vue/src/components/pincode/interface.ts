@@ -1,3 +1,5 @@
+import type { ClassValue, StyleValue } from 'vue';
+import type { PinCodePart } from '@fibrae/semi-foundation/components/pincode/constants';
 import type { PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
 import type { InputSize, ModelModifiers, ValidateStatus } from '../input/interface';
 
@@ -12,8 +14,10 @@ export interface PinCodeProps {
     count?: number;
     format?: PinCodeFormat;
     autofocus?: boolean;
+    classNames?: Partial<Record<PinCodePart, ClassValue>>;
     disabled?: boolean;
     size?: InputSize;
+    styles?: Partial<Record<PinCodePart, StyleValue>>;
     validateStatus?: ValidateStatus;
 }
 

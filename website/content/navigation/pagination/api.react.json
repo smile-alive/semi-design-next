@@ -4,6 +4,11 @@
         "props": {
             "className": { "zh-CN": "根元素 `nav` 的类名。", "en-US": "Class name of the root `nav` element." },
             "style": { "zh-CN": "根元素 `nav` 的内联样式。", "en-US": "Inline style of the root `nav` element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `list`、`total`、`prev`、`next`、`item`、`ellipsis`、`sizeChanger`、`sizeChangerDropdown`、`quickJumper`、`dropdown`，与组件自带的类名合并。`item` 也作用于省略号按钮，`dropdown` 是省略号与 small 型页码悬浮弹出的页码列表浮层。",
+                "en-US": "Class names of the inner parts, keyed by `list`, `total`, `prev`, `next`, `item`, `ellipsis`, `sizeChanger`, `sizeChangerDropdown`, `quickJumper` and `dropdown`; merged with the built-in classes. `item` also reaches the ellipsis button, and `dropdown` is the popup listing pages that opens from the ellipsis and the small size."
+            },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "ref": { "zh-CN": "根元素 `nav` 的 ref，两种尺寸一致。", "en-US": "Ref of the root `nav` element, in both sizes." },
             "total": {
                 "zh-CN": "总条数。总条数变化时，非受控的分页器回到第 1 页；受控时页码以 `currentPage` 为准。",

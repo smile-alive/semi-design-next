@@ -625,11 +625,25 @@ describe('OverflowList', () => {
         expect(declared.itemKey.default).toBeUndefined();
     });
 
-    it('classNames 与 styles 按部位落到对应元素', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
         const view = renderList({ renderMode: 'scroll', classNames: { wrapper: 'my-wrapper' }, styles: { wrapper: { order: 3 } } }, { item: keyDiv });
         const wrapper = view.container.querySelector(`.${prefixCls}-scroll-wrapper`);
         expect(wrapper).toHaveClass('my-wrapper');
         expect(wrapper).toHaveStyle({ order: '3' });
+
+        const resize = stubResizeObserver();
+        const collapse = renderList({ classNames: { item: 'my-item', overflow: 'my-overflow' }, styles: { item: { order: 1 }, overflow: { order: 2 } } }, { overflow: plus });
+        await measure(resize, collapse.container, 300);
+        await resize(getList(collapse.container), 120);
+        const collapseItems = collapse.container.querySelectorAll(`.${prefixCls}-item`);
+        expect(collapseItems).not.toHaveLength(0);
+        for (const item of collapseItems) {
+            expect(item).toHaveClass('my-item');
+            expect(item).toHaveStyle({ order: '1' });
+        }
+        const overflow = getElement(`.${prefixCls}-overflow`, collapse.container);
+        expect(overflow).toHaveClass('my-overflow');
+        expect(overflow).toHaveStyle({ order: '2' });
     });
 
     it('scroll: wrapperProps 落在 wrapper 上', () => {

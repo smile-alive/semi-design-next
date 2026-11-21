@@ -15,6 +15,8 @@
     // No fallback on `activeKey`: a bound `undefined` (form reset) would throw with one
     let {
         activeKey = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         accordion = defaults('accordion', false),
         clickHeaderToExpand = defaults('clickHeaderToExpand', true),
         expandIconPosition = defaults('expandIconPosition', 'right'),
@@ -52,6 +54,12 @@
     const activeSet = $derived(CollapseFoundation.deriveActiveSet(foundationProps, states()));
 
     setCollapseContext({
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
         get activeSet() {
             return activeSet;
         },

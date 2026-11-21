@@ -29,7 +29,7 @@ const cardCls = `${prefixCls}-event-card`;
 type MonthViewProps = MonthCalendarProps & Pick<CalendarProps, 'range' | 'showCurrTime' | 'scrollTop' | 'renderTimeDisplay'>;
 
 export default function MonthCalendar(props: MonthViewProps) {
-    const { ref, className, style, mode, displayValue, range, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest } = props;
+    const { ref, className, classNames, style, styles, mode, displayValue, range, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest } = props;
 
     const { locale, localeCode } = useLocale('Calendar');
     const { dateFnsLocale: contextDateFnsLocale } = useConfigContext();
@@ -132,7 +132,7 @@ export default function MonthCalendar(props: MonthViewProps) {
         // key is the date string, which has spaces and so is no IDREF
         const titleId = `${cardIdPrefix}-${date.valueOf()}`;
         const content = ({ initialFocusRef }: RenderContentProps<HTMLButtonElement>) => (
-            <div ref={cardRef} className={cardCls} onMouseDownCapture={markPressInCard}>
+            <div ref={cardRef} className={clsx(cardCls, classNames?.dropdown)} style={styles?.dropdown} onMouseDownCapture={markPressInCard}>
                 <div className={`${cardCls}-content`}>
                     <div className={`${cardCls}-header`}>
                         <div id={titleId} className={`${cardCls}-header-info`}>
@@ -163,7 +163,8 @@ export default function MonthCalendar(props: MonthViewProps) {
                 onEscKeyDown={(e) => closeCardToMore(e, key)}
             >
                 <div
-                    className={listCls}
+                    className={clsx(listCls, classNames?.day)}
+                    style={styles?.day}
                     // the Popover would make the cell a second tab stop beside "more"; -1 is truthy, so it keeps it
                     tabIndex={-1}
                     {...getCellProps(date, isToday)}
@@ -177,8 +178,8 @@ export default function MonthCalendar(props: MonthViewProps) {
                             }
                         }}
                         type="button"
-                        className={`${cardCls}-wrapper`}
-                        style={{ bottom: 0 }}
+                        className={clsx(`${cardCls}-wrapper`, classNames?.more)}
+                        style={{ bottom: 0, ...styles?.more }}
                         aria-expanded={isCardOpen}
                         aria-haspopup="dialog"
                         onClick={(e) => handleMoreClick(e, key, date, remained)}
@@ -207,11 +208,11 @@ export default function MonthCalendar(props: MonthViewProps) {
                         <div role="cell">{header}</div>
                     </div>
                 )}
-                <div className={`${prefixCls}-header`}>
+                <div className={clsx(`${prefixCls}-header`, classNames?.header)} style={styles?.header}>
                     <div className={`${prefixCls}-grid`}>
                         <div className={`${prefixCls}-grid-row`} role="row">
                             {monthlyData[0].map(({ weekday, isWeekend }) => (
-                                <div key={`${weekday}-monthheader`} className={clsx({ [`${cssClasses.PREFIX}-weekend`]: markWeekend && isWeekend })} aria-label={weekday} role="columnheader">
+                                <div key={`${weekday}-monthheader`} className={clsx({ [`${cssClasses.PREFIX}-weekend`]: markWeekend && isWeekend }, classNames?.headerCell)} style={styles?.headerCell} aria-label={weekday} role="columnheader">
                                     <span>{weekday}</span>
                                 </div>
                             ))}
@@ -241,7 +242,7 @@ export default function MonthCalendar(props: MonthViewProps) {
                                                 return renderCollapsed(day[ind], each, listCls, hidden);
                                             }
                                             return (
-                                                <div key={`${date}-weeksk`} className={listCls} {...getCellProps(date, isToday)}>
+                                                <div key={`${date}-weeksk`} className={clsx(listCls, classNames?.day)} style={styles?.day} {...getCellProps(date, isToday)}>
                                                     {formatDayString(date, month, dayString)}
                                                     {dateGridRender?.(date.toString(), date)}
                                                 </div>
@@ -254,11 +255,12 @@ export default function MonthCalendar(props: MonthViewProps) {
                                             topInd < itemLimit ? (
                                                 <div
                                                     key={key || `${ind}-monthevent`}
-                                                    className={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-month`}
+                                                    className={clsx(`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-month`, classNames?.event)}
                                                     style={{
                                                         insetInlineStart: toPercent(leftPos),
                                                         width: toPercent(eventWidth),
                                                         top: `${topInd}em`,
+                                                        ...styles?.event,
                                                     }}
                                                 >
                                                     {content}

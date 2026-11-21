@@ -6,10 +6,18 @@
                 "zh-CN": "对齐方式，可选 center、justify、left、plain；row 为 true 时无效。",
                 "en-US": "Alignment: center, justify, left or plain; ignored when row is true."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 itemKey、itemValue，分别作用到全部条目的键与值，与组件自带的类名合并，排在条目自己的 classNames 之前。",
+                "en-US": "Class names of the inner parts, keyed by itemKey and itemValue, applied to the key and value of every item and merged with the built-in classes; they come before the item's own classNames."
+            },
             "row": { "zh-CN": "是否双行显示。", "en-US": "Whether to display key and value in two rows." },
             "size": {
                 "zh-CN": "双行显示时的尺寸，可选 small、medium、large。",
                 "en-US": "Size in two-row mode: small, medium or large."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames，值可以是样式对象或字符串；条目自己的 styles 后写。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames, each a style object or a string; the item's own styles are applied after."
             },
             "data": {
                 "zh-CN": "列表显示的数据；为空时使用 Descriptions.Item 子节点。",
@@ -44,12 +52,12 @@
             "itemKey": { "zh-CN": "键，可以是 JSX 元素。", "en-US": "Key, a JSX element." },
             "span": { "zh-CN": "单元格跨越的列数。", "en-US": "Number of columns the cell spans." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 key，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by key; merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 key、value，与组件自带的类名合并，排在父级 Descriptions 的 itemKey、itemValue 之后。",
+                "en-US": "Class names of the inner parts, keyed by key and value; merged with the built-in classes and placed after the itemKey and itemValue of the parent Descriptions."
             },
             "styles": {
-                "zh-CN": "内部各部位的样式，键为 key，值可以是样式对象或字符串。",
-                "en-US": "Styles of the inner parts, keyed by key, each a style object or a string."
+                "zh-CN": "内部各部位的样式，键为 key、value，值可以是样式对象或字符串。",
+                "en-US": "Styles of the inner parts, keyed by key and value, each a style object or a string."
             }
         }
     }

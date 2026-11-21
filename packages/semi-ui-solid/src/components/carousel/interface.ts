@@ -1,5 +1,5 @@
 import type { JSX, Ref } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/components/carousel/constants';
+import type { CarouselPart, strings } from '@fibrae/semi-foundation/components/carousel/constants';
 import type { CarouselAutoPlay } from '@fibrae/semi-foundation/components/carousel/foundation';
 import type { ElementProps } from '../../base/index';
 
@@ -40,6 +40,7 @@ export interface CarouselProps extends ElementProps<'div', 'onChange' | 'ref'> {
     arrowType?: (typeof strings.ARROW_MAP)[number];
     children?: JSX.Element;
     class?: string;
+    classNames?: Partial<Record<CarouselPart, string>>;
     defaultActiveIndex?: number;
     indicatorPosition?: (typeof strings.POSITION_MAP)[number];
     indicatorSize?: (typeof strings.SIZE)[number];
@@ -54,6 +55,7 @@ export interface CarouselProps extends ElementProps<'div', 'onChange' | 'ref'> {
     showIndicator?: boolean;
     slideDirection?: (typeof strings.DIRECTION)[number];
     speed?: number;
+    styles?: Partial<Record<CarouselPart, JSX.CSSProperties | string>>;
     trigger?: (typeof strings.TRIGGER)[number];
     /** The root element with the CarouselHandle methods */
     ref?: Ref<CarouselElement>;
@@ -61,6 +63,8 @@ export interface CarouselProps extends ElementProps<'div', 'onChange' | 'ref'> {
 
 export interface CarouselIndicatorProps {
     activeIndex: number;
+    classNames?: Partial<Record<CarouselPart, string>>;
+    styles?: Partial<Record<CarouselPart, JSX.CSSProperties | string>>;
     position?: (typeof strings.POSITION_MAP)[number];
     size?: (typeof strings.SIZE)[number];
     total: number;
@@ -81,6 +85,8 @@ export interface CarouselArrowProps {
     prev: () => void;
     next: () => void;
     arrowProps?: ArrowProps;
+    classNames?: Partial<Record<CarouselPart, string>>;
     leftArrow?: JSX.Element;
     rightArrow?: JSX.Element;
+    styles?: Partial<Record<CarouselPart, JSX.CSSProperties | string>>;
 }

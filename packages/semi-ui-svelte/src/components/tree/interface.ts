@@ -69,7 +69,7 @@ export interface TreeIconSnippetProps {
 /** Put `class` and `onClick` on the element the snippet renders */
 export interface TreeExpandIconSnippetProps {
     onClick: (event: MouseEvent) => void;
-    class: string;
+    class: ClassValue;
     expanded: boolean;
 }
 
@@ -92,7 +92,7 @@ export interface TreeFullLabelSnippetProps {
 }
 
 export interface TreeSearchSnippetProps {
-    class: string;
+    class: ClassValue;
     value: string;
     placeholder: string;
     showClear: boolean;

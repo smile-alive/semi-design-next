@@ -1,5 +1,6 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
 import type { Extensions } from '@tiptap/core';
+import type { SidebarCodeContentPart, SidebarFileContentPart, SidebarFileItemPart, SidebarPart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import type { CodeHighlightProps } from '@fibrae/semi-ui-vue/code-highlight/interface';
 import type { JsonViewerCustomRenderSlotProps, JsonViewerProps, JsonViewerSearchButtonSlotProps } from '@fibrae/semi-ui-vue/json-viewer/interface';
 import type { UploadEmits, UploadProps } from '@fibrae/semi-ui-vue/upload/interface';
@@ -12,7 +13,9 @@ export interface SideBarOption {
 
 export type SideBarDetailContent = CodeItemData | FileItemData;
 
-export interface SideBarProps extends ContainerProps {
+export interface SideBarProps extends Omit<ContainerProps, 'classNames' | 'styles'> {
+    classNames?: Partial<Record<SidebarPart, ClassValue>>;
+    styles?: Partial<Record<SidebarPart, StyleValue>>;
     /** `main`, `code`, `file` or a custom mode rendered through `#detailContent` */
     mode?: string;
     activeKey?: string;
@@ -105,6 +108,8 @@ export type ImageUploadNodeOptions = Partial<UploadProps> &
     };
 
 export interface FileItemProps {
+    classNames?: Partial<Record<SidebarFileItemPart, ClassValue>>;
+    styles?: Partial<Record<SidebarFileItemPart, StyleValue>>;
     name?: string;
     /** HTML; a later value replaces the document without emitting contentChange */
     content?: string;
@@ -133,12 +138,16 @@ interface CollapseListEmits<T> {
 }
 
 export interface CodeContentProps extends CollapseListProps {
+    classNames?: Partial<Record<SidebarCodeContentPart, ClassValue>>;
+    styles?: Partial<Record<SidebarCodeContentPart, StyleValue>>;
     codes?: CodeItemData[];
 }
 
 export type CodeContentEmits = CollapseListEmits<CodeItemData>;
 
 export interface FileContentProps extends CollapseListProps {
+    classNames?: Partial<Record<SidebarFileContentPart, ClassValue>>;
+    styles?: Partial<Record<SidebarFileContentPart, StyleValue>>;
     /** Rendered read-only: each entry's extensions and imgUploadProps reach its preview */
     files?: FileItemData[];
 }

@@ -18,9 +18,11 @@
     import { useNestedPopups } from '../tooltip/context';
     import type { FocusTarget } from '../tooltip/interface';
     import { useCalendarContext } from './context';
-    import type { CalendarSlots, EventObject, WeekStartsOn } from './interface';
+    import type { CalendarProps, CalendarSlots, EventObject, WeekStartsOn } from './interface';
 
     interface MonthCalendarProps {
+        classNames?: CalendarProps['classNames'];
+        styles?: CalendarProps['styles'];
         displayValue: Date;
         events: EventObject[];
         markWeekend: boolean;
@@ -158,10 +160,10 @@
                     <slot name="header" />
                 </div>
             </div>
-            <div :class="`${prefixCls}-header`">
+            <div :class="[`${prefixCls}-header`, props.classNames?.header]" :style="props.styles?.header">
                 <div :class="`${prefixCls}-grid`">
                     <div :class="`${prefixCls}-grid-row`" role="row">
-                        <div v-for="day in monthlyData[0]" :key="day.weekday" :aria-label="day.weekday" :class="{ [`${cssClasses.PREFIX}-weekend`]: props.markWeekend && day.isWeekend }" role="columnheader">
+                        <div v-for="day in monthlyData[0]" :key="day.weekday" :aria-label="day.weekday" :class="[{ [`${cssClasses.PREFIX}-weekend`]: props.markWeekend && day.isWeekend }, props.classNames?.headerCell]" role="columnheader" :style="props.styles?.headerCell">
                             <span>{{ day.weekday }}</span>
                         </div>
                     </div>
@@ -178,12 +180,16 @@
                                 <div
                                     :aria-current="day.isToday ? 'date' : undefined"
                                     :aria-label="format(day.date, 'PPP', { locale: dateFnsLocale })"
-                                    :class="{
-                                        [`${cssClasses.PREFIX}-today`]: day.isToday,
-                                        [`${cssClasses.PREFIX}-weekend`]: props.markWeekend && day.isWeekend,
-                                        [`${prefixCls}-same`]: day.isSameMonth,
-                                    }"
+                                    :class="[
+                                        {
+                                            [`${cssClasses.PREFIX}-today`]: day.isToday,
+                                            [`${cssClasses.PREFIX}-weekend`]: props.markWeekend && day.isWeekend,
+                                            [`${prefixCls}-same`]: day.isSameMonth,
+                                        },
+                                        props.classNames?.day,
+                                    ]"
                                     role="cell"
+                                    :style="props.styles?.day"
                                     :tabindex="day.hidden > 0 ? -1 : undefined"
                                     @click="emit('click', $event, CalendarFoundation.formatCbValue([day.date]))"
                                 >
@@ -193,13 +199,22 @@
                                             <span v-else :class="`${cssClasses.PREFIX}-today-date`">{{ day.dayString }}</span>
                                         </span>
                                     </slot>
-                                    <button v-if="day.hidden > 0" :ref="(el) => setMoreButton(day.key, el)" :aria-expanded="isOpen(day.key)" aria-haspopup="dialog" :class="`${cardCls}-wrapper`" style="bottom: 0" type="button" @click.stop="foundation.toggleCard($event, day.key, day.date, day.hidden)">
+                                    <button
+                                        v-if="day.hidden > 0"
+                                        :ref="(el) => setMoreButton(day.key, el)"
+                                        :aria-expanded="isOpen(day.key)"
+                                        aria-haspopup="dialog"
+                                        :class="[`${cardCls}-wrapper`, props.classNames?.more]"
+                                        :style="[{ bottom: 0 }, props.styles?.more]"
+                                        type="button"
+                                        @click.stop="foundation.toggleCard($event, day.key, day.date, day.hidden)"
+                                    >
                                         {{ remaining(day.hidden) }}
                                     </button>
                                     <slot :date="day.date" :dateString="day.date.toString()" name="dateGrid" />
                                 </div>
                                 <template v-if="day.hidden > 0" #content="{ initialFocusRef }">
-                                    <div :ref="(el) => setCard(day.key, el)" :class="cardCls">
+                                    <div :ref="(el) => setCard(day.key, el)" :class="[cardCls, props.classNames?.dropdown]" :style="props.styles?.dropdown">
                                         <div :class="`${cardCls}-content`">
                                             <div :class="`${cardCls}-header`">
                                                 <div :id="day.titleId" :class="`${cardCls}-header-info`">
@@ -229,7 +244,7 @@
                             </component>
                         </div>
                         <div :class="`${cssClasses.PREFIX}-event-items`">
-                            <div v-for="(span, ind) in week.display" :key="span.item.key || `${ind}-monthevent`" :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-month`]" :style="span.style">
+                            <div v-for="(span, ind) in week.display" :key="span.item.key || `${ind}-monthevent`" :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-month`, props.classNames?.event]" :style="[span.style, props.styles?.event]">
                                 <slot :event="eventOf(span.item)" name="event">{{ span.item.children }}</slot>
                             </div>
                         </div>

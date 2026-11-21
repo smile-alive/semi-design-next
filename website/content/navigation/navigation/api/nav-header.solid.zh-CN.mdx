@@ -2,9 +2,11 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性        | 说明                                                                                                  | 类型                                                                                | 默认值 |
-| ----------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------ |
-| link        | 头部的 `href`，传入时头部内容包裹在链接中。                                                           | `string`                                                                            | -      |
-| linkOptions | 透传给链接的属性。                                                                                    | <ApiType detail={"JSX.AnchorHTMLAttributes\u003cHTMLAnchorElement>"}>Type</ApiType> | -      |
-| logo        | Logo 节点，如图片或图标。                                                                             | `JSX.Element`                                                                       | -      |
-| text        | Logo 文案，只接受字符串或数字，其他内容放在 children 中。收起后文案隐藏，并作为头部链接的可访问名称。 | `string \| number`                                                                  | -      |
+| 属性        | 说明                                                                                                      | 类型                                                                                                         | 默认值 |
+| ----------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------ |
+| classNames  | 内部各部位的类名，键为 `logo`、`text`、`link`（设置 `link` 后包住头部内容的链接），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cNavHeaderPart, string>>"}>Type</ApiType>                          | -      |
+| link        | 头部的 `href`，传入时头部内容包裹在链接中。                                                               | `string`                                                                                                     | -      |
+| linkOptions | 透传给链接的属性。                                                                                        | <ApiType detail={"JSX.AnchorHTMLAttributes\u003cHTMLAnchorElement>"}>Type</ApiType>                          | -      |
+| logo        | Logo 节点，如图片或图标。                                                                                 | `JSX.Element`                                                                                                | -      |
+| styles      | 内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。                                       | <ApiType detail={"Partial\u003cRecord\u003cNavHeaderPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |
+| text        | Logo 文案，只接受字符串或数字，其他内容放在 children 中。收起后文案隐藏，并作为头部链接的可访问名称。     | `string \| number`                                                                                           | -      |

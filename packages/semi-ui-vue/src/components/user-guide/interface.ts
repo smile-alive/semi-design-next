@@ -1,4 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { UserGuidePart } from '@fibrae/semi-foundation/components/user-guide/constants';
 import type { ButtonProps } from '../button/interface';
 import type { Position } from '../tooltip/interface';
 
@@ -29,6 +30,7 @@ export interface UserGuideStepItem {
 }
 
 export interface UserGuideProps {
+    classNames?: Partial<Record<UserGuidePart, ClassValue>>;
     /** Controlled step index; undefined lets the component keep it. */
     current?: number;
     finishText?: string;
@@ -42,6 +44,7 @@ export interface UserGuideProps {
     showSkipButton?: boolean;
     spotlightPadding?: number;
     steps?: UserGuideStepItem[];
+    styles?: Partial<Record<UserGuidePart, StyleValue>>;
     theme?: 'default' | 'primary';
     visible?: boolean;
     zIndex?: number;

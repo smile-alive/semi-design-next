@@ -111,11 +111,11 @@ export default function SideSheetContent({
                 <div className={`${prefixCls}-content`}>
                     <div className={clsx(`${prefixCls}-header`, classNames?.header)} style={styles?.header}>
                         {hasTitle && (
-                            <div id={titleId} className={`${prefixCls}-title`} aria-level={2} role="heading" x-semi-prop="title">
+                            <div id={titleId} className={clsx(`${prefixCls}-title`, classNames?.title)} style={styles?.title} aria-level={2} role="heading" x-semi-prop="title">
                                 {title}
                             </div>
                         )}
-                        {closable && <Button type="tertiary" className={`${prefixCls}-close`} aria-label={locale.close} size="small" theme="borderless" icon={closeIcon || <IconClose />} onClick={onClose} />}
+                        {closable && <Button type="tertiary" className={clsx(`${prefixCls}-close`, classNames?.close)} style={styles?.close} aria-label={locale.close} size="small" theme="borderless" icon={closeIcon || <IconClose />} onClick={onClose} />}
                     </div>
                     <div className={clsx(`${prefixCls}-body`, classNames?.body)} style={styles?.body} x-semi-prop="children">
                         {children}

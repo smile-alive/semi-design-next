@@ -45,6 +45,24 @@ describe('Svelte Banner', () => {
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['icon', 'title', 'description', 'close', 'extra'] as const;
+        const { root } = setup({
+            props: {
+                title: 't',
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            },
+            description: true,
+            extra: true,
+        });
+        for (const part of parts) {
+            const el = root()?.querySelector(`.${prefix}-${part}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
     it('不同 type 的 Banner', () => {
         const { store, root } = setup();
         expect(root()).toHaveClass(`${prefix}-info`);

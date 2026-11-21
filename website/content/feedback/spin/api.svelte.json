@@ -21,12 +21,12 @@
             "size": { "zh-CN": "组件大小。", "en-US": "Component size." },
             "spinning": { "zh-CN": "是否处于加载中的状态。", "en-US": "Whether it is loading." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 child（包裹内容的元素），追加在自带类名之后。",
-                "en-US": "Class names of the inner parts, keyed by child (the element wrapping the content), appended after the built-in class names."
+                "zh-CN": "内部各部位的类名，键为 child（包裹内容的元素）、indicator（加载指示器，传入 indicator 时为其外层包裹元素）、tip（提示文字），追加在自带类名之后。",
+                "en-US": "Class names of the inner parts, keyed by child (the element wrapping the content), indicator (the loading indicator, or the element wrapping a given indicator) and tip (the tip text), appended after the built-in class names."
             },
             "styles": {
-                "zh-CN": "内部各部位的样式字符串，键为 child（包裹内容的元素）。",
-                "en-US": "Style strings of the inner parts, keyed by child (the element wrapping the content)."
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
             },
             "tip": {
                 "zh-CN": "当 Spin 作为包裹元素时，描述文字的 snippet。",

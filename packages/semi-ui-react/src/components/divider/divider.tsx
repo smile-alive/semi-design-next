@@ -1,6 +1,6 @@
 import React, { type CSSProperties, type ReactNode, Children } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/divider/constants';
+import { cssClasses, type DividerPart } from '@fibrae/semi-foundation/components/divider/constants';
 import '@fibrae/semi-foundation/components/divider/divider.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
 
@@ -11,6 +11,8 @@ export interface DividerProps extends ElementProps<'div'> {
     margin?: number | string;
     children?: ReactNode;
     className?: string;
+    classNames?: Partial<Record<DividerPart, string>>;
+    styles?: Partial<Record<DividerPart, CSSProperties>>;
     dashed?: boolean;
     layout?: 'horizontal' | 'vertical';
     style?: CSSProperties;
@@ -21,7 +23,7 @@ export interface DividerProps extends ElementProps<'div'> {
 const defaultProps = { layout: 'horizontal', align: 'center' } satisfies Partial<DividerProps>;
 
 export default function Divider(rawProps: DividerProps) {
-    const { layout, dashed, align, className, margin, style, children, ...rest } = useDefaultProps('Divider', rawProps, defaultProps);
+    const { layout, dashed, align, className, classNames, margin, style, styles, children, ...rest } = useDefaultProps('Divider', rawProps, defaultProps);
 
     let overrideDefaultStyle: CSSProperties = {};
 
@@ -56,7 +58,7 @@ export default function Divider(rawProps: DividerProps) {
         <div aria-orientation={!hasText && layout === 'vertical' ? 'vertical' : undefined} role={hasText ? undefined : 'separator'} {...rest} className={dividerClassNames} style={{ ...overrideDefaultStyle, ...style }}>
             {hasText &&
                 (isTextOnly ? (
-                    <span className={`${prefixCls}_inner-text`} x-semi-prop="children">
+                    <span className={clsx(`${prefixCls}_inner-text`, classNames?.content)} style={styles?.content} x-semi-prop="children">
                         {nodes}
                     </span>
                 ) : (

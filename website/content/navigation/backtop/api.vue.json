@@ -6,6 +6,10 @@
                 "zh-CN": "徽章参数，同 FloatButton。",
                 "en-US": "Badge props, same as FloatButton."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `body`（按钮内承载图标或默认插槽内容的容器 `.semi-floatButton-body`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `body` (the container of the icon or default slot content inside the button, `.semi-floatButton-body`); merged with the built-in classes."
+            },
             "colorful": {
                 "zh-CN": "多彩按钮，同 FloatButton；未设置时取 FloatButton 的默认值。",
                 "en-US": "Colorful button, same as FloatButton. Falls back to the FloatButton default when unset."
@@ -21,6 +25,10 @@
             "size": {
                 "zh-CN": "尺寸，可选 default、small、large；未设置时取 FloatButton 的默认值。",
                 "en-US": "Size: default, small or large. Falls back to the FloatButton default when unset."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "target": {
                 "zh-CN": "返回被监听滚动的元素的函数，未设置时为 window；返回 null 表示节点尚不可用。挂载时调用，函数本身变化时重新调用；模板 ref 在父组件 mounted 之前已赋值，可直接读取。",

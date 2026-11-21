@@ -38,8 +38,6 @@ export default function TabBar(props: TabBarProps) {
         tabBarExtraContent: rawTabBarExtraContent,
         tabPosition,
         type,
-        dropdownClassName,
-        dropdownStyle,
         deleteTabItem,
         handleKeyDown,
         more,
@@ -82,12 +80,16 @@ export default function TabBar(props: TabBarProps) {
         }
         // only float is taken from the element: its other style stays on the element and is not applied twice
         const extraFloat = isValidElement<{ style?: CSSProperties }>(tabBarExtraContent) ? tabBarExtraContent.props.style?.float : undefined;
-        const extraCls = clsx(cssClasses.TABS_BAR_EXTRA, {
-            [`${cssClasses.TABS_BAR}-${type}-extra`]: type,
-            [`${cssClasses.TABS_BAR}-${type}-extra-${size}`]: size,
-        });
+        const extraCls = clsx(
+            cssClasses.TABS_BAR_EXTRA,
+            {
+                [`${cssClasses.TABS_BAR}-${type}-extra`]: type,
+                [`${cssClasses.TABS_BAR}-${type}-extra-${size}`]: size,
+            },
+            classNames?.extra
+        );
         return (
-            <div className={extraCls} style={{ float: extraFloat ?? 'inline-end' }} x-semi-prop="tabBarExtraContent">
+            <div className={extraCls} style={{ float: extraFloat ?? 'inline-end', ...styles?.extra }} x-semi-prop="tabBarExtraContent">
                 {tabBarExtraContent}
             </div>
         );
@@ -120,12 +122,12 @@ export default function TabBar(props: TabBarProps) {
     );
 
     const renderCollapse = (items: Array<OverflowItem>, icon: ReactNode, pos: 'start' | 'end'): ReactNode => {
-        const arrowCls = clsx(`${cssClasses.TABS_BAR}-arrow-${pos}`, `${cssClasses.TABS_BAR}-arrow`);
+        const arrowCls = clsx(`${cssClasses.TABS_BAR}-arrow-${pos}`, `${cssClasses.TABS_BAR}-arrow`, classNames?.arrow);
         const arrowName = pos === 'start' ? locale.prevTabs : locale.nextTabs;
 
         if (!items.length) {
             return (
-                <div className={arrowCls} role="presentation">
+                <div className={arrowCls} style={styles?.arrow} role="presentation">
                     <Button aria-label={arrowName} disabled theme="borderless" icon={icon} />
                 </div>
             );
@@ -143,7 +145,7 @@ export default function TabBar(props: TabBarProps) {
 
         const button = (
             // the Button is the Tab stop; Dropdown would add 0 here
-            <div className={arrowCls} role="presentation" tabIndex={-1} onClick={() => foundation.handleArrowClick(items, pos)}>
+            <div className={arrowCls} style={styles?.arrow} role="presentation" tabIndex={-1} onClick={() => foundation.handleArrowClick(items, pos)}>
                 <Button aria-label={arrowName} theme="borderless" icon={icon} />
             </div>
         );
@@ -154,7 +156,7 @@ export default function TabBar(props: TabBarProps) {
         return (
             <Dropdown
                 key={pos}
-                style={dropdownStyle}
+                style={styles?.dropdown}
                 clickToHide
                 clickTriggerToHide
                 disableFocusListener // prevent the panel from popping up again after clicking
@@ -164,7 +166,7 @@ export default function TabBar(props: TabBarProps) {
                 trigger="hover"
                 {...dropdownProps?.[pos]}
                 // the user's className adds to the built-in one: the built-in class supplies the popup's max-height and scrolling
-                className={clsx(dropdownClassName, `${cssClasses.TABS_BAR}-dropdown`, dropdownProps?.[pos]?.className)}
+                className={clsx(`${cssClasses.TABS_BAR}-dropdown`, classNames?.dropdown, dropdownProps?.[pos]?.className)}
             >
                 {button}
             </Dropdown>
@@ -206,7 +208,8 @@ export default function TabBar(props: TabBarProps) {
 
     const renderMoreDropdown = (panels: PlainTab[], moreDropdownProps: DropdownProps, trigger: ReactNode) => (
         <Dropdown
-            className={`${cssClasses.TABS_BAR}-more-dropdown-${type}`}
+            className={clsx(`${cssClasses.TABS_BAR}-more-dropdown-${type}`, classNames?.dropdown)}
+            style={styles?.dropdown}
             clickToHide
             position="bottomLeft"
             render={
@@ -228,7 +231,7 @@ export default function TabBar(props: TabBarProps) {
 
     const renderWithMoreTrigger = (): ReactNode => {
         let moreTrigger: ReactNode = (
-            <button type="button" className={clsx(`${cssClasses.TABS_BAR}-more-trigger`, `${cssClasses.TABS_BAR}-more-trigger-${type}`)}>
+            <button type="button" className={clsx(`${cssClasses.TABS_BAR}-more-trigger`, `${cssClasses.TABS_BAR}-more-trigger-${type}`, classNames?.more)} style={styles?.more}>
                 <span className={`${cssClasses.TABS_BAR}-more-trigger-content`}>
                     <span>{locale.more}</span>
                     <IconChevronDown className={`${cssClasses.TABS_BAR}-more-trigger-content-icon`} />
@@ -276,16 +279,20 @@ export default function TabBar(props: TabBarProps) {
         <div
             {...rest}
             ref={mergedRef}
-            className={clsx(className, {
-                [cssClasses.TABS_BAR]: true,
-                [cssClasses.TABS_BAR_LINE]: type === 'line',
-                [cssClasses.TABS_BAR_CARD]: type === 'card',
-                [cssClasses.TABS_BAR_BUTTON]: type === 'button',
-                [cssClasses.TABS_BAR_SLASH]: type === 'slash',
-                [`${cssClasses.TABS_BAR}-${tabPosition}`]: tabPosition,
-                [`${cssClasses.TABS_BAR}-collapse`]: effectiveCollapsible,
-            })}
-            style={style}
+            className={clsx(
+                className,
+                {
+                    [cssClasses.TABS_BAR]: true,
+                    [cssClasses.TABS_BAR_LINE]: type === 'line',
+                    [cssClasses.TABS_BAR_CARD]: type === 'card',
+                    [cssClasses.TABS_BAR_BUTTON]: type === 'button',
+                    [cssClasses.TABS_BAR_SLASH]: type === 'slash',
+                    [`${cssClasses.TABS_BAR}-${tabPosition}`]: tabPosition,
+                    [`${cssClasses.TABS_BAR}-collapse`]: effectiveCollapsible,
+                },
+                classNames?.tabBar
+            )}
+            style={{ ...style, ...styles?.tabBar }}
         >
             {contents}
             {renderExtra()}

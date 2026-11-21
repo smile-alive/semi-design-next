@@ -32,6 +32,8 @@ function Sidebar(rawProps: SideBarProps) {
         mode,
         title,
         className,
+        classNames,
+        styles,
         detailContent,
         activeKey,
         options,
@@ -78,12 +80,16 @@ function Sidebar(rawProps: SideBarProps) {
 
     const renderDetailHeaderNode = () =>
         renderDetailHeader?.(mode, detailContent) || (
-            <div className={`${prefixCls}-detail-header`}>
+            <div className={clsx(`${prefixCls}-detail-header`, classNames?.header)} style={styles?.header}>
                 <span className={cssClasses.DETAIL_HEADER_LEFT}>
-                    <Button type="tertiary" aria-label={locale.close} theme="borderless" icon={<IconClose />} onClick={(e) => onBackWard?.(e, strings.MODE.MAIN)} />
-                    <span className={`${prefixCls}-detail-header-title`}>{detailContent?.name}</span>
+                    <Button type="tertiary" className={clsx(`${prefixCls}-detail-header-back`, classNames?.close)} style={styles?.close} aria-label={locale.close} theme="borderless" icon={<IconClose />} onClick={(e) => onBackWard?.(e, strings.MODE.MAIN)} />
+                    <span className={clsx(`${prefixCls}-detail-header-title`, classNames?.title)} style={styles?.title}>
+                        {detailContent?.name}
+                    </span>
                 </span>
-                <span className={`${prefixCls}-detail-header-right`}>{typeof detailContent?.content === 'string' && <Button type="tertiary" aria-label={locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={handleCopyDetailContent} />}</span>
+                <span className={`${prefixCls}-detail-header-right`}>
+                    {typeof detailContent?.content === 'string' && <Button type="tertiary" className={clsx(`${prefixCls}-detail-header-copy`, classNames?.copy)} style={styles?.copy} aria-label={locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={handleCopyDetailContent} />}
+                </span>
             </div>
         );
 
@@ -115,6 +121,8 @@ function Sidebar(rawProps: SideBarProps) {
                 [`${prefixCls}-main`]: isMain,
                 [`${prefixCls}-detail`]: !isMain,
             })}
+            classNames={classNames}
+            styles={styles}
             title={isMain ? title : null}
             afterVisibleChange={handleAfterVisibleChange}
             containerRef={runtime.containerRef}
@@ -122,8 +130,10 @@ function Sidebar(rawProps: SideBarProps) {
         >
             {isMain ? (
                 <div className={`${prefixCls}-main-content-wrapper`}>
-                    <Options activeKey={activeKey} options={options} renderOptionItem={renderOptionItem} onChange={onActiveOptionChange} />
-                    <div className={`${prefixCls}-main-content`}>{renderMainContent?.(activeKey)}</div>
+                    <Options classNames={classNames} styles={styles} activeKey={activeKey} options={options} renderOptionItem={renderOptionItem} onChange={onActiveOptionChange} />
+                    <div className={clsx(`${prefixCls}-main-content`, classNames?.mainContent)} style={styles?.mainContent}>
+                        {renderMainContent?.(activeKey)}
+                    </div>
                 </div>
             ) : (
                 renderDetail()

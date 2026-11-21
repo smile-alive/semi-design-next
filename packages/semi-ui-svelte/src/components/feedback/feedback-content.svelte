@@ -7,7 +7,7 @@
     import RadioGroup from '../radio/radio-group.svelte';
     import type { FeedbackContentProps } from './interface.js';
 
-    let { type, value, textAreaProps, radioGroupProps, checkboxGroupProps, onTextChange, onReasonChange, onEmojiChange, onRadioChange, onCheckboxChange, children, radioLabel, radioExtra, checkboxLabel, checkboxExtra }: FeedbackContentProps = $props();
+    let { type, value, textAreaProps, radioGroupProps, checkboxGroupProps, emojiClass, emojiStyle, onTextChange, onReasonChange, onEmojiChange, onRadioChange, onCheckboxChange, children, radioLabel, radioExtra, checkboxLabel, checkboxExtra }: FeedbackContentProps = $props();
 
     const locale = useLocale('Feedback');
 
@@ -27,7 +27,7 @@
     <!-- APG radio group: native radios provide the arrow keys, single Tab stop and checked state -->
     <div aria-label={locale().locale.rating} class={`${prefix}-emoji-container`} role="radiogroup">
         {#each emojis as [name, item] (item)}
-            <label class={[`${prefix}-emoji-item`, { [`${prefix}-emoji-item-selected`]: item === shown.emoji }]} data-value={item}>
+            <label class={[`${prefix}-emoji-item`, emojiClass, { [`${prefix}-emoji-item-selected`]: item === shown.emoji }]} data-value={item} style={emojiStyle}>
                 <input aria-label={locale().locale[name]} checked={item === shown.emoji} class={`${prefix}-emoji-input`} name={emojiGroupName} type="radio" value={item} onchange={() => onEmojiChange(item)} />
                 <span aria-hidden="true" class={`${prefix}-emoji-glyph`}>{item}</span>
             </label>

@@ -1,7 +1,7 @@
 import { isValidElement, useState, type ReactNode, type MouseEvent, type CSSProperties, type SVGProps } from 'react';
 import clsx from 'clsx';
 import { pickBy } from 'es-toolkit';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+import { cssClasses, strings, type UploadFileCardPart, type UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
 import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
 import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import type { Locale } from '@fibrae/semi-foundation/locale';
@@ -14,6 +14,7 @@ import Progress from '../progress/index';
 import Spin from '../spin/index';
 import Tooltip from '../tooltip/index';
 import Typography from '../typography';
+import { useUploadContext, type UploadContextValue } from './context';
 import type { RenderFileItemProps } from './interface';
 
 const prefixCls = cssClasses.PREFIX;
@@ -65,6 +66,27 @@ function withDefaults(rawProps: FileCardProps): FileCardProps {
     return { ...rawProps, ...Object.fromEntries(missing) };
 }
 
+const itemParts = {
+    thumbnail: 'itemThumbnail',
+    name: 'itemName',
+    progress: 'itemProgress',
+    validateMessage: 'itemValidateMessage',
+    retry: 'itemRetry',
+    replace: 'itemReplace',
+    close: 'itemClose',
+} as const satisfies Record<UploadFileCardPart, UploadPart>;
+
+// The parent Upload's item* parts come first, the card's own parts after them
+function mergeParts(upload: UploadContextValue | undefined, own: FileCardProps): Pick<FileCardProps, 'className' | 'classNames' | 'style' | 'styles'> {
+    const classNames: FileCardProps['classNames'] = {};
+    const styles: FileCardProps['styles'] = {};
+    for (const [key, itemKey] of Object.entries(itemParts) as [UploadFileCardPart, UploadPart][]) {
+        classNames[key] = clsx(upload?.classNames?.[itemKey], own.classNames?.[key]) || undefined;
+        styles[key] = { ...upload?.styles?.[itemKey], ...own.styles?.[key] };
+    }
+    return { classNames, styles, className: clsx(upload?.classNames?.item, own.className), style: { ...upload?.styles?.item, ...own.style } };
+}
+
 function transSize(size: string | number) {
     return typeof size === 'number' ? getFileSize(size) : size;
 }
@@ -89,17 +111,17 @@ function renderValidateMessage({ status, validateMessage }: FileCardProps): Reac
     return isValidElement(validateMessage) ? validateMessage : null;
 }
 
-function renderPicValidateMsg({ status, validateMessage }: FileCardProps, failed: boolean): ReactNode {
+function renderPicValidateMsg({ status, validateMessage, classNames, styles }: FileCardProps, failed: boolean): ReactNode {
     let icon: ReactNode = null;
     if (validateMessage && status === strings.FILE_STATUS_VALIDATING) {
         icon = (
-            <span className={`${prefixCls}-tooltip-children-wrapper ${prefixCls}-picture-file-card-icon-loading`}>
+            <span className={clsx(`${prefixCls}-tooltip-children-wrapper`, `${prefixCls}-picture-file-card-icon-loading`, classNames.validateMessage)} style={styles.validateMessage}>
                 <Spin size="small" />
             </span>
         );
     } else if (validateMessage && failed) {
         icon = (
-            <div className={`${prefixCls}-picture-file-card-icon-error`}>
+            <div className={clsx(`${prefixCls}-picture-file-card-icon-error`, classNames.validateMessage)} style={styles.validateMessage}>
                 <ErrorSvg />
             </div>
         );
@@ -130,7 +152,7 @@ function stopThen(callback?: () => void) {
 }
 
 function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPreview: boolean, onImageError: () => void): ReactNode {
-    const { url, percent, status, disabled, className, style, onPreviewClick, showPicInfo, renderPicInfo, renderPicClose, renderPicPreviewIcon, renderThumbnail, name, index, picHeight, picWidth } = props;
+    const { url, percent, status, disabled, className, classNames, style, styles, onPreviewClick, showPicInfo, renderPicInfo, renderPicClose, renderPicPreviewIcon, renderThumbnail, name, index, picHeight, picWidth } = props;
     const onRemove = stopThen(props.onRemove);
     const { showRetry, showReplace, showPicProgress: showProgress, showPreview, failed } = UploadFoundation.getFileCardFlags(props, props);
     const customThumbnail = typeof renderThumbnail === 'function';
@@ -147,13 +169,13 @@ function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPrevi
         className
     );
     const retry = (
-        <button type="button" className={`${prefixCls}-picture-file-card-retry`} aria-label={locale.retry} onClick={stopThen(props.onRetry)}>
+        <button type="button" className={clsx(`${prefixCls}-picture-file-card-retry`, classNames.retry)} style={styles.retry} aria-label={locale.retry} onClick={stopThen(props.onRetry)}>
             <IconRefresh className={`${prefixCls}-picture-file-card-icon-retry`} />
         </button>
     );
     const replace = (
         <Tooltip content={locale.replace} position="top" showArrow={false} spacing={4} trigger="hover">
-            <button type="button" className={`${prefixCls}-picture-file-card-replace`} aria-label={locale.replace} onClick={stopThen(props.onReplace)}>
+            <button type="button" className={clsx(`${prefixCls}-picture-file-card-replace`, classNames.replace)} style={styles.replace} aria-label={locale.replace} onClick={stopThen(props.onReplace)}>
                 <ReplaceSvg className={`${prefixCls}-picture-file-card-icon-replace`} />
             </button>
         </Tooltip>
@@ -163,7 +185,7 @@ function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPrevi
         typeof renderPicClose === 'function' ? (
             renderPicClose({ className: `${prefixCls}-picture-file-card-close`, remove: onRemove })
         ) : (
-            <button type="button" className={`${prefixCls}-picture-file-card-close`} aria-label={locale.remove} onClick={onRemove}>
+            <button type="button" className={clsx(`${prefixCls}-picture-file-card-close`, classNames.close)} style={styles.close} aria-label={locale.remove} onClick={onRemove}>
                 <IconClear className={`${prefixCls}-picture-file-card-icon-close`} />
             </button>
         );
@@ -179,14 +201,14 @@ function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPrevi
         itemStyle.width = picWidth;
         imgStyle.width = picWidth;
     }
-    const defaultThumbnail = !fallbackPreview ? <HydratedImage style={imgStyle} alt={name} src={url} onError={onImageError} /> : <IconFile size="large" />;
+    const defaultThumbnail = !fallbackPreview ? <HydratedImage className={classNames.thumbnail} style={{ ...imgStyle, ...styles.thumbnail }} alt={name} src={url} onError={onImageError} /> : <IconFile className={classNames.thumbnail} style={styles.thumbnail} size="large" />;
     const thumbnail = customThumbnail ? renderThumbnail(props) : defaultThumbnail;
 
     return (
         <div {...pickDataAriaProps(props)} className={filePicCardCls} style={itemStyle} role="listitem" onClick={onPreviewClick}>
             {thumbnail}
             {onPreviewClick && <PreviewTrigger label={locale.preview} />}
-            {showProgress && <Progress type="circle" aria-label={locale.uploadProgress} orbitStroke="var(--semi-color-white)" percent={percent} size="small" />}
+            {showProgress && <Progress type="circle" className={classNames.progress} style={styles.progress} aria-label={locale.uploadProgress} orbitStroke="var(--semi-color-white)" percent={percent} size="small" />}
             {showRetry && retry}
             {showReplace && replace}
             {showPreview && preview}
@@ -198,7 +220,7 @@ function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPrevi
 }
 
 function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPreview: boolean, onImageError: () => void): ReactNode {
-    const { name, size, percent, url, disabled, preview, previewFile, className, style, onPreviewClick, renderFileOperation, showTooltip } = props;
+    const { name, size, percent, url, disabled, preview, previewFile, className, classNames, style, styles, onPreviewClick, renderFileOperation, showTooltip } = props;
     const { showRetry, showReplace, showListProgress: showProgress, failed } = UploadFoundation.getFileCardFlags(props, props);
     const fileCardCls = clsx(
         {
@@ -208,10 +230,13 @@ function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPrev
         },
         className
     );
-    const previewCls = clsx({
-        [`${prefixCls}-file-card-preview`]: true,
-        [`${prefixCls}-file-card-preview-placeholder`]: !preview || previewFile || fallbackPreview,
-    });
+    const previewCls = clsx(
+        {
+            [`${prefixCls}-file-card-preview`]: true,
+            [`${prefixCls}-file-card-preview-placeholder`]: !preview || previewFile || fallbackPreview,
+        },
+        classNames.thumbnail
+    );
     const infoCls = `${prefixCls}-file-card-info`;
     let previewContent: ReactNode = preview && !fallbackPreview ? <HydratedImage alt="" src={url} onError={onImageError} /> : <IconFile size="large" />;
     if (previewFile) {
@@ -221,31 +246,35 @@ function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPrev
     if (typeof renderFileOperation === 'function') {
         operation = renderFileOperation(props);
     } else if (!disabled) {
-        operation = <Button type="tertiary" className={`${prefixCls}-file-card-close`} aria-label={locale.remove} size="small" theme="borderless" icon={<IconClose />} onClick={stopThen(props.onRemove)} />;
+        operation = <Button type="tertiary" className={clsx(`${prefixCls}-file-card-close`, classNames.close)} style={styles.close} aria-label={locale.remove} size="small" theme="borderless" icon={<IconClose />} onClick={stopThen(props.onRemove)} />;
     }
     return (
         <div {...pickDataAriaProps(props)} className={fileCardCls} style={style} role="listitem" onClick={onPreviewClick}>
             {onPreviewClick && <PreviewTrigger label={locale.preview} />}
-            <div className={previewCls}>{previewContent}</div>
+            <div className={previewCls} style={styles.thumbnail}>
+                {previewContent}
+            </div>
             <div className={`${infoCls}-main`}>
                 <div className={`${infoCls}-main-text`}>
-                    <Typography.Text className={`${infoCls}-name`} ellipsis={{ showTooltip }}>
+                    <Typography.Text className={clsx(`${infoCls}-name`, classNames.name)} style={styles.name} ellipsis={{ showTooltip }}>
                         {name}
                     </Typography.Text>
                     <span>
                         <span className={`${infoCls}-size`}>{transSize(size)}</span>
                         {showReplace && (
                             <Tooltip content={locale.replace} position="top" showArrow={false} trigger="hover">
-                                <Button type="tertiary" className={`${prefixCls}-file-card-replace`} aria-label={locale.replace} size="small" theme="borderless" icon={<DirectorySvg />} onClick={stopThen(props.onReplace)} />
+                                <Button type="tertiary" className={clsx(`${prefixCls}-file-card-replace`, classNames.replace)} style={styles.replace} aria-label={locale.replace} size="small" theme="borderless" icon={<DirectorySvg />} onClick={stopThen(props.onReplace)} />
                             </Tooltip>
                         )}
                     </span>
                 </div>
-                {showProgress && <Progress style={{ width: '100%' }} aria-label={locale.uploadProgress} percent={percent} />}
+                {showProgress && <Progress className={classNames.progress} style={{ width: '100%', ...styles.progress }} aria-label={locale.uploadProgress} percent={percent} />}
                 <div className={`${infoCls}-main-control`}>
-                    <span className={`${infoCls}-validate-message`}>{renderValidateMessage(props)}</span>
+                    <span className={clsx(`${infoCls}-validate-message`, classNames.validateMessage)} style={styles.validateMessage}>
+                        {renderValidateMessage(props)}
+                    </span>
                     {showRetry && (
-                        <button type="button" className={`${infoCls}-retry`} onClick={stopThen(props.onRetry)}>
+                        <button type="button" className={clsx(`${infoCls}-retry`, classNames.retry)} style={styles.retry} onClick={stopThen(props.onRetry)}>
                             {locale.retry}
                         </button>
                     )}
@@ -257,7 +286,9 @@ function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPrev
 }
 
 export default function FileCard(rawProps: FileCardProps) {
-    const props = { ...withDefaults(rawProps), validateMessage: useUnwrappedLazy(rawProps.validateMessage) };
+    const upload = useUploadContext();
+
+    const props = { ...withDefaults(rawProps), ...mergeParts(upload, rawProps), validateMessage: useUnwrappedLazy(rawProps.validateMessage) };
 
     const { locale } = useLocale('Upload');
 

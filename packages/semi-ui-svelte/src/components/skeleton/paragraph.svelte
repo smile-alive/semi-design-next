@@ -3,7 +3,7 @@
     import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
     import type { SkeletonParagraphProps } from './interface.js';
 
-    let { rows = 4, ...rest }: SkeletonParagraphProps = $props();
+    let { classNames, rows = 4, styles, ...rest }: SkeletonParagraphProps = $props();
 
     const prefixCls = cssClasses.PREFIX;
 
@@ -13,6 +13,6 @@
 
 <ul {...rest} aria-hidden={rest['aria-hidden'] ?? 'true'} class={[`${prefixCls}-paragraph`, rest.class]}>
     {#each items as item (item)}
-        <li></li>
+        <li class={classNames?.row} style={styles?.row}></li>
     {/each}
 </ul>

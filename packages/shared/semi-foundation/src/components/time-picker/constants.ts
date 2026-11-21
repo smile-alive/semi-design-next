@@ -7,7 +7,7 @@ const DEFAULT_RANGE_SEPARATOR = ' ~ ' as const;
 export type PanelType = 'left' | 'right';
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type TimePickerPart = 'dropdown' | 'input';
+export type TimePickerPart = 'dropdown' | 'input' | 'header' | 'content' | 'item' | 'footer';
 
 export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-timepicker`,

@@ -28,7 +28,7 @@
 </script>
 
 <template>
-    <ul aria-orientation="vertical" :class="`${cssClasses.PREFIX}-menu`" role="menu" v-bind="$attrs" @keydown="onKeydown">
+    <ul aria-orientation="vertical" :class="[`${cssClasses.PREFIX}-menu`, ctx?.view.value.classNames?.menu]" role="menu" :style="ctx?.view.value.styles?.menu" v-bind="$attrs" @keydown="onKeydown">
         <slot />
     </ul>
 </template>

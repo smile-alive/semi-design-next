@@ -25,6 +25,7 @@
             {
                 [`${PREFIX_CHAT_BOX}-right`]: props.message.role === ROLE.USER && view.value.align === CHAT_ALIGN.LEFT_RIGHT,
             },
+            view.value.classNames?.item,
         ])
     );
 
@@ -43,7 +44,7 @@
 
 <template>
     <slot v-if="$slots.fullChatBox" :class="boxClass" :defaultNodes="defaultNodes()" :message="props.message" name="fullChatBox" :role="role" />
-    <div v-for="(nodes, i) in [defaultNodes()]" v-else :key="i" :class="boxClass">
+    <div v-for="(nodes, i) in [defaultNodes()]" v-else :key="i" :class="boxClass" :style="view.styles?.item">
         <component :is="nodes.avatar" />
         <div :class="`${PREFIX_CHAT_BOX}-wrap`">
             <component :is="nodes.title" v-if="!props.continueSend" />

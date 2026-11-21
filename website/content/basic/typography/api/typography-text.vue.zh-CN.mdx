@@ -2,21 +2,23 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性      | 说明                                                                                      | 类型                                                                                                                                                                  | 默认值      |
-| --------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| code      | 是否被 code 元素包裹。                                                                    | `boolean`                                                                                                                                                             | `false`     |
-| component | 自定义渲染元素，可以是标签名或 Vue 组件，默认 span。                                      | `string \| Component`                                                                                                                                                 | `undefined` |
-| copyable  | 是否可复制；传对象时见 Copyable Config。                                                  | `boolean \| TypographyCopyableConfig`                                                                                                                                 | `false`     |
-| delete    | 添加删除线样式。                                                                          | `boolean`                                                                                                                                                             | `false`     |
-| disabled  | 禁用文本。                                                                                | `boolean`                                                                                                                                                             | `false`     |
-| ellipsis  | 设置自动溢出省略；传对象时见 Ellipsis Config。                                            | `boolean \| Ellipsis`                                                                                                                                                 | `false`     |
-| link      | 是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。 | `LinkType`                                                                                                                                                            | `false`     |
-| mark      | 添加标记样式。                                                                            | `boolean`                                                                                                                                                             | `false`     |
-| size      | 文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸。                                     | `"inherit" \| "normal" \| "small"`                                                                                                                                    | `"normal"`  |
-| strong    | 是否加粗。                                                                                | `boolean`                                                                                                                                                             | `false`     |
-| type      | 文本类型。                                                                                | <ApiType detail={"\"danger\" \u007c \"primary\" \u007c \"quaternary\" \u007c \"secondary\" \u007c \"success\" \u007c \"tertiary\" \u007c \"warning\""}>Type</ApiType> | `"primary"` |
-| underline | 添加下划线样式。                                                                          | `boolean`                                                                                                                                                             | `false`     |
-| weight    | 字重，数字。                                                                              | `number`                                                                                                                                                              | `undefined` |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 icon（图标容器）、expand（展开或收起按钮）、copy（复制按钮，外层 span 仍用 copyable.class），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTypographyTextPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| code | 是否被 code 元素包裹。 | `boolean` | `false` |
+| component | 自定义渲染元素，可以是标签名或 Vue 组件，默认 span。 | `string \| Component` | `undefined` |
+| copyable | 是否可复制；传对象时见 Copyable Config。 | `boolean \| TypographyCopyableConfig` | `false` |
+| delete | 添加删除线样式。 | `boolean` | `false` |
+| disabled | 禁用文本。 | `boolean` | `false` |
+| ellipsis | 设置自动溢出省略；传对象时见 Ellipsis Config。 | `boolean \| Ellipsis` | `false` |
+| link | 是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。 | `LinkType` | `false` |
+| mark | 添加标记样式。 | `boolean` | `false` |
+| size | 文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸。 | `"inherit" \| "normal" \| "small"` | `"normal"` |
+| strong | 是否加粗。 | `boolean` | `false` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cTypographyTextPart, StyleValue>>"}>Type</ApiType> | `undefined` |
+| type | 文本类型。 | <ApiType detail={"\"danger\" \u007c \"primary\" \u007c \"quaternary\" \u007c \"secondary\" \u007c \"success\" \u007c \"tertiary\" \u007c \"warning\""}>Type</ApiType> | `"primary"` |
+| underline | 添加下划线样式。 | `boolean` | `false` |
+| weight | 字重，数字。 | `number` | `undefined` |
 
 **Events**
 

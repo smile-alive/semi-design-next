@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoCollapse | Whether the levels beyond `maxItemCount` collapse into an ellipsis automatically. | `boolean` | `true` |
 | children | `Breadcrumb.Item` children. children are not rendered when `routes` is not empty. | `ReactNode` | - |
 | className | Class name of the root nav element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `list`, `item`, `itemLink`, `itemIcon`, `itemTitle`, `separator` and `more`; merged with the built-in classes. The `item*` keys apply to every item, `separator` also reaches the separator after the ellipsis, and `more` is the ellipsis button. | <ApiType detail={"Partial\u003cRecord\u003cBreadcrumbPart, string>>"}>Type</ApiType> | - |
 | compact | Whether the compact size is used, which sets the size of text and Semi icons. | `boolean` | `true` |
 | maxItemCount | Number of levels above which the breadcrumb collapses. The first, current and last levels stay visible. | `number` | `4` |
 | moreType | Built-in rendering of the ellipsis area, `default` or `popover`. `renderMore` wins when it is provided. | `MoreType` | `"default"` |
@@ -20,3 +21,4 @@ import ApiType from '#/components/ApiType.astro';
 | separator | Custom separator, either text or a ReactNode. | `React.ReactNode` | `"/"` |
 | showTooltip | Whether a Tooltip shows for an overflowing title, with its options: `width` is the truncation width in px, `ellipsisPos` truncates at the `end` or in the `middle`, and `opts` are passed to the Tooltip without `content`, defaulting to `{ autoAdjustOverflow: true, position: 'top' }`. `false` hides the Tooltip, and the title is still truncated at `width`. | `boolean \| ShowTooltipProps` | `{ width: 150, ellipsisPos: 'end' }` |
 | style | Inline style of the root nav element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cBreadcrumbPart, React.CSSProperties>>"}>Type</ApiType> | - |

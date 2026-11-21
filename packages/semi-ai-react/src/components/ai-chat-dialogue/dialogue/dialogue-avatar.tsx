@@ -7,17 +7,24 @@ import type { RenderAvatarProps } from '../interface';
 const prefix = cssClasses.PREFIX;
 
 interface DialogueAvatarProps extends RenderAvatarProps {
+    className?: string;
+    style?: React.CSSProperties;
     continueSend?: boolean;
     customRenderFunc?: (props: RenderAvatarProps) => ReactNode;
 }
 
-function DialogueAvatar({ role, customRenderFunc, continueSend, message }: DialogueAvatarProps) {
+function DialogueAvatar({ role, customRenderFunc, className, style, continueSend, message }: DialogueAvatarProps) {
     const node = useMemo(() => {
         return (
             <Avatar
-                className={clsx(`${prefix}-avatar`, {
-                    [`${prefix}-avatar-hidden`]: continueSend,
-                })}
+                className={clsx(
+                    `${prefix}-avatar`,
+                    {
+                        [`${prefix}-avatar-hidden`]: continueSend,
+                    },
+                    className
+                )}
+                style={style}
                 // alt names the sender only in a continued run, where the title beside it is not shown
                 alt={continueSend ? (role?.name ?? '') : ''}
                 color={role?.color}
@@ -25,7 +32,7 @@ function DialogueAvatar({ role, customRenderFunc, continueSend, message }: Dialo
                 src={role?.avatar}
             />
         );
-    }, [continueSend, role]);
+    }, [className, style, continueSend, role]);
 
     if (typeof customRenderFunc === 'function') {
         return customRenderFunc({

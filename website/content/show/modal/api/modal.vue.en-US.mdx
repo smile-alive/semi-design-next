@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | cancelLoading | Whether the cancel button is loading. When omitted it follows the Promise returned by onCancel; pass false to turn that off. | `boolean` | `semiGlobalDefault("Modal", "cancelLoading")` |
 | cancelText | Cancel button text. Defaults to the locale entry Modal.cancel. | `string` | `semiGlobalDefault("Modal", "cancelText")` |
 | centered | Whether the dialog is vertically centered. | `boolean` | `false` |
-| classNames | Class names of the inner parts, keyed by mask, content, header, body and footer; values take anything class takes and merge with the built-in classes. There is no header part when the #header slot is used. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Modal", "classNames")` |
+| classNames | Class names of the inner parts, keyed by mask, content, header, title, icon, close, body and footer; values take anything class takes and merge with the built-in classes. There are no header, title, icon and close parts when the #header slot is used. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Modal", "classNames")` |
 | closable | Whether the close button in the corner is shown. | `boolean` | `true` |
 | closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `true` |
 | confirmLoading | Whether the ok button is loading. When omitted it follows the Promise returned by onOk; pass false to turn that off. | `boolean` | `semiGlobalDefault("Modal", "confirmLoading")` |

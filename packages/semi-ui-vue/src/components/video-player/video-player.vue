@@ -21,6 +21,7 @@
     const props = withDefaults(defineProps<VideoPlayerProps & /* @vue-ignore */ ElementProps<'div', keyof VideoPlayerProps | EmitHandlers<VideoPlayerEmits>>>(), {
         autoPlay: () => semiDefault('VideoPlayer', 'autoPlay', false),
         captionsSrc: semiGlobalDefault('VideoPlayer', 'captionsSrc'),
+        classNames: semiGlobalDefault('VideoPlayer', 'classNames'),
         clickToPlay: () => semiDefault('VideoPlayer', 'clickToPlay', true),
         controlsList: () => semiDefault('VideoPlayer', 'controlsList', DEFAULT_CONTROLS_LIST),
         crossOrigin: semiGlobalDefault('VideoPlayer', 'crossOrigin'),
@@ -38,6 +39,7 @@
         routeList: semiGlobalDefault('VideoPlayer', 'routeList'),
         seekTime: () => semiDefault('VideoPlayer', 'seekTime', numbers.DEFAULT_SEEK_TIME),
         src: semiGlobalDefault('VideoPlayer', 'src'),
+        styles: semiGlobalDefault('VideoPlayer', 'styles'),
         theme: () => semiDefault('VideoPlayer', 'theme', strings.DARK),
         volume: () => semiDefault('VideoPlayer', 'volume', numbers.DEFAULT_VOLUME),
         width: semiGlobalDefault('VideoPlayer', 'width'),
@@ -99,10 +101,12 @@
             <video
                 ref="video"
                 :autoplay="props.autoPlay"
+                :class="[`${prefix}-video`, props.classNames?.video]"
                 :controls="false"
                 :crossorigin="props.crossOrigin"
                 :loop="props.loop"
                 :src="videoSrc"
+                :style="props.styles?.video"
                 @canplay="foundation.handleCanPlay"
                 @click="onVideoClick"
                 @durationchange="foundation.handleDurationChange"
@@ -121,11 +125,11 @@
             </video>
             <div v-if="props.src == null" :class="`${prefix}-resource-not-found`">{{ locale.noResource }}</div>
         </div>
-        <img v-if="!state.isPlaying && props.poster" :alt="locale.poster" :class="[`${prefix}-poster`, { [`${prefix}-poster-hide`]: state.currentTime > 0 && state.currentTime < state.totalTime }]" :src="props.poster" />
-        <div v-if="!state.isPlaying && !state.isError" :class="`${prefix}-pause`">
+        <img v-if="!state.isPlaying && props.poster" :alt="locale.poster" :class="[`${prefix}-poster`, { [`${prefix}-poster-hide`]: state.currentTime > 0 && state.currentTime < state.totalTime }, props.classNames?.poster]" :src="props.poster" :style="props.styles?.poster" />
+        <div v-if="!state.isPlaying && !state.isError" :class="[`${prefix}-pause`, props.classNames?.playIcon]" :style="props.styles?.playIcon">
             <IconPlayCircle />
         </div>
-        <div v-if="state.isError" :class="[`${prefix}-error`, { [`${prefix}-error-${props.theme}`]: props.theme }]" role="alert">
+        <div v-if="state.isError" :class="[`${prefix}-error`, { [`${prefix}-error-${props.theme}`]: props.theme }, props.classNames?.error]" role="alert" :style="props.styles?.error">
             <div :class="`${prefix}-error-svg`">
                 <svg fill="none" height="30" viewBox="0 0 41 30" width="41" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -140,12 +144,12 @@
             {{ locale.videoError }}
         </div>
         <div role="status">
-            <div v-if="state.showNotification && state.notificationContent" :class="`${prefix}-notification`">
+            <div v-if="state.showNotification && state.notificationContent" :class="[`${prefix}-notification`, props.classNames?.notification]" :style="props.styles?.notification">
                 {{ state.notificationContent }}
             </div>
         </div>
-        <div :class="[controlsCls, { [`${controlsCls}-hide`]: !state.showControls }]">
-            <VideoProgress :bufferedValue="state.bufferedValue" :markers="props.markers" :max="state.totalTime" :step="props.seekTime" :value="state.currentTime" @change="foundation.handleTimeChange" />
+        <div :class="[controlsCls, { [`${controlsCls}-hide`]: !state.showControls }, props.classNames?.controls]" :style="props.styles?.controls">
+            <VideoProgress :bufferedValue="state.bufferedValue" :classNames="props.classNames" :markers="props.markers" :max="state.totalTime" :step="props.seekTime" :styles="props.styles" :value="state.currentTime" @change="foundation.handleTimeChange" />
             <div :class="`${controlsCls}-menu`">
                 <div :class="`${controlsCls}-menu-left`">
                     <Button v-if="shows('play')" :aria-label="state.isPlaying ? locale.pause : locale.play" :class="menuButtonClass" theme="borderless" @click="foundation.handlePlayOrPause">
@@ -159,8 +163,8 @@
                             <IconRestart :rotate="180" />
                         </template>
                     </Button>
-                    <div v-if="shows('time')" :class="`${controlsCls}-time`">{{ formatTime(state.currentTime) }} / {{ formatTime(state.totalTime) }}</div>
-                    <Popover v-if="shows('volume')" :ariaLabel="locale.volume" autoAdjustOverflow :class="`${controlsCls}-popover`" position="top" role="dialog">
+                    <div v-if="shows('time')" :class="[`${controlsCls}-time`, props.classNames?.time]" :style="props.styles?.time">{{ formatTime(state.currentTime) }} / {{ formatTime(state.totalTime) }}</div>
+                    <Popover v-if="shows('volume')" :ariaLabel="locale.volume" autoAdjustOverflow :class="[`${controlsCls}-popover`, props.classNames?.volumeDropdown]" position="top" role="dialog" :style="props.styles?.volumeDropdown">
                         <Button :aria-label="locale.volume" :class="menuButtonClass" theme="borderless" @click="foundation.handleVolumeSilent">
                             <template #icon>
                                 <IconMute v-if="state.muted" />
@@ -175,11 +179,11 @@
                             </div>
                         </template>
                     </Popover>
-                    <ControlsMenu v-if="shows('playbackRate')" :current="state.playbackRate" :label="locale.playbackRate" :list="props.playbackRateList" @select="foundation.handleRateChange($event, locale)" />
+                    <ControlsMenu v-if="shows('playbackRate')" :classNames="props.classNames" :current="state.playbackRate" :label="locale.playbackRate" :list="props.playbackRateList" :styles="props.styles" @select="foundation.handleRateChange($event, locale)" />
                 </div>
                 <div :class="`${controlsCls}-menu-right`">
-                    <ControlsMenu v-if="props.qualityList?.length && shows('quality')" :current="state.currentQuality" :label="locale.quality" :list="props.qualityList" @select="foundation.handleQualityChange($event, locale)" />
-                    <ControlsMenu v-if="props.routeList?.length && shows('route')" :current="state.currentRoute" :label="locale.route" :list="props.routeList" @select="foundation.handleRouteChange($event, locale)" />
+                    <ControlsMenu v-if="props.qualityList?.length && shows('quality')" :classNames="props.classNames" :current="state.currentQuality" :label="locale.quality" :list="props.qualityList" :styles="props.styles" @select="foundation.handleQualityChange($event, locale)" />
+                    <ControlsMenu v-if="props.routeList?.length && shows('route')" :classNames="props.classNames" :current="state.currentRoute" :label="locale.route" :list="props.routeList" :styles="props.styles" @select="foundation.handleRouteChange($event, locale)" />
                     <Button v-if="shows('mirror')" :aria-label="state.isMirror ? locale.cancelMirror : locale.mirror" :class="menuButtonClass" theme="borderless" @click="foundation.handleMirror(locale)">
                         <template #icon>
                             <IconFlipHorizontal />

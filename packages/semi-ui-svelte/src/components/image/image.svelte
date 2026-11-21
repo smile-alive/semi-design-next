@@ -134,7 +134,7 @@
         onload={foundation.handleLoaded}
     />
     {#if loadStatus !== 'success'}
-        <div class="{prefixCls}-overlay">
+        <div class={[`${prefixCls}-overlay`, classNames?.overlay]} style={styles?.overlay}>
             {#if loadStatus === 'error'}
                 <div class={statusCls}>
                     {#if typeof fallback === 'function'}

@@ -91,8 +91,8 @@
                 onVisibleChange: (visible: boolean) => foundation.handleDropdownVisibleChange(visible),
             },
             { ...user },
-            props.styles?.dropdown === undefined ? {} : { style: props.styles.dropdown },
-            props.classNames?.dropdown === undefined ? {} : { classNames: { ...user?.classNames, content: [user?.classNames?.content, props.classNames.dropdown] } }
+            { style: [view.value.styles?.subNavDropdown, props.styles?.dropdown] },
+            view.value.classNames?.subNavDropdown === undefined && props.classNames?.dropdown === undefined ? {} : { classNames: { ...user?.classNames, content: [user?.classNames?.content, view.value.classNames?.subNavDropdown, props.classNames?.dropdown] } }
         );
     });
 
@@ -110,7 +110,10 @@
                     [`${prefix}-sub-title-selected`]: isSelected.value,
                     [`${prefix}-sub-title-disabled`]: props.disabled,
                 },
+                view.value.classNames?.subNavTitle,
+                props.classNames?.title,
             ],
+            style: [view.value.styles?.subNavTitle, props.styles?.title],
             onClick: handleClick,
         };
         const { control } = splitControlAttrs(attrs, isAriaKey);
@@ -136,7 +139,17 @@
         };
     };
 
-    const iconClass = (toggle: boolean) => [`${prefix}-item-icon`, toggle ? `${prefix}-item-icon-toggle-${view.value.toggleIconPosition}` : `${prefix}-item-icon-info`];
+    // the blank indent slots are not the icon, so they take no icon part
+    const iconClass = (toggle: boolean, placeholder = false) => [
+        `${prefix}-item-icon`,
+        toggle ? `${prefix}-item-icon-toggle-${view.value.toggleIconPosition}` : `${prefix}-item-icon-info`,
+        ...(placeholder ? [] : toggle ? [view.value.classNames?.itemToggleIcon, props.classNames?.toggleIcon] : [view.value.classNames?.itemIcon, props.classNames?.icon]),
+    ];
+
+    const iconStyle = (toggle: boolean) => (toggle ? [view.value.styles?.itemToggleIcon, props.styles?.toggleIcon] : [view.value.styles?.itemIcon, props.styles?.icon]);
+
+    // parts of the nav first, then the ones of this sub, then what the caller passed to the li
+    const rootAttrs = (attrs: Record<string, unknown>) => mergeProps({ class: [{ [`${prefix}-sub-wrap`]: !(view.value.isInSubNav && isPopup.value) }, view.value.classNames?.subNav], style: view.value.styles?.subNav }, splitControlAttrs(attrs, isAriaKey).root);
 
     const placeholders = () =>
         countPlaceholderIcons({
@@ -167,26 +180,26 @@
 
 <template>
     <WrapperOutlet :isInSubNav="view.isInSubNav" isSubNav :itemProps="props">
-        <ItemShell ref="shell" v-bind="splitControlAttrs($attrs, isAriaKey).root" :class="{ [`${prefix}-sub-wrap`]: !(view.isInSubNav && isPopup) }" :disabled="props.disabled" :isCollapsed="view.isCollapsed" :isInSubNav="view.isInSubNav" isSubNav :itemKey="props.itemKey" :text="props.text">
+        <ItemShell ref="shell" v-bind="rootAttrs($attrs)" :disabled="props.disabled" :isCollapsed="view.isCollapsed" :isInSubNav="view.isInSubNav" isSubNav :itemKey="props.itemKey" :text="props.text">
             <template #content>
                 <component :is="titleWrapper" v-bind="titleWrapperAttrs">
                     <component :is="nativeTag(menuTitle ? 'div' : 'button')" :ref="handoverFocus" v-bind="titleAttrs($attrs)">
                         <!-- a span: the title is a button, which only takes phrasing content -->
                         <span :class="`${prefix}-item-inner`">
-                            <i v-for="n in placeholders()" :key="`placeholder-${n}`" :class="iconClass(false)" />
-                            <i v-if="view.toggleIconPosition === 'left'" :class="iconClass(true)">
+                            <i v-for="n in placeholders()" :key="`placeholder-${n}`" :class="iconClass(false, true)" />
+                            <i v-if="view.toggleIconPosition === 'left'" :class="iconClass(true)" :style="iconStyle(true)">
                                 <template v-if="customToggle()">
                                     <component :is="node" v-for="[node, key] in expandNodes()" :key="key" v-bind="iconAttrs(node, 'default', rotateClass())" />
                                 </template>
                                 <component :is="defaultToggle()" v-else-if="defaultToggle()" :class="rotateClass()" />
                             </i>
-                            <i v-if="infoIconShown()" :class="iconClass(false)">
+                            <i v-if="infoIconShown()" :class="iconClass(false)" :style="iconStyle(false)">
                                 <component :is="node" v-for="[node, key] in iconNodes()" :key="key" v-bind="iconAttrs(node, 'large')" />
                             </i>
-                            <span :class="`${prefix}-item-text`">
+                            <span :class="[`${prefix}-item-text`, view.classNames?.itemText, props.classNames?.text]" :style="[view.styles?.itemText, props.styles?.text]">
                                 <slot name="text">{{ props.text }}</slot>
                             </span>
-                            <i v-if="view.toggleIconPosition === 'right'" :class="iconClass(true)">
+                            <i v-if="view.toggleIconPosition === 'right'" :class="iconClass(true)" :style="iconStyle(true)">
                                 <template v-if="customToggle()">
                                     <component :is="node" v-for="[node, key] in expandNodes()" :key="key" v-bind="iconAttrs(node, 'default', rotateClass())" />
                                 </template>
@@ -202,7 +215,7 @@
                     </template>
                 </component>
                 <component :is="view.subNavMotion ? Collapsible : SlotFragment" v-if="!horizontal" v-bind="subListWrapperAttrs">
-                    <ul v-if="!view.isCollapsed && (view.subNavMotion || isOpen)" :id="subListId" :class="[`${prefix}-sub`, { [`${prefix}-sub-open`]: isOpen, [`${prefix}-sub-popover`]: isPopup }]">
+                    <ul v-if="!view.isCollapsed && (view.subNavMotion || isOpen)" :id="subListId" :class="[`${prefix}-sub`, { [`${prefix}-sub-open`]: isOpen, [`${prefix}-sub-popover`]: isPopup }, view.classNames?.subNavList, props.classNames?.list]" :style="[view.styles?.subNavList, props.styles?.list]">
                         <slot />
                     </ul>
                 </component>

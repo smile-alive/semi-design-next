@@ -6,6 +6,10 @@
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `editor`、`searchTrigger`、`searchBox`、`searchInput`、`searchOptions`、`replaceInput`，与组件自带的类名合并；`editor` 是挂载编辑器的元素，搜索面板的部位只在面板打开时存在。",
+                "en-US": "Class names of the inner parts, keyed by `editor`, `searchTrigger`, `searchBox`, `searchInput`, `searchOptions` and `replaceInput`, merged with the built-in classes. `editor` is the element the editor mounts in; the search panel parts exist only while the panel is open."
+            },
             "height": {
                 "zh-CN": "高度，数字按 px 处理，字符串原样使用。",
                 "en-US": "Height. A number is taken as px; a string is used as is."
@@ -37,6 +41,10 @@
             "style": {
                 "zh-CN": "根元素的内联样式，同名属性会覆盖组件设置的 width、height 与 position。",
                 "en-US": "Inline style of the root element. Its properties override the width, height and position the component sets."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "value": {
                 "zh-CN": "展示与编辑的 JSON 文本，未传时为空文本。只有 value 与编辑器当前内容不同时才会重建编辑器，把 onChange 的值写回 value 不会丢失光标、焦点和撤销历史。",

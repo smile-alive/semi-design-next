@@ -113,7 +113,7 @@ export interface AIChatInputUploadButtonSlotProps {
 
 export interface AIChatInputActionAreaSlotProps {
     menuItem: VNode[];
-    class: string;
+    class: HTMLAttributes['class'];
 }
 
 interface OptionSlotProps {

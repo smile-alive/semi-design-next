@@ -111,6 +111,8 @@
 
     const view = $derived<TabsView>({
         activeKey: current,
+        classNames,
+        styles,
         prevActiveKey: motion.prevActiveKey,
         forceDisableMotion: motion.forceDisableMotion,
         paneKeys,
@@ -134,11 +136,9 @@
         showRestInDropdown,
         more,
         arrowPosition,
-        classNames: { visibleTabs: classNames?.visibleTabs },
-        styles: { visibleTabs: styles?.visibleTabs },
+        classNames,
+        styles,
         dropdownProps,
-        class: classNames?.tabBar,
-        style: styles?.tabBar,
     });
 
     // Without `panel` the content area is the single panel; without a matching tab it has nothing to be labelled by

@@ -10,6 +10,8 @@ interface ChatBoxAvatarProps {
     role?: Metadata;
     continueSend?: boolean;
     message?: Message;
+    class?: string;
+    style?: JSX.CSSProperties | string;
     customRenderFunc?: (props: RenderAvatarProps) => JSX.Element;
     renderRoleAvatar?: (props: RenderRoleAvatarProps) => JSX.Element;
 }
@@ -26,7 +28,8 @@ export default function ChatBoxAvatar(props: ChatBoxAvatarProps) {
 
     const node = () => (
         <Avatar
-            class={clsx(`${PREFIX_CHAT_BOX}-avatar`, { [`${PREFIX_CHAT_BOX}-avatar-hidden`]: props.continueSend })}
+            class={clsx(`${PREFIX_CHAT_BOX}-avatar`, { [`${PREFIX_CHAT_BOX}-avatar-hidden`]: props.continueSend }, props.class)}
+            style={props.style}
             // the title next to it names the sender, and a run's repeat avatar is not rendered visibly at all
             alt=""
             color={props.role?.color}

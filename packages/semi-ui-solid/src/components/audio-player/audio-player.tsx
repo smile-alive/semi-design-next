@@ -9,6 +9,7 @@ import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
 import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-solid';
 import { useDefaultProps, useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import Button from '../button';
 import Dropdown from '../dropdown';
 import Image from '../image';
@@ -36,7 +37,7 @@ const transparentStyle = { background: 'transparent' };
 
 export default function AudioPlayer(rawProps: AudioPlayerProps) {
     const props = useDefaultProps('AudioPlayer', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['audioUrl', 'autoPlay', 'class', 'showToolbar', 'skipDuration', 'theme']);
+    const [local, rest] = splitProps(props, ['audioUrl', 'autoPlay', 'class', 'classNames', 'showToolbar', 'skipDuration', 'styles', 'theme']);
 
     const locale = useLocale('AudioPlayer');
 
@@ -63,17 +64,21 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
     const refreshButton = () => <Button style={transparentStyle} aria-label={text().refresh} icon={<IconRefresh class={iconClass} style={{ transform: 'rotateY(180deg)' }} />} onClick={foundation.handleRefresh} />;
 
     const renderControl = () => (
-        <div class={`${prefixCls}-control`}>
+        <div class={clsx(`${prefixCls}-control`, local.classNames?.controls)} style={local.styles?.controls}>
             <Show when={isList()}>
                 <Tooltip autoAdjustOverflow content={text().prev} showArrow={false}>
                     {(getTriggerProps) => <Button {...getTriggerProps()} style={{ ...circleStyle, ...transparentStyle }} aria-label={text().prev} size="large" icon={<IconRestart class={iconClass} size="large" />} onClick={() => foundation.handleTrackChange('prev')} />}
                 </Tooltip>
             </Show>
             <Button
-                class={clsx(`${prefixCls}-control-button-play`, {
-                    [`${prefixCls}-control-button-play-disabled`]: state().error,
-                })}
-                style={circleStyle}
+                class={clsx(
+                    `${prefixCls}-control-button-play`,
+                    {
+                        [`${prefixCls}-control-button-play-disabled`]: state().error,
+                    },
+                    local.classNames?.playButton
+                )}
+                style={mergeStyles(circleStyle, local.styles?.playButton)}
                 aria-label={state().isPlaying ? text().pause : text().play}
                 disabled={state().error}
                 size="large"
@@ -91,14 +96,14 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
     const renderInfo = () => (
         <div class={`${prefixCls}-info-container`}>
             {/* decorative: the title beside it names the track, so it is no preview button either */}
-            <Show when={info()?.cover}>{(cover) => <Image alt="" height={50} preview={false} src={cover()} width={50} />}</Show>
+            <Show when={info()?.cover}>{(cover) => <Image alt="" class={clsx(`${prefixCls}-cover`, local.classNames?.cover)} height={50} preview={false} src={cover()} style={local.styles?.cover} width={50} />}</Show>
             <div class={`${prefixCls}-info`}>
                 {/* the error hides the time row, so a track without a title still needs this row for the error */}
                 <Show when={info()?.title || state().error}>
-                    <div class={`${prefixCls}-info-title`}>
+                    <div class={clsx(`${prefixCls}-info-title`, local.classNames?.title)} style={local.styles?.title}>
                         {info()?.title}
                         <Show when={state().error}>
-                            <div class={`${prefixCls}-error`} role="alert">
+                            <div class={clsx(`${prefixCls}-error`, local.classNames?.error)} style={local.styles?.error} role="alert">
                                 <IconAlertCircle size="large" />
                                 {text().mediaError}
                             </div>
@@ -109,7 +114,16 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
                     <div class={`${prefixCls}-info-time`}>
                         <span style={{ width: '38px' }}>{formatTime(state().currentTime)}</span>
                         <div class={`${prefixCls}-slider-container`}>
-                            <AudioSlider max={state().totalTime} value={state().currentTime} getValueText={(value) => `${formatTimeText(value, text())} / ${formatTimeText(state().totalTime, text())}`} label={text().progress} theme={local.theme} onChange={foundation.handleTimeChange} />
+                            <AudioSlider
+                                max={state().totalTime}
+                                value={state().currentTime}
+                                getValueText={(value) => `${formatTimeText(value, text())} / ${formatTimeText(state().totalTime, text())}`}
+                                label={text().progress}
+                                theme={local.theme}
+                                classNames={local.classNames}
+                                styles={local.styles}
+                                onChange={foundation.handleTimeChange}
+                            />
                         </div>
                         <span style={{ width: '38px' }}>{formatTime(state().totalTime)}</span>
                     </div>
@@ -119,7 +133,7 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
     );
 
     const renderToolbar = () => (
-        <div class={`${prefixCls}-control`}>
+        <div class={clsx(`${prefixCls}-control`, `${prefixCls}-toolbar`, local.classNames?.toolbar)} style={local.styles?.toolbar}>
             <Show when={!state().error}>
                 {/* The Button is the Popover's own trigger: a Tooltip around it competes for the focus-opened popup */}
                 <Popover
@@ -128,9 +142,9 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
                     role="dialog"
                     autoAdjustOverflow
                     content={
-                        <div class={clsx(`${prefixCls}-control-volume`, `${prefixCls}-control-volume-${local.theme}`)}>
+                        <div class={clsx(`${prefixCls}-control-volume`, `${prefixCls}-control-volume-${local.theme}`, local.classNames?.volumeDropdown)} style={local.styles?.volumeDropdown}>
                             <div class={`${prefixCls}-control-volume-title`}>{state().volume}%</div>
-                            <AudioSlider max={100} value={state().volume} getValueText={(value) => `${value}%`} height={120} label={text().volume} showTooltip={false} theme={local.theme} vertical onChange={foundation.handleVolumeChange} />
+                            <AudioSlider max={100} value={state().volume} getValueText={(value) => `${value}%`} height={120} label={text().volume} showTooltip={false} theme={local.theme} classNames={local.classNames} styles={local.styles} vertical onChange={foundation.handleVolumeChange} />
                         </div>
                     }
                 >
@@ -144,6 +158,8 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
                 </Tooltip>
                 <Dropdown
                     class={clsx(`${prefixCls}-control-speed-menu`, `${prefixCls}-control-speed-menu-${local.theme}`)}
+                    classNames={{ content: local.classNames?.speedDropdown }}
+                    styles={{ content: local.styles?.speedDropdown }}
                     render={
                         <Dropdown.Menu>
                             <For each={RATE_OPTIONS}>
@@ -159,7 +175,7 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
                 >
                     {(getTriggerProps) => (
                         // the visible rate alone does not say what the menu sets
-                        <button {...getTriggerProps({ class: `${prefixCls}-control-speed` })} type="button" aria-label={[text().playbackRate, state().currentRate.label].join(' ')}>
+                        <button {...getTriggerProps({ class: clsx(`${prefixCls}-control-speed`, local.classNames?.speed) })} style={local.styles?.speed} type="button" aria-label={[text().playbackRate, state().currentRate.label].join(' ')}>
                             <span>{state().currentRate.label}</span>
                         </button>
                     )}

@@ -6,6 +6,7 @@ import TabsFoundation, { type MotionView, type TabsAdapter, type TabsState } fro
 import '@fibrae/semi-foundation/components/tabs/tabs.scss';
 import { isToken, type Token, useDefaultProps, useFoundation } from '../../base/index';
 import { useWatch } from '../../primitives/index';
+import { mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { type TabsContextValue, TabsContext } from './context';
 import type { PlainTab, TabBarProps, TabPaneProps, TabRender, TabsProps } from './interface';
@@ -122,6 +123,8 @@ export default function Tabs(rawProps: TabsProps) {
     const motion = createMemo((prev?: MotionView) => TabsFoundation.getMotionView(prev, { activeKey: activeKey(), propsActiveKey: local.activeKey, paneKeys: paneKeys() }));
 
     const view = createMemo(() => ({
+        classNames: local.classNames,
+        styles: local.styles,
         tabsId,
         everyPanelMounted: !isTabListMode() && local.keepDOM,
         type: local.type,
@@ -149,17 +152,11 @@ export default function Tabs(rawProps: TabsProps) {
         get list() {
             return panes();
         },
-        get class() {
-            return local.classNames?.tabBar;
-        },
         get classNames() {
-            return { visibleTabs: local.classNames?.visibleTabs };
-        },
-        get style() {
-            return local.styles?.tabBar;
+            return local.classNames;
         },
         get styles() {
-            return { visibleTabs: local.styles?.visibleTabs };
+            return local.styles;
         },
         get size() {
             return local.size;
@@ -241,7 +238,8 @@ export default function Tabs(rawProps: TabsProps) {
             <div
                 {...paneRest}
                 id={getPanelId(tabsId, key())}
-                class={clsx(pane.class, cssClasses.TABS_PANE, active() ? cssClasses.TABS_PANE_ACTIVE : cssClasses.TABS_PANE_INACTIVE)}
+                class={clsx(pane.class, cssClasses.TABS_PANE, active() ? cssClasses.TABS_PANE_ACTIVE : cssClasses.TABS_PANE_INACTIVE, local.classNames?.pane)}
+                style={mergeStyles(paneRest.style, local.styles?.pane)}
                 aria-hidden={active() ? 'false' : 'true'}
                 aria-labelledby={getTabId(tabsId, key())}
                 role="tabpanel"

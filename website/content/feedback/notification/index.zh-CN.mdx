@@ -171,49 +171,53 @@ import { Notification } from '@fibrae/semi-ui-solid';
 
 <Framework only="react">
 
-| 属性              | 说明                                                                                                                         | 类型                 | 默认值              |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------- |
-| className         | 通知元素的类名                                                                                                               | string               |                     |
-| content           | 通知内容                                                                                                                     | ReactNode            | ''                  |
-| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                    | `ltr` \| `rtl`       |                     |
-| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                  | number               | 3                   |
-| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative` 这会改变浮层 DOM 树位置，但不会改变视图渲染位置。 | () => HTMLElement    | () => document.body |
-| icon              | 左上角 icon                                                                                                                  | ReactNode            |                     |
-| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                | string               |                     |
-| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                           | string               | `topRight`          |
-| showClose         | 是否展示关闭按钮                                                                                                             | boolean              | true                |
-| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                              | boolean \| number    | false               |
-| style             | 通知元素的内联样式                                                                                                           | CSSProperties        |                     |
-| theme             | 填充样式，支持`light`, `normal`                                                                                              | string               | `normal`            |
-| title             | 通知标题                                                                                                                     | ReactNode            | ''                  |
-| zIndex            | 弹层 z-index 值，首次设置一次生效                                                                                            | number               | 1010                |
-| onClick           | 点击通知的回调函数                                                                                                           | (e: event) => void   |                     |
-| onClose           | 通知关闭的回调函数(主动关闭、延时到达关闭都会触发，每次关闭只触发一次)                                                       | () => void           |                     |
-| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                 | (id: string) => void |                     |
+| 属性              | 说明                                                                                                                         | 类型                                               | 默认值              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------------- |
+| className         | 通知元素的类名                                                                                                               | string                                             |                     |
+| content           | 通知内容                                                                                                                     | ReactNode                                          | ''                  |
+| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                    | `ltr` \| `rtl`                                     |                     |
+| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                  | number                                             | 3                   |
+| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative` 这会改变浮层 DOM 树位置，但不会改变视图渲染位置。 | () => HTMLElement                                  | () => document.body |
+| icon              | 左上角 icon                                                                                                                  | ReactNode                                          |                     |
+| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                | string                                             |                     |
+| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                           | string                                             | `topRight`          |
+| showClose         | 是否展示关闭按钮                                                                                                             | boolean                                            | true                |
+| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                              | boolean \| number                                  | false               |
+| style             | 通知元素的内联样式                                                                                                           | CSSProperties                                      |                     |
+| classNames        | 内部各部位的类名，键为 `icon`、`title`、`content`、`close`，与组件自带的类名合并                                             | `Partial<Record<NotificationPart, string>>`        |                     |
+| styles            | 内部各部位的内联样式，键同 `classNames`                                                                                      | `Partial<Record<NotificationPart, CSSProperties>>` |                     |
+| theme             | 填充样式，支持`light`, `normal`                                                                                              | string                                             | `normal`            |
+| title             | 通知标题                                                                                                                     | ReactNode                                          | ''                  |
+| zIndex            | 弹层 z-index 值，首次设置一次生效                                                                                            | number                                             | 1010                |
+| onClick           | 点击通知的回调函数                                                                                                           | (e: event) => void                                 |                     |
+| onClose           | 通知关闭的回调函数(主动关闭、延时到达关闭都会触发，每次关闭只触发一次)                                                       | () => void                                         |                     |
+| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                 | (id: string) => void                               |                     |
 
 </Framework>
 
 <Framework only="vue">
 
-| 属性              | 说明                                                                                                                                                 | 类型                                  | 默认值              |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- | ------------------- |
-| class             | 通知元素的类名                                                                                                                                       | string \| object \| array             |                     |
-| content           | 通知内容；函数在通知内部作为函数式组件渲染，可以 `inject`                                                                                            | string \| VNode \| (() => VNodeChild) | ''                  |
-| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                                            | `ltr` \| `rtl`                        |                     |
-| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                                          | number                                | 3                   |
-| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative` 这会改变浮层 DOM 树位置，但不会改变视图渲染位置。只在首次创建容器时生效。 | () => HTMLElement                     | () => document.body |
-| icon              | 左上角 icon                                                                                                                                          | string \| VNode \| (() => VNodeChild) |                     |
-| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                                        | string                                |                     |
-| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                                                   | string                                | `topRight`          |
-| showClose         | 是否展示关闭按钮                                                                                                                                     | boolean                               | true                |
-| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                                                      | boolean \| number                     | false               |
-| style             | 通知元素的内联样式                                                                                                                                   | StyleValue                            |                     |
-| theme             | 填充样式，支持`light`, `normal`                                                                                                                      | string                                | `normal`            |
-| title             | 通知标题                                                                                                                                             | string \| VNode \| (() => VNodeChild) | ''                  |
-| zIndex            | 弹层 z-index 值，每次弹出时生效                                                                                                                      | number                                | 1010                |
-| onClick           | 点击通知的回调函数，落在通知元素上                                                                                                                   | (e: MouseEvent) => void               |                     |
-| onClose           | 通知关闭的回调函数(主动关闭、延时到达关闭都会触发，每次关闭只触发一次)                                                                               | () => void                            |                     |
-| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                                         | (id: string) => void                  |                     |
+| 属性              | 说明                                                                                                                                                 | 类型                                            | 默认值              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------- |
+| class             | 通知元素的类名                                                                                                                                       | string \| object \| array                       |                     |
+| content           | 通知内容；函数在通知内部作为函数式组件渲染，可以 `inject`                                                                                            | string \| VNode \| (() => VNodeChild)           | ''                  |
+| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                                            | `ltr` \| `rtl`                                  |                     |
+| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                                          | number                                          | 3                   |
+| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative` 这会改变浮层 DOM 树位置，但不会改变视图渲染位置。只在首次创建容器时生效。 | () => HTMLElement                               | () => document.body |
+| icon              | 左上角 icon                                                                                                                                          | string \| VNode \| (() => VNodeChild)           |                     |
+| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                                        | string                                          |                     |
+| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                                                   | string                                          | `topRight`          |
+| showClose         | 是否展示关闭按钮                                                                                                                                     | boolean                                         | true                |
+| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                                                      | boolean \| number                               | false               |
+| style             | 通知元素的内联样式                                                                                                                                   | StyleValue                                      |                     |
+| classNames        | 内部各部位的类名，键为 `icon`、`title`、`content`、`close`，与组件自带的类名合并                                                                     | `Partial<Record<NotificationPart, ClassValue>>` |                     |
+| styles            | 内部各部位的内联样式，键同 `classNames`                                                                                                              | `Partial<Record<NotificationPart, StyleValue>>` |                     |
+| theme             | 填充样式，支持`light`, `normal`                                                                                                                      | string                                          | `normal`            |
+| title             | 通知标题                                                                                                                                             | string \| VNode \| (() => VNodeChild)           | ''                  |
+| zIndex            | 弹层 z-index 值，每次弹出时生效                                                                                                                      | number                                          | 1010                |
+| onClick           | 点击通知的回调函数，落在通知元素上                                                                                                                   | (e: MouseEvent) => void                         |                     |
+| onClose           | 通知关闭的回调函数(主动关闭、延时到达关闭都会触发，每次关闭只触发一次)                                                                               | () => void                                      |                     |
+| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                                         | (id: string) => void                            |                     |
 
 选项里的 `onClick`、`onClose`、`onCloseClick` 保留回调的键名，不使用 emit。
 
@@ -221,25 +225,27 @@ import { Notification } from '@fibrae/semi-ui-solid';
 
 <Framework only="solid">
 
-| 属性              | 说明                                                                                                                                                  | 类型                               | 默认值              |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ------------------- |
-| class             | 通知元素的类名                                                                                                                                        | string                             |                     |
-| content           | 通知内容；函数在通知内部渲染，可以读取该位置的 context                                                                                                | JSX.Element \| (() => JSX.Element) | ''                  |
-| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                                             | `ltr` \| `rtl`                     |                     |
-| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                                           | number                             | 3                   |
-| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative`。这会改变浮层 DOM 树位置，但不会改变视图渲染位置。只在首次创建容器时生效。 | () => HTMLElement                  | () => document.body |
-| icon              | 左上角图标                                                                                                                                            | JSX.Element \| (() => JSX.Element) |                     |
-| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                                         | string                             |                     |
-| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                                                    | string                             | `topRight`          |
-| showClose         | 是否展示关闭按钮                                                                                                                                      | boolean                            | true                |
-| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                                                       | boolean \| number                  | false               |
-| style             | 通知元素的内联样式，对象的键为 CSS 属性名，或字符串                                                                                                   | JSX.CSSProperties \| string        |                     |
-| theme             | 填充样式，可选 `light`、`normal`                                                                                                                      | string                             | `normal`            |
-| title             | 通知标题；函数在通知内部渲染，可以读取该位置的 context                                                                                                | JSX.Element \| (() => JSX.Element) | ''                  |
-| zIndex            | 弹层 z-index 值，每次弹出时生效                                                                                                                       | number                             | 1010                |
-| onClick           | 点击通知的回调函数，落在通知元素上                                                                                                                    | (e: MouseEvent) => void            |                     |
-| onClose           | 通知关闭的回调函数，主动关闭、延时到达关闭都会触发，每次关闭只触发一次                                                                                | () => void                         |                     |
-| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                                          | (id: string) => void               |                     |
+| 属性              | 说明                                                                                                                                                  | 类型                                                             | 默认值              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------- |
+| class             | 通知元素的类名                                                                                                                                        | string                                                           |                     |
+| content           | 通知内容；函数在通知内部渲染，可以读取该位置的 context                                                                                                | JSX.Element \| (() => JSX.Element)                               | ''                  |
+| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                                             | `ltr` \| `rtl`                                                   |                     |
+| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                                           | number                                                           | 3                   |
+| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative`。这会改变浮层 DOM 树位置，但不会改变视图渲染位置。只在首次创建容器时生效。 | () => HTMLElement                                                | () => document.body |
+| icon              | 左上角图标                                                                                                                                            | JSX.Element \| (() => JSX.Element)                               |                     |
+| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                                         | string                                                           |                     |
+| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                                                    | string                                                           | `topRight`          |
+| showClose         | 是否展示关闭按钮                                                                                                                                      | boolean                                                          | true                |
+| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                                                       | boolean \| number                                                | false               |
+| style             | 通知元素的内联样式，对象的键为 CSS 属性名，或字符串                                                                                                   | JSX.CSSProperties \| string                                      |                     |
+| classNames        | 内部各部位的类名，键为 `icon`、`title`、`content`、`close`，与组件自带的类名合并                                                                      | `Partial<Record<NotificationPart, string>>`                      |                     |
+| styles            | 内部各部位的内联样式，键同 `classNames`                                                                                                               | `Partial<Record<NotificationPart, JSX.CSSProperties \| string>>` |                     |
+| theme             | 填充样式，可选 `light`、`normal`                                                                                                                      | string                                                           | `normal`            |
+| title             | 通知标题；函数在通知内部渲染，可以读取该位置的 context                                                                                                | JSX.Element \| (() => JSX.Element)                               | ''                  |
+| zIndex            | 弹层 z-index 值，每次弹出时生效                                                                                                                       | number                                                           | 1010                |
+| onClick           | 点击通知的回调函数，落在通知元素上                                                                                                                    | (e: MouseEvent) => void                                          |                     |
+| onClose           | 通知关闭的回调函数，主动关闭、延时到达关闭都会触发，每次关闭只触发一次                                                                                | () => void                                                       |                     |
+| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                                          | (id: string) => void                                             |                     |
 
 `class`、`style` 与原生属性和事件（如 `aria-*`、`data-*`）落在通知的根 `div` 上。选项不接受 `ref`，通知元素由组件内部管理。回调保留 `onClick`、`onClose`、`onCloseClick` 的键名，直接传入函数。
 
@@ -247,25 +253,27 @@ import { Notification } from '@fibrae/semi-ui-solid';
 
 <Framework only="svelte">
 
-| 属性              | 说明                                                                                                                                                  | 类型                      | 默认值              |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------- |
-| class             | 通知元素的类名                                                                                                                                        | string \| object \| array |                     |
-| content           | 通知内容，字符串或 snippet；snippet 在通知内部渲染                                                                                                    | string \| Snippet         | ''                  |
-| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                                             | `ltr` \| `rtl`            |                     |
-| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                                           | number                    | 3                   |
-| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative`。这会改变浮层 DOM 树位置，但不会改变视图渲染位置。只在首次创建容器时生效。 | () => HTMLElement         | () => document.body |
-| icon              | 左上角图标，字符串或 snippet                                                                                                                          | string \| Snippet         |                     |
-| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                                         | string                    |                     |
-| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                                                    | string                    | `topRight`          |
-| showClose         | 是否展示关闭按钮                                                                                                                                      | boolean                   | true                |
-| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                                                       | boolean \| number         | false               |
-| style             | 通知元素的内联样式，只接受字符串                                                                                                                      | string                    |                     |
-| theme             | 填充样式，可选 `light`、`normal`                                                                                                                      | string                    | `normal`            |
-| title             | 通知标题，字符串或 snippet                                                                                                                            | string \| Snippet         | ''                  |
-| zIndex            | 弹层 z-index 值，每次弹出时生效                                                                                                                       | number                    | 1010                |
-| onClick           | 点击通知的回调函数，落在通知元素上                                                                                                                    | (e: MouseEvent) => void   |                     |
-| onClose           | 通知关闭的回调函数，主动关闭、延时到达关闭都会触发，每次关闭只触发一次                                                                                | () => void                |                     |
-| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                                          | (id: string) => void      |                     |
+| 属性              | 说明                                                                                                                                                  | 类型                                            | 默认值              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------- |
+| class             | 通知元素的类名                                                                                                                                        | string \| object \| array                       |                     |
+| content           | 通知内容，字符串或 snippet；snippet 在通知内部渲染                                                                                                    | string \| Snippet                               | ''                  |
+| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                                             | `ltr` \| `rtl`                                  |                     |
+| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                                           | number                                          | 3                   |
+| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative`。这会改变浮层 DOM 树位置，但不会改变视图渲染位置。只在首次创建容器时生效。 | () => HTMLElement                               | () => document.body |
+| icon              | 左上角图标，字符串或 snippet                                                                                                                          | string \| Snippet                               |                     |
+| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                                         | string                                          |                     |
+| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                                                    | string                                          | `topRight`          |
+| showClose         | 是否展示关闭按钮                                                                                                                                      | boolean                                         | true                |
+| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                                                       | boolean \| number                               | false               |
+| style             | 通知元素的内联样式，只接受字符串                                                                                                                      | string                                          |                     |
+| classNames        | 内部各部位的类名，键为 `icon`、`title`、`content`、`close`，与组件自带的类名合并                                                                      | `Partial<Record<NotificationPart, ClassValue>>` |                     |
+| styles            | 内部各部位的内联样式，键同 `classNames`，只接受字符串                                                                                                 | `Partial<Record<NotificationPart, string>>`     |                     |
+| theme             | 填充样式，可选 `light`、`normal`                                                                                                                      | string                                          | `normal`            |
+| title             | 通知标题，字符串或 snippet                                                                                                                            | string \| Snippet                               | ''                  |
+| zIndex            | 弹层 z-index 值，每次弹出时生效                                                                                                                       | number                                          | 1010                |
+| onClick           | 点击通知的回调函数，落在通知元素上                                                                                                                    | (e: MouseEvent) => void                         |                     |
+| onClose           | 通知关闭的回调函数，主动关闭、延时到达关闭都会触发，每次关闭只触发一次                                                                                | () => void                                      |                     |
+| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                                          | (id: string) => void                            |                     |
 
 `class`、`style` 与原生属性和事件（如 `aria-*`、`data-*`）落在通知的根 `div` 上。回调保留 `onClick`、`onClose`、`onCloseClick` 的键名，直接传入函数。
 

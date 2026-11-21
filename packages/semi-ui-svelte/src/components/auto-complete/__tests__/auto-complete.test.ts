@@ -367,7 +367,32 @@ describe('Svelte AutoComplete 打开与选择', () => {
         expect(getInput()).not.toHaveAttribute('aria-activedescendant');
     });
 
-    it('classNames 与 styles 按部位落到对应元素；maxHeight 数字按 px、字符串原样，与 styles.dropdown 合并且 styles.dropdown 优先', async () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['input', 'prefix', 'suffix', 'clear', 'dropdown', 'item'] as const;
+        setup(
+            {
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+                defaultOpen: true,
+                showClear: true,
+                prefix: createRawSnippet(() => ({ render: () => '<span>pre</span>' })),
+                suffix: createRawSnippet(() => ({ render: () => '<span>suf</span>' })),
+            },
+            { value: 'a' }
+        );
+        await settle();
+        // the clear button only shows while the input wrapper is hovered or focused
+        await fireEvent.mouseOver(getElement('.semi-input-wrapper'));
+        await settle();
+        const selectors = { input: 'input', prefix: '.semi-input-prefix', suffix: '.semi-input-suffix', clear: '.semi-input-clearbtn', dropdown: `.${optionCls}-list`, item: `.${optionCls}` };
+        for (const part of parts) {
+            const el = document.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('maxHeight 数字按 px、字符串原样，与 styles.dropdown 合并且 styles.dropdown 优先', async () => {
         const first = setup({ defaultOpen: true, maxHeight: 400, classNames: { dropdown: 'ddc' }, styles: { dropdown: 'color: red' } });
         await settle();
         expect(getList()).toHaveClass('ddc');

@@ -3,7 +3,7 @@ import { createContext } from '@fibrae/semi-ui-vue/base';
 import type { ToastHookApi } from '@fibrae/semi-ui-vue/toast/index';
 import type { ChatMessage, ChatProps } from './interface';
 
-export type ChatView = Pick<ChatProps, 'align' | 'customMarkDownComponents' | 'escapeHtml' | 'markdownRenderProps' | 'mode' | 'roleConfig'>;
+export type ChatView = Pick<ChatProps, 'align' | 'classNames' | 'customMarkDownComponents' | 'escapeHtml' | 'markdownRenderProps' | 'mode' | 'roleConfig' | 'styles'>;
 
 export interface ChatContext {
     view: ComputedRef<ChatView>;

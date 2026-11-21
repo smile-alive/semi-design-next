@@ -9,7 +9,7 @@ import ScrollList from '../scroll-list/index';
 import ScrollItem, { type ScrollItemHandle } from '../scroll-list/scroll-item';
 import type { TimePickerProps } from './time-picker';
 
-export type ComboboxProps = Pick<TimePickerProps, 'format' | 'disabledHours' | 'disabledMinutes' | 'disabledSeconds' | 'hideDisabledOptions' | 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'scrollItemProps' | 'panelFooter' | 'panelHeader'> &
+export type ComboboxProps = Pick<TimePickerProps, 'format' | 'disabledHours' | 'disabledMinutes' | 'disabledSeconds' | 'hideDisabledOptions' | 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'scrollItemProps' | 'panelFooter' | 'panelHeader' | 'classNames' | 'styles'> &
     BaseProps & {
         prefixCls?: string;
         onChange?: (value: { timeStampValue: number }) => void;
@@ -30,7 +30,7 @@ export interface AMPMOptionItem {
     text: string;
 }
 
-export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORMAT, disabledHours, disabledMinutes, disabledSeconds, hideDisabledOptions, use12Hours, hourStep, minuteStep, secondStep, scrollItemProps, panelHeader, panelFooter, onChange, defaultIsAM, timeStampValue }: ComboboxProps) {
+export default function Combobox({ ref, classNames, styles, prefixCls, format = strings.DEFAULT_FORMAT, disabledHours, disabledMinutes, disabledSeconds, hideDisabledOptions, use12Hours, hourStep, minuteStep, secondStep, scrollItemProps, panelHeader, panelFooter, onChange, defaultIsAM, timeStampValue }: ComboboxProps) {
     const { locale } = useLocale('TimePicker');
 
     const ampmRef = useRef<ScrollItemHandle>(null);
@@ -55,7 +55,12 @@ export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORM
     });
 
     // the type allows only these keys; picking them keeps a JS caller from replacing the columns' own list and callbacks
-    const itemProps = pickKeys(scrollItemProps ?? {}, ['cycled', 'mode', 'motion', 'transform']);
+    const itemProps = {
+        ...pickKeys(scrollItemProps ?? {}, ['cycled', 'mode', 'motion', 'transform']),
+        // always objects, so the columns do not read ScrollItem's global default
+        classNames: { option: classNames?.item },
+        styles: { option: styles?.item },
+    };
 
     const pick = (type: ColumnType) => (item: { value: string }) =>
         onChange?.({
@@ -101,7 +106,7 @@ export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORM
     }
 
     return (
-        <ScrollList footer={panelFooter} header={panelHeader} x-semi-footer-alias="panelFooter" x-semi-header-alias="panelHeader">
+        <ScrollList classNames={{ header: classNames?.header, body: classNames?.content, footer: classNames?.footer }} styles={{ header: styles?.header, body: styles?.content, footer: styles?.footer }} footer={panelFooter} header={panelHeader} x-semi-footer-alias="panelFooter" x-semi-header-alias="panelHeader">
             {ampmSelect}
             {hourSelect}
             {minuteSelect}

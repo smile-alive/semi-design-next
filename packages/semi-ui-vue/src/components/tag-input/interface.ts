@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { TagInputPart } from '@fibrae/semi-foundation/components/tag-input/constants';
 import type { TagInputValidateStatus } from '@fibrae/semi-foundation/components/tag-input/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ModelModifiers } from '../input/interface';
@@ -21,6 +22,8 @@ export interface TagInputProps {
     defaultValue?: string[];
     inputValue?: string;
     inputValueModifiers?: ModelModifiers;
+    classNames?: Partial<Record<TagInputPart, ClassValue>>;
+    styles?: Partial<Record<TagInputPart, StyleValue>>;
     disabled?: boolean;
     maxLength?: number;
     max?: number;

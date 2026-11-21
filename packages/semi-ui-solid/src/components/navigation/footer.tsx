@@ -17,7 +17,7 @@ export default function NavFooter(props: NavFooterProps) {
 }
 
 export function FooterView(props: NavFooterProps) {
-    const [local, rest] = splitProps(props, ['children', 'class', 'collapseButton', 'collapseText']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'collapseButton', 'collapseText', 'styles']);
 
     const context = useNavContext('Nav.Footer');
 
@@ -35,7 +35,7 @@ export function FooterView(props: NavFooterProps) {
     return (
         <div {...rest} class={clsx(local.class, `${prefix}-footer`, { [`${prefix}-footer-collapsed`]: isCollapsed() })}>
             <Show when={showButton()} fallback={body()}>
-                <Show when={hasContent(button())} fallback={<CollapseButton collapseText={local.collapseText} isCollapsed={isCollapsed()} locale={context.locale()} onClick={context.toggleCollapsed} />}>
+                <Show when={hasContent(button())} fallback={<CollapseButton class={local.classNames?.collapseButton} collapseText={local.collapseText} isCollapsed={isCollapsed()} locale={context.locale()} style={local.styles?.collapseButton} onClick={context.toggleCollapsed} />}>
                     {button()}
                 </Show>
             </Show>

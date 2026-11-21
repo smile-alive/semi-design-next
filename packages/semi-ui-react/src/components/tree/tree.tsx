@@ -246,8 +246,10 @@ function Tree(rawProps: TreeProps) {
             dragOverNodeKey: view.dragOverNodeKey,
             dropPosition: view.dropPosition,
             labelEllipsis: labelEllipsis === undefined ? virtualize : labelEllipsis,
+            classNames,
+            styles,
         }),
-        [disabled, icon, foundation, expandAction, directory, multiple, loadData, renderLabel, draggable, renderFullLabel, view.dragOverNodeKey, view.dropPosition, labelEllipsis, virtualize]
+        [disabled, icon, foundation, expandAction, directory, multiple, loadData, renderLabel, draggable, renderFullLabel, view.dragOverNodeKey, view.dropPosition, labelEllipsis, virtualize, classNames, styles]
     );
 
     const getNodeProps = (treeNode: FlattenNode): TreeNodeProps | null => {
@@ -337,14 +339,15 @@ function Tree(rawProps: TreeProps) {
                 {filterTreeNode && renderInput()}
                 {noData ? (
                     emptyContent !== null && (
-                        <div className={listCls} role="none">
+                        <div className={clsx(listCls, classNames?.list)} style={styles?.list} role="none">
                             <TreeNode empty emptyContent={emptyContent || locale?.emptyText} />
                         </div>
                     )
                 ) : (
                     <div
                         ref={treeRef}
-                        className={listCls}
+                        className={clsx(listCls, classNames?.list)}
+                        style={styles?.list}
                         aria-activedescendant={renderedActiveIndex === -1 ? undefined : nodeId(treeId, activeKey)}
                         aria-describedby={ariaDescribedby}
                         aria-label={ariaLabel}

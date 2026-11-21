@@ -4,7 +4,7 @@
     import { IconArrowRight } from '@fibrae/semi-icons-svelte';
     import type { ChatProps } from './interface.js';
 
-    let { hints, class: className, style, hintBox, onHintClick }: { hints: string[]; class?: ClassValue; style?: string; hintBox?: ChatProps['hintBox']; onHintClick: (hint: string) => void } = $props();
+    let { hints, class: className, style, itemClass, itemStyle, hintBox, onHintClick }: { hints: string[]; class?: ClassValue; style?: string; itemClass?: ClassValue; itemStyle?: string; hintBox?: ChatProps['hintBox']; onHintClick: (hint: string) => void } = $props();
 
     const { PREFIX_HINT } = cssClasses;
 </script>
@@ -14,7 +14,7 @@
         {#if hintBox}
             {@render hintBox({ content: item, index, onHintClick: () => onHintClick(item) })}
         {:else}
-            <button class="{PREFIX_HINT}-item" type="button" onclick={() => onHintClick(item)}>
+            <button class={[`${PREFIX_HINT}-item`, itemClass]} style={itemStyle} type="button" onclick={() => onHintClick(item)}>
                 <span class="{PREFIX_HINT}-content">{item}</span>
                 <IconArrowRight class="{PREFIX_HINT}-icon" />
             </button>

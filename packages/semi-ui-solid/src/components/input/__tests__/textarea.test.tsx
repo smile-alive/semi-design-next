@@ -536,12 +536,14 @@ describe('TextArea', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        render(() => <TextArea classNames={{ textarea: 'my-textarea', lineNumber: 'my-nums' }} styles={{ textarea: { order: '1' }, lineNumber: { order: '2' } }} defaultValue="a" showLineNumber />);
-        expect(getTextArea()).toHaveClass(`${prefixCls}-textarea`, 'my-textarea');
-        expect(getTextArea()).toHaveStyle({ order: '1' });
-        const panel = document.querySelector(`.${prefixCls}-textarea-lineNumber`);
-        expect(panel).toHaveClass('my-nums');
-        expect(panel).toHaveStyle({ order: '2' });
+        const parts = ['textarea', 'lineNumber', 'clear', 'counter'] as const;
+        const selectors = { textarea: `${prefixCls}-textarea`, lineNumber: `${prefixCls}-textarea-lineNumber`, clear: `${prefixCls}-clearbtn`, counter: `${prefixCls}-textarea-counter` };
+        render(() => <TextArea classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]))} defaultValue="a" showClear showCounter showLineNumber />);
+        for (const part of parts) {
+            const el = document.querySelector(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('行号面板对辅助技术隐藏', () => {

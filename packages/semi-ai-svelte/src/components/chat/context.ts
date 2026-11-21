@@ -2,7 +2,7 @@ import { createContext } from '@fibrae/semi-ui-svelte/base';
 import type { ToastHookApi } from '@fibrae/semi-ui-svelte/toast/interface';
 import type { ChatMessage, ChatProps } from './interface.js';
 
-export type ChatView = Required<Pick<ChatProps, 'align' | 'escapeHtml' | 'mode'>> & Pick<ChatProps, 'customMarkDownComponents' | 'markdownRenderProps' | 'roleConfig'>;
+export type ChatView = Required<Pick<ChatProps, 'align' | 'escapeHtml' | 'mode'>> & Pick<ChatProps, 'classNames' | 'customMarkDownComponents' | 'markdownRenderProps' | 'roleConfig' | 'styles'>;
 
 export type ChatSnippets = Pick<ChatProps, 'title' | 'avatar' | 'roleAvatar' | 'content' | 'action' | 'fullChatBox'>;
 

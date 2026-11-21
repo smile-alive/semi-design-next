@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | className | Class name of the root `nav` element. | `string` | `""` |
+| classNames | Class names of the inner parts, keyed by `list`, `total`, `prev`, `next`, `item`, `ellipsis`, `sizeChanger`, `sizeChangerDropdown`, `quickJumper` and `dropdown`; merged with the built-in classes. `item` also reaches the ellipsis button, and `dropdown` is the popup listing pages that opens from the ellipsis and the small size. | <ApiType detail={"Partial\u003cRecord\u003cPaginationPart, string>>"}>Type</ApiType> | - |
 | currentPage | Current page. Once set the pagination is controlled and the page is entirely determined by this prop; when undefined the component manages the page itself. | `number` | - |
 | defaultCurrentPage | Initial page when not controlled. | `number` | `1` |
 | disabled | Whether disabled. When disabled, the navigation buttons, the page numbers, the size changer and the quick jumper are all unavailable. | `boolean` | `false` |
@@ -25,4 +26,5 @@ import ApiType from '#/components/ApiType.astro';
 | showTotal | Whether to show the total number of pages; not shown when `size` is `small`. | `boolean` | `false` |
 | size | Size: `default` or `small`. | `'default' \| 'small'` | `"default"` |
 | style | Inline style of the root `nav` element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cPaginationPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | total | Total number of items. When it changes, an uncontrolled pagination goes back to page 1; when controlled, the page follows `currentPage`. | `number` | `1` |

@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | autoPlay | Whether to play automatically. | `boolean` | `false` |
 | captionsSrc | Captions source URL; the captions are shown by default once set. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `video`, `poster`, `playIcon`, `error`, `notification`, `controls`, `progress`, `progressBuffered`, `progressPlayed`, `progressHandle`, `time`, `volumeDropdown` and `dropdown`; merged with the built-in classes. `progressBuffered` and `progressPlayed` apply to every marker segment; `dropdown` lands on the popup of the playback rate, quality and route menus. | <ApiType detail={"Partial\u003cRecord\u003cVideoPlayerPart, string>>"}>Type</ApiType> | - |
 | clickToPlay | Whether clicking the video toggles playback. | `boolean` | `true` |
 | controlsList | Controls shown in the control bar, all by default. A control also needs the prop it depends on to show. | `VideoControl[]` | <ApiType detail={"[\"play\", \"next\", \"time\", \"volume\", \"playbackRate\", \"quality\", \"route\", \"mirror\", \"fullscreen\", \"pictureInPicture\"]"}>Type</ApiType> |
 | crossOrigin | CORS setting of the video element: anonymous or use-credentials; an empty string means anonymous. | `'' \| 'anonymous' \| 'use-credentials'` | - |
@@ -31,6 +32,7 @@ import ApiType from '#/components/ApiType.astro';
 | seekTime | Seconds a fast forward or rewind moves. | `number` | `10` |
 | src | Video URL. Without it a missing-resource message shows; removing it keeps the previous source on the video element. | `string` | - |
 | style | Inline style of the root div, applied after width and height, so it overrides them. | `JSX.CSSProperties \| string` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cVideoPlayerPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | theme | Theme, affecting only the background color: dark or light. | `VideoPlayerTheme` | `"dark"` |
 | volume | Initial volume from 0 to 100, read once when the player mounts. | `number` | `100` |
 | width | Player width; a number is in pixels, a string is used as is. | `number \| string` | - |

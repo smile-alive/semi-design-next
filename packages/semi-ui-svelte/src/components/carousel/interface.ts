@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
+import type { CarouselPart } from '@fibrae/semi-foundation/components/carousel/constants';
 import type { CarouselAutoPlay } from '@fibrae/semi-foundation/components/carousel/foundation';
 
 export interface ArrowButton {
@@ -26,6 +27,7 @@ export interface CarouselProps<T = unknown> extends Omit<HTMLAttributes<HTMLDivE
     arrowProps?: ArrowProps;
     arrowType?: 'always' | 'hover';
     autoPlay?: CarouselAutoPlay;
+    classNames?: Partial<Record<CarouselPart, ClassValue>>;
     indicatorPosition?: 'left' | 'center' | 'right';
     indicatorSize?: 'small' | 'medium';
     indicatorType?: 'dot' | 'line' | 'columnar';
@@ -33,6 +35,7 @@ export interface CarouselProps<T = unknown> extends Omit<HTMLAttributes<HTMLDivE
     showIndicator?: boolean;
     slideDirection?: 'left' | 'right';
     speed?: number;
+    styles?: Partial<Record<CarouselPart, string>>;
     theme?: 'dark' | 'primary' | 'light';
     trigger?: 'click' | 'hover';
     onChange?: (activeIndex: number, preIndex: number) => void;

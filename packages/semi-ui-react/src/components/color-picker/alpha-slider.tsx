@@ -1,7 +1,8 @@
 import type React from 'react';
 import { useRef } from 'react';
+import clsx from 'clsx';
 import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/components/color-picker/color-slider-foundation';
-import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import { cssClasses, type ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import type { HsvaColor } from '@fibrae/semi-foundation/components/color-picker/interface';
 import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
 import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
@@ -18,10 +19,12 @@ export interface AlphaSliderProps {
     handleSize: number;
     className?: string;
     style?: React.CSSProperties;
+    classNames?: Partial<Record<ColorPickerPart, string>>;
+    styles?: Partial<Record<ColorPickerPart, React.CSSProperties>>;
     onChange: (alpha: number) => void;
 }
 
-export default function AlphaSlider({ hsva, width, height, handleSize, style, onChange }: AlphaSliderProps) {
+export default function AlphaSlider({ hsva, width, height, handleSize, style, classNames, styles, onChange }: AlphaSliderProps) {
     const { locale } = useLocale('ColorPicker');
 
     const domRef = useRef<HTMLDivElement>(null);
@@ -44,11 +47,12 @@ export default function AlphaSlider({ hsva, width, height, handleSize, style, on
     return (
         <div
             ref={domRef}
-            className={`${cssClasses.PREFIX}-alphaSlider`}
+            className={clsx(`${cssClasses.PREFIX}-alphaSlider`, classNames?.alpha)}
             style={{
                 width,
                 height,
                 ...style,
+                ...styles?.alpha,
             }}
             onLostPointerCapture={foundation.handleLostPointerCapture}
             onPointerDown={foundation.handlePointerDown}
@@ -56,7 +60,7 @@ export default function AlphaSlider({ hsva, width, height, handleSize, style, on
         >
             <div className={`${cssClasses.PREFIX}-alphaSliderInner`} style={{ background: `linear-gradient(90deg, ${colorFrom}, ${colorTo})` }}>
                 <div
-                    className={`${cssClasses.PREFIX}-alphaHandle`}
+                    className={clsx(`${cssClasses.PREFIX}-alphaHandle`, classNames?.handle)}
                     style={{
                         width: handleSize,
                         height: handleSize,
@@ -64,6 +68,7 @@ export default function AlphaSlider({ hsva, width, height, handleSize, style, on
                         top: `50%`,
                         transform: `translateY(-50%)`,
                         backgroundColor: hsvaToRgbaString(hsva),
+                        ...styles?.handle,
                     }}
                 >
                     <input type="range" className={`${cssClasses.PREFIX}-handleSlider`} aria-label={locale.alpha} aria-valuetext={`${round(hsva.a * 100)}%`} max={100} min={0} value={round(hsva.a * 100)} onChange={(e) => foundation.setValue(Number(e.target.value))} onKeyDown={foundation.handleKeyDown} />

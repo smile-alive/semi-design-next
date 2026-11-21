@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property  | Description                                                                     | Type                 | Default     |
-| --------- | ------------------------------------------------------------------------------- | -------------------- | ----------- |
-| activeKey | Keys of the expanded code panels; bind it with v-model:activeKey.               | `string \| string[]` | `undefined` |
-| codes     | The code entries, each with the CodeItem props and a key identifying its panel. | `CodeItemData[]`     | `[]`        |
+| Property   | Description                                                                                                                                                                  | Type                                                                                             | Default     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------- |
+| activeKey  | Keys of the expanded code panels; bind it with v-model:activeKey.                                                                                                            | `string \| string[]`                                                                             | `undefined` |
+| classNames | Class names of the inner parts, keyed by itemHeader and itemExpand; they apply to every code panel and merge with the built-in classes. Values take the same forms as class. | <ApiType detail={"Partial\u003cRecord\u003cSidebarCodeContentPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| codes      | The code entries, each with the CodeItem props and a key identifying its panel.                                                                                              | `CodeItemData[]`                                                                                 | `[]`        |
+| styles     | Inline styles of the inner parts, keyed like classNames.                                                                                                                     | <ApiType detail={"Partial\u003cRecord\u003cSidebarCodeContentPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

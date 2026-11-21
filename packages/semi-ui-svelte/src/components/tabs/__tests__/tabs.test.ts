@@ -147,14 +147,55 @@ describe('Tabs', () => {
 
     it('classNames 与 styles 按部位落到对应元素', () => {
         stubIntersectionObserver();
-        const parts = ['tabBar', 'content', 'visibleTabs'] as const;
-        const selectors = { tabBar: `${prefix}-bar`, content: `${prefix}-content`, visibleTabs: `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper` };
-        setup({ collapsible: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) }, threePanes);
+        const parts = ['tabBar', 'content', 'visibleTabs', 'item', 'itemIcon', 'itemClose', 'pane', 'extra', 'arrow'] as const;
+        const selectors = {
+            tabBar: `${prefix}-bar`,
+            content: `${prefix}-content`,
+            visibleTabs: `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`,
+            item: `${prefix}-tab`,
+            itemIcon: `${prefix}-bar-icon`,
+            itemClose: `${prefix}-tab-icon-close`,
+            pane: `${prefix}-pane`,
+            extra: `${prefix}-bar-extra`,
+            arrow: `${prefix}-bar-arrow`,
+        };
+        setup(
+            { collapsible: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) },
+            threePanes.map((pane) => ({ ...pane, closable: true })),
+            { snippets: ['icon', 'extra'] }
+        );
         for (const part of parts) {
             const el = getElement(`.${selectors[part]}`);
             expect(el).toHaveClass(`my-${part}`);
             expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
         }
+        expect(document.querySelectorAll(`.${prefix}-bar-arrow.my-arrow`)).toHaveLength(2);
+        expect(document.querySelectorAll(`.${prefix}-tab.my-item`)).toHaveLength(3);
+        expect(document.querySelectorAll(`.${prefix}-pane.my-pane`)).toHaveLength(3);
+    });
+
+    it('classNames.more 与 classNames.dropdown 落到更多按钮和下拉浮层', async () => {
+        setup({ more: { count: 1, dropdownProps: { trigger: 'click' } }, classNames: { more: 'my-more', dropdown: 'my-dropdown' }, styles: { more: 'order: 1', dropdown: 'order: 2' } });
+        expect(screen.getByRole('button', { name: '更多' })).toHaveClass('my-more');
+        expect(screen.getByRole('button', { name: '更多' })).toHaveStyle({ order: '1' });
+        await click(screen.getByText('更多'));
+        await screen.findAllByRole('menuitemcheckbox');
+        const dropdown = getElement(`.${prefix}-bar-more-dropdown-line`);
+        expect(dropdown).toHaveClass('my-dropdown');
+        // Dropdown puts `style` on the menu container inside the popup wrapper that takes the class
+        expect(getElement(`.${BASE_CLASS_PREFIX}-dropdown`, dropdown)).toHaveStyle({ order: '2' });
+    });
+
+    it('classNames.dropdown 落到箭头下拉浮层', async () => {
+        scrollSpy();
+        const io = stubIntersectionObserver();
+        setup({ collapsible: true, classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: 'order: 2' } }, keyPanes(['k0', 'k1', 'k2']));
+        await io.intersect({ 'k0-bar': true, 'k1-bar': false, 'k2-bar': false });
+        await click(arrowButton('end'));
+        await screen.findAllByRole('menuitemcheckbox');
+        const dropdown = getElement(`.${prefix}-bar-dropdown`);
+        expect(dropdown).toHaveClass('my-dropdown');
+        expect(getElement(`.${BASE_CLASS_PREFIX}-dropdown`, dropdown)).toHaveStyle({ order: '2' });
     });
 
     it('不同类型的 Tabs', () => {

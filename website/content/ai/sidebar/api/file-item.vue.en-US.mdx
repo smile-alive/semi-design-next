@@ -1,12 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property       | Description                                                                                                                                     | Type                     | Default     |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------- |
-| content        | Rich text as HTML. Later changes are synced to the editor; content equal to the editor's is not reset, and syncing does not emit contentChange. | `string`                 | `undefined` |
-| editable       | Whether it is editable; later changes are synced to the editor.                                                                                 | `boolean`                | `true`      |
-| extensions     | tiptap extensions appended to the built-in ones, read when the editor is created; later changes have no effect.                                 | `Extensions`             | `[]`        |
-| imgUploadProps | Image upload options, read when the editor is created; later changes have no effect.                                                            | `ImageUploadNodeOptions` | `undefined` |
-| name           | File name, used as the accessible name of the editing area; later changes are synced to the editor.                                             | `string`                 | `undefined` |
+| Property       | Description                                                                                                                                                                             | Type                                                                                          | Default     |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------- |
+| classNames     | Class names of the inner parts, keyed by menuBar and editor; merged with the built-in classes. Values take the same forms as class. menuBar is rendered only when the item is editable. | <ApiType detail={"Partial\u003cRecord\u003cSidebarFileItemPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| content        | Rich text as HTML. Later changes are synced to the editor; content equal to the editor's is not reset, and syncing does not emit contentChange.                                         | `string`                                                                                      | `undefined` |
+| editable       | Whether it is editable; later changes are synced to the editor.                                                                                                                         | `boolean`                                                                                     | `true`      |
+| extensions     | tiptap extensions appended to the built-in ones, read when the editor is created; later changes have no effect.                                                                         | `Extensions`                                                                                  | `[]`        |
+| imgUploadProps | Image upload options, read when the editor is created; later changes have no effect.                                                                                                    | `ImageUploadNodeOptions`                                                                      | `undefined` |
+| name           | File name, used as the accessible name of the editing area; later changes are synced to the editor.                                                                                     | `string`                                                                                      | `undefined` |
+| styles         | Inline styles of the inner parts, keyed like classNames.                                                                                                                                | <ApiType detail={"Partial\u003cRecord\u003cSidebarFileItemPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

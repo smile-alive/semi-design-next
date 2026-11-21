@@ -265,8 +265,8 @@
         // the trigger draws its own clear button: a global Input default must not add one
         showClear: false,
         ...omit(props.inputProps ?? {}, ['ref']),
-        class: [`${prefix}-input`, props.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, props.inputProps?.class],
-        style: props.multiple ? { width: state.value.inputValue ? `${state.value.inputValue.length * 16}px` : '2px' } : props.inputProps?.style,
+        class: [`${prefix}-input`, props.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, props.inputProps?.class, props.classNames?.input],
+        style: [props.multiple ? { width: state.value.inputValue ? `${state.value.inputValue.length * 16}px` : '2px' } : props.inputProps?.style, props.styles?.input],
     });
 
     // a search field over the trigger's list, not a second combobox (React Aria Autocomplete pattern)
@@ -304,6 +304,8 @@
             inputValue: state.value.inputValue,
             selected: option.selected,
             semiOptionId: optionId(index),
+            parentClassNames: props.classNames,
+            parentStyles: props.styles,
         };
     };
 
@@ -362,6 +364,7 @@
                 [`${prefix}-selection-text-hide`]: state.value.inputValue && searching,
                 [`${prefix}-selection-text-inactive`]: !state.value.inputValue && searching,
             },
+            !shown && props.classNames?.placeholder,
         ];
     };
 
@@ -476,13 +479,15 @@
                             [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text',
                             [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon',
                         },
+                        props.classNames?.prefix,
                     ]"
+                    :style="props.styles?.prefix"
                     x-semi-prop="prefix,insetLabel"
                 >
                     <slot v-if="k.prefix" name="prefix" />
                     <slot v-else name="insetLabel" />
                 </div>
-                <div :class="`${prefix}-selection`">
+                <div :class="[`${prefix}-selection`, props.classNames?.content]" :style="props.styles?.content">
                     <div
                         v-if="props.multiple"
                         :class="[
@@ -497,7 +502,7 @@
                             <template v-if="tagFold.expanded">
                                 <template v-for="(item, index) in selectedItems" :key="`${item.value}`">
                                     <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
-                                    <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
+                                    <Tag v-else :class="props.classNames?.tag" :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="[{ maxWidth: '100%' }, props.styles?.tag]" @close="removeTag(item, $event)">
                                         <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
                                         <component :is="selectedSlot(item)" v-else-if="selectedSlot(item)" />
                                         <template v-else>{{ item.label }}</template>
@@ -508,7 +513,7 @@
                                 <OverflowList itemKey="value" :items="collapsedTags()" @overflow="handleOverflow">
                                     <template #item="{ item, index }">
                                         <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
-                                        <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
+                                        <Tag v-else :class="props.classNames?.tag" :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="[{ maxWidth: '100%' }, props.styles?.tag]" @close="removeTag(item, $event)">
                                             <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
                                             <component :is="selectedSlot(item)" v-else-if="selectedSlot(item)" />
                                             <template v-else>{{ item.label }}</template>
@@ -517,7 +522,7 @@
                                     <template #overflow="{ items }">
                                         <template v-for="item in items.slice(0, 1)" :key="`${item.value}`">
                                             <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, collapsedTags().indexOf(item))" />
-                                            <Tag v-else :closable="!selectedItemProps(item, 0).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
+                                            <Tag v-else :class="props.classNames?.tag" :closable="!selectedItemProps(item, 0).disabled" color="white" :size="tagSize()" :style="[{ maxWidth: '100%' }, props.styles?.tag]" @close="removeTag(item, $event)">
                                                 <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, collapsedTags().indexOf(item))" />
                                                 <TypographyText
                                                     v-else
@@ -543,7 +548,7 @@
                                         <Space :spacing="2" :style="{ maxWidth: '400px' }" wrap>
                                             <template v-for="(item, index) in selectedItems.slice(selectedItems.length - state.overflowItemCount)" :key="`${item.value}`">
                                                 <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
-                                                <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="{ maxWidth: '100%' }" @close="removeTag(item, $event)">
+                                                <Tag v-else :class="props.classNames?.tag" :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="[{ maxWidth: '100%' }, props.styles?.tag]" @close="removeTag(item, $event)">
                                                     <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
                                                     <component :is="selectedSlot(item)" v-else-if="selectedSlot(item)" />
                                                     <template v-else>{{ item.label }}</template>
@@ -566,7 +571,7 @@
                                 <template #tag="{ index }">
                                     <template v-for="item in [selectedItems[index]]" :key="`${item.value}`">
                                         <slot v-if="$slots.tag" name="tag" v-bind="selectedItemProps(item, index)" />
-                                        <Tag v-else :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :tabindex="-1" @close="removeTag(item, $event)">
+                                        <Tag v-else :class="props.classNames?.tag" :closable="!selectedItemProps(item, index).disabled" color="white" :size="tagSize()" :style="props.styles?.tag" :tabindex="-1" @close="removeTag(item, $event)">
                                             <slot v-if="$slots.selectedItem" name="selectedItem" v-bind="selectedItemProps(item, index)" />
                                             <component :is="selectedSlot(item)" v-else-if="selectedSlot(item)" />
                                             <template v-else>{{ item.label }}</template>
@@ -575,12 +580,12 @@
                                 </template>
                             </TagGroup>
                         </template>
-                        <span v-else-if="props.placeholder && !state.inputValue" :class="[`${prefix}-selection-text`, `${prefix}-selection-placeholder`]">{{ props.placeholder }}</span>
+                        <span v-else-if="props.placeholder && !state.inputValue" :class="[`${prefix}-selection-text`, `${prefix}-selection-placeholder`, props.classNames?.placeholder]" :style="props.styles?.placeholder">{{ props.placeholder }}</span>
                         <Input v-if="filterable && searchInTrigger" :ref="setTriggerInput" v-bind="triggerInputBindings()" />
                     </div>
                     <div v-else :class="`${prefix}-content-wrapper`">
                         <template v-for="option in [singleItem()]" :key="String(option?.value)">
-                            <span :id="selectionTextId" :class="singleTextClass(hasSingleContent(option))" x-semi-prop="placeholder">
+                            <span :id="selectionTextId" :class="singleTextClass(hasSingleContent(option))" :style="hasSingleContent(option) ? undefined : props.styles?.placeholder" x-semi-prop="placeholder">
                                 <template v-if="hasSingleContent(option)">
                                     <slot v-if="$slots.selectedItem" :disabled="looks.disabled" :index="0" name="selectedItem" :onClose="() => foundation.handleClearClick()" :option="option" />
                                     <component :is="selectedSlot(option)" v-else-if="selectedSlot(option)" />
@@ -600,20 +605,22 @@
                             [`${prefix}-suffix-text`]: k.suffix === 'text',
                             [`${prefix}-suffix-icon`]: k.suffix === 'icon',
                         },
+                        props.classNames?.suffix,
                     ]"
+                    :style="props.styles?.suffix"
                     x-semi-prop="suffix"
                 >
                     <slot name="suffix" />
                 </div>
             </template>
             <!-- .stop keeps the button's own Enter and Space from the owner's keydown listeners, which listen to the combobox -->
-            <button v-if="!$slots.trigger && clearable" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clear`" type="button" @click="foundation.handleClearClick" @keydown.enter.space.stop>
+            <button v-if="!$slots.trigger && clearable" ref="clearButton" :aria-label="locale.locale.clear" :class="[`${prefix}-clear`, props.classNames?.clear]" :style="props.styles?.clear" type="button" @click="foundation.handleClearClick" @keydown.enter.space.stop>
                 <slot name="clearIcon">
                     <IconClear />
                 </slot>
             </button>
             <template v-if="!$slots.trigger">
-                <div v-if="props.showArrow" :class="`${prefix}-arrow`" x-semi-prop="arrowIcon">
+                <div v-if="props.showArrow" :class="[`${prefix}-arrow`, props.classNames?.arrow]" :style="props.styles?.arrow" x-semi-prop="arrowIcon">
                     <slot v-if="$slots.arrowIcon" name="arrowIcon" />
                     <IconChevronDown v-else />
                 </div>
@@ -636,7 +643,7 @@
                 <div v-if="$slots.outerTopSlot" :class="`${prefix}-option-list-outer-top-slot`" @mouseenter="foundation.handleSlotMouseEnter">
                     <slot name="outerTopSlot" />
                 </div>
-                <div v-if="!searchInTrigger && filterable" :class="`${prefix}-dropdown-search-wrapper`">
+                <div v-if="!searchInTrigger && filterable" :class="[`${prefix}-dropdown-search-wrapper`, props.classNames?.search]" :style="props.styles?.search">
                     <Input :ref="setDropdownInput" v-bind="dropdownInputBindings()">
                         <template #prefix>
                             <IconSearch />
@@ -644,7 +651,15 @@
                     </Input>
                 </div>
                 <!-- scroll.capture: with virtualize the scrolling element is the VirtualList inside, and scroll does not bubble -->
-                <div :id="listboxId" v-bind="nameAttrs()" :aria-multiselectable="props.multiple" :class="[`${prefix}-option-list`, { [`${prefix}-option-list-chosen`]: state.selections.size }]" role="listbox" :style="{ maxHeight: toCssLength(props.maxHeight) }" @scroll.capture="foundation.handleListScroll">
+                <div
+                    :id="listboxId"
+                    v-bind="nameAttrs()"
+                    :aria-multiselectable="props.multiple"
+                    :class="[`${prefix}-option-list`, { [`${prefix}-option-list-chosen`]: state.selections.size }, props.classNames?.list]"
+                    role="listbox"
+                    :style="[{ maxHeight: toCssLength(props.maxHeight) }, props.styles?.list]"
+                    @scroll.capture="foundation.handleListScroll"
+                >
                     <div v-if="$slots.innerTopSlot" :class="`${prefix}-option-list-inner-top-slot`" @mouseenter="foundation.handleSlotMouseEnter">
                         <slot name="innerTopSlot" />
                     </div>
@@ -652,7 +667,7 @@
                         <Spin />
                     </div>
                     <template v-else-if="visibleOptions.length === 0">
-                        <SelectOption v-if="!emptyHidden()" empty>
+                        <SelectOption v-if="!emptyHidden()" :class="props.classNames?.empty" empty :style="props.styles?.empty">
                             <slot v-if="$slots.emptyContent" name="emptyContent" />
                             <template v-else>{{ locale.locale.emptyText }}</template>
                         </SelectOption>
@@ -674,7 +689,7 @@
                     </VirtualList>
                     <template v-for="run in optionRuns" v-else :key="run.group?.key ?? `.${run.first}`">
                         <component :is="hasTitle(run.group) ? 'div' : SlotFragment" v-bind="groupWrapperAttrs(run.group, run.first)">
-                            <SelectOptGroup v-if="hasTitle(run.group)" v-bind="run.group.attrs" :id="groupTitleId(run.group, run.first)">
+                            <SelectOptGroup v-if="hasTitle(run.group)" :id="groupTitleId(run.group, run.first)" v-bind="{ ...run.group.attrs, class: [props.classNames?.groupLabel, run.group.attrs.class], style: [props.styles?.groupLabel, run.group.attrs.style as StyleValue] }">
                                 <template v-if="run.group.labelSlot" #label>
                                     <component :is="run.group.labelSlot" />
                                 </template>

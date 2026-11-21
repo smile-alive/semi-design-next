@@ -23,8 +23,8 @@
                 "en-US": "Class name of the root label element."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `addon`（包裹内容的容器），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `addon` (the container wrapping the content); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `icon`（圆形单选框本体）、`label`（标签文字）、`extra`（补充说明），与组件自带的类名合并。`type` 为 `button` 时没有 `icon` 与 `extra`，`label` 是按钮面。",
+                "en-US": "Class names of the inner parts, keyed by `icon` (the round box), `label` (the label text) and `extra` (the supplementary text); merged with the built-in classes. With `type` set to `button` there is no `icon` or `extra`, and `label` is the button face."
             },
             "defaultChecked": {
                 "zh-CN": "初始是否选中，非受控使用；在 RadioGroup 中使用时无效。",
@@ -109,6 +109,10 @@
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`（每个 Radio 的根元素）、`itemIcon`、`itemLabel`、`itemExtra`，作用于组内全部 Radio，与 Radio 自己的 `classNames` 合并，组的类名在前。",
+                "en-US": "Class names of the inner parts, keyed by `item` (the root of every Radio), `itemIcon`, `itemLabel` and `itemExtra`. They apply to every Radio in the group and merge with each Radio's own `classNames`, the group's first."
+            },
             "defaultValue": {
                 "zh-CN": "非受控时默认选中的值。",
                 "en-US": "The value selected by default when uncontrolled."
@@ -148,6 +152,10 @@
             "style": {
                 "zh-CN": "根元素的内联样式。",
                 "en-US": "Inline style of the root element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，Radio 自己的 `styles` 后写。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; each Radio's own `styles` are applied after them."
             },
             "type": {
                 "zh-CN": "组内所有 Radio 的样式类型，可选 `default`、`button`、`card` 或 `pureCard`。",

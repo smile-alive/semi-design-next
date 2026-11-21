@@ -18,6 +18,8 @@
     let {
         initValues,
         layout = defaults('layout', 'vertical'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         labelPosition = defaults('labelPosition', 'top'),
         labelWidth = defaults('labelWidth'),
         labelAlign = defaults('labelAlign'),
@@ -60,6 +62,12 @@
         },
         get layout() {
             return layout;
+        },
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
         },
         get labelPosition() {
             return labelPosition;

@@ -130,7 +130,7 @@ export default function DialogueAction(props: DialogueActionProps) {
             when={context.view().dialogueRenderConfig?.renderDialogueAction}
             keyed
             fallback={
-                <div class={wrapCls()}>
+                <div class={clsx(wrapCls(), context.view().classNames?.itemActions)} style={context.view().styles?.itemActions}>
                     <For each={barKeys()}>{(key) => factories[key]()}</For>
                 </div>
             }

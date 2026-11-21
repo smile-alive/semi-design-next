@@ -1452,4 +1452,34 @@ describe('Transfer 排序、禁用与 tabindex', () => {
         expect(getRoot()).not.toHaveAttribute('tabindex');
         expect(getSearchInput()).toHaveAttribute('tabindex', '-1');
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['source', 'selected', 'filter', 'header', 'title', 'action', 'list', 'groupTitle', 'item', 'itemDragHandle', 'itemRemove', 'empty'] as const;
+        const selectors = {
+            source: 'left',
+            selected: 'right',
+            filter: 'filter',
+            header: 'header',
+            title: 'header-total',
+            action: 'header-all',
+            list: 'left-list, .' + prefixCls + '-right-list',
+            groupTitle: 'group-title',
+            item: 'item',
+            itemDragHandle: 'right-item-drag-handler',
+            itemRemove: 'item-close-icon',
+            empty: 'empty',
+        };
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`]));
+        renderTransfer({ type: 'groupList', dataSource: dataWithGroup, defaultValue: [1, 2], draggable: true, disabled: true, classNames, styles });
+        renderTransfer({ dataSource: [], classNames, styles });
+        for (const part of parts) {
+            const els = Array.from(document.querySelectorAll(`.${prefixCls}-${selectors[part]}`));
+            expect(els.length).toBeGreaterThan(0);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
 });

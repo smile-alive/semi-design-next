@@ -38,4 +38,7 @@ export const numbers = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type UploadPart = 'item';
+export type UploadPart = 'trigger' | 'prompt' | 'validateMessage' | 'dragIcon' | 'dragMainText' | 'dragSubText' | 'list' | 'listTitle' | 'clear' | 'item' | 'itemThumbnail' | 'itemName' | 'itemProgress' | 'itemValidateMessage' | 'itemRetry' | 'itemReplace' | 'itemClose';
+
+/** Keys of `classNames` and `styles` of `Upload.FileCard`; `Upload` maps its `item*` keys onto them for every card */
+export type UploadFileCardPart = 'thumbnail' | 'name' | 'progress' | 'validateMessage' | 'retry' | 'replace' | 'close';

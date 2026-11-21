@@ -1,8 +1,10 @@
 import type { ComputedRef } from 'vue';
 import { createContext } from '../../base/index';
-import type { ItemKey, Mode, NavClickData, NavOpenChangeData, NavSlots, OnSelectedData } from './interface';
+import type { ItemKey, Mode, NavClickData, NavOpenChangeData, NavProps, NavSlots, OnSelectedData } from './interface';
 
 export interface NavContextView {
+    classNames?: NavProps['classNames'];
+    styles?: NavProps['styles'];
     isCollapsed: boolean;
     mode: Mode;
     /** True below a Sub: its title and list, inline or in the popup */

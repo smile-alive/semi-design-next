@@ -6,13 +6,15 @@ const { PREFIX_HINT } = cssClasses;
 interface HintProps {
     className?: string;
     style?: React.CSSProperties;
+    itemClassName?: string;
+    itemStyle?: React.CSSProperties;
     hints?: string[];
     selecting?: boolean;
     onHintClick?: (item: string) => void;
     renderHintBox?: (props: { content: string; index: number; onHintClick: () => void }) => React.ReactNode;
 }
 
-function Hint({ hints, onHintClick, renderHintBox, className, style, selecting }: HintProps) {
+function Hint({ hints, onHintClick, renderHintBox, className, style, itemClassName, itemStyle, selecting }: HintProps) {
     return (
         <section
             className={clsx(`${PREFIX_HINT}s`, className, {
@@ -37,7 +39,8 @@ function Hint({ hints, onHintClick, renderHintBox, className, style, selecting }
                 return (
                     <div
                         key={index}
-                        className={`${PREFIX_HINT}-item`}
+                        className={clsx(`${PREFIX_HINT}-item`, itemClassName)}
+                        style={itemStyle}
                         role="button"
                         tabIndex={0}
                         onClick={() => {

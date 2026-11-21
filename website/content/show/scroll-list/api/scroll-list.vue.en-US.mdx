@@ -1,10 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property   | Description                                               | Type               | Default                                         |
-| ---------- | --------------------------------------------------------- | ------------------ | ----------------------------------------------- |
-| bodyHeight | Height of the list body.                                  | `string \| number` | `semiGlobalDefault("ScrollList", "bodyHeight")` |
-| footer     | Footer text. The footer slot takes precedence when given. | `string`           | `semiGlobalDefault("ScrollList", "footer")`     |
-| header     | Header text. The header slot takes precedence when given. | `string`           | `semiGlobalDefault("ScrollList", "header")`     |
+| Property   | Description                                                                                                        | Type                                                                                     | Default                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| bodyHeight | Height of the list body.                                                                                           | `string \| number`                                                                       | `semiGlobalDefault("ScrollList", "bodyHeight")` |
+| classNames | Class names of the inner parts, keyed by `header`, `title`, `body` and `footer`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("ScrollList", "classNames")` |
+| footer     | Footer text. The footer slot takes precedence when given.                                                          | `string`                                                                                 | `semiGlobalDefault("ScrollList", "footer")`     |
+| header     | Header text. The header slot takes precedence when given.                                                          | `string`                                                                                 | `semiGlobalDefault("ScrollList", "header")`     |
+| styles     | Inline styles of the inner parts, keyed like `classNames`.                                                         | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("ScrollList", "styles")`     |
 
 **Events**
 

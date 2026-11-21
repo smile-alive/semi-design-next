@@ -122,8 +122,8 @@
                 "en-US": "Extra props of the search Input when search is on; listeners use Vue keys such as onFocus. Do not pass modelValue, defaultValue or onChange, which would override the Select's own state and search handling."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 dropdown（下拉弹出层），值的写法同 class，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by dropdown (the dropdown popup); values take any class binding and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、groupLabel、item、itemIcon、itemContent，值的写法同 class，与组件自带的类名合并。content 是触发器中间的已选内容区，input 是触发器内搜索框的根元素（与 Input 的 input 不同，后者是原生输入框），search 是 searchPosition=\"dropdown\" 时下拉层顶部的搜索区域，dropdown 是弹出层最外层，list 是选项列表。item、itemIcon、itemContent 作用到全部选项，先于 SelectOption 自己的 classNames 生效，对 optionItem、createItem 插槽渲染的选项不生效。",
+                "en-US": "Class names of the inner parts, keyed by prefix, suffix, content, placeholder, input, search, tag, clear, arrow, dropdown, list, empty, groupLabel, item, itemIcon and itemContent; values take any class binding and merge with the built-in classes. content is the selection area in the middle of the trigger, input is the root element of the search field inside the trigger (unlike input of Input, which is the native input), search is the search area at the top of the dropdown when searchPosition=\"dropdown\", dropdown is the outermost layer of the popup, and list is the option list. item, itemIcon and itemContent apply to every option and come before the classNames of SelectOption; they do not apply to options drawn by the optionItem or createItem slot."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 classNames，例如给 dropdown 设置 width。根元素上的 style 不会传给弹出层。",
@@ -322,6 +322,14 @@
                 "zh-CN": "选中时是否显示 √ 图标。",
                 "en-US": "Whether a tick icon is shown when the option is selected."
             },
+            "classNames": {
+                "zh-CN": "选项内部各部位的类名，键为 icon（选中的对勾图标容器）、content（默认插槽为纯文本时的文本元素），值的写法同 class，在 Select 的 item* 类名之后追加。",
+                "en-US": "Class names of the inner parts of the option, keyed by icon (the tick icon container) and content (the text element, present when the default slot is plain text); values take any class binding and are appended after the item* class names of Select."
+            },
+            "styles": {
+                "zh-CN": "选项内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts of the option, keyed like classNames."
+            },
             "empty": {
                 "zh-CN": "供 Select 内部使用，渲染空状态行，使用方不需要设置。",
                 "en-US": "Used by Select internally to render the empty-state row; callers do not set it."
@@ -345,6 +353,14 @@
             "semiOptionId": {
                 "zh-CN": "供 Select 内部使用，选项行的 id，使用方不需要设置。",
                 "en-US": "Used by Select internally as the id of the option row; callers do not set it."
+            },
+            "parentClassNames": {
+                "zh-CN": "供 Select 与 AutoComplete 内部使用，父级 classNames 中的 item、itemIcon、itemContent，使用方不需要设置。",
+                "en-US": "Used by Select and AutoComplete internally for item, itemIcon and itemContent of the parent classNames; callers do not set it."
+            },
+            "parentStyles": {
+                "zh-CN": "供 Select 与 AutoComplete 内部使用，父级 styles 中的 item、itemIcon、itemContent，使用方不需要设置。",
+                "en-US": "Used by Select and AutoComplete internally for item, itemIcon and itemContent of the parent styles; callers do not set it."
             }
         },
         "events": {

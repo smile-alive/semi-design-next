@@ -1,11 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                                                                                                 | Type      | Default     |
-| -------- | --------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
-| active   | Whether the item is active: bolder text and a deeper color, plus a tick on its leading side when the Dropdown has showTick. | `boolean` | `false`     |
-| disabled | Whether the item is disabled.                                                                                               | `boolean` | `false`     |
-| showTick | Takes effect only outside a Dropdown. Inside one, the showTick of the Dropdown applies.                                     | `boolean` | `undefined` |
-| type     | Text color type: primary, secondary, tertiary, warning or danger.                                                           | `Type`    | `undefined` |
+| Property   | Description                                                                                                                                                                              | Type                                                                              | Default     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------- |
+| active     | Whether the item is active: bolder text and a deeper color, plus a tick on its leading side when the Dropdown has showTick.                                                              | `boolean`                                                                         | `false`     |
+| classNames | Class names of the inner parts, keyed by `icon` (the icon container `.semi-dropdown-item-icon`); merged with the built-in classes and the `itemIcon` of the Dropdown, coming after them. | <ApiType detail={"Partial\u003cRecord\u003c\"icon\", PartClass>>"}>Type</ApiType> | `undefined` |
+| disabled   | Whether the item is disabled.                                                                                                                                                            | `boolean`                                                                         | `false`     |
+| showTick   | Takes effect only outside a Dropdown. Inside one, the showTick of the Dropdown applies.                                                                                                  | `boolean`                                                                         | `undefined` |
+| styles     | Inline styles of the inner parts, keyed like `classNames`; applied after the `itemIcon` of the Dropdown.                                                                                 | <ApiType detail={"Partial\u003cRecord\u003c\"icon\", PartStyle>>"}>Type</ApiType> | `undefined` |
+| type       | Text color type: primary, secondary, tertiary, warning or danger.                                                                                                                        | `Type`                                                                            | `undefined` |
 
 **Events**
 

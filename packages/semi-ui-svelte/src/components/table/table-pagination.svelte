@@ -23,7 +23,7 @@
     const info = $derived(TableFoundation.formatPaginationInfo(pagination, locale().locale.pageText, formatPageText as FoundationPageText));
 </script>
 
-<div class="{table.prefixCls}-pagination-outer">
+<div class={[`${table.prefixCls}-pagination-outer`, table.classNames?.pagination]} style={table.styles?.pagination}>
     {#if table.parts.paginationContent}
         {@render table.parts.paginationContent({ pagination: omit(pagination, ['position', 'formatPageText']) })}
     {:else}

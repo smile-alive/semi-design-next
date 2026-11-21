@@ -8,7 +8,7 @@ import type { HeaderProps } from '../interface';
 
 const prefixCls = `${cssClasses.PREFIX}-preview-header`;
 
-export default function Header({ ref, onClose, title, titleId, titleStyle, className, renderHeader, closable, renderCloseIcon }: HeaderProps) {
+export default function Header({ ref, onClose, title, titleId, className, classNames, styles, renderHeader, closable, renderCloseIcon }: HeaderProps) {
     const { locale } = useLocale('Image');
     const closeIcon = useUnwrappedLazy(typeof renderCloseIcon === 'function' ? renderCloseIcon() : renderCloseIcon);
 
@@ -17,12 +17,12 @@ export default function Header({ ref, onClose, title, titleId, titleStyle, class
     }
 
     return (
-        <section ref={ref} className={clsx(prefixCls, className)}>
-            <section id={titleId} className={`${prefixCls}-title`} style={titleStyle}>
+        <section ref={ref} className={clsx(prefixCls, className, classNames?.header)} style={styles?.header}>
+            <section id={titleId} className={clsx(`${prefixCls}-title`, classNames?.title)} style={styles?.title}>
                 {renderHeader ? renderHeader(title) : title}
             </section>
             {closable && (
-                <button type="button" className={`${prefixCls}-close`} aria-label={locale.close} onClick={onClose}>
+                <button type="button" className={clsx(`${prefixCls}-close`, classNames?.close)} style={styles?.close} aria-label={locale.close} onClick={onClose}>
                     {isValidElement(closeIcon) ? closeIcon : <IconClose />}
                 </button>
             )}

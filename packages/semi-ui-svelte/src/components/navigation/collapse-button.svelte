@@ -7,7 +7,7 @@
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';
     import type { NavCollapseButtonProps } from './interface.js';
 
-    let { collapsed, collapseText, onToggle }: NavCollapseButtonProps = $props();
+    let { class: className, style, collapsed, collapseText, onToggle }: NavCollapseButtonProps = $props();
 
     const locale = useLocale('Navigation');
 </script>
@@ -37,7 +37,7 @@
     {/if}
 {/snippet}
 
-<div class={`${cssClasses.PREFIX}-collapse-btn`}>
+<div class={[`${cssClasses.PREFIX}-collapse-btn`, className]} {style}>
     <!-- One element tree for both states: swapping the wrapper would remount the button and drop the focus it holds -->
     <Tooltip child={trigger} condition={collapsed} content={tip} position="right" />
 </div>

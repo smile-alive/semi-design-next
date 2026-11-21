@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | align | 对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。 | `'leftAlign' \| 'leftRight'` | `"leftRight"` |
 | avatar | 自定义头像的 snippet，参数含默认头像 `defaultAvatar`、消息 `message` 与角色 `role`。 | <ApiType detail={"Snippet\u003c[AIChatDialogueAvatarSnippetProps]>"}>Type</ApiType> | - |
 | chats | 对话消息列表，可用 `bind:chats` 双向绑定。不绑定时，组件内的增删改（如删除消息）只在组件内生效；`onChatsChange` 在每次变更时只调用一次。 | `Message[]` | - |
-| classNames | 内部各部位的类名，键为 hint（提示区最外层），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 messages、item、itemCheckbox、itemAvatar、itemTitle、itemContent、itemActions、reasoning、references、annotation、file、image、loading、code、hint、hintItem、backBottom，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。item 开头的键作用于每一条消息，hint 是提示词列表容器，hintItem 是单个提示词。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatDialoguePart, ClassValue>>"}>Type</ApiType> | - |
 | content | 自定义内容区域的 snippet，参数含默认内容 `defaultContent`、消息 `message`、角色 `role` 与 `class`。`defaultContent` 与默认渲染一致，包含引用列表与加载指示。 | <ApiType detail={"Snippet\u003c[AIChatDialogueContentSnippetProps]>"}>Type</ApiType> | - |
 | contentItem | 按内容项自定义渲染的 snippet，每个内容项都会先经过它，参数含 `item`、`type`、`message`、`index`、`parent`、默认渲染 `defaultItem` 与自定义节点应带的 `class`。snippet 的输出无法检查，不处理的项需自己用 `{@render defaultItem()}` 渲染，渲染为空时不会回落到内置渲染。 | <ApiType detail={"Snippet\u003c[AIChatDialogueContentItemSnippetProps]>"}>Type</ApiType> | - |
 | disabledFileItemClick | 是否禁用文件卡片的点击。 | `boolean` | `false` |

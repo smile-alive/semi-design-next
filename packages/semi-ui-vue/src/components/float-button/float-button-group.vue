@@ -1,13 +1,15 @@
 <script setup lang="ts">
     import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/components/float-button/constants';
     import '@fibrae/semi-foundation/components/float-button/float-button.scss';
-    import { type ElementProps, type EmitHandlers, semiDefault } from '../../base/index';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault } from '../../base/index';
     import Badge from '../badge';
     import FloatButtonAction from './float-button-action.vue';
     import type { FloatButtonGroupEmits, FloatButtonGroupItem, FloatButtonGroupProps, FloatButtonGroupSlots } from './interface';
 
     const props = withDefaults(defineProps<FloatButtonGroupProps & /* @vue-ignore */ ElementProps<'div', keyof FloatButtonGroupProps | EmitHandlers<FloatButtonGroupEmits>>>(), {
+        classNames: semiGlobalDefault('FloatButtonGroup', 'classNames'),
         disabled: () => semiDefault('FloatButtonGroup', 'disabled', false),
+        styles: semiGlobalDefault('FloatButtonGroup', 'styles'),
     });
 
     // Declared so that only a click on an item reports; a listener left to attrs would also fire for the group's padding.
@@ -24,6 +26,7 @@
             ...rest,
             class: [
                 `${prefix}-item`,
+                props.classNames?.item,
                 item.class,
                 {
                     [`${buttonPrefix}-${shape}`]: shape,
@@ -32,6 +35,7 @@
                     [`${prefix}-item-disabled`]: itemDisabled,
                 },
             ],
+            style: [props.styles?.item, item.style],
             'data-value': value,
             disabled: itemDisabled,
             onClick: (event: MouseEvent) => {

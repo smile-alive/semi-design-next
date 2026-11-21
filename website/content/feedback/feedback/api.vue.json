@@ -19,12 +19,12 @@
                 "en-US": "Plain-text title that also names the dialog. The title slot wins when both are given."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `mask`、`header`、`body`，与组件自带的类名合并，传给当前模式的 Modal 或 SideSheet。",
-                "en-US": "Class names of the inner parts, keyed by `mask`, `header` and `body`; merged with the built-in classes. Passed to the Modal or SideSheet of the current mode."
+                "zh-CN": "内部各部位的类名，键为 `mask`、`content`（`role=\"dialog\"` 的面板本体）、`header`、`title`、`close`、`body`、`footer`、`emoji`（`type` 为 `emoji` 时的单个表情选项），值的写法同 class，与组件自带的类名合并。除 `emoji` 外的键传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Class names of the inner parts, keyed by `mask`, `content` (the panel with `role=\"dialog\"`), `header`, `title`, `close`, `body`, `footer` and `emoji` (a single emoji option when `type` is `emoji`); values take any class binding and merge with the built-in classes. Keys other than `emoji` are passed to the Modal or SideSheet of the current mode."
             },
             "styles": {
-                "zh-CN": "内部各部位的内联样式，键同 `classNames`，传给当前模式的 Modal 或 SideSheet。",
-                "en-US": "Inline styles of the inner parts, keyed like `classNames`. Passed to the Modal or SideSheet of the current mode."
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，值的写法同 style。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; values take any style binding."
             },
             "textAreaProps": {
                 "zh-CN": "type 为 text 与 emoji 时多行输入框的属性，不含 modelValue（值由 Feedback 管理）；其中的 onChange 在 Feedback 处理后调用。",

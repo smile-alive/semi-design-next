@@ -52,7 +52,15 @@
         "source": "packages/semi-ui-svelte/src/components/card/meta.svelte",
         "props": {
             "avatar": { "zh-CN": "头像。", "en-US": "Avatar." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 avatar、section、title、description，值的写法同 class（字符串、数组或对象），与组件自带的类名合并；section 是标题与描述所在的文字区域。",
+                "en-US": "Class names of the inner parts, keyed by avatar, section, title and description; values take anything class takes (string, array or object) and merge with the built-in classes. section is the text area holding the title and description."
+            },
             "description": { "zh-CN": "描述。", "en-US": "Description." },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames。",
+                "en-US": "Style strings of the inner parts, keyed like classNames."
+            },
             "title": {
                 "zh-CN": "标题，字符串或 snippet。",
                 "en-US": "Title, a string or a snippet."

@@ -1,10 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                            | Type                   | Default     |
-| -------- | ------------------------------------------------------ | ---------------------- | ----------- |
-| color    | Color of the dot.                                      | `string`               | `undefined` |
-| position | Overrides the mode of the Timeline for this item.      | `TimelineItemPosition` | `undefined` |
-| type     | Dot type: default, ongoing, success, warning or error. | `TimelineItemType`     | `"default"` |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `rail`, `icon`, `content`, `extra` and `time`; merged with the built-in classes, after the `item*` class names of the Timeline. `rail` is the connecting line and `icon` holds the dot or the custom dot. | <ApiType detail={"Partial\u003cRecord\u003cTimelineItemPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| color | Color of the dot. | `string` | `undefined` |
+| position | Overrides the mode of the Timeline for this item. | `TimelineItemPosition` | `undefined` |
+| styles | Inline styles of the inner parts, keyed like `classNames`, applied after the `item*` styles of the Timeline. | <ApiType detail={"Partial\u003cRecord\u003cTimelineItemPart, StyleValue>>"}>Type</ApiType> | `undefined` |
+| type | Dot type: default, ongoing, success, warning or error. | `TimelineItemType` | `"default"` |
 
 **Events**
 

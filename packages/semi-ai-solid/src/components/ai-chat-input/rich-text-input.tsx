@@ -1,6 +1,7 @@
-import { createEffect, createMemo, getOwner, on, onCleanup, onMount, untrack } from 'solid-js';
+import { type JSX, createEffect, createMemo, getOwner, on, onCleanup, onMount, untrack } from 'solid-js';
 import { Editor, type Extensions, type Content as TiptapContent } from '@tiptap/core';
 import type { EditorView } from '@tiptap/pm/view';
+import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/editor-config';
@@ -12,6 +13,8 @@ const prefix = cssClasses.PREFIX;
 
 interface RichTextInputProps {
     id: string;
+    class?: string;
+    style?: JSX.CSSProperties;
     /** The list the editor drives while its panel is open, and the option the keyboard is on */
     controls?: string;
     activeDescendant?: string;
@@ -75,7 +78,8 @@ export default function RichTextInput(props: RichTextInputProps) {
                 host = element;
                 props.ref(element);
             }}
-            class={`${prefix}-editor-content`}
+            class={clsx(`${prefix}-editor-content`, props.class)}
+            style={props.style}
             onFocusIn={(e) => props.onFocus(e)}
             onFocusOut={(e) => props.onBlur(e)}
             onPaste={(e) => props.onPaste?.(e)}

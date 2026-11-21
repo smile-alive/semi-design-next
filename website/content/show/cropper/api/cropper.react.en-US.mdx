@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | aspectRatio | Fixed aspect ratio of the crop box, kept while dragging. When it changes after loading, the box is laid out again at the new ratio. | `number` | - |
 | className | Class name of the root element. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `cropperBox` (the crop box); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cCropperPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `cropperBox` (the crop box), `mask` (the layer outside the crop box) and `handle` (every resize handle on the box's edges and corners); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cCropperPart, string>>"}>Type</ApiType> | - |
 | defaultAspectRatio | Initial aspect ratio of the crop box, which changes while dragging. | `number` | `1` |
 | fill | Fill color of the parts of the result that are not the image. | `string` | `"rgba(0, 0, 0, 0)"` |
 | imgProps | Attributes passed to the `img` element being cropped. `src` comes from the `src` prop; `className` is merged with the component's own class name; `style` sits under the component's layout, so the size and offset win; `onLoad` is called after the component has handled the load; `alt` defaults to an empty string and `crossOrigin` to `anonymous`, and both can be overridden. | <ApiType detail={"React.ImgHTMLAttributes\u003cHTMLImageElement>"}>Type</ApiType> | - |

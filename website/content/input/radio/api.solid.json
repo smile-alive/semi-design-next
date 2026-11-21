@@ -3,12 +3,12 @@
         "source": "packages/semi-ui-solid/src/components/radio/radio.tsx",
         "props": {
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 addon（包裹内容的容器），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by addon (the container wrapping the content); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 icon（圆形单选框本体）、label（标签文字）、extra（补充说明），与组件自带的类名合并。type 为 button 时没有 icon 与 extra，label 是按钮面。",
+                "en-US": "Class names of the inner parts, keyed by icon (the round box), label (the label text) and extra (the supplementary text); merged with the built-in classes. With type set to button there is no icon or extra, and label is the button face."
             },
             "styles": {
-                "zh-CN": "内部各部位的内联样式，键为 addon（包裹内容的容器）。",
-                "en-US": "Inline styles of the inner parts, keyed by addon (the container wrapping the content)."
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
             },
             "addonId": {
                 "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
@@ -84,6 +84,10 @@
                 "zh-CN": "type 为 button 时按钮的尺寸，可选 small、middle、large。",
                 "en-US": "Button size when type is button: small, middle or large."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 item（每个 Radio 的根元素）、itemIcon、itemLabel、itemExtra，作用于组内全部 Radio，与 Radio 自己的 classNames 合并，组的类名在前。",
+                "en-US": "Class names of the inner parts, keyed by item (the root of every Radio), itemIcon, itemLabel and itemExtra. They apply to every Radio in the group and merge with each Radio's own classNames, the group's first."
+            },
             "defaultValue": {
                 "zh-CN": "非受控时默认选中的值。",
                 "en-US": "The value selected by default when uncontrolled."
@@ -116,6 +120,10 @@
             "renderLabel": {
                 "zh-CN": "渲染 options 中一项的标签，参数为该项与序号。",
                 "en-US": "Renders the label of an options item, given the item and its index."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames，Radio 自己的 styles 后写；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; each Radio's own styles are applied after them. Style objects use kebab-case CSS property names, and style strings work too."
             },
             "type": {
                 "zh-CN": "组内所有 Radio 的样式类型，可选 default、button、card、pureCard。",

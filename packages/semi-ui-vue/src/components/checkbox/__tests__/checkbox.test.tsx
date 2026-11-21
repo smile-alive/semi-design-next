@@ -480,4 +480,18 @@ describe('Checkbox', () => {
         }>();
         expectTypeOf<CheckboxEvent['nativeEvent']>().toEqualTypeOf<MouseEvent>();
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['icon', 'label', 'extra'] as const;
+        const selectors = { icon: 'inner-display', label: 'addon', extra: 'extra' };
+        render(Checkbox, {
+            props: { classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) },
+            slots: { default: () => 'label', extra: () => 'more' },
+        });
+        for (const part of parts) {
+            const el = getElement(`.${prefixCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
 });

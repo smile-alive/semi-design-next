@@ -12,6 +12,7 @@
     import useLocale from '../locale/use-locale.svelte.js';
     import Modal from '../modal/modal.svelte';
     import AddArea from './add-area.svelte';
+    import { setUploadContext } from './context.js';
     import FileCard from './file-card.svelte';
     import type { CustomFile, FileItem, UploadCropProps, UploadFileItemSlotProps, UploadProps } from './interface.js';
 
@@ -242,7 +243,7 @@
     // `capture` works by presence, and Svelte writes `false` on a non-boolean attribute as the string "false"
     const captureAttr = $derived((capture === true ? '' : capture || undefined) as 'user' | 'environment' | undefined);
     const cropModalRest = $derived(omit(cropModalProps ?? {}, ['style', 'styles', 'width']));
-    const pictureAddStyle = $derived([picHeight !== undefined && `height: ${toCssLength(picHeight)}`, picWidth !== undefined && `width: ${toCssLength(picWidth)}`].filter(Boolean).join(';') || undefined);
+    const pictureAddStyle = $derived([picHeight !== undefined && `height: ${toCssLength(picHeight)}`, picWidth !== undefined && `width: ${toCssLength(picWidth)}`, styles?.trigger].filter(Boolean).join(';') || undefined);
 
     const dragListeners = {
         ondragenter: (event: DragEvent) => foundation.handleDragEnter(event),
@@ -250,6 +251,15 @@
         ondragleave: (event: DragEvent) => foundation.handleDragLeave(event),
         ondrop: (event: DragEvent) => foundation.handleDrop(event),
     };
+
+    setUploadContext({
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
+    });
 
     const cardsOf = () => fileListRoot?.querySelector(`.${prefix}-${isPicture ? 'picture-list' : 'file-list-main'}`)?.children ?? [];
 
@@ -284,8 +294,6 @@
         picWidth,
         picHeight,
         validateMessage: UploadFoundation.getFallbackValidateMessage(file, locale().locale),
-        class: classNames?.item,
-        style: styles?.item,
         onRemove: () => foundation.handleRemove(file),
         onRetry: () => foundation.retry(file),
         onReplace: () => foundation.startReplace(file.uid),
@@ -325,6 +333,7 @@
                 [`${prefix}-picture-add-disabled`]: disabled,
                 [`${dragArea}-legal`]: draggable && states().dragAreaStatus === strings.DRAG_AREA_LEGAL,
             },
+            classNames?.trigger,
         ]}
         describedby={addDescribedby}
         {disabled}
@@ -385,9 +394,11 @@
                         [`${dragArea}-legal`]: states().dragAreaStatus === strings.DRAG_AREA_LEGAL,
                         [`${dragArea}-custom`]: children,
                     },
+                    classNames?.trigger,
                 ]}
                 describedby={addDescribedby}
                 {disabled}
+                style={styles?.trigger}
                 tabindex={addTabindex}
                 {...dragListeners}
                 onOpen={openFileDialog}
@@ -395,7 +406,7 @@
                 {#if children}
                     {@render children()}
                 {:else}
-                    <div class={`${dragArea}-icon`} x-semi-prop="dragIcon">
+                    <div class={[`${dragArea}-icon`, classNames?.dragIcon]} style={styles?.dragIcon} x-semi-prop="dragIcon">
                         {#if dragIcon}
                             {@render dragIcon()}
                         {:else}
@@ -403,14 +414,14 @@
                         {/if}
                     </div>
                     <div class={`${dragArea}-text`}>
-                        <div class={`${dragArea}-main-text`} x-semi-prop="dragMainText">
+                        <div class={[`${dragArea}-main-text`, classNames?.dragMainText]} style={styles?.dragMainText} x-semi-prop="dragMainText">
                             {#if dragMainText}
                                 {@render dragMainText()}
                             {:else}
                                 {locale().locale.mainText}
                             {/if}
                         </div>
-                        <div class={`${dragArea}-sub-text`} x-semi-prop="dragSubText">
+                        <div class={[`${dragArea}-sub-text`, classNames?.dragSubText]} style={styles?.dragSubText} x-semi-prop="dragSubText">
                             {@render dragSubText?.()}
                         </div>
                         <div class={`${dragArea}-tips`}>
@@ -422,26 +433,26 @@
                 {/if}
             </AddArea>
         {:else}
-            <AddArea bind:hasControl={addAreaHasControl} class={`${prefix}-add`} describedby={addDescribedby} {disabled} onOpen={openFileDialog} tabindex={addTabindex}>
+            <AddArea bind:hasControl={addAreaHasControl} class={[`${prefix}-add`, classNames?.trigger]} describedby={addDescribedby} {disabled} onOpen={openFileDialog} style={styles?.trigger} tabindex={addTabindex}>
                 {@render children?.()}
             </AddArea>
         {/if}
     {/if}
     {#if prompt}
-        <div class={`${prefix}-prompt`} x-semi-prop="prompt">
+        <div class={[`${prefix}-prompt`, classNames?.prompt]} style={styles?.prompt} x-semi-prop="prompt">
             {@render prompt()}
         </div>
     {/if}
     {#if validateMessage}
-        <div class={`${prefix}-validate-message`} x-semi-prop="validateMessage">
+        <div class={[`${prefix}-validate-message`, classNames?.validateMessage]} style={styles?.validateMessage} x-semi-prop="validateMessage">
             {@render validateMessage()}
         </div>
     {/if}
     <!-- the picture wall keeps its wrappers when the list is empty, so adding the first file keeps the add button mounted and focused -->
     {#if showUploadList && (isPicture || (listType === strings.FILE_LIST_DEFAULT && shownFiles.length))}
-        <div bind:this={fileListRoot} class={[`${prefix}-file-list`, { [`${prefix}-picture-file-list`]: isPicture }]} onfocusin={trackFocus} onfocusout={untrackFocus}>
+        <div bind:this={fileListRoot} class={[`${prefix}-file-list`, { [`${prefix}-picture-file-list`]: isPicture }, classNames?.list]} style={styles?.list} onfocusin={trackFocus} onfocusout={untrackFocus}>
             {#if !isPicture && limit !== 1}
-                <div class={`${prefix}-file-list-title`}>
+                <div class={[`${prefix}-file-list-title`, classNames?.listTitle]} style={styles?.listTitle}>
                     {#if fileListHeader}
                         {@render fileListHeader({ fileList: shownFiles, onClear: foundation.handleClear, clearText: locale().locale.clear })}
                     {:else}
@@ -453,7 +464,7 @@
                             {/if}
                         </span>
                         {#if showClear && !disabled}
-                            <button class={`${prefix}-file-list-title-clear`} type="button" onclick={foundation.handleClear}>
+                            <button class={[`${prefix}-file-list-title-clear`, classNames?.clear]} style={styles?.clear} type="button" onclick={foundation.handleClear}>
                                 {locale().locale.clear}
                             </button>
                         {/if}

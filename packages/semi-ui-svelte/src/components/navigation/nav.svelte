@@ -98,6 +98,12 @@
     const collapseAnimating = $derived(collapsed !== settledCollapsed);
 
     setNavContext({
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
         get isCollapsed() {
             return collapsed;
         },
@@ -202,7 +208,7 @@
                 <NavHeader {...header} />
             {/if}
             <div class={[`${prefix}-list-wrapper`, classNames?.body]} style={styles?.body}>
-                <ul class={`${prefix}-list`}>
+                <ul class={[`${prefix}-list`, classNames?.list]} style={styles?.list}>
                     {#if formatted.formattedItems.length}
                         <NavItems {expandIcon} {icon} items={formatted.formattedItems} level={0} {subDropdownProps} {text} {toggleIcon} />
                     {/if}

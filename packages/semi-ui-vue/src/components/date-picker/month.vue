@@ -67,9 +67,9 @@
 
     const dayClass = (day: MonthDayInfo) => {
         if (slots.fullDate) {
-            return [cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: day.fullDate === activeDate.value }];
+            return [cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: day.fullDate === activeDate.value }, props.classNames?.item];
         }
-        return [cssClasses.DAY, MonthFoundation.getDayClasses(statusOf(day), day.fullDate === activeDate.value)];
+        return [cssClasses.DAY, MonthFoundation.getDayClasses(statusOf(day), day.fullDate === activeDate.value), props.classNames?.item];
     };
 
     const isSelected = (day: MonthDayInfo) => {
@@ -89,7 +89,7 @@
 
 <template>
     <!-- cells are not focusable (aria-activedescendant) -->
-    <div :aria-activedescendant="dayId(activeDate)" :aria-labelledby="props.labelledby" :aria-multiselectable="props.multiple" :class="cssClasses.MONTH" role="grid" tabindex="0" @keydown="foundation.handleKeyDown($event, todayText)">
+    <div :aria-activedescendant="dayId(activeDate)" :aria-labelledby="props.labelledby" :aria-multiselectable="props.multiple" :class="[cssClasses.MONTH, props.classNames?.body]" role="grid" :style="props.styles?.body" tabindex="0" @keydown="foundation.handleKeyDown($event, todayText)">
         <div :class="cssClasses.WEEKDAY" role="row">
             <div v-for="(text, index) in weekdays" :key="index" :class="`${prefix}-weekday-item`" role="columnheader">
                 {{ text }}
@@ -98,7 +98,7 @@
         <div :class="cssClasses.WEEKS">
             <div v-for="(week, weekIndex) in weeks" :key="weekIndex" :class="cssClasses.WEEK" role="row">
                 <template v-for="(day, dayIndex) in week" :key="dayIndex">
-                    <div v-if="!day.fullDate" :class="cssClasses.DAY" role="gridcell"><span /></div>
+                    <div v-if="!day.fullDate" :class="[cssClasses.DAY, props.classNames?.item]" role="gridcell" :style="props.styles?.item"><span /></div>
                     <div
                         v-else
                         :id="dayId(day.fullDate)"
@@ -107,6 +107,7 @@
                         :aria-selected="isSelected(day)"
                         :class="dayClass(day)"
                         role="gridcell"
+                        :style="props.styles?.item"
                         :title="day.fullDate"
                         @click="foundation.selectDay(day)"
                         @mouseenter="emit('dayHover', day)"

@@ -12,6 +12,9 @@ export const cssClasses = {
     CAROUSEL_ARROW: `${BASE_CLASS_PREFIX}-carousel-arrow`,
 };
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style`. `indicators` is the tablist, `indicator` one tab button */
+export type CarouselPart = 'content' | 'indicators' | 'indicator' | 'arrows' | 'prevArrow' | 'nextArrow';
+
 export const numbers = {
     DEFAULT_ACTIVE_INDEX: 0,
     DEFAULT_INTERVAL: 2000,

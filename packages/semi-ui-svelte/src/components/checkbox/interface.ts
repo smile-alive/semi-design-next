@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
+import type { CheckboxGroupPart, CheckboxPart } from '@fibrae/semi-foundation/components/checkbox/constants';
 
 export type CheckboxValue = string | number | boolean;
 export type CheckboxType = 'default' | 'card' | 'pureCard';
@@ -26,6 +27,8 @@ export interface CheckboxProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'on
     disabled?: boolean;
     indeterminate?: boolean;
     type?: CheckboxType;
+    classNames?: Partial<Record<CheckboxPart, ClassValue>>;
+    styles?: Partial<Record<CheckboxPart, string>>;
     addonId?: string;
     extraId?: string;
     preventScroll?: boolean;
@@ -54,6 +57,8 @@ export interface CheckboxGroupProps extends Omit<HTMLAttributes<HTMLDivElement>,
     options?: Array<string | CheckboxOptionItem>;
     direction?: CheckboxDirection;
     type?: CheckboxType;
+    classNames?: Partial<Record<CheckboxGroupPart, ClassValue>>;
+    styles?: Partial<Record<CheckboxGroupPart, string>>;
     onChange?: (value: CheckboxValue[]) => void;
     /** Fires when focus leaves the whole group, not between its boxes */
     onBlur?: (event: FocusEvent) => void;

@@ -6,6 +6,14 @@
                 "zh-CN": "当前值，配合 v-model 使用；传入后由该值决定显示，变回 undefined 时回到 defaultValue 并转为非受控。",
                 "en-US": "Current value, used with v-model. When given, this value decides what is shown; back to undefined it returns to defaultValue and becomes uncontrolled."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`dropdown`，与组件自带的类名合并。`item` 是单颗星，`dropdown` 是设置 `tooltips` 后出现的提示弹出层。",
+                "en-US": "Class names of the inner parts, keyed by `item` and `dropdown`; merged with the built-in classes. `item` is a single star; `dropdown` is the tip popup shown when `tooltips` is set."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "defaultValue": { "zh-CN": "非受控时的初始值。", "en-US": "Initial value when uncontrolled." },
             "count": { "zh-CN": "星的总数。", "en-US": "Total number of stars." },
             "allowHalf": { "zh-CN": "是否允许半选。", "en-US": "Whether half stars can be selected." },

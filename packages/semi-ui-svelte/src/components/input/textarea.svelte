@@ -333,12 +333,12 @@
         {@render field()}
     {/if}
     {#if allowClear}
-        <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${prefixCls}-clearbtn`} type="button" onclick={foundation.handleClearClick} onmousedown={keepFocus}>
+        <button aria-label={locale().locale.clear} bind:this={clearButton} class={[`${prefixCls}-clearbtn`, classNames?.clear]} style={styles?.clear} type="button" onclick={foundation.handleClearClick} onmousedown={keepFocus}>
             <IconClear />
         </button>
     {/if}
     {#if hasCounter}
-        <div class={[`${prefixCls}-textarea-counter`, { [`${prefixCls}-textarea-counter-exceed`]: exceeds }]} id={counterId} onclick={foundation.handleCounterClick}>
+        <div class={[`${prefixCls}-textarea-counter`, { [`${prefixCls}-textarea-counter-exceed`]: exceeds }, classNames?.counter]} id={counterId} style={styles?.counter} onclick={foundation.handleCounterClick}>
             {count}{#if maxCount}/{maxCount}{/if}
         </div>
     {/if}

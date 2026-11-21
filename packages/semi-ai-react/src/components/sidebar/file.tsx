@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import type { Extensions } from '@tiptap/core';
 import { type Editor, EditorContent, useEditor, useEditorState } from '@tiptap/react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { type SidebarFileContentPart, type SidebarFileItemPart, cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import {
     type FileMenuButtonKey,
     type FileMenuItem,
@@ -66,8 +66,10 @@ const prefixCls = cssClasses.FILE;
 export interface FileItemProps extends ElementProps<'div'> {
     key?: string;
     className?: string;
+    classNames?: Partial<Record<SidebarFileItemPart, string>>;
     name?: string;
     style?: React.CSSProperties;
+    styles?: Partial<Record<SidebarFileItemPart, React.CSSProperties>>;
     editable?: boolean;
     content?: string;
     onContentChange?: (content: string) => void;
@@ -123,7 +125,7 @@ const MENU_ICONS: Record<FileMenuButtonKey, React.ComponentType> = {
     image: IconImage,
 };
 
-function MenuBar({ editor, className, canUpload }: { editor: Editor; className: string; canUpload: boolean }) {
+function MenuBar({ editor, className, style, canUpload }: { editor: Editor; className: string; style?: React.CSSProperties; canUpload: boolean }) {
     const { locale: menuLocale } = useLocale('Sidebar');
 
     const [linkDropdownVisible, setLinkDropdownVisible] = useState(false);
@@ -218,10 +220,14 @@ function MenuBar({ editor, className, canUpload }: { editor: Editor; className: 
         );
     };
 
-    return <div className={className}>{getFileMenuItems(canUpload).map(renderItem)}</div>;
+    return (
+        <div className={className} style={style}>
+            {getFileMenuItems(canUpload).map(renderItem)}
+        </div>
+    );
 }
 
-export const FileItem = React.memo(function FileItem({ editable = true, name, content, onContentChange, extensions = [], className, style, imgUploadProps, ...rest }: FileItemProps) {
+export const FileItem = React.memo(function FileItem({ editable = true, name, content, onContentChange, extensions = [], className, classNames, style, styles, imgUploadProps, ...rest }: FileItemProps) {
     const defaultExtensions = useMemo<Extensions>(() => [...getFileEditorExtensions(), ImageUploadNode.configure(imgUploadProps)], [imgUploadProps]);
 
     // The upload node reads imgUploadProps only when the editor is created, so the image button must follow that same snapshot
@@ -258,24 +264,31 @@ export const FileItem = React.memo(function FileItem({ editable = true, name, co
 
     return (
         <div {...rest} className={clsx(prefixCls, className)} style={style}>
-            {editable && <MenuBar className={`${prefixCls}-menu-bar`} canUpload={canUpload} editor={editor} />}
-            <EditorContent className={`${prefixCls}-editor`} editor={editor} />
+            {editable && <MenuBar className={clsx(`${prefixCls}-menu-bar`, classNames?.menuBar)} style={styles?.menuBar} canUpload={canUpload} editor={editor} />}
+            <EditorContent className={clsx(`${prefixCls}-editor`, classNames?.editor)} style={styles?.editor} editor={editor} />
         </div>
     );
 });
 
 export interface FileContentProps extends SideBarCollapseProps {
+    classNames?: Partial<Record<SidebarFileContentPart, string>>;
+    styles?: Partial<Record<SidebarFileContentPart, React.CSSProperties>>;
     files?: FileItemProps[];
     onExpand?: (e: React.MouseEvent, file: FileItemProps, mode: string) => void;
 }
 
-function FileContent({ activeKey, files = [], onExpand, style, className, onChange, ...rest }: FileContentProps) {
+function FileContent({ activeKey, files = [], onExpand, style, className, classNames, styles, onChange, ...rest }: FileContentProps) {
     return (
         <Collapse {...rest} className={clsx(collapseCls, `${collapseCls}-file`, className)} style={style} activeKey={activeKey} clickHeaderToExpand={false} onChange={onChange}>
             {files.map((file) => {
                 const { key, ...item } = file;
                 return (
-                    <Collapse.Panel key={key} header={<CollapseHeader content={file} mode="file" />} itemKey={key} extra={onExpand ? <CollapseExpandButton content={file} mode="file" onExpand={onExpand} /> : undefined}>
+                    <Collapse.Panel
+                        key={key}
+                        header={<CollapseHeader className={classNames?.itemHeader} style={styles?.itemHeader} content={file} mode="file" />}
+                        itemKey={key}
+                        extra={onExpand ? <CollapseExpandButton className={classNames?.itemExpand} style={styles?.itemExpand} content={file} mode="file" onExpand={onExpand} /> : undefined}
+                    >
                         <FileItem {...item} editable={false} />
                     </Collapse.Panel>
                 );

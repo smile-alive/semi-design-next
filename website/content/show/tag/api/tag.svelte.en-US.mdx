@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | avatarShape | Shape of the avatar in an avatar tag: square or circle. | `AvatarShape` | `"square"` |
 | avatarSrc | Avatar image URL. Setting it makes an avatar tag. | `string` | - |
 | children | Snippet for the tag content. | `Snippet` | - |
+| classNames | Class names of the inner parts, keyed by `prefix`, `avatar`, `content`, `suffix` and `close`; merged with the built-in classes. `avatar` lands on the root element of the avatar. | <ApiType detail={"Partial\u003cRecord\u003cTagPart, ClassValue>>"}>Type</ApiType> | - |
 | closable | Whether the tag can be closed. | `boolean` | `false` |
 | color | Tag color: one of the 16 palette colors or white. | `TagColor` | `"grey"` |
 | colorful | Whether the tag is colorful. | `boolean` | `false` |
@@ -16,6 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | prefixIcon | Snippet for the icon before the content. | `Snippet` | - |
 | shape | Tag shape: square or circle. | `TagShape` | `"square"` |
 | size | Tag size: small, default or large. | `TagSize` | `"default"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTagPart, string>>"}>Type</ApiType> | - |
 | suffixIcon | Snippet for the icon after the content. | `Snippet` | - |
 | tabindex | tabindex of the tag. An interactive tag defaults to 0. | `number \| null` | - |
 | tagKey | Unique identifier of the tag, passed as the second argument of onClose. | `string \| number` | - |

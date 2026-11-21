@@ -6,7 +6,7 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type CascaderPart = 'dropdown';
+export type CascaderPart = 'prefix' | 'suffix' | 'content' | 'placeholder' | 'input' | 'tag' | 'clear' | 'arrow' | 'dropdown' | 'list' | 'empty' | 'item' | 'itemContent' | 'itemIcon';
 
 export const strings = {
     SHOW_NEXT_BY_CLICK: 'click',

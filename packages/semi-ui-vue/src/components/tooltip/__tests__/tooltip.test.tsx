@@ -706,8 +706,8 @@ describe('Tooltip', () => {
         expect(document.querySelector('.wrapper')).toBeNull();
     });
 
-    it('classNames 与 styles 按部位落到对应元素', () => {
-        renderTip({ classNames: { wrapper: ['my-wrapper'] }, styles: { wrapper: { order: 3 } } }, () => (
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        renderTip({ classNames: { wrapper: ['my-wrapper'], arrow: ['my-arrow'] }, styles: { wrapper: { order: 3 }, arrow: { order: 4 } }, trigger: 'custom', visible: true }, () => (
             <>
                 <span>a</span>
                 <span>b</span>
@@ -716,6 +716,10 @@ describe('Tooltip', () => {
         const wrapper = screen.getByText('a').parentElement;
         expect(wrapper).toHaveClass('semi-tooltip-trigger-wrapper', 'my-wrapper');
         expect(wrapper).toHaveStyle({ order: '3', display: 'inline-block' });
+        await screen.findByRole('tooltip');
+        const arrow = document.querySelector('.semi-tooltip-icon-arrow');
+        expect(arrow).toHaveClass('my-arrow');
+        expect(arrow).toHaveStyle({ order: '4' });
     });
 
     it('loading Button 的包装只有一个 Tab 停靠点且描述在按钮', async () => {

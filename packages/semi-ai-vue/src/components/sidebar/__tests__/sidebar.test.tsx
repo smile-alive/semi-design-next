@@ -869,3 +869,72 @@ describe('Sidebar 全局默认值与透传', () => {
         expect(screen.getByRole('button', { name: en_US.Sidebar.close })).toBeInTheDocument();
     });
 });
+
+describe('Sidebar classNames 与 styles', () => {
+    const partProps = (parts: readonly string[]) => ({
+        classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+        styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+    });
+    const expectParts = (container: Element, parts: readonly string[], selectors: Record<string, string>) => {
+        for (const part of parts) {
+            const el = container.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    };
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'close', 'content', 'options', 'option', 'mainContent'] as const;
+        const { container } = render(Sidebar, { props: { options, visible: true, ...partProps(parts) }, slots: { mainContent: () => 'main' } });
+        expectParts(container, parts, {
+            header: '.semi-sidebar-container-header',
+            title: '.semi-sidebar-container-header-title',
+            close: '.semi-sidebar-container-header-closeBtn',
+            content: '.semi-sidebar-container-content',
+            options: '.semi-sidebar-options',
+            option: '.semi-sidebar-options-button',
+            mainContent: '.semi-sidebar-main-content',
+        });
+    });
+
+    it('详情视图的 header、title、close、copy 落在详情头部', () => {
+        const parts = ['header', 'title', 'close', 'copy', 'content'] as const;
+        const { container } = render(Sidebar, { props: { detailContent: codeDetail, mode: 'code', visible: true, ...partProps(parts) } });
+        expectParts(container, parts, {
+            header: '.semi-sidebar-detail-header',
+            title: '.semi-sidebar-detail-header-title',
+            close: '.semi-sidebar-detail-header-back',
+            copy: '.semi-sidebar-detail-header-copy',
+            content: '.semi-sidebar-container-content',
+        });
+    });
+
+    it('Container 的部位落到对应元素', () => {
+        const parts = ['header', 'title', 'close', 'content'] as const;
+        const { container } = render(Container, { props: { title: 't', visible: true, ...partProps(parts) }, slots: { default: 'c' } });
+        expectParts(container, parts, {
+            header: '.semi-sidebar-container-header',
+            title: '.semi-sidebar-container-header-title',
+            close: '.semi-sidebar-container-header-closeBtn',
+            content: '.semi-sidebar-container-content',
+        });
+    });
+
+    it('CodeContent 的 item 部位作用到每个面板', () => {
+        const parts = ['itemHeader', 'itemExpand'] as const;
+        const selectors = { itemHeader: '.semi-sidebar-collapse-header-content', itemExpand: '.semi-sidebar-collapse-header-expand-btn' };
+        const codes = [
+            { key: 'a', name: 'a.js', content: 'let a;' },
+            { key: 'b', name: 'b.js', content: 'let b;' },
+        ];
+        const { container } = render(CodeContent, { props: { codes, onExpand: () => {}, ...partProps(parts) } });
+        for (const part of parts) {
+            const els = container.querySelectorAll(selectors[part]);
+            expect(els).toHaveLength(2);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
+});

@@ -11,7 +11,7 @@
     type Foundation = SeekFoundation<SeekBaseProps>;
     type Adapter = SeekAdapter<SeekBaseProps>;
 
-    let { value = 0, max = 100, vertical = false, height = 4, showTooltip = true, theme = 'dark', label, getValueText, onChange }: AudioSliderProps = $props();
+    let { value = 0, max = 100, vertical = false, height = 4, showTooltip = true, theme = 'dark', label, classNames, styles, getValueText, onChange }: AudioSliderProps = $props();
 
     let track = $state<HTMLDivElement>();
     let input = $state<HTMLInputElement>();
@@ -50,6 +50,8 @@
     const movingInfo = $derived(states().movingInfo);
     const tooltipStyle = $derived(movingInfo ? `translate: ${SeekFoundation.getPreviewTranslate(movingInfo.offset, vertical)}` : undefined);
 
+    const joinStyles = (...values: Array<string | undefined>) => values.filter(Boolean).join(';') || undefined;
+
     const onInput = (event: Event & { currentTarget: HTMLInputElement }) => onChange?.(Number(event.currentTarget.value));
 </script>
 
@@ -86,8 +88,9 @@
                     [`${prefix}-slider-vertical`]: vertical,
                     [`${prefix}-slider-horizontal`]: !vertical,
                 },
+                classNames?.sliderTrack,
             ]}
-            style={vertical ? `height: ${toCssLength(height)}` : undefined}
+            style={joinStyles(vertical ? `height: ${toCssLength(height)}` : undefined, styles?.sliderTrack)}
         >
             <div
                 class={[
@@ -96,10 +99,14 @@
                         [`${prefix}-slider-progress-vertical`]: vertical,
                         [`${prefix}-slider-progress-horizontal`]: !vertical,
                     },
+                    classNames?.sliderProgress,
                 ]}
-                style={`height: ${vertical ? `${percent}%` : '100%'}; width: ${vertical ? '100%' : `${percent}%`}`}
+                style={joinStyles(`height: ${vertical ? `${percent}%` : '100%'}; width: ${vertical ? '100%' : `${percent}%`}`, styles?.sliderProgress)}
             ></div>
-            <div class={`${prefix}-slider-dot`} style={vertical ? `left: 50%; bottom: calc(${percent}% - ${dotSize / 2}px); transform: translateX(-50%); pointer-events: none` : `left: calc(${percent}% - ${dotSize / 2}px); top: 50%; transform: translateY(-50%); pointer-events: none`}></div>
+            <div
+                class={[`${prefix}-slider-dot`, classNames?.sliderThumb]}
+                style={joinStyles(vertical ? `left: 50%; bottom: calc(${percent}% - ${dotSize / 2}px); transform: translateX(-50%); pointer-events: none` : `left: calc(${percent}% - ${dotSize / 2}px); top: 50%; transform: translateY(-50%); pointer-events: none`, styles?.sliderThumb)}
+            ></div>
         </div>
     </div>
 {/snippet}

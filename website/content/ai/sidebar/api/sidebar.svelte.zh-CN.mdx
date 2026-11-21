@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | activeKey | 主视图中当前选中的选项 key，可用 `bind:activeKey` 绑定。 | `string` | - |
 | afterVisibleChange | 显示或隐藏动画结束后调用，参数为当前是否可见。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 header、title、close、copy、content、options、option、mainContent，与组件自带的类名合并，值的写法同 class（字符串、数组或对象）。详情视图下 header、title、close 落在详情头部，close 是返回主视图的按钮，copy 是复制内容的按钮。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, ClassValue>>"}>Type</ApiType> | - |
 | closeOnEsc | 按下 Esc 键时是否调用 onCancel。 | `boolean` | - |
 | customRender | 转发给内置代码详情中 JsonViewer 的 customRender snippet，用于渲染 customRenderRule 匹配的内容。 | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType> | - |
 | defaultSize | 初始宽高，仅在 resizable 为 true 时生效。 | `{ width?: number \| string; height?: number \| string }` | - |
@@ -30,6 +31,7 @@ import ApiType from '#/components/ApiType.astro';
 | resizable | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean` | - |
 | searchButton | 转发给内置代码详情中 JsonViewer 的 searchButton snippet，替换其搜索按钮。 | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType> | - |
 | showClose | 是否显示头部的关闭按钮。 | `boolean` | - |
+| styles | 内部各部位的样式字符串，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, string>>"}>Type</ApiType> | - |
 | title | 标题，可以是纯文本或 snippet。 | `Snippet \| string` | - |
 | visible | 是否显示，可用 `bind:visible` 绑定。 | `boolean` | - |
 

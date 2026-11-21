@@ -22,6 +22,10 @@
                 "zh-CN": "根元素 nav 的类名。",
                 "en-US": "Class name of the root nav element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `list`、`item`、`itemLink`、`itemIcon`、`itemTitle`、`separator`、`more`，与组件自带的类名合并。`item*` 作用到每一项，`separator` 同时作用于折叠项后的分隔符，`more` 是省略号按钮。",
+                "en-US": "Class names of the inner parts, keyed by `list`, `item`, `itemLink`, `itemIcon`, `itemTitle`, `separator` and `more`; merged with the built-in classes. The `item*` keys apply to every item, `separator` also reaches the separator after the ellipsis, and `more` is the ellipsis button."
+            },
             "compact": {
                 "zh-CN": "是否使用紧凑尺寸，影响文字与 Semi 图标的尺寸。",
                 "en-US": "Whether the compact size is used, which sets the size of text and Semi icons."
@@ -65,6 +69,10 @@
             "style": {
                 "zh-CN": "根元素 nav 的内联样式。",
                 "en-US": "Inline style of the root nav element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             }
         }
     },
@@ -78,6 +86,10 @@
             "className": {
                 "zh-CN": "该项的列表项 li 的类名。",
                 "en-US": "Class name of the li that holds the item."
+            },
+            "classNames": {
+                "zh-CN": "该项内部各部位的类名，键为 `link`、`icon`、`title`、`separator`，与组件自带的类名合并，写在 `Breadcrumb` 的 `item*` 类名之后。`separator` 在通过 `separator` 属性传入自定义分隔符时不生效。",
+                "en-US": "Class names of the inner parts of this item, keyed by `link`, `icon`, `title` and `separator`; merged with the built-in classes, after the `item*` class names of Breadcrumb. `separator` has no effect when a custom separator is passed through the `separator` prop."
             },
             "href": {
                 "zh-CN": "链接的目的地，挂载在 a 标签上；当前项不渲染为链接。",
@@ -106,6 +118,10 @@
             "style": {
                 "zh-CN": "该项的列表项 li 的内联样式。",
                 "en-US": "Inline style of the li that holds the item."
+            },
+            "styles": {
+                "zh-CN": "该项内部各部位的内联样式，键同 `classNames`，写在 `Breadcrumb` 的 `styles` 之后。",
+                "en-US": "Inline styles of the inner parts of this item, keyed like `classNames`, after `styles` of Breadcrumb."
             }
         }
     }

@@ -5,4 +5,4 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type ModalPart = 'mask' | 'content' | 'header' | 'body' | 'footer';
+export type ModalPart = 'mask' | 'content' | 'header' | 'title' | 'icon' | 'close' | 'body' | 'footer';

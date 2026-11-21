@@ -52,14 +52,14 @@
             </div>
             <div :class="`${prefixCls}-content`">
                 <!-- styled as a heading but not one: a fixed level would break the page outline -->
-                <TypographyTitle v-if="view.title.length || props.title" :class="`${prefixCls}-title`" component="div" :heading="view.image.present ? 4 : 6" :style="view.image.present ? undefined : { fontWeight: 400 }" x-semi-prop="title">
+                <TypographyTitle v-if="view.title.length || props.title" :class="[`${prefixCls}-title`, props.classNames?.title]" component="div" :heading="view.image.present ? 4 : 6" :style="[view.image.present ? undefined : { fontWeight: 400 }, props.styles?.title]" x-semi-prop="title">
                     <component :is="node" v-for="[node, key] in view.title" :key="key" />
                     <template v-if="!view.title.length">{{ props.title }}</template>
                 </TypographyTitle>
-                <div v-if="view.description.length" :class="`${prefixCls}-description`" x-semi-prop="description">
+                <div v-if="view.description.length" :class="[`${prefixCls}-description`, props.classNames?.description]" :style="props.styles?.description" x-semi-prop="description">
                     <component :is="node" v-for="[node, key] in view.description" :key="key" />
                 </div>
-                <div v-if="view.footer.length" :class="`${prefixCls}-footer`" x-semi-prop="children">
+                <div v-if="view.footer.length" :class="[`${prefixCls}-footer`, props.classNames?.footer]" :style="props.styles?.footer" x-semi-prop="children">
                     <component :is="node" v-for="[node, key] in view.footer" :key="key" />
                 </div>
             </div>

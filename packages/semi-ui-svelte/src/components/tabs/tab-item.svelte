@@ -52,20 +52,29 @@
     {...getTabKeyAttrs(itemKey)}
     aria-disabled={disabled ? 'true' : 'false'}
     aria-selected={selected ? 'true' : 'false'}
-    class={[prefix, `${prefix}-${resolvedType}`, `${prefix}-${resolvedPosition}`, `${prefix}-single`, rest.class, { [cssClasses.TABS_TAB_ACTIVE]: selected, [cssClasses.TABS_TAB_DISABLED]: disabled, [`${prefix}-small`]: resolvedSize === 'small', [`${prefix}-medium`]: resolvedSize === 'medium' }]}
+    class={[
+        prefix,
+        `${prefix}-${resolvedType}`,
+        `${prefix}-${resolvedPosition}`,
+        `${prefix}-single`,
+        rest.class,
+        { [cssClasses.TABS_TAB_ACTIVE]: selected, [cssClasses.TABS_TAB_DISABLED]: disabled, [`${prefix}-small`]: resolvedSize === 'small', [`${prefix}-medium`]: resolvedSize === 'medium' },
+        ctx?.view.classNames?.item,
+    ]}
     role="tab"
+    style={[rest.style, ctx?.view.styles?.item].filter(Boolean).join('; ') || undefined}
     tabindex={selected || itemKey === ctx?.view.tabbableKey ? 0 : -1}
     onclick={handleClick}
     onkeydown={handleKeyDown}
 >
     {#if icon}
-        <span class="{cssClasses.TABS_BAR}-icon">{@render icon()}</span>
+        <span class={[`${cssClasses.TABS_BAR}-icon`, ctx?.view.classNames?.itemIcon]} style={ctx?.view.styles?.itemIcon}>{@render icon()}</span>
     {/if}
     {@render tab?.()}
     {#if closable}
         <!-- Keyboard users close with Backspace and Delete on the tab; this named button is the pointer and screen reader affordance -->
         <span aria-label={locale().locale.close} role="button" onclick={handleClose}>
-            <IconClose class="{prefix}-icon-close" />
+            <IconClose class={[`${prefix}-icon-close`, ctx?.view.classNames?.itemClose]} style={ctx?.view.styles?.itemClose} />
         </span>
     {/if}
 </div>

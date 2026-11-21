@@ -676,4 +676,60 @@ describe('Breadcrumb', () => {
         expect(getItemWraps()).toHaveLength(5);
         expect(screen.getByRole('button', { name: 'e:1' })).toBeInTheDocument();
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['list', 'item', 'itemLink', 'itemIcon', 'itemTitle', 'separator', 'more'] as const;
+        const selectors = { list: 'list', item: 'item-wrap', itemLink: 'item-link', itemIcon: 'item-icon', itemTitle: 'item-title', separator: 'separator', more: 'item-more' };
+        const { container } = render(Breadcrumb, {
+            props: {
+                maxItemCount: 3,
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+            },
+            slots: {
+                default: () =>
+                    ['a', 'b', 'c', 'd', 'e'].map((name) => (
+                        <BreadcrumbItem key={name} href={`#${name}`}>
+                            {{ default: () => name, icon: () => <IconHome /> }}
+                        </BreadcrumbItem>
+                    )),
+            },
+        });
+        for (const part of parts) {
+            const el = container.querySelector(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('Breadcrumb.Item 的 classNames 在父级 item* 之后，样式后写', () => {
+        const { container } = render(Breadcrumb, {
+            props: {
+                classNames: { item: 'p-item', itemLink: 'p-link', itemIcon: 'p-icon', itemTitle: 'p-title', separator: 'p-sep' },
+                styles: { itemLink: { order: 1, opacity: 0.5 }, separator: { order: 1 } },
+            },
+            slots: {
+                default: () => [
+                    <BreadcrumbItem key="a" href="#a" class="own" classNames={{ link: 'c-link', icon: 'c-icon', title: 'c-title', separator: 'c-sep' }} styles={{ link: { order: 2 }, separator: { order: 2 } }}>
+                        {{ default: () => 'a', icon: () => <IconHome /> }}
+                    </BreadcrumbItem>,
+                    <BreadcrumbItem key="b" href="#b">
+                        {{ default: () => 'b' }}
+                    </BreadcrumbItem>,
+                ],
+            },
+        });
+        const [first, second] = [...container.querySelectorAll(`.${prefix}-item-wrap`)];
+        expect(first.className).toMatch(/p-item own$/);
+        expect(second).toHaveClass('p-item');
+        const link = defined(first.querySelector(`.${prefix}-item`));
+        expect(link.className).toMatch(/p-link c-link$/);
+        expect(link).toHaveStyle({ order: '2', opacity: '0.5' });
+        expect(defined(first.querySelector(`.${prefix}-item-icon`)).className).toMatch(/p-icon c-icon/);
+        expect(defined(first.querySelector(`.${prefix}-item-title`)).className).toMatch(/p-title c-title/);
+        const sep = defined(first.querySelector(`.${prefix}-separator`));
+        expect(sep.className).toMatch(/p-sep c-sep$/);
+        expect(sep).toHaveStyle({ order: '2' });
+        expect(defined(second.querySelector(`.${prefix}-item`))).toHaveStyle({ order: '1' });
+    });
 });

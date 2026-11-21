@@ -52,8 +52,8 @@
                 "en-US": "Class name of the confirmation card."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `content`（弹出层内的内容容器 `.semi-popover`）、`arrow`（箭头），与组件自带的类名合并；确认卡片 `.semi-popconfirm` 的类名用 `class`。",
-                "en-US": "Class names of the inner parts, keyed by `content` (the content container `.semi-popover` inside the popup) and `arrow`; merged with the built-in classes. The class of the confirmation card `.semi-popconfirm` is set with `class`."
+                "zh-CN": "内部各部位的类名，键为 `content`（弹出层内的外层卡片 `.semi-popover`）、`arrow`（箭头）、`header`（头部）、`icon`（图标）、`title`（标题）、`close`（关闭按钮）、`body`（`content` snippet 渲染的内容区，不是 `content` 键）、`footer`（底部按钮区），与组件自带的类名合并；确认卡片 `.semi-popconfirm` 的类名用 `class`。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the outer card `.semi-popover` inside the popup), `arrow`, `header`, `icon`, `title`, `close` (the close button), `body` (the area that renders the `content` snippet, not the `content` key) and `footer` (the button area); merged with the built-in classes. The class of the confirmation card `.semi-popconfirm` is set with `class`."
             },
             "clickToHide": {
                 "zh-CN": "点击弹出层及其内部任一元素时是否关闭。",
@@ -167,8 +167,8 @@
                 "en-US": "Style string of the confirmation card."
             },
             "styles": {
-                "zh-CN": "内部各部位的内联样式，键同 `classNames`。`content` 是内容容器的样式字符串；`arrow` 是箭头的 borderColor、backgroundColor 与 borderOpacity。",
-                "en-US": "Inline styles of the inner parts, keyed like `classNames`. `content` is the style string of the content container; `arrow` holds the arrow's borderColor, backgroundColor and borderOpacity."
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。`content`、`header`、`icon`、`title`、`close`、`body`、`footer` 是对应元素的样式字符串；`arrow` 是箭头的 borderColor、backgroundColor 与 borderOpacity。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. `content`, `header`, `icon`, `title`, `close`, `body` and `footer` are the style strings of their elements; `arrow` holds the arrow's borderColor, backgroundColor and borderOpacity."
             },
             "title": {
                 "zh-CN": "标题，可以是字符串或 snippet，同时作为对话框的可访问名称。",

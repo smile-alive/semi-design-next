@@ -43,6 +43,8 @@
 
     const prefix = cssClasses.PREFIX;
     const compact = computed(() => context?.view.value.compact);
+    const parentClassNames = computed(() => context?.view.value.classNames);
+    const parentStyles = computed(() => context?.view.value.styles);
     const isLink = computed(() => !props.active && props.href != null);
     const isKeyboardLink = computed(() => BreadcrumbItemFoundation.isKeyboardLink({ active: props.active, hasHref: props.href != null, noLink: props.noLink, hasOnClick: Boolean(props.onClick) || Boolean(context?.view.value.hasOnClick) }));
     const tooltip = computed<ShowTooltipProps>(() => BreadcrumbItemFoundation.getTooltipConfig(context?.view.value.showTooltip));
@@ -66,19 +68,20 @@
 </script>
 
 <template>
-    <li :aria-current="props.active ? 'page' : undefined" :class="`${prefix}-item-wrap`">
+    <li :aria-current="props.active ? 'page' : undefined" :class="[`${prefix}-item-wrap`, parentClassNames?.item]" :style="parentStyles?.item">
         <template v-for="(nodes, n) in [titleNodes($slots.default?.() ?? [])]" :key="n">
             <component
                 :is="isLink ? 'a' : 'span'"
-                :class="[`${prefix}-item`, { [`${prefix}-item-active`]: props.active, [`${prefix}-item-link`]: !props.noLink }]"
+                :class="[`${prefix}-item`, { [`${prefix}-item-active`]: props.active, [`${prefix}-item-link`]: !props.noLink }, parentClassNames?.itemLink, props.classNames?.link]"
                 :href="isLink ? props.href : undefined"
                 :role="isKeyboardLink ? 'link' : undefined"
+                :style="[parentStyles?.itemLink, props.styles?.link]"
                 :tabindex="isKeyboardLink ? 0 : undefined"
                 @click="handleClick($event, nodes)"
                 @keydown="handleKeydown"
             >
-                <component :is="node" v-for="[node, key] in slotNodes($slots.icon?.() ?? [])" :key="key" v-bind="iconProps(node)" />
-                <span v-if="nodes.length > 0 && isText(nodes)" :class="`${prefix}-item-title`">
+                <component :is="node" v-for="[node, key] in slotNodes($slots.icon?.() ?? [])" :key="key" v-bind="iconProps(node)" :class="[parentClassNames?.itemIcon, props.classNames?.icon]" :style="[parentStyles?.itemIcon, props.styles?.icon]" />
+                <span v-if="nodes.length > 0 && isText(nodes)" :class="[`${prefix}-item-title`, parentClassNames?.itemTitle, props.classNames?.title]" :style="[parentStyles?.itemTitle, props.styles?.title]">
                     <TypographyText
                         :ellipsis="{
                             showTooltip: tooltip.opts ? { opts: tooltip.opts } : false,
@@ -89,7 +92,7 @@
                         >{{ slotText(nodes).text }}</TypographyText
                     >
                 </span>
-                <span v-else-if="nodes.length > 0" :class="[`${prefix}-item-title`, `${prefix}-item-title-inline`]">
+                <span v-else-if="nodes.length > 0" :class="[`${prefix}-item-title`, `${prefix}-item-title-inline`, parentClassNames?.itemTitle, props.classNames?.title]" :style="[parentStyles?.itemTitle, props.styles?.title]">
                     <component :is="node" v-for="[node, key] in nodes" :key="key" />
                 </span>
             </component>
@@ -97,7 +100,7 @@
         <template v-if="props.shouldRenderSeparator">
             <slot v-if="$slots.separator" name="separator" />
             <template v-else-if="props.separator">{{ props.separator }}</template>
-            <span v-else :class="`${prefix}-separator`">
+            <span v-else :class="[`${prefix}-separator`, parentClassNames?.separator, props.classNames?.separator]" :style="[parentStyles?.separator, props.styles?.separator]">
                 <template v-for="(nodes, s) in [separatorNodes()]" :key="s">
                     <component :is="node" v-for="[node, key] in nodes" :key="key" />
                     <template v-if="nodes.length === 0">{{ context?.view.value.separator }}</template>

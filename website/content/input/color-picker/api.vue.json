@@ -15,12 +15,20 @@
                 "zh-CN": "是否开启滴管拾色器，需要安全 context 与 Chromium 95 以上。",
                 "en-US": "Whether to enable the eyedropper color picker; requires a secure context and Chromium 95 or later."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `area`（选色区）、`hue`（色相滑条）、`alpha`（透明度滑条）、`handle`（三处共用的圆形手柄）、`preview`（颜色预览块）、`input`（颜色值输入框）、`format`（格式选择器）、`trigger`（默认触发按钮）、`dropdown`（usePopover 时的弹出层），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `area` (saturation and brightness area), `hue` (hue slider), `alpha` (alpha slider), `handle` (the round handle shared by all three), `preview` (color preview block), `input` (color value input), `format` (format select), `trigger` (default trigger button) and `dropdown` (the popup with `usePopover`); values take any class binding and merge with the built-in classes."
+            },
             "defaultFormat": {
                 "zh-CN": "手动输入时默认使用的颜色格式，可选 rgba、hex、hsva。",
                 "en-US": "Color format used by default for manual input: rgba, hex or hsva."
             },
             "width": { "zh-CN": "宽度，单位为像素。", "en-US": "Width in pixels." },
             "height": { "zh-CN": "高度，单位为像素。", "en-US": "Height in pixels." },
+            "styles": {
+                "zh-CN": "内部各部位的样式，键同 `classNames`，值的写法同 style。",
+                "en-US": "Styles of the inner parts, keyed like `classNames`; values take any style binding."
+            },
             "usePopover": {
                 "zh-CN": "是否放入 Popover 渲染，触发器使用默认插槽。",
                 "en-US": "Whether to render inside a Popover; the trigger comes from the default slot."

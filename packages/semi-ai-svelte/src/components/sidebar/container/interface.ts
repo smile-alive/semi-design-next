@@ -1,7 +1,10 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { SidebarContainerPart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 
 export interface ContainerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+    classNames?: Partial<Record<SidebarContainerPart, ClassValue>>;
+    styles?: Partial<Record<SidebarContainerPart, string>>;
     /** Bindable; the close button and Esc write false before `onCancel` */
     visible?: boolean;
     /** Plain text or a snippet; text is what the wrappers (Annotation, MCPConfigure) default from the locale */

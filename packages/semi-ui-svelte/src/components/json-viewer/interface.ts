@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { JsonViewerPart } from '@fibrae/semi-foundation/components/json-viewer/constants';
 import type { FindMatch, JsonViewerOptions as CoreOptions, SearchOptions, TokenRenderType } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 
 export type JsonViewerSearchOptions = SearchOptions;
@@ -37,6 +38,8 @@ export interface JsonViewerSearchButtonArgs {
 // the editor owns the root's content, so children would clash with it
 export interface JsonViewerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'> {
     /** Bindable; the editor's text. A value different from the editor's current text re-creates the editor */
+    classNames?: Partial<Record<JsonViewerPart, ClassValue>>;
+    styles?: Partial<Record<JsonViewerPart, string>>;
     value?: string;
     width?: number | string;
     height?: number | string;

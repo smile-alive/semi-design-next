@@ -5,7 +5,7 @@
     import { getNavContext } from './context.js';
     import type { NavFooterProps } from './interface.js';
 
-    let { collapseButton = false, collapseText, children, ...rest }: NavFooterProps = $props();
+    let { classNames, styles, collapseButton = false, collapseText, children, ...rest }: NavFooterProps = $props();
 
     const ctx = getNavContext('Nav.Footer');
 
@@ -18,7 +18,7 @@
         {#if typeof collapseButton === 'function'}
             {@render collapseButton()}
         {:else}
-            <CollapseButton {collapseText} collapsed={ctx.isCollapsed} onToggle={ctx.toggleCollapsed} />
+            <CollapseButton class={classNames?.collapseButton} {collapseText} collapsed={ctx.isCollapsed} onToggle={ctx.toggleCollapsed} style={styles?.collapseButton} />
         {/if}
     {:else}
         {@render children?.()}

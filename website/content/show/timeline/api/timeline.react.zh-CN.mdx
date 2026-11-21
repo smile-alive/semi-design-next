@@ -2,11 +2,13 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性       | 说明                                                                                                | 类型                                                                | 默认值   |
-| ---------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | -------- |
-| children   | 时间轴的节点，通常为 `Timeline.Item`；dataSource 非空时被忽略。                                     | `React.ReactNode`                                                   | -        |
-| className  | 根元素 `ul` 的类名。                                                                                | `string`                                                            | -        |
-| dataSource | 数据数组，非空时按数据渲染节点并忽略子节点；每项的属性与 Timeline.Item 相同，`content` 为节点内容。 | `Data[]`                                                            | -        |
-| mode       | 时间轴与内容的相对位置，可选 `left`、`right`、`center` 或 `alternate`。                             | `'alternate' \| 'center' \| 'left' \| 'right'`                      | `"left"` |
-| ref        | 根元素 `ul` 的引用。                                                                                | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType> | -        |
-| style      | 根元素 `ul` 的样式。                                                                                | `React.CSSProperties`                                               | -        |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| children | 时间轴的节点，通常为 `Timeline.Item`；dataSource 非空时被忽略。 | `React.ReactNode` | - |
+| className | 根元素 `ul` 的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `item`、`itemRail`、`itemIcon`、`itemContent`、`itemExtra`、`itemTime`，与组件自带的类名合并；`item` 落在每个 `li` 上，`itemRail` 是连接线，`itemIcon` 是圆点或自定义 dot 的容器；`item*` 键作用到全部 Timeline.Item，且在节点自己的 classNames 之前。 | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, string>>"}>Type</ApiType> | - |
+| dataSource | 数据数组，非空时按数据渲染节点并忽略子节点；每项的属性与 Timeline.Item 相同，`content` 为节点内容。 | `Data[]` | - |
+| mode | 时间轴与内容的相对位置，可选 `left`、`right`、`center` 或 `alternate`。 | `'alternate' \| 'center' \| 'left' \| 'right'` | `"left"` |
+| ref | 根元素 `ul` 的引用。 | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType> | - |
+| style | 根元素 `ul` 的样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, React.CSSProperties>>"}>Type</ApiType> | - |

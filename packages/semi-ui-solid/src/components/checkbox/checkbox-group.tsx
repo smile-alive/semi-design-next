@@ -1,7 +1,7 @@
 import { createMemo, createUniqueId, Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState, type CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
-import { checkboxGroupClasses as css, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
+import { checkboxGroupClasses as css, type CheckboxGroupPart, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { callHandler, omitFormInjected } from '../../utils/index';
 import Checkbox, { type CheckboxProps } from './checkbox';
@@ -31,6 +31,8 @@ export interface CheckboxGroupProps extends ElementProps<'div', 'onChange' | 'de
     onChange?: (value: CheckboxValue[]) => void;
     direction?: CheckboxDirection;
     type?: CheckboxType;
+    classNames?: Partial<Record<CheckboxGroupPart, string>>;
+    styles?: Partial<Record<CheckboxGroupPart, JSX.CSSProperties | string>>;
 }
 
 export type CheckboxGroupState = CheckboxGroupBaseState;
@@ -55,6 +57,8 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         'options',
         'direction',
         'class',
+        'classNames',
+        'styles',
         'type',
         'disabled',
         'name',
@@ -103,6 +107,12 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
     }));
 
     const context: CheckboxGroupContextValue = {
+        get classNames() {
+            return local.classNames;
+        },
+        get styles() {
+            return local.styles;
+        },
         view,
         onChange: foundation.handleChange,
     };

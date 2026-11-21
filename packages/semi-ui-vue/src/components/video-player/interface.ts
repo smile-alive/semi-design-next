@@ -1,4 +1,5 @@
-import type { VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
+import type { ClassValue, StyleValue } from 'vue';
+import type { VideoControl, VideoPlayerPart } from '@fibrae/semi-foundation/components/video-player/constants';
 import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 
 export type VideoPlayerTheme = 'dark' | 'light';
@@ -14,6 +15,8 @@ export type VideoPlayerMarker = Marker;
 export interface VideoPlayerProps {
     autoPlay?: boolean;
     captionsSrc?: string;
+    /** `progressBuffered` and `progressPlayed` apply to every marker segment */
+    classNames?: Partial<Record<VideoPlayerPart, ClassValue>>;
     clickToPlay?: boolean;
     controlsList?: VideoControl[];
     crossOrigin?: '' | 'anonymous' | 'use-credentials';
@@ -36,6 +39,7 @@ export interface VideoPlayerProps {
     routeList?: VideoPlayerOption<string>[];
     seekTime?: number;
     src?: string;
+    styles?: Partial<Record<VideoPlayerPart, StyleValue>>;
     theme?: VideoPlayerTheme;
     /** Read once, when the player mounts */
     volume?: number;
@@ -62,8 +66,10 @@ export interface VideoProgressProps {
     /** Seconds an arrow key moves */
     step: number;
     bufferedValue: number;
+    classNames?: Partial<Record<VideoPlayerPart, ClassValue>>;
     markers?: VideoPlayerMarker[];
     showTooltip?: boolean;
+    styles?: Partial<Record<VideoPlayerPart, StyleValue>>;
 }
 
 export interface VideoProgressEmits {
@@ -71,10 +77,12 @@ export interface VideoProgressEmits {
 }
 
 export interface ControlsMenuProps<T> {
+    classNames?: Partial<Record<VideoPlayerPart, ClassValue>>;
     current: T;
     /** What the menu sets, read before the current option in the button's name */
     label: string;
     list: VideoPlayerOption<T>[];
+    styles?: Partial<Record<VideoPlayerPart, StyleValue>>;
 }
 
 export interface ControlsMenuEmits<T> {

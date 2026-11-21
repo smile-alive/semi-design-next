@@ -18,6 +18,23 @@ describe('Progress', () => {
         vi.restoreAllMocks();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['rail', 'track', 'text'] as const;
+        const selectors = {
+            line: { rail: 'track', track: 'track-inner', text: 'line-text' },
+            circle: { rail: 'circle-ring-track', track: 'circle-ring-inner', text: 'circle-text' },
+        };
+        for (const type of ['line', 'circle'] as const) {
+            const { container, unmount } = render(<Progress type={type} classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} percent={30} showInfo />);
+            for (const part of parts) {
+                const el = container.querySelector(`.${prefixCls}-${selectors[type][part]}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+            unmount();
+        }
+    });
+
     it('percent 传入 NaN 等非法值', () => {
         // React reports the uncaught lifecycle error to window and console before rethrowing it
         vi.spyOn(console, 'error').mockImplementation(() => {});

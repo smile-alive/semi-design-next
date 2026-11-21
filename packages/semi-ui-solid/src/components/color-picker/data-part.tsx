@@ -1,16 +1,21 @@
-import { Show } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import { type JSX, Show } from 'solid-js';
+import clsx from 'clsx';
+import { cssClasses, type ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/components/color-picker/data-part-foundation';
 import type { ColorFormat } from '@fibrae/semi-foundation/components/color-picker/interface';
 import { IconEyedropper } from '@fibrae/semi-icons-solid';
 import { useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import Button from '../button';
 import Input, { InputGroup } from '../input';
 import InputNumber from '../input-number';
 import { useLocale } from '../locale';
 import Select from '../select';
 
-export type DataPartProps = DataPartBaseProps;
+export interface DataPartProps extends DataPartBaseProps {
+    classNames?: Partial<Record<ColorPickerPart, string>>;
+    styles?: Partial<Record<ColorPickerPart, JSX.CSSProperties | string>>;
+}
 
 type Foundation = DataPartFoundation<DataPartBaseProps>;
 type Adapter = DataPartAdapter<DataPartBaseProps>;
@@ -37,10 +42,11 @@ export default function DataPart(props: DataPartProps) {
 
     return (
         <div class={`${cssClasses.PREFIX}-dataPart`} style={{ width: `${props.width}px` }}>
-            <div class={`${cssClasses.PREFIX}-colorDemoBlock`} style={{ 'min-width': '20px', 'min-height': '20px', 'background-color': demoColor() }} />
+            <div class={clsx(`${cssClasses.PREFIX}-colorDemoBlock`, props.classNames?.preview)} style={mergeStyles({ 'min-width': '20px', 'min-height': '20px', 'background-color': demoColor() }, props.styles?.preview)} />
             <InputGroup class={`${cssClasses.PREFIX}-inputGroup`} size="small">
                 <Input
-                    class={`${cssClasses.PREFIX}-colorPickerInput`}
+                    class={clsx(`${cssClasses.PREFIX}-colorPickerInput`, props.classNames?.input)}
+                    style={props.styles?.input}
                     aria-label={locale().locale.color}
                     value={state().inputValue}
                     // the inputs share one compact group: the adornments and showClear are set so global Input and
@@ -71,7 +77,8 @@ export default function DataPart(props: DataPartProps) {
                     />
                 </Show>
                 <Select
-                    class={`${cssClasses.PREFIX}-formatSelect`}
+                    class={clsx(`${cssClasses.PREFIX}-formatSelect`, props.classNames?.format)}
+                    style={props.styles?.format}
                     aria-label={locale().locale.format}
                     value={state().format}
                     optionList={FORMAT_OPTIONS}

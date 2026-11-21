@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property  | Description                                                         | Type                 | Default     |
-| --------- | ------------------------------------------------------------------- | -------------------- | ----------- |
-| activeKey | Keys of the expanded groups; bind it with v-model:activeKey.        | `string \| string[]` | `undefined` |
-| info      | Groups of references; each has a header, a key and its annotations. | `AnnotationInfo[]`   | `[]`        |
+| Property   | Description                                                                                                                                                                            | Type                                                                                     | Default     |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
+| activeKey  | Keys of the expanded groups; bind it with v-model:activeKey.                                                                                                                           | `string \| string[]`                                                                     | `undefined` |
+| classNames | Class names of the inner parts, keyed by groupHeader, groupContent, item, itemTitle, itemDetail and itemFooter; merged with the built-in classes. Values take the same forms as class. | <ApiType detail={"Partial\u003cRecord\u003cAnnotationPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| info       | Groups of references; each has a header, a key and its annotations.                                                                                                                    | `AnnotationInfo[]`                                                                       | `[]`        |
+| styles     | Inline styles of the inner parts, keyed like classNames.                                                                                                                               | <ApiType detail={"Partial\u003cRecord\u003cAnnotationPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

@@ -23,6 +23,7 @@
         arrowProps = defaults('arrowProps'),
         arrowType = defaults('arrowType', 'always'),
         autoPlay = defaults('autoPlay', true),
+        classNames = defaults('classNames'),
         indicatorPosition = defaults('indicatorPosition', 'center'),
         indicatorSize = defaults('indicatorSize', 'small'),
         indicatorType = defaults('indicatorType', 'dot'),
@@ -31,6 +32,7 @@
         showIndicator = defaults('showIndicator', true),
         slideDirection = defaults('slideDirection', 'left'),
         speed = defaults('speed', numbers.DEFAULT_SPEED),
+        styles = defaults('styles'),
         theme = defaults('theme', 'light'),
         trigger = defaults('trigger', 'click'),
         onChange,
@@ -185,7 +187,7 @@
 
 <div {...rest} aria-roledescription={rest['aria-roledescription'] ?? locale().locale.carousel} bind:this={root} class={[cssClasses.CAROUSEL, rest.class]} role={rest.role ?? 'region'} onfocusin={handleFocusIn} onfocusout={handleFocusOut} onmouseenter={handleMouseEnter} onmouseleave={handleMouseLeave}>
     <!-- announce a slide the user switched to, never one that rotation brought -->
-    <div aria-live={states().rotating ? 'off' : 'polite'} class={[`${content}-${animation}`, content, { [`${content}-reverse`]: slideDirection === 'left' ? states().isReverse : !states().isReverse }]} x-semi-prop="slide">
+    <div aria-live={states().rotating ? 'off' : 'polite'} class={[`${content}-${animation}`, content, { [`${content}-reverse`]: slideDirection === 'left' ? states().isReverse : !states().isReverse }, classNames?.content]} style={styles?.content} x-semi-prop="slide">
         {#each items as item, index (index)}
             {@const isCurrent = index === current}
             <!-- with indicators the slides are the panels of their tabs (APG tabbed carousel), otherwise named groups -->
@@ -215,17 +217,18 @@
     </div>
     {#if hasIndicator}
         <div class={indicator}>
-            <div aria-label={locale().locale.indicators} class={[indicator, `${indicator}-${indicatorType}`, `${indicator}-${indicatorPosition}`]} role="tablist">
+            <div aria-label={locale().locale.indicators} class={[indicator, `${indicator}-${indicatorType}`, `${indicator}-${indicatorPosition}`, classNames?.indicators]} role="tablist" style={styles?.indicators}>
                 {#each items as _, index (index)}
                     {@const isCurrent = index === current}
                     <button
                         aria-controls={slideId(index)}
                         aria-label={slideNumber(index)}
                         aria-selected={isCurrent}
-                        class={[`${indicator}-item`, { [`${indicator}-item-active`]: isCurrent, [`${indicator}-item-${theme}`]: theme, [`${indicator}-item-${indicatorSize}`]: indicatorSize }]}
+                        class={[`${indicator}-item`, { [`${indicator}-item-active`]: isCurrent, [`${indicator}-item-${theme}`]: theme, [`${indicator}-item-${indicatorSize}`]: indicatorSize }, classNames?.indicator]}
                         data-index={index}
                         id={tabId(index)}
                         role="tab"
+                        style={styles?.indicator}
                         tabindex={isCurrent ? 0 : -1}
                         type="button"
                         onblur={foundation.handleIndicatorBlur}
@@ -238,14 +241,15 @@
         </div>
     {/if}
     {#if showArrow && total > 1}
-        <div class={[arrow, `${arrow}-${theme}`, { [`${arrow}-hover`]: arrowType === 'hover' }]}>
+        <div class={[arrow, `${arrow}-${theme}`, { [`${arrow}-hover`]: arrowType === 'hover' }, classNames?.arrows]} style={styles?.arrows}>
             <button
                 {...leftProps}
                 {@attach (node) => {
                     leftNamed = hasReadableText(node);
                 }}
                 aria-label={arrowLabel(leftProps, Boolean(leftArrow), leftNamed, locale().locale.prev)}
-                class={[`${arrow}-prev`, `${arrow}-${theme}`, leftProps.class]}
+                class={[`${arrow}-prev`, `${arrow}-${theme}`, classNames?.prevArrow, leftProps.class]}
+                style={styles?.prevArrow ?? leftProps.style}
                 type="button"
                 x-semi-prop="leftArrow"
                 onclick={handlePrev}
@@ -262,7 +266,8 @@
                     rightNamed = hasReadableText(node);
                 }}
                 aria-label={arrowLabel(rightProps, Boolean(rightArrow), rightNamed, locale().locale.next)}
-                class={[`${arrow}-next`, `${arrow}-${theme}`, rightProps.class]}
+                class={[`${arrow}-next`, `${arrow}-${theme}`, classNames?.nextArrow, rightProps.class]}
+                style={styles?.nextArrow ?? rightProps.style}
                 type="button"
                 x-semi-prop="rightArrow"
                 onclick={handleNext}

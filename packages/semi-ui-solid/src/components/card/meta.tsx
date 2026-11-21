@@ -1,6 +1,6 @@
 import { children, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+import { cssClasses, type CardMetaPart } from '@fibrae/semi-foundation/components/card/constants';
 import type { ElementProps } from '../../base/index';
 import { hasContent } from '../../utils/index';
 
@@ -8,12 +8,14 @@ const prefixCls = cssClasses.PREFIX;
 
 export interface MetaProps extends ElementProps<'div', 'title'> {
     avatar?: JSX.Element;
+    classNames?: Partial<Record<CardMetaPart, string>>;
     description?: JSX.Element;
+    styles?: Partial<Record<CardMetaPart, JSX.CSSProperties | string>>;
     title?: JSX.Element;
 }
 
 export default function Meta(props: MetaProps) {
-    const [local, rest] = splitProps(props, ['avatar', 'class', 'description', 'title']);
+    const [local, rest] = splitProps(props, ['avatar', 'class', 'classNames', 'description', 'styles', 'title']);
 
     const avatar = children(() => local.avatar);
     const title = children(() => local.title);
@@ -22,15 +24,21 @@ export default function Meta(props: MetaProps) {
     return (
         <div {...rest} class={clsx(`${prefixCls}-meta`, local.class)}>
             <Show when={hasContent(avatar())}>
-                <div class={`${prefixCls}-meta-avatar`}>{avatar()}</div>
+                <div class={clsx(`${prefixCls}-meta-avatar`, local.classNames?.avatar)} style={local.styles?.avatar}>
+                    {avatar()}
+                </div>
             </Show>
             <Show when={hasContent(title()) || hasContent(description())}>
-                <div class={`${prefixCls}-meta-wrapper`}>
+                <div class={clsx(`${prefixCls}-meta-wrapper`, local.classNames?.section)} style={local.styles?.section}>
                     <Show when={hasContent(title())}>
-                        <div class={`${prefixCls}-meta-wrapper-title`}>{title()}</div>
+                        <div class={clsx(`${prefixCls}-meta-wrapper-title`, local.classNames?.title)} style={local.styles?.title}>
+                            {title()}
+                        </div>
                     </Show>
                     <Show when={hasContent(description())}>
-                        <div class={`${prefixCls}-meta-wrapper-description`}>{description()}</div>
+                        <div class={clsx(`${prefixCls}-meta-wrapper-description`, local.classNames?.description)} style={local.styles?.description}>
+                            {description()}
+                        </div>
                     </Show>
                 </div>
             </Show>

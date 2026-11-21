@@ -2,6 +2,14 @@
     "divider": {
         "source": "packages/semi-ui-vue/src/components/divider/divider.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 content（中间的文字，仅当内容全是文本时渲染），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by content (the text in the middle, rendered only when the content is all text); values take any class binding and merge with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "align": {
                 "zh-CN": "带内容时内容的对齐方式，可选 left、center、right。",
                 "en-US": "Alignment of the content: left, center or right."

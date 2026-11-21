@@ -1034,14 +1034,12 @@ describe('Navigation 行为', () => {
 
         it('classNames 与 styles 按部位落到对应元素', async () => {
             useFakeTimers();
-            renderMore({ classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: { color: 'green' } } }, { classNames: { body: 'my-body' }, styles: { body: { color: 'red' } } });
-            const body = document.querySelector(`.${prefixCls}-list-wrapper`);
-            expect(body).toHaveClass('my-body');
-            expect(body).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+            renderMore({ classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: { color: 'green' } } }, { classNames: { subNavDropdown: 'nav-dropdown' }, styles: { subNavDropdown: { color: 'red', flexGrow: 1 } } });
             await hover(getSubTitle('更多'));
             await vi.advanceTimersByTimeAsync(100);
-            expect(popupOf('文档')).toHaveClass('my-dropdown');
-            expect(popupOf('文档')).toHaveStyle({ color: 'rgb(0, 128, 0)' });
+            const popup = popupOf('文档');
+            expect(Array.from(popup.classList).indexOf('nav-dropdown')).toBeLessThan(Array.from(popup.classList).indexOf('my-dropdown'));
+            expect(popup).toHaveStyle({ color: 'rgb(0, 128, 0)', flexGrow: '1' });
         });
 
         it('styles.dropdown 优先于 dropdownProps.style，未给时不覆盖', async () => {
@@ -1232,6 +1230,102 @@ describe('Navigation 的属性落点与渲染时机', () => {
         expect(li).toHaveAttribute('role', 'menuitem');
         expect(li).toHaveClass('own');
         expect(li).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+    });
+});
+
+describe('Navigation 的 classNames 与 styles', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const navSelectors = {
+            body: `.${prefixCls}-list-wrapper`,
+            list: `ul.${prefixCls}-list`,
+            item: `li.${prefixCls}-item:not(.${prefixCls}-item-sub)`,
+            itemIcon: `.${prefixCls}-item-icon-info`,
+            itemText: `.${prefixCls}-item-text`,
+            itemToggleIcon: `.${prefixCls}-item-icon-toggle-right`,
+            subNav: `.${prefixCls}-sub-wrap`,
+            subNavTitle: `.${prefixCls}-sub-title`,
+            subNavList: `ul.${prefixCls}-sub`,
+        };
+        const itemSelectors = { icon: `.${prefixCls}-item-icon-info`, text: `.${prefixCls}-item-text`, toggleIcon: `.${prefixCls}-item-icon-toggle-right` };
+        const subSelectors = { title: `.${prefixCls}-sub-title`, icon: `.${prefixCls}-item-icon-info`, text: `.${prefixCls}-item-text`, toggleIcon: `.${prefixCls}-item-icon-toggle-right`, list: `ul.${prefixCls}-sub` };
+        const headerSelectors = { logo: `.${prefixCls}-header-logo`, text: `.${prefixCls}-header-text`, link: `.${prefixCls}-header-link` };
+        // Nav parts and the parts of its children reach the same elements, so each owner uses its own style property
+        const make = (prefix: string, selectors: Record<string, string>, property: string) => ({
+            classNames: Object.fromEntries(Object.keys(selectors).map((part) => [part, `${prefix}-${part}`])),
+            styles: Object.fromEntries(Object.keys(selectors).map((part, index) => [part, { [property]: index + 1 }])),
+        });
+        const checkParts = (selectors: Record<string, string>, prefix: string, property: string) => {
+            Object.keys(selectors).forEach((part, index) => {
+                const elements = document.querySelectorAll(`.${prefix}-${part}`);
+                expect(elements.length, `${prefix}-${part}`).toBeGreaterThan(0);
+                elements.forEach((el) => {
+                    expect(el.matches(selectors[part]), `${prefix}-${part}`).toBe(true);
+                    expect(el).toHaveStyle({ [property]: String(index + 1) });
+                });
+            });
+        };
+
+        renderNav({ ...make('nav', navSelectors, 'order'), defaultOpenKeys: ['sub'], subNavMotion: false }, () => (
+            <>
+                <NavHeader {...make('header', headerSelectors, 'order')} link="#" text="T">
+                    {{ logo: () => 'L' }}
+                </NavHeader>
+                <NavItem {...make('leaf', itemSelectors, 'flexGrow')} itemKey="leaf" text="Leaf">
+                    {{ icon: () => <span />, toggleIcon: () => <span /> }}
+                </NavItem>
+                <SubNav {...make('sub', subSelectors, 'flexShrink')} itemKey="sub" text="Sub">
+                    {{
+                        default: () => <NavItem itemKey="child" text="Child" />,
+                        icon: () => <span />,
+                    }}
+                </SubNav>
+                <NavFooter {...make('footer', { collapseButton: '' }, 'order')} collapseButton />
+            </>
+        ));
+
+        checkParts(navSelectors, 'nav', 'order');
+        checkParts(itemSelectors, 'leaf', 'flexGrow');
+        checkParts(subSelectors, 'sub', 'flexShrink');
+        checkParts(headerSelectors, 'header', 'order');
+        checkParts({ collapseButton: `.${prefixCls}-collapse-btn` }, 'footer', 'order');
+        // item parts reach the leaf item, the item nested in the sub and the sub title alike
+        expect(document.querySelectorAll('.nav-itemIcon')).toHaveLength(3);
+        expect(document.querySelectorAll('.nav-itemToggleIcon')).toHaveLength(3);
+        expect(document.querySelectorAll('.nav-item')).toHaveLength(2);
+        expect(document.querySelectorAll('.nav-subNav')).toHaveLength(1);
+    });
+
+    it('Nav 的 item* 作用到全部子项，子项自己的 classNames 在后、样式后写', () => {
+        renderNav({ classNames: { item: 'nav-item', itemText: 'nav-text', subNavTitle: 'nav-title' }, defaultOpenKeys: ['sub'], styles: { itemText: { order: 1, flexGrow: 1 }, subNavTitle: { order: 1 } }, subNavMotion: false }, () => (
+            <>
+                <NavItem class="own-root" classNames={{ text: 'own-text' }} itemKey="leaf" style={{ order: 2 }} styles={{ text: { order: 3 } }} text="Leaf" />
+                <SubNav classNames={{ title: 'own-title', text: 'own-text' }} itemKey="sub" styles={{ title: { order: 4 } }} text="Sub">
+                    {() => <NavItem itemKey="child" text="Child" />}
+                </SubNav>
+            </>
+        ));
+        const classList = (el: Element) => Array.from(el.classList);
+        const leaf = getItem('Leaf');
+        expect(classList(leaf).indexOf('nav-item')).toBeLessThan(classList(leaf).indexOf('own-root'));
+        expect(leaf).toHaveStyle({ order: '2' });
+        const leafText = screen.getByText('Leaf');
+        expect(classList(leafText).indexOf('nav-text')).toBeLessThan(classList(leafText).indexOf('own-text'));
+        expect(leafText).toHaveStyle({ order: '3', flexGrow: '1' });
+        // the nav-level text also reaches the sub title and a nested item, the sub's own text only its title
+        const subText = screen.getByText('Sub');
+        expect(classList(subText).indexOf('nav-text')).toBeLessThan(classList(subText).indexOf('own-text'));
+        expect(screen.getByText('Child')).toHaveClass('nav-text');
+        expect(screen.getByText('Child')).not.toHaveClass('own-text');
+        expect(getItem('Child')).toHaveClass('nav-item');
+        const title = getSubTitle('Sub');
+        expect(classList(title).indexOf('nav-title')).toBeLessThan(classList(title).indexOf('own-title'));
+        expect(title).toHaveStyle({ order: '4' });
+    });
+
+    it('items 配置里叶子项的 classNames 与 styles 生效', () => {
+        renderNav({ items: [{ itemKey: 'a', text: 'A', classNames: { text: 'cfg-text' }, styles: { text: { order: 5 } } }] });
+        expect(screen.getByText('A')).toHaveClass('cfg-text');
+        expect(screen.getByText('A')).toHaveStyle({ order: '5' });
     });
 });
 

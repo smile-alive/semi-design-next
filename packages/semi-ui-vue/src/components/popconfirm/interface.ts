@@ -1,4 +1,4 @@
-import type { ClassValue, HTMLAttributes, VNode } from 'vue';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
 import type { PopconfirmPart } from '@fibrae/semi-foundation/components/popconfirm/constants';
 import type { ButtonProps, Type as ButtonType } from '../button/interface';
 import type { PopoverEmits, PopoverProps } from '../popover/interface';
@@ -19,6 +19,8 @@ export interface PopconfirmProps extends PopoverProps {
     cancelText?: string;
     cancelType?: ButtonType;
     classNames?: Partial<Record<PopconfirmPart, ClassValue>>;
+    /** `arrow` is the arrow color config of Popover, the other keys are inline styles */
+    styles?: Partial<Record<Exclude<PopconfirmPart, 'arrow'>, StyleValue>> & Pick<NonNullable<PopoverProps['styles']>, 'arrow'>;
     defaultVisible?: boolean;
     disabled?: boolean;
     okButtonProps?: PopconfirmButtonProps;

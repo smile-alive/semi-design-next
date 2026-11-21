@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import type { ClassValue } from 'svelte/elements';
+    import { cssClasses, type ImagePreviewPart } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageState } from '@fibrae/semi-foundation/components/image/preview-image-foundation';
     import { useFoundation } from '../../../base/index.js';
     import { Spin } from '../../spin/index.js';
@@ -17,6 +18,8 @@
         crossOrigin?: 'anonymous' | 'use-credentials';
         initialZoom?: number;
         zoomEvent?: WheelEvent;
+        classNames?: Partial<Record<ImagePreviewPart, ClassValue>>;
+        styles?: Partial<Record<ImagePreviewPart, string>>;
         onZoom: (zoom: number, reportToUser: boolean) => void;
         onLoad: (src: string) => void;
         onError: (src: string) => void;
@@ -25,7 +28,7 @@
     type Foundation = PreviewImageFoundation<PreviewImageBaseProps>;
     type Adapter = PreviewImageAdapter<PreviewImageBaseProps>;
 
-    let { src, alt = '', rotation, maxZoom, minZoom, zoom, ratio, disableDownload, crossOrigin, initialZoom, zoomEvent, onZoom, onLoad, onError }: Props = $props();
+    let { src, alt = '', rotation, maxZoom, minZoom, zoom, ratio, disableDownload, crossOrigin, initialZoom, zoomEvent, classNames, styles, onZoom, onLoad, onError }: Props = $props();
 
     let container = $state.raw<HTMLDivElement | null>(null);
     let image = $state.raw<HTMLImageElement | null>(null);
@@ -82,9 +85,10 @@
         <img
             {alt}
             bind:this={image}
-            class="{cls}-img"
+            class={[`${cls}-img`, classNames?.img]}
             crossorigin={crossOrigin}
             {src}
+            style={styles?.img}
             style:height="{states().height}px"
             style:position="absolute"
             style:transform="translate({states().translate.x}px, {states().translate.y}px) rotate({rotation}deg)"

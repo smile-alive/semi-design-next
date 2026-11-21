@@ -5,7 +5,7 @@
     import { TypographyText } from '../typography/index.js';
     import type { QuickControlProps } from './internal.js';
 
-    let { locale, type, presets = [], presetPosition = 'bottom', insetInput = false, onPresetClick }: QuickControlProps = $props();
+    let { class: className, style, locale, type, presets = [], presetPosition = 'bottom', insetInput = false, onPresetClick }: QuickControlProps = $props();
 
     const prefix = cssClasses.PREFIX;
     const base = $derived(`${prefix}-quick-control-${presetPosition}`);
@@ -24,7 +24,7 @@
 </script>
 
 {#if items.length}
-    <div {...{ 'x-insetinput': insetInput ? 'true' : 'false' }} class={[`${prefix}-quick-control`, base, { [`${prefix}-quick-control-${type}`]: type }]}>
+    <div {...{ 'x-insetinput': insetInput ? 'true' : 'false' }} class={[`${prefix}-quick-control`, base, { [`${prefix}-quick-control-${type}`]: type }, className]} {style}>
         {#if !isPanelTopAndBottom}
             <div class={`${prefix}-quick-control-header`}>{locale.presets}</div>
         {/if}

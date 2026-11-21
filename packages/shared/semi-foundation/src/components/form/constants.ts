@@ -4,6 +4,15 @@ export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-form`,
 };
 
+/** Keys of `Form`'s `classNames` and `styles`; they reach every Label, ErrorMessage and field extra text inside the Form. The root takes `className` and `style` */
+export type FormPart = 'label' | 'labelText' | 'labelExtra' | 'labelTooltip' | 'content' | 'help' | 'extra';
+
+/** Keys of `Form.Section`'s `classNames` and `styles`; the root takes `className` and `style` */
+export type FormSectionPart = 'title' | 'extra';
+
+/** Keys of `Form.Label`'s `classNames` and `styles`; the root takes `className` and `style` */
+export type FormLabelPart = 'text' | 'extra' | 'tooltip';
+
 export const strings = {
     LAYOUT: ['horizontal', 'vertical'],
     DEFAULT_TRIGGER: 'change',

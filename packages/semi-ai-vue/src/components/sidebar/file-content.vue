@@ -10,7 +10,7 @@
     import type { FileContentEmits, FileContentProps } from './interface';
     import { useHasExpandListener } from './use-expand-listener';
 
-    const props = withDefaults(defineProps<FileContentProps & /* @vue-ignore */ ElementProps<'div', keyof FileContentProps | EmitHandlers<FileContentEmits>>>(), { activeKey: undefined, files: () => [] });
+    const props = withDefaults(defineProps<FileContentProps & /* @vue-ignore */ ElementProps<'div', keyof FileContentProps | EmitHandlers<FileContentEmits>>>(), { activeKey: undefined, classNames: undefined, files: () => [], styles: undefined });
     const emit = defineEmits<FileContentEmits>();
 
     const locale = useLocale('Sidebar');
@@ -29,11 +29,11 @@
     <Collapse :activeKey="props.activeKey" :class="[collapseCls, `${collapseCls}-file`]" :clickHeaderToExpand="false" @change="onChange">
         <CollapsePanel v-for="file in props.files" :key="file.key" :itemKey="file.key ?? ''">
             <template #header>
-                <CollapseHeader mode="file" :name="file.name" />
+                <CollapseHeader :class="props.classNames?.itemHeader" mode="file" :name="file.name" :style="props.styles?.itemHeader" />
             </template>
             <!-- the panel's extra sits beside the toggle button, not inside it -->
             <template v-if="hasExpandListener()" #extra>
-                <Button :aria-label="locale.locale.expand" :class="`${collapseCls}-header-expand-btn`" theme="borderless" type="tertiary" @click="emit('expand', $event, file, 'file')">
+                <Button :aria-label="locale.locale.expand" :class="[`${collapseCls}-header-expand-btn`, props.classNames?.itemExpand]" :style="props.styles?.itemExpand" theme="borderless" type="tertiary" @click="emit('expand', $event, file, 'file')">
                     <template #icon>
                         <IconFullScreenStroked />
                     </template>

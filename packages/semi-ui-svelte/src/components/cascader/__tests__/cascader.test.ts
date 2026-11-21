@@ -167,11 +167,54 @@ describe('Svelte Cascader 渲染', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        setup({ classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: 'width: 321px' } });
+        const selectors = {
+            prefix: 'prefix',
+            suffix: 'suffix',
+            content: 'selection',
+            placeholder: 'selection-placeholder',
+            input: 'input',
+            tag: 'selection-tag',
+            clear: 'clearbtn',
+            arrow: 'arrow',
+            dropdown: 'popover',
+            list: 'option-list',
+            empty: 'option-empty',
+            item: 'option',
+            itemContent: 'option-label',
+            itemIcon: 'option-icon',
+        };
+        const parts = Object.keys(selectors) as Array<keyof typeof selectors>;
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`]));
+        const expectParts = (names: typeof parts) => {
+            for (const part of names) {
+                const el = document.querySelector(`.${prefixCls}-${selectors[part]}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+        const common = { classNames, styles };
+        const snippet = (html: string) => createRawSnippet(() => ({ render: () => html }));
+
+        const first = setup({ ...common, filterTreeNode: true, prefix: snippet('<span>p</span>'), suffix: snippet('<span>s</span>') });
         await openDropdown();
-        const popup = getElement('.my-dropdown');
-        expect(popup).toHaveClass(`${prefixCls}-popover`);
-        expect(popup).toHaveStyle({ width: '321px' });
+        expectParts(['prefix', 'suffix', 'content', 'placeholder', 'arrow', 'dropdown', 'list', 'item', 'itemContent', 'itemIcon']);
+        first.unmount();
+
+        const second = setup({ ...common, multiple: true, showClear: true, defaultOpen: true }, { value: [['Asia', 'China', 'Beijing']] });
+        await settle();
+        expectParts(['tag', 'clear']);
+        second.unmount();
+
+        const third = setup({ ...common, filterTreeNode: true });
+        await openDropdown();
+        await search('北');
+        expectParts(['input']);
+        third.unmount();
+
+        setup({ ...common, defaultOpen: true }, { data: [] });
+        await settle();
+        expectParts(['empty']);
     });
 
     it('空数据显示默认空状态，emptyContent 替换它，null 隐藏它', async () => {

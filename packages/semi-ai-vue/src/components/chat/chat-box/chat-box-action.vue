@@ -49,6 +49,7 @@
                 [`${PREFIX_CHAT_BOX_ACTION}-show`]: ChatBoxActionFoundation.isActionBarShown({ showReset: flags.value.showReset, finished: flags.value.finished, showAction: state.value.showAction }),
                 [`${PREFIX_CHAT_BOX_ACTION}-hidden`]: !flags.value.finished,
             },
+            context.view.value.classNames?.itemActions,
         ])
     );
 
@@ -68,7 +69,7 @@
 
 <template>
     <slot v-if="$slots.action" :class="wrapClass" :message="props.message" name="action" v-bind="slotProps()" />
-    <div v-else :class="wrapClass">
+    <div v-else :class="wrapClass" :style="context.view.value.styles?.itemActions">
         <component :is="nodes[key]()" v-for="key in keys" :key="key" />
     </div>
 </template>

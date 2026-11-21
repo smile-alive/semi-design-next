@@ -22,6 +22,10 @@
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `icon`（勾选框本体）、`label`（标签文字）、`extra`（补充说明），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `icon` (the box), `label` (the label text) and `extra` (the supplementary text); merged with the built-in classes."
+            },
             "defaultChecked": {
                 "zh-CN": "初始是否选中，非受控使用；在设置了 `value` 的 CheckboxGroup 中无效。",
                 "en-US": "Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup that sets `value`."
@@ -74,6 +78,10 @@
                 "zh-CN": "根元素 `span` 的样式。",
                 "en-US": "Style of the root `span` element."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "tabIndex": {
                 "zh-CN": "原生 input 的 `tabIndex`，即焦点所在的元素。",
                 "en-US": "`tabIndex` of the native input, which receives focus."
@@ -108,6 +116,10 @@
             "className": {
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`（每个 Checkbox 的根元素）、`itemIcon`、`itemLabel`、`itemExtra`，作用于组内全部 Checkbox，与 Checkbox 自己的 `classNames` 合并，组的类名在前。",
+                "en-US": "Class names of the inner parts, keyed by `item` (the root of every Checkbox), `itemIcon`, `itemLabel` and `itemExtra`. They apply to every Checkbox in the group and merge with each Checkbox's own `classNames`, the group's first."
             },
             "defaultValue": {
                 "zh-CN": "非受控时组内默认选中的值，与 Checkbox 的 `value` 匹配。",
@@ -144,6 +156,10 @@
             "style": {
                 "zh-CN": "根元素的样式。",
                 "en-US": "Style of the root element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，Checkbox 自己的 `styles` 后写。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; each Checkbox's own `styles` are applied after them."
             },
             "type": {
                 "zh-CN": "组内所有 Checkbox 的样式类型，可选 `default`、`card` 或 `pureCard`。",

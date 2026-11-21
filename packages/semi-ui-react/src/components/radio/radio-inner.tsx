@@ -28,10 +28,14 @@ export interface RadioInnerProps {
     'aria-errormessage'?: React.AriaAttributes['aria-errormessage'];
     'aria-invalid'?: React.AriaAttributes['aria-invalid'];
     tabIndex?: number;
+    iconClassName?: string;
+    iconStyle?: React.CSSProperties;
 }
 
 export default function RadioInner({
     ref,
+    iconClassName,
+    iconStyle,
     checked,
     disabled,
     autoFocus,
@@ -61,7 +65,8 @@ export default function RadioInner({
         [`${prefix}-inner-pureCardRadio`]: isPureCardRadio,
     });
 
-    const inner = clsx({ [`${prefix}-inner-display`]: !isButtonRadio });
+    // a button radio has no icon, so the icon part has nowhere to land
+    const inner = clsx({ [`${prefix}-inner-display`]: !isButtonRadio }, !isButtonRadio && iconClassName);
 
     // The radio role supports no aria-invalid/errormessage/required (radiogroup does),
     // so the error goes in the description
@@ -86,7 +91,9 @@ export default function RadioInner({
                 onClick={onClick}
                 onKeyUp={onKeyUp}
             />
-            <span className={inner}>{checked && <IconRadio />}</span>
+            <span className={inner} style={isButtonRadio ? undefined : iconStyle}>
+                {checked && <IconRadio />}
+            </span>
         </span>
     );
 }

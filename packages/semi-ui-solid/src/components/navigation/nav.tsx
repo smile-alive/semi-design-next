@@ -33,7 +33,7 @@ const defaultProps = {
 } satisfies Partial<NavProps>;
 
 // items configs may carry app data (e.g. `path`), so only these keys, `data-*` and `aria-*` reach the item
-const ITEM_CONFIG_KEYS: ReadonlySet<string> = new Set(['itemKey', 'indent', 'isCollapsed', 'link', 'linkOptions', 'disabled', 'class', 'style', 'forwardRef', 'ref', 'tabIndex', 'tooltipHideDelay', 'tooltipShowDelay', 'onClick', 'onMouseEnter', 'onMouseLeave']);
+const ITEM_CONFIG_KEYS: ReadonlySet<string> = new Set(['itemKey', 'indent', 'isCollapsed', 'link', 'linkOptions', 'disabled', 'class', 'style', 'classNames', 'styles', 'forwardRef', 'ref', 'tabIndex', 'tooltipHideDelay', 'tooltipShowDelay', 'onClick', 'onMouseEnter', 'onMouseLeave']);
 const SUB_CONFIG_KEYS: ReadonlySet<string> = new Set(['itemKey', 'indent', 'isCollapsed', 'isOpen', 'disabled', 'class', 'style', 'ref', 'classNames', 'styles', 'dropdownProps', 'subDropdownProps', 'onMouseEnter', 'onMouseLeave']);
 
 function pickConfigProps(config: object, allowed: ReadonlySet<string>) {
@@ -172,6 +172,9 @@ export default function Nav(rawProps: NavProps) {
     const footerSlot = createMemo(() => slotProps<NavFooterProps>(footerContent(), NAV_FOOTER));
 
     const view: NavView = {
+        get classNames() {
+            return local.classNames;
+        },
         get isCollapsed() {
             return isCollapsed();
         },
@@ -196,6 +199,9 @@ export default function Nav(rawProps: NavProps) {
         },
         get selectedKeysIsControlled() {
             return local.selectedKeys !== undefined;
+        },
+        get styles() {
+            return local.styles;
         },
         get subNavCloseDelay() {
             return local.subNavCloseDelay;
@@ -297,7 +303,7 @@ export default function Nav(rawProps: NavProps) {
                         </Show>
                         <For each={headerTokens()}>{(token) => <HeaderView {...token.props} />}</For>
                         <div class={clsx(`${prefix}-list-wrapper`, local.classNames?.body)} style={local.styles?.body}>
-                            <ul class={`${prefix}-list`}>
+                            <ul class={clsx(`${prefix}-list`, local.classNames?.list)} style={local.styles?.list}>
                                 <NavNodes nodes={listNodes()} />
                             </ul>
                         </div>

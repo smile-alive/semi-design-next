@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | 底部标记配置，包含 `shape`、`text`、`bgColor`、`textColor`、`className` 和 `style`；传入 `render` 时完全由它渲染。仅在 `extra-small` 至 `extra-large` 的预设尺寸下显示。 | <ApiType detail={"{ render?: () => React.ReactNode; shape?: 'circle' \u007c 'square'; text: React.ReactNode; bgColor?: string; textColor?: string; className?: string; style?: CSSProperties; }"}>Type</ApiType> | - |
 | children | 头像内的文字或自定义内容。 | `React.ReactNode` | - |
 | className | 头像主体元素（`.semi-avatar`）的类名；使用额外边框或顶部、底部标记时，它位于外层包裹元素之内。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `image`、`label`、`mask`、`border`，与组件自带的类名合并。`image` 是图片，`label` 是文字头像的文字，`mask` 是悬停遮罩，`border` 是额外边框（开启边框动效时动画圈同样应用）。 | <ApiType detail={"Partial\u003cRecord\u003cAvatarPart, string>>"}>Type</ApiType> | - |
 | color | 头像的预设背景颜色，可选 `amber`、`blue`、`cyan`、`green`、`grey`、`indigo`、`light-blue`、`light-green`、`lime`、`orange`、`pink`、`purple`、`red`、`teal`、`violet`、`yellow`；图片头像不使用。 | `AvatarColor` | `"grey"` |
 | contentMotion | 启用头像内容区域的动画。 | `boolean` | - |
 | gap | 文字内容与头像左右两侧的间距，单位为像素。 | `number` | `3` |
@@ -24,4 +25,5 @@ import ApiType from '#/components/ApiType.astro';
 | src | 图片头像的资源地址。 | `string` | - |
 | srcSet | 图片头像的响应式资源集合。 | `string` | - |
 | style | 头像样式；使用额外边框、顶部或底部标记时，样式落在外层包裹元素上。 | `CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cAvatarPart, CSSProperties>>"}>Type</ApiType> | - |
 | topSlot | 顶部标记配置，包含 `text`、`gradientStart`、`gradientEnd`、`textColor`、`className` 和 `style`；传入 `render` 时完全由它渲染。仅在圆形且预设尺寸为 `extra-small` 至 `extra-large` 时显示，渐变色未设置时使用 `var(--semi-color-primary)`。 | <ApiType detail={"{ render?: () => React.ReactNode; gradientStart?: string; gradientEnd?: string; text: React.ReactNode; textColor?: string; className?: string; style?: CSSProperties; }"}>Type</ApiType> | - |

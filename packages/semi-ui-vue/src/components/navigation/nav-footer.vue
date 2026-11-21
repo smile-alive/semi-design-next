@@ -23,7 +23,7 @@
     <div :class="[`${prefix}-footer`, { [`${prefix}-footer-collapsed`]: ctx.view.value.isCollapsed }]">
         <template v-if="showButton()">
             <slot v-if="$slots.collapseButton" name="collapseButton" />
-            <CollapseButton v-else :collapsed="ctx.view.value.isCollapsed" @toggle="ctx.toggleCollapsed">
+            <CollapseButton v-else :class="props.classNames?.collapseButton" :collapsed="ctx.view.value.isCollapsed" :style="props.styles?.collapseButton" @toggle="ctx.toggleCollapsed">
                 <template v-if="$slots.collapseText" #collapseText="slotProps">
                     <slot v-bind="slotProps" name="collapseText" />
                 </template>

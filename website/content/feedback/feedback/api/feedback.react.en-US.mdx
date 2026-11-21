@@ -9,7 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | checkboxGroupProps | Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label. | <ApiType detail={"Omit\u003cCheckboxGroupProps, 'value'>"}>Type</ApiType> | - |
 | children | Feedback content for type custom. | `React.ReactNode` | - |
 | className | Class name of the panel root, merged with the built-in class names. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `mask`, `header` and `body`; merged with the built-in classes. Passed through to the Modal or SideSheet of the current mode. | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `mask`, `content` (the panel with `role="dialog"`), `header`, `title`, `close`, `body`, `footer` and `emoji` (a single emoji option when `type` is `emoji`); merged with the built-in classes. Keys other than `emoji` are passed through to the Modal or SideSheet of the current mode. | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, string>>"}>Type</ApiType> | - |
 | closable | Whether to show the close button. Passed through to the Modal or SideSheet of the current mode. | `boolean` | - |
 | closeIcon | Icon inside the close button. Passed through to the Modal or SideSheet of the current mode. | `ReactNode` | - |
 | closeOnEsc | Whether Esc closes the panel, passed through to the Modal or SideSheet of the current mode. In popup mode it must be true for Esc to call onCancel. | `boolean` | - |
@@ -30,7 +30,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderContent | Wraps the feedback content: receives the built-in content (the children for type custom) and returns the wrapped node. | <ApiType detail={"(content: React.ReactNode) => React.ReactNode"}>Type</ApiType> | - |
 | size | Size of the panel. Passed through to the Modal or SideSheet of the current mode. | `Size` | - |
 | style | Inline style, applied to the role="dialog" element in popup mode and to the `.semi-modal` dialog box in modal mode. | `CSSProperties` | - |
-| styles | Inline styles of the inner parts, keyed like `classNames`. Passed through to the Modal or SideSheet of the current mode. | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, React.CSSProperties>>"}>Type</ApiType> | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | textAreaProps | Props of the multi-line input for the text and emoji types, written as the props of TextArea. Feedback takes over onChange, and your onChange is still called. | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |
 | title | Title of the panel. | `ReactNode` | - |
 | type | Type of the feedback content: `emoji`, `text`, `radio`, `checkbox` or `custom`. For custom, the content goes in children or is produced by renderContent. | `'checkbox' \| 'custom' \| 'emoji' \| 'radio' \| 'text'` | `"emoji"` |

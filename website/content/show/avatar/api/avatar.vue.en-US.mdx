@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | alt | Alternative text for the avatar image or text. | `string` | `semiGlobalDefault("Avatar", "alt")` |
 | border | Additional border, with optional color and animation. | <ApiType detail={"boolean \u007c { color?: string \u007c undefined; motion?: boolean \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Avatar", "border")` |
 | bottomSlot | Shape, background color, text color, class and style of the bottom badge; use the bottomSlotText slot for its content. | `AvatarBottomSlot` | `semiGlobalDefault("Avatar", "bottomSlot")` |
+| classNames | Class names of the inner parts, keyed by image, label, mask and border; values take any class binding and merge with the built-in classes. image is the picture, label the text of a text avatar, mask the hover overlay and border the additional border (the animated ring too when the border motion is on). | <ApiType detail={"Partial\u003cRecord\u003cAvatarPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Avatar", "classNames")` |
 | color | Preset background color of the avatar. | `AvatarColor` | `"grey"` |
 | contentMotion | Enables animation in the avatar content area. | `boolean` | `semiGlobalDefault("Avatar", "contentMotion")` |
 | gap | Space in pixels between the text and either side of the avatar. | `number` | `3` |
@@ -16,6 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Avatar size, as a preset name or a valid CSS size. | `string` | `undefined` |
 | src | Image source URL. | `string` | `semiGlobalDefault("Avatar", "src")` |
 | srcSet | Responsive image sources. | `string` | `semiGlobalDefault("Avatar", "srcSet")` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cAvatarPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Avatar", "styles")` |
 | topSlot | Gradient, text color, class and style of the top badge; use the topSlotText slot for its content. | `AvatarTopSlot` | `semiGlobalDefault("Avatar", "topSlot")` |
 
 **Events**

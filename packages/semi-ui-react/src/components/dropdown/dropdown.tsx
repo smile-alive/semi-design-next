@@ -148,11 +148,30 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
     const { menuDepth } = parentContext;
     const popVisible = props.visible ?? state.popVisible;
     const content = render ?? (Array.isArray(menu) ? renderMenu(menu) : null);
+    const { classNames: parentClassNames, styles: parentStyles } = parentContext;
 
     const contextValue = useMemo(() => {
         const getPopupId = () => tooltipRef.current?.getPopupId();
-        return { showTick, selectionMode, menuDepth: DropdownFoundation.getChildMenuDepth(menuDepth), trigger, close: foundation.close, closeAll: foundation.closeAll, getPopupId };
-    }, [foundation, showTick, selectionMode, menuDepth, trigger]);
+        return {
+            showTick,
+            selectionMode,
+            menuDepth: DropdownFoundation.getChildMenuDepth(menuDepth),
+            trigger,
+            close: foundation.close,
+            closeAll: foundation.closeAll,
+            getPopupId,
+            classNames: {
+                menu: clsx(parentClassNames?.menu, classNames?.menu),
+                item: clsx(parentClassNames?.item, classNames?.item),
+                itemIcon: clsx(parentClassNames?.itemIcon, classNames?.itemIcon),
+            },
+            styles: {
+                menu: { ...parentStyles?.menu, ...styles?.menu },
+                item: { ...parentStyles?.item, ...styles?.item },
+                itemIcon: { ...parentStyles?.itemIcon, ...styles?.itemIcon },
+            },
+        };
+    }, [foundation, showTick, selectionMode, menuDepth, trigger, parentClassNames, parentStyles, classNames, styles]);
 
     // moves focus into the menu when Tooltip gives the popup its initial focus
     const focusTarget = useMemo(() => ({ focus: foundation.handleOpened }), [foundation]);

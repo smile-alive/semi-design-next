@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | 输入框下方内容的 snippet。 | `Snippet` | - |
 | canSend | 发送按钮是否可用。通常由内部逻辑决定，设置后以此值为准。 | `boolean` | - |
 | chats | 对话列表，可绑定：`bind:chats`。发送消息、点赞、重置、清除上下文、删除时，Chat 先把新列表写回，再触发 `onChatsChange`。列表的整体替换、`push` 和最后一条消息文本的就地增长都会被跟随，其他就地修改（如深层 content 改动、单独翻转 status）会渲染但不被跟随，建议整体替换数组。 | `ChatMessage[]` | - |
-| classNames | 内部各部位的类名，键为 hint（提示区最外层）、inputBox（输入框），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cChatPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 messages、dropArea、item、itemAvatar、itemTitle、itemContent、itemActions、divider、hint、hintItem、backBottom、stop、inputBox、input、send，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。messages 是可滚动的消息列表，item\* 作用到每一条消息，hint 是提示词列表容器，inputBox 是底部输入区域的根元素。 | <ApiType detail={"Partial\u003cRecord\u003cChatPart, ClassValue>>"}>Type</ApiType> | - |
 | content | 自定义消息内容区域的 snippet，参数为 `message`、`role`、默认内容 `defaultContent`（snippet）和类名 `class`。 | <ApiType detail={"Snippet\u003c[ChatContentSnippetProps]>"}>Type</ApiType> | - |
 | customMarkDownComponents | 自定义 Markdown 渲染组件，键为元素名，传给消息内容的 MarkdownRender。 | `MarkdownRenderComponents` | - |
 | divider | 自定义清除上下文后的分割线的 snippet，参数为 `message`。 | <ApiType detail={"Snippet\u003c[ChatDividerSnippetProps]>"}>Type</ApiType> | - |

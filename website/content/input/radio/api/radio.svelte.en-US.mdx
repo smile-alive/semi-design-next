@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | addonId | Id of the addon node, which aria-labelledby points to. Generated when omitted. | `string` | - |
 | checked | Whether the radio is checked; bind it with `bind:checked`. Ignored inside a RadioGroup. `bind:checked={get, set}` makes it fully controlled; a plain `checked` is the initial value, a click overrides it inside the component, and a new value from the parent wins again. | `boolean` | - |
 | children | Label content snippet of the radio. The rest of the tag's content is this snippet. | `Snippet` | - |
-| classNames | Class names of the inner parts, keyed by addon (the container wrapping the content); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cRadioPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by icon (the round box), label (the label text) and extra (the supplementary text); values take anything class takes (string, array or object) and merge with the built-in classes. With type set to button there is no icon or extra, and label is the button face. | <ApiType detail={"Partial\u003cRecord\u003cRadioPart, ClassValue>>"}>Type</ApiType> | - |
 | disabled | Whether the radio is disabled. | `boolean` | - |
 | displayMode | When set to vertical, the radio is displayed as a block and takes a line of its own. | `RadioDisplayMode` | - |
 | extra | Snippet of the supplementary text, which aria-describedby points to. Not rendered when type is button. | `Snippet` | - |

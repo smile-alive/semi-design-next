@@ -37,7 +37,7 @@ const isRenderable = (node: unknown) => node != null && typeof node !== 'boolean
 
 export default function Breadcrumb(rawProps: BreadcrumbProps) {
     const props = useDefaultProps('Breadcrumb', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['activeIndex', 'aria-label', 'autoCollapse', 'children', 'class', 'compact', 'maxItemCount', 'moreType', 'onClick', 'ref', 'renderIcon', 'renderItem', 'renderMore', 'routes', 'separator', 'showTooltip']);
+    const [local, rest] = splitProps(props, ['activeIndex', 'aria-label', 'autoCollapse', 'children', 'class', 'classNames', 'compact', 'maxItemCount', 'moreType', 'onClick', 'ref', 'renderIcon', 'renderItem', 'renderMore', 'routes', 'separator', 'showTooltip', 'styles']);
 
     const localeResult = useLocale('Breadcrumb');
 
@@ -60,6 +60,12 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
         },
         get showTooltip() {
             return local.showTooltip;
+        },
+        get classNames() {
+            return local.classNames;
+        },
+        get styles() {
+            return local.styles;
         },
     };
 
@@ -167,7 +173,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
     const moreArea = () => (
         <li ref={handoverFocus} class={`${clsPrefix}-collapse`}>
             <span class={`${clsPrefix}-item-wrap`}>
-                <span class={`${clsPrefix}-item ${clsPrefix}-item-more`} aria-label={localeResult().locale.expand} role="button" tabIndex={0} onClick={foundation.handleExpand} onKeyDown={foundation.handleExpandKeyDown}>
+                <span class={clsx(`${clsPrefix}-item ${clsPrefix}-item-more`, local.classNames?.more)} style={local.styles?.more} aria-label={localeResult().locale.expand} role="button" tabIndex={0} onClick={foundation.handleExpand} onKeyDown={foundation.handleExpandKeyDown}>
                     <Switch fallback={<IconMore />}>
                         <Match when={hasRenderMore()}>
                             <Show keyed when={local.renderMore}>
@@ -202,7 +208,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
                         </Match>
                     </Switch>
                 </span>
-                <span class={`${clsPrefix}-separator`} x-semi-prop="separator">
+                <span class={clsx(`${clsPrefix}-separator`, local.classNames?.separator)} style={local.styles?.separator} x-semi-prop="separator">
                     {local.separator}
                 </span>
             </span>
@@ -221,7 +227,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
                 })}
                 aria-label={local['aria-label'] ?? localeResult().locale.label}
             >
-                <ol ref={(node) => (listElement = node)} class={`${clsPrefix}-list`}>
+                <ol ref={(node) => (listElement = node)} class={clsx(`${clsPrefix}-list`, local.classNames?.list)} style={local.styles?.list}>
                     <For each={visible()}>
                         {(entry) => (
                             <Show when={entry !== MORE} fallback={moreArea()}>

@@ -38,10 +38,10 @@
     onMount(() => searchInput?.focus());
 </script>
 
-<search aria-label={locale().locale.search} class={`${prefix}-search-bar-container`} style="position: absolute; top: 20px; right: 20px">
+<search aria-label={locale().locale.search} class={[`${prefix}-search-bar-container`, ctx.classNames?.searchBox]} style={['position: absolute; top: 20px; right: 20px', ctx.styles?.searchBox].filter(Boolean).join('; ')}>
     <div class={`${prefix}-search-bar`}>
-        <Input aria-label={locale().locale.search} bind:this={searchInput} class={`${prefix}-search-bar-input`} composition onChange={onSearchInput} onKeyDown={closeOnEscape} placeholder={locale().locale.search} showClear={false} />
-        <ul class={`${prefix}-search-options`}>
+        <Input aria-label={locale().locale.search} bind:this={searchInput} class={[`${prefix}-search-bar-input`, ctx.classNames?.searchInput]} composition onChange={onSearchInput} onKeyDown={closeOnEscape} placeholder={locale().locale.search} showClear={false} style={ctx.styles?.searchInput} />
+        <ul class={[`${prefix}-search-options`, ctx.classNames?.searchOptions]} style={ctx.styles?.searchOptions}>
             {#each searchOptionItems as item (item.key)}
                 <li class={[`${prefix}-search-options-item`, { [`${prefix}-search-options-item-active`]: ctx.searchOptions[item.key] }]}>
                     <Button aria-label={locale().locale[item.key]} aria-pressed={ctx.searchOptions[item.key]} theme="borderless" type="tertiary" onclick={() => ctx.toggleSearchOption(item.key)} onkeydown={closeOnEscape}>
@@ -71,7 +71,7 @@
         </Button>
     </div>
     <div class={`${prefix}-replace-bar`}>
-        <Input aria-label={locale().locale.replaceWith} bind:value={() => replaceText, (next) => (replaceText = String(next ?? ''))} class={`${prefix}-replace-bar-input`} onKeyDown={closeOnEscape} placeholder={locale().locale.replace} showClear={false} />
+        <Input aria-label={locale().locale.replaceWith} bind:value={() => replaceText, (next) => (replaceText = String(next ?? ''))} class={[`${prefix}-replace-bar-input`, ctx.classNames?.replaceInput]} onKeyDown={closeOnEscape} placeholder={locale().locale.replace} showClear={false} style={ctx.styles?.replaceInput} />
         <Button disabled={ctx.readOnly} style="width: fit-content" onclick={() => ctx.replace(replaceText)} onkeydown={closeOnEscape}>
             {locale().locale.replace}
         </Button>

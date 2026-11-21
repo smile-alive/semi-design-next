@@ -28,6 +28,16 @@ describe('PinCode', () => {
         semiGlobal.config.overrideDefaultProps = {};
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        render(() => <PinCode count={3} classNames={{ input: 'my-input' }} styles={{ input: { order: '2' } }} />);
+        const cells = Array.from(document.querySelectorAll(`${wrapperSelector} > .${BASE_CLASS_PREFIX}-input-wrapper`));
+        expect(cells).toHaveLength(3);
+        for (const cell of cells) {
+            expect(cell).toHaveClass('my-input');
+            expect(cell).toHaveStyle({ order: '2' });
+        }
+    });
+
     it('正常渲染不崩溃', () => {
         render(() => <PinCode />);
         expect(getWrapper()).not.toBeNull();

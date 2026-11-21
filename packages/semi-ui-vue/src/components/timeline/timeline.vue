@@ -1,20 +1,26 @@
 <script setup lang="ts">
+    import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
     import { getPosCls } from '@fibrae/semi-foundation/components/timeline/utils';
     import '@fibrae/semi-foundation/components/timeline/timeline.scss';
     import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
     import { slotNodes } from '../../utils/index';
+    import { provideTimelineContext } from './context';
     import type { TimelineProps, TimelineSlots } from './interface';
     import TimelineItem from './timeline-item.vue';
 
     const props = withDefaults(defineProps<TimelineProps & /* @vue-ignore */ ElementProps<'ul', keyof TimelineProps>>(), {
+        classNames: semiGlobalDefault('Timeline', 'classNames'),
         mode: () => semiDefault('Timeline', 'mode', 'left'),
         dataSource: semiGlobalDefault('Timeline', 'dataSource'),
+        styles: semiGlobalDefault('Timeline', 'styles'),
     });
 
     const slots = defineSlots<TimelineSlots>();
 
     const prefixCls = cssClasses.PREFIX;
+
+    provideTimelineContext(computed(() => ({ classNames: props.classNames, styles: props.styles })));
 
     const childNodes = () => slotNodes(slots.default?.() ?? []);
 </script>
@@ -22,7 +28,18 @@
 <template>
     <ul :class="[prefixCls, { [`${prefixCls}-${props.mode}`]: props.mode }]">
         <template v-if="props.dataSource?.length">
-            <TimelineItem v-for="(item, index) in props.dataSource" :key="index" :class="[item.class, getPosCls(props.mode, item.position, index)]" :color="item.color" :position="item.position" :style="item.style" :type="item.type" v-bind="item.onClick ? { onClick: item.onClick } : {}">
+            <TimelineItem
+                v-for="(item, index) in props.dataSource"
+                :key="index"
+                :class="[item.class, getPosCls(props.mode, item.position, index)]"
+                :classNames="item.classNames"
+                :color="item.color"
+                :position="item.position"
+                :style="item.style"
+                :styles="item.styles"
+                :type="item.type"
+                v-bind="item.onClick ? { onClick: item.onClick } : {}"
+            >
                 <template #dot>
                     <slot :index="index" :item="item" name="dot" />
                 </template>

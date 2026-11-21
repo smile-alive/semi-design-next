@@ -38,7 +38,7 @@ export default function FormSlot({ children, label: rawLabel, className, style, 
     const generatedId = useId();
     let slotError = null;
 
-    const formProps = fieldBridge ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol']) : {};
+    const formProps = fieldBridge ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol', 'classNames', 'styles']) : {};
     const { labelCol, wrapperCol, labelWidth, labelAlign } = formProps;
     const labelPosition = slotLabelPosition || formProps.labelPosition || 'top';
     const appendCol = labelCol && wrapperCol;
@@ -73,13 +73,13 @@ export default function FormSlot({ children, label: rawLabel, className, style, 
     };
 
     const ariaLabelledby = joinIds(rest['aria-labelledby'], labelId);
-    const mainCls = `${prefix}-field-main ${prefix}-slot-main`;
+    const mainCls = clsx(`${prefix}-field-main`, `${prefix}-slot-main`, formProps.classNames?.content);
 
     if (!appendCol) {
         content = (
             <>
                 {!noLabel && <Label {...mergeLabelProps} />}
-                <div className={mainCls}>
+                <div className={mainCls} style={formProps.styles?.content}>
                     {children}
                     {slotError}
                 </div>
@@ -96,7 +96,7 @@ export default function FormSlot({ children, label: rawLabel, className, style, 
                 {/* a top label takes a line of its own, or a Row would lay it out beside the wrapper column */}
                 {labelPosition === 'top' ? <div style={{ flexBasis: '100%' }}>{labelColContent}</div> : labelColContent}
                 <Col {...wrapperCol}>
-                    <div className={mainCls}>
+                    <div className={mainCls} style={formProps.styles?.content}>
                         {children}
                         {slotError}
                     </div>

@@ -661,15 +661,47 @@ describe('AIChatInput', () => {
         });
 
         it('classNames 与 styles 按部位落到对应元素', async () => {
-            const { container } = await setup({ skills, skillHotKey: '/', classNames: { templates: 'tpl-cls' }, styles: { templates: 'order: 3' } }, { template: true });
+            const parts = ['references', 'reference', 'attachments', 'attachment', 'editor', 'footer', 'configure', 'actions', 'upload', 'send', 'templates', 'skills', 'skillItem', 'suggestions', 'suggestionItem'] as const;
+            const classNames = Object.fromEntries(parts.map((part) => [part, `${part}-cls`]));
+            const styles = Object.fromEntries(parts.map((part, index) => [part, `order: ${index + 1}`]));
+            const selectors = {
+                references: `.${prefix}-references`,
+                reference: `.${prefix}-reference`,
+                attachments: `.${prefix}-scroll-wrapper`,
+                attachment: `.${prefix}-attachment`,
+                editor: `.${prefix}-editor-content`,
+                footer: `.${prefix}-footer`,
+                configure: `.${prefix}-footer-configure`,
+                actions: `.${prefix}-footer-action`,
+                upload: `.${prefix}-footer-action-upload`,
+                send: `.${prefix}-footer-action-send`,
+                templates: `.${prefix}-template`,
+                skills: `.${prefix}-skill`,
+                skillItem: `.${prefix}-skill-item`,
+                suggestions: `.${prefix}-suggestion`,
+                suggestionItem: `.${prefix}-suggestion-item`,
+            };
+            const expectPart = async (part: (typeof parts)[number]) => {
+                await waitFor(() => expect(document.querySelector(selectors[part])).not.toBeNull());
+                const node = query(selectors[part]);
+                expect(node).toHaveClass(`${part}-cls`);
+                expect(node).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            };
+            const { container, update } = await setup({ skills, skillHotKey: '/', references: refs, uploadProps: { defaultFileList: files }, classNames, styles }, { template: true });
+            for (const part of ['references', 'reference', 'attachments', 'attachment', 'editor', 'footer', 'configure', 'actions', 'upload', 'send'] as const) {
+                await expectPart(part);
+            }
+            await update({ suggestions: ['first'] });
+            await expectPart('suggestions');
+            await expectPart('suggestionItem');
+            await keyDown(container, 'Escape');
+            await update({ suggestions: undefined });
             await keyDown(container, '/');
-            await waitFor(() => expect(skillItems()).toHaveLength(2));
+            await expectPart('skills');
+            await expectPart('skillItem');
             await keyDown(container, 'Enter');
             await fireEvent.click(templateButton(container));
-            await waitFor(() => expect(document.querySelector(`.${prefix}-template`)).not.toBeNull());
-            const panel = query(`.${prefix}-template`);
-            expect(panel).toHaveClass('tpl-cls');
-            expect(panel).toHaveStyle({ order: '3' });
+            await expectPart('templates');
         });
 
         it('模板按钮打开 template，并传入 skill 与内容 setter', async () => {

@@ -27,6 +27,29 @@ afterEach(() => {
 });
 
 describe('Progress', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['rail', 'track', 'text'] as const;
+        const selectors = {
+            line: { rail: 'track', track: 'track-inner', text: 'line-text' },
+            circle: { rail: 'circle-ring-track', track: 'circle-ring-inner', text: 'circle-text' },
+        };
+        for (const type of ['line', 'circle'] as const) {
+            const { container, unmount } = setup({
+                type,
+                showInfo: true,
+                percent: 30,
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            });
+            for (const part of parts) {
+                const el = container.querySelector(`.${prefixCls}-${selectors[type][part]}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+            unmount();
+        }
+    });
+
     it('percent 传入 NaN 时抛出错误', () => {
         const { update } = setup({ percent: 30 });
         expect(() => update({ percent: Number.NaN })).toThrow('[Semi Progress]:percent can not be NaN');

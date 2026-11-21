@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | allowEmpty | 值变为空的字段是否在 values 中保留 key。字段上的同名属性优先。 | `boolean` | `false` |
 | autoScrollToError | 提交或调用 formApi.validate 校验失败时，是否自动滚动到出错的字段；传对象时作为 scroll-into-view-if-needed 的选项。 | `boolean \| Options` | `false` |
+| classNames | 内部各部位的类名，键为 `label`、`labelText`、`labelExtra`、`labelTooltip`、`content`、`help`、`extra`，作用到表单内全部字段的标签、内容区、帮助文字与附加说明，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cFormPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Form", "classNames")` |
 | disabled | 统一应用在每个字段上的 disabled，字段自身的 disabled 优先。 | `boolean` | `semiGlobalDefault("Form", "disabled")` |
 | extraTextPosition | 统一应用在每个字段上的 extraText 位置，middle 在 Label 与控件之间，bottom 在控件之后。字段上的同名属性优先。 | `"bottom" \| "middle"` | `semiGlobalDefault("Form", "extraTextPosition")` |
 | form | useForm 返回的 formApi，用于在 Form 外部控制表单。 | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | `undefined` |
@@ -22,6 +23,7 @@ import ApiType from '#/components/ApiType.astro';
 | showValidateIcon | 校验信息前是否显示对应状态的图标。 | `boolean` | `true` |
 | stopPropagation | 是否阻止 submit、reset 事件冒泡，用于嵌套 Form 时避免触发外层 Form 的事件。 | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `semiGlobalDefault("Form", "stopPropagation")` |
 | stopValidateWithError | 使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。 | `boolean` | `semiGlobalDefault("Form", "stopValidateWithError")` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cFormPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Form", "styles")` |
 | trigger | 统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。 | `FieldValidateTriggerType` | `semiGlobalDefault("Form", "trigger")` |
 | validator | Form 级别的校验函数，submit 与 formApi.validate 时调用，支持返回 Promise，与 `schema` 互斥。设置后字段自身的 validator 与 rules 不再生效。返回空值或空对象表示通过，失败时返回与 values 结构相同的错误对象，每个错误是字符串或字符串数组。 | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | `undefined` |
 | wrapperCol | 统一应用在每个字段上的控件栅格布局，同 Col 的 span、offset 等属性，需与 labelCol 一起设置。 | `ColProps` | `semiGlobalDefault("Form", "wrapperCol")` |

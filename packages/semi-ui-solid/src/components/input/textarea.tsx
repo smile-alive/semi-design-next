@@ -363,7 +363,8 @@ export default function TextArea(rawProps: TextAreaProps) {
                 <button
                     ref={setClearButton}
                     type="button"
-                    class={`${prefixCls}-clearbtn`}
+                    class={clsx(`${prefixCls}-clearbtn`, local.classNames?.clear)}
+                    style={local.styles?.clear}
                     aria-label={locale().locale.clear}
                     // a native listener, so the foundation's stopPropagation keeps the click from outer listeners too
                     on:click={foundation.handleClearClick}
@@ -374,7 +375,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                 </button>
             </Show>
             <Show when={hasCounter()}>
-                <div id={counterId} class={clsx(`${prefixCls}-textarea-counter`, { [`${prefixCls}-textarea-counter-exceed`]: exceeds() })} onClick={foundation.handleCounterClick}>
+                <div id={counterId} class={clsx(`${prefixCls}-textarea-counter`, { [`${prefixCls}-textarea-counter-exceed`]: exceeds() }, local.classNames?.counter)} style={local.styles?.counter} onClick={foundation.handleCounterClick}>
                     {count()}
                     <Show when={local.maxCount}>/{local.maxCount}</Show>
                 </div>

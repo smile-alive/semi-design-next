@@ -28,7 +28,7 @@
 </script>
 
 <template>
-    <div :class="`${table.view.value.prefixCls}-pagination-outer`">
+    <div :class="[`${table.view.value.prefixCls}-pagination-outer`, table.view.value.classNames?.pagination]" :style="table.view.value.styles?.pagination">
         <template v-for="(nodes, nodesIndex) in [custom()]" :key="nodesIndex">
             <template v-if="nodes">
                 <component :is="node" v-for="[node, key] in nodes" :key="key" />

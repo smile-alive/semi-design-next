@@ -99,11 +99,72 @@ describe('Select', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        renderSelect({ classNames: { dropdown: 'ddc' }, styles: { dropdown: { color: 'red' } }, defaultOpen: true });
-        const dropdown = document.querySelector('.ddc');
-        expect(dropdown).not.toBeNull();
-        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(dropdown).toContainElement(getOptionList());
+        const parts = ['prefix', 'suffix', 'content', 'placeholder', 'input', 'search', 'tag', 'clear', 'arrow', 'dropdown', 'list', 'empty', 'groupLabel', 'item', 'itemIcon', 'itemContent'] as const;
+        const partProps = {
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }])),
+        };
+        const expectPart = (selector: string, part: (typeof parts)[number]) => {
+            const el = document.querySelector(selector);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        };
+
+        const { unmount } = renderSelect({
+            ...partProps,
+            multiple: true,
+            filter: true,
+            showClear: true,
+            defaultOpen: true,
+            defaultValue: ['abc'],
+            prefix: 'pre',
+            suffix: 'suf',
+            children: (
+                <Select.OptGroup label="g">
+                    <Option value="abc" label="Abc" />
+                </Select.OptGroup>
+            ),
+        });
+        expectPart(`.${prefixCls}-prefix`, 'prefix');
+        expectPart(`.${prefixCls}-suffix`, 'suffix');
+        expectPart(`.${prefixCls}-selection`, 'content');
+        expectPart(`.${prefixCls}-input`, 'input');
+        expectPart(`.${BASE_CLASS_PREFIX}-tag`, 'tag');
+        expectPart(`.${prefixCls}-clear`, 'clear');
+        expectPart(`.${prefixCls}-arrow`, 'arrow');
+        expectPart(`.${prefixCls}-option-list-wrapper`, 'dropdown');
+        expectPart(`.${prefixCls}-option-list`, 'list');
+        expectPart(`.${prefixCls}-group`, 'groupLabel');
+        expectPart(`.${prefixCls}-option`, 'item');
+        expectPart(`.${prefixCls}-option-icon`, 'itemIcon');
+        expectPart(`.${prefixCls}-option-text`, 'itemContent');
+        unmount();
+
+        renderSelect({ ...partProps, filter: true, searchPosition: 'dropdown', defaultOpen: true, placeholder: 'p', optionList: [], children: undefined });
+        expectPart(`.${prefixCls}-selection-placeholder`, 'placeholder');
+        expectPart(`.${prefixCls}-dropdown-search-wrapper`, 'search');
+        expectPart(`.${prefixCls}-option-empty`, 'empty');
+        expect(document.querySelector(`.${prefixCls}-option-empty`)).not.toHaveClass('my-item');
+    });
+
+    it('Select 的 item 系列键先于 Select.Option 自己的 classNames 与 styles 生效', () => {
+        renderSelect({
+            defaultOpen: true,
+            classNames: { item: 'p-item', itemIcon: 'p-icon', itemContent: 'p-content' },
+            styles: { item: { order: '1', color: 'red' }, itemIcon: { order: '1' }, itemContent: { order: '1' } },
+            children: <Option value="abc" label="Abc" class="own-item" style={{ order: '2' }} classNames={{ icon: 'own-icon', content: 'own-content' }} styles={{ icon: { order: '2' }, content: { order: '2' } }} />,
+        });
+        const option = getOptions()[0];
+        expect(option.className).toMatch(/p-item.*own-item/);
+        expect(option).toHaveStyle({ order: '2', color: 'rgb(255, 0, 0)' });
+        for (const [selector, name] of [
+            [`.${prefixCls}-option-icon`, 'icon'],
+            [`.${prefixCls}-option-text`, 'content'],
+        ]) {
+            const el = option.querySelector(selector)!;
+            expect(el.className).toMatch(new RegExp(`p-${name}.*own-${name}`));
+            expect(el).toHaveStyle({ order: '2' });
+        }
     });
 
     it('不同位置', () => {

@@ -10,8 +10,10 @@
     const props = withDefaults(defineProps<DividerProps & /* @vue-ignore */ ElementProps<'div', keyof DividerProps>>(), {
         layout: () => semiDefault('Divider', 'layout', 'horizontal'),
         align: () => semiDefault('Divider', 'align', 'center'),
+        classNames: semiGlobalDefault('Divider', 'classNames'),
         dashed: semiGlobalDefault('Divider', 'dashed'),
         margin: semiGlobalDefault('Divider', 'margin'),
+        styles: semiGlobalDefault('Divider', 'styles'),
     });
 
     const slots = defineSlots<DividerSlots>();
@@ -47,7 +49,7 @@
 <template>
     <div :aria-orientation="props.layout === 'vertical' ? 'vertical' : undefined" :class="rootClass()" :role="content().length ? undefined : 'separator'" :style="marginStyle">
         <template v-for="(nodes, i) in [content()]" :key="i">
-            <span v-if="nodes.length && isText(nodes)" :class="`${prefixCls}_inner-text`" x-semi-prop="children">
+            <span v-if="nodes.length && isText(nodes)" :class="[`${prefixCls}_inner-text`, props.classNames?.content]" :style="props.styles?.content" x-semi-prop="children">
                 <component :is="node" v-for="[node, key] in nodes" :key="key" />
             </span>
             <template v-else>

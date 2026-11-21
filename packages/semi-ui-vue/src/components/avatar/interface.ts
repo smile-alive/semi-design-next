@@ -1,5 +1,5 @@
-import type { CSSProperties, ImgHTMLAttributes, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
+import type { ClassValue, CSSProperties, ImgHTMLAttributes, StyleValue, VNode } from 'vue';
+import type { AvatarGroupPart, AvatarPart, strings } from '@fibrae/semi-foundation/components/avatar/constants';
 
 export type AvatarShape = 'circle' | 'square';
 export type AvatarSize = (typeof strings.SIZE)[number];
@@ -31,6 +31,8 @@ export interface AvatarProps {
     bottomSlot?: AvatarBottomSlot;
     border?: boolean | { color?: string; motion?: boolean };
     contentMotion?: boolean;
+    classNames?: Partial<Record<AvatarPart, ClassValue>>;
+    styles?: Partial<Record<AvatarPart, StyleValue>>;
     /** Returning `false` keeps the broken image instead of falling back to the content */
     onError?: (event: Event) => boolean | void;
 }
@@ -55,6 +57,8 @@ export interface AvatarGroupProps {
     size?: string;
     overlapFrom?: AvatarGroupOverlapFrom;
     maxCount?: number;
+    classNames?: Partial<Record<AvatarGroupPart, ClassValue>>;
+    styles?: Partial<Record<AvatarGroupPart, StyleValue>>;
 }
 export interface AvatarGroupSlots {
     default?: () => VNode[];

@@ -10,6 +10,10 @@
                 "zh-CN": "超出 maxItemCount 后是否自动折叠。",
                 "en-US": "Whether items beyond maxItemCount collapse automatically."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `list`、`item`、`itemLink`、`itemIcon`、`itemTitle`、`separator`、`more`，与组件自带的类名合并。`item*` 作用到每一项，`separator` 同时作用于折叠项后的分隔符，`more` 是省略号按钮。",
+                "en-US": "Class names of the inner parts, keyed by `list`, `item`, `itemLink`, `itemIcon`, `itemTitle`, `separator` and `more`; merged with the built-in classes. The `item*` keys apply to every item, `separator` also reaches the separator after the ellipsis, and `more` is the ellipsis button."
+            },
             "compact": {
                 "zh-CN": "是否使用紧凑尺寸，影响图标与文字的尺寸。",
                 "en-US": "Whether the compact size is used, which sets the size of icons and text."
@@ -49,12 +53,20 @@
             "showTooltip": {
                 "zh-CN": "是否在标题溢出时展示 Tooltip 及相关配置：width 为截断宽度，数字按 px 计算，传 'auto' 时不截断；ellipsisPos 为截断位置，end 或 middle；opts 为传给 Tooltip 的属性，不含 content。传 false 时不展示 Tooltip。",
                 "en-US": "Whether a Tooltip shows for an overflowing title, with its options: width is the truncation width, a number in px or 'auto' for no truncation; ellipsisPos truncates at the end or in the middle; opts are passed to the Tooltip without content. false hides the Tooltip."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             }
         }
     },
     "breadcrumb-item": {
         "source": "packages/semi-ui-solid/src/components/breadcrumb/item.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "该项内部各部位的类名，键为 `link`、`icon`、`title`、`separator`，与组件自带的类名合并，写在 Breadcrumb 的 `item*` 类名之后。`separator` 在通过 `separator` 属性传入自定义分隔符时不生效。",
+                "en-US": "Class names of the inner parts of this item, keyed by `link`, `icon`, `title` and `separator`; merged with the built-in classes, after the `item*` class names of Breadcrumb. `separator` has no effect when a custom separator is passed through the `separator` prop."
+            },
             "href": {
                 "zh-CN": "链接的目的地，挂载在 a 标签上；当前项不渲染为链接。",
                 "en-US": "Destination of the link, mounted on an a element. The current item does not render as a link."
@@ -74,6 +86,10 @@
             "separator": {
                 "zh-CN": "该项之后的分隔符，覆盖 Breadcrumb 的 separator，可以是文字或 JSX 元素。",
                 "en-US": "Separator after this item, overriding the separator of Breadcrumb. It is text or a JSX element."
+            },
+            "styles": {
+                "zh-CN": "该项内部各部位的内联样式，键同 `classNames`，写在 Breadcrumb 的 `styles` 之后。",
+                "en-US": "Inline styles of the inner parts of this item, keyed like `classNames`, after `styles` of Breadcrumb."
             }
         }
     }

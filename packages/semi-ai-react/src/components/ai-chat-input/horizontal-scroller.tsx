@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, type CSSProperties, type ReactNode } from 'react';
+import clsx from 'clsx';
 import { numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { IconChevronRightStroked } from '@fibrae/semi-icons-react';
 import { useFocusHandover, useLocale, useResizeObserver } from '@fibrae/semi-ui-react/hooks';
 
-export default function HorizontalScroller({ children, prefix }) {
+export default function HorizontalScroller({ children, prefix, className, style }: { children: ReactNode; prefix: string; className?: string; style?: CSSProperties }) {
     const { locale } = useLocale('AIChatInput');
 
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -39,7 +40,7 @@ export default function HorizontalScroller({ children, prefix }) {
     useEffect(() => checkScrollAbility(), [checkScrollAbility, children]);
 
     return (
-        <div ref={wrapperRef} className={`${prefix}-scroll-wrapper`}>
+        <div ref={wrapperRef} className={clsx(`${prefix}-scroll-wrapper`, className)} style={style}>
             {canScrollLeft && (
                 <button ref={handoverFromLeft} type="button" className={`${prefix}-scroll-button ${prefix}-scroll-button-left`} aria-label={locale.scrollLeft} onClick={handleScrollLeft}>
                     <IconChevronRightStroked className={`${prefix}-scroll-button-left-icon`} />

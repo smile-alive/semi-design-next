@@ -1,8 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                  | Type     | Default |
-| -------- | -------------------------------------------- | -------- | ------- |
-| rows     | Number of rows in the placeholder paragraph. | `number` | `4`     |
+| Property   | Description                                                                                                            | Type                                                                              | Default     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------- |
+| classNames | Class names of the inner parts, keyed by `row`; merged with the built-in classes. `row` is each `li` of the paragraph. | <ApiType detail={"Partial\u003cRecord\u003c\"row\", ClassValue>>"}>Type</ApiType> | `undefined` |
+| rows       | Number of rows in the placeholder paragraph.                                                                           | `number`                                                                          | `4`         |
+| styles     | Inline styles of the inner parts, keyed like `classNames`.                                                             | <ApiType detail={"Partial\u003cRecord\u003c\"row\", StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

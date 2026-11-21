@@ -1,5 +1,5 @@
 import { createContext } from '../../base/index.js';
-import type { RadioChangeEvent, RadioGroupButtonSize, RadioMode, RadioValue } from './interface.js';
+import type { RadioChangeEvent, RadioGroupButtonSize, RadioGroupProps, RadioMode, RadioValue } from './interface.js';
 
 // Read by property, so a radio re-renders for the keys it uses only.
 export interface RadioGroupContextValue {
@@ -11,6 +11,8 @@ export interface RadioGroupContextValue {
     readonly isPureCardRadio: boolean;
     readonly buttonSize: RadioGroupButtonSize;
     readonly mode: RadioMode;
+    readonly classNames: RadioGroupProps['classNames'];
+    readonly styles: RadioGroupProps['styles'];
     handleChange: (event: RadioChangeEvent) => void;
     /** Registers a radio's DOM write-back and returns its unregister function. */
     register: (sync: () => void) => () => void;

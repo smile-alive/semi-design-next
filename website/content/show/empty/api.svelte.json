@@ -8,8 +8,8 @@
                 "en-US": "Placeholder image in dark mode, following the theme-mode attribute of the html element. Takes the same values as image."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 image，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by image; values take anything class takes (string, array or object) and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 image、title、description、footer（children 所在的底部区域），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by image, title, description and footer (the bottom area holding children); values take anything class takes (string, array or object) and merge with the built-in classes."
             },
             "description": { "zh-CN": "描述内容。", "en-US": "Description content." },
             "image": {

@@ -11,6 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoFocus | Focuses the rating on mount, on the same radio that `focus()` picks. | `boolean` | - |
 | character | Character drawn in every star, a React node such as `<IconLikeHeart />`; the star icon when not set. When it is a plain text string, that text is the unit in each star's accessible name and the group summary. | `React.ReactNode` | - |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `item` and `dropdown`; merged with the built-in classes. `item` is a single star; `dropdown` is the tip popup shown when `tooltips` is set. | <ApiType detail={"Partial\u003cRecord\u003cRatingPart, string>>"}>Type</ApiType> | - |
 | count | Total number of stars. | `number` | `5` |
 | defaultValue | Initial value when uncontrolled. | `number` | `0` |
 | disabled | Read-only: no interaction and no focus. | `boolean` | - |
@@ -25,6 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | ref | Handle of the component, exposing the `focus()` and `blur()` methods. | <ApiType detail={"React.Ref\u003cRatingHandle>"}>Type</ApiType> | - |
 | size | Size: `default` or `small`, or a number for a custom size. | `'default' \| 'small' \| number` | `"default"` |
 | style | Style of the root element. | `React.CSSProperties` | `{}` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cRatingPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | tooltips | Tooltip text for each star, matched by array index to the star position; an empty or missing item shows no tooltip. | `string[]` | - |
 | value | Controlled value. When given, this value decides what is shown; back to `undefined` it returns to `defaultValue` and becomes uncontrolled. | `number` | - |
 

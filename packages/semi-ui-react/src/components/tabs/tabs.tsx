@@ -157,6 +157,8 @@ function Tabs(rawProps: TabsProps) {
     const contextValue = useMemo(
         () => ({
             activeKey,
+            classNames,
+            styles,
             lazyRender,
             panes,
             tabPaneMotion,
@@ -170,20 +172,18 @@ function Tabs(rawProps: TabsProps) {
             deleteTabItem,
             handleKeyDown: foundation.handleKeyDown,
         }),
-        [activeKey, lazyRender, panes, tabPaneMotion, tabPosition, prevActiveKey, forceDisableMotion, tabsId, everyPanelMounted, tabbableKey, type, deleteTabItem, foundation]
+        [activeKey, classNames, styles, lazyRender, panes, tabPaneMotion, tabPosition, prevActiveKey, forceDisableMotion, tabsId, everyPanelMounted, tabbableKey, type, deleteTabItem, foundation]
     );
 
     const tabBarProps: TabBarProps = {
         activeKey,
-        className: classNames?.tabBar,
-        classNames: { visibleTabs: classNames?.visibleTabs },
+        classNames,
         collapsible,
         list: panes,
         onTabClick: handleTabClick,
         showRestInDropdown,
         size,
-        style: styles?.tabBar,
-        styles: { visibleTabs: styles?.visibleTabs },
+        styles,
         tabBarExtraContent,
         tabPosition,
         type,

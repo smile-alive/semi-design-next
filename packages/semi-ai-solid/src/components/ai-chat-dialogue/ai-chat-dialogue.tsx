@@ -11,7 +11,7 @@ import { useDefaultProps, useFoundation } from '@fibrae/semi-ui-solid/base';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import { useFocusHandover, useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { mergeRefs } from '@fibrae/semi-ui-solid/utils';
-import { AIChatDialogueContext, type AIChatDialogueContextValue } from './context';
+import { AIChatDialogueContext, type AIChatDialogueContextValue, CodePartContext } from './context';
 import Dialogue from './dialogue/dialogue';
 import Hint from './dialogue/dialogue-hint';
 import type { AIChatDialogueHandle, AIChatDialogueProps } from './interface';
@@ -124,6 +124,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
     const view = createMemo(
         () => ({
             align: local.align,
+            classNames: local.classNames,
             dialogueRenderConfig: local.dialogueRenderConfig,
             disabledFileItemClick: local.disabledFileItemClick,
             escapeHtml: local.escapeHtml,
@@ -134,6 +135,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
             selecting: local.selecting,
             showReference: local.showReference,
             showReset: local.showReset,
+            styles: local.styles,
         }),
         undefined,
         { equals: shallowEqualObjects }
@@ -162,31 +164,35 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
         messageDelete: foundation.deleteMessage,
     };
 
+    const codePart = () => ({ class: local.classNames?.code, style: local.styles?.code });
+
     // a busy log defers announcements, so a streamed reply is read once it settles, not chunk by chunk
     const streaming = () => isUnfinishedStatus(chats().at(-1)?.status);
 
     return (
         <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest)} class={clsx(prefix, local.class)} style={local.style}>
-            <div ref={(node) => (list = node)} class={`${prefix}-list`} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
+            <div ref={(node) => (list = node)} class={clsx(`${prefix}-list`, local.classNames?.messages)} style={local.styles?.messages} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
                 <AIChatDialogueContext.Provider value={context}>
-                    <For each={chatIds()}>
-                        {(id, index) => {
-                            // a row keeps its last message while the list it left is still being removed
-                            const message = createMemo<Message>(
-                                (previous) => chatsById().get(id) ?? previous,
-                                untrack(() => chatsById().get(id))!
-                            );
-                            return <Dialogue role={local.roleConfig[message().role]} isLastChat={index() === chatIds().length - 1} isSelected={state().selectedIds.has(id)} message={message()} />;
-                        }}
-                    </For>
-                    <Show when={hints().length > 0}>
-                        <Hint class={local.classNames?.hint} style={local.styles?.hint} hints={hints()} selecting={local.selecting} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
-                    </Show>
+                    <CodePartContext.Provider value={codePart}>
+                        <For each={chatIds()}>
+                            {(id, index) => {
+                                // a row keeps its last message while the list it left is still being removed
+                                const message = createMemo<Message>(
+                                    (previous) => chatsById().get(id) ?? previous,
+                                    untrack(() => chatsById().get(id))!
+                                );
+                                return <Dialogue role={local.roleConfig[message().role]} isLastChat={index() === chatIds().length - 1} isSelected={state().selectedIds.has(id)} message={message()} />;
+                            }}
+                        </For>
+                        <Show when={hints().length > 0}>
+                            <Hint class={local.classNames?.hint} style={local.styles?.hint} itemClass={local.classNames?.hintItem} itemStyle={local.styles?.hintItem} hints={hints()} selecting={local.selecting} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
+                        </Show>
+                    </CodePartContext.Provider>
                 </AIChatDialogueContext.Provider>
             </div>
             <Show when={state().backBottomVisible}>
                 <span ref={handoverBackBottomFocus} class={`${prefix}-backBottom`}>
-                    <Button type="tertiary" class={`${prefix}-backBottom-button`} aria-label={locale().locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
+                    <Button type="tertiary" class={clsx(`${prefix}-backBottom-button`, local.classNames?.backBottom)} style={local.styles?.backBottom} aria-label={locale().locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
                 </span>
             </Show>
         </div>

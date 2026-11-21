@@ -5,6 +5,7 @@ import { mergeStyles } from '../../utils/index';
 export const viewPropKeys = [
     'allDayEventsRender',
     'class',
+    'classNames',
     'dateGridRender',
     'displayValue',
     'events',
@@ -22,6 +23,7 @@ export const viewPropKeys = [
     'scrollTop',
     'showCurrTime',
     'style',
+    'styles',
     'weekStartsOn',
     'width',
 ] as const;

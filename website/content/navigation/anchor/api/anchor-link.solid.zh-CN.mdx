@@ -1,7 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性     | 说明                                                                                | 类型          | 默认值 |
-| -------- | ----------------------------------------------------------------------------------- | ------------- | ------ |
-| disabled | 是否禁用，禁用后不响应点击跳转。                                                    | `boolean`     | -      |
-| href     | 跳转的目标，以 # 开头时按元素 id 查找，其余按 CSS 选择器查找；未设置时为 `#`。      | `string`      | -      |
-| title    | 链接的文字内容，可以是节点；未开启 showTooltip 且为非空字符串时同时作为原生 title。 | `JSX.Element` | -      |
+| 属性       | 说明                                                                                              | 类型                                                                                                          | 默认值 |
+| ---------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------ |
+| classNames | 链接内部各部位的类名，键为 `title`，与组件自带的类名合并，写在 `Anchor` 的 `itemTitle` 类名之后。 | <ApiType detail={"Partial\u003cRecord\u003cAnchorLinkPart, string>>"}>Type</ApiType>                          | -      |
+| disabled   | 是否禁用，禁用后不响应点击跳转。                                                                  | `boolean`                                                                                                     | -      |
+| href       | 跳转的目标，以 # 开头时按元素 id 查找，其余按 CSS 选择器查找；未设置时为 `#`。                    | `string`                                                                                                      | -      |
+| styles     | 链接内部各部位的内联样式，键同 `classNames`，写在 `Anchor` 的 `styles` 之后。                     | <ApiType detail={"Partial\u003cRecord\u003cAnchorLinkPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |
+| title      | 链接的文字内容，可以是节点；未开启 showTooltip 且为非空字符串时同时作为原生 title。               | `JSX.Element`                                                                                                 | -      |
