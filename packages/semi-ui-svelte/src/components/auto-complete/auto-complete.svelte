@@ -295,24 +295,26 @@
 {/snippet}
 
 {#snippet panel()}
-    <div bind:this={listbox} id={listId} {...nameAttrs} class={[`${prefixCls}-option-list`, classNames?.dropdown]} role="listbox" style={[`max-height: ${toCssLength(maxHeight)}`, styles?.dropdown].filter(Boolean).join('; ')} onmousedown={keepFocusOnPress}>
-        {#if loading}
-            <div class={`${prefixCls}-loading-wrapper`}>
-                <Spin />
-            </div>
-        {:else if states().options.length === 0}
-            {@render emptyContent?.()}
-        {:else}
-            {#each visibleOptions as option, index (option.key ?? `${option.label}${option.value}${index}`)}
-                {#if item}
-                    <Option {...optionProps(option, index)}>
-                        {@render item({ item: option._source as T, index })}
-                    </Option>
-                {:else}
-                    <Option {...optionProps(option, index)} />
-                {/if}
-            {/each}
-        {/if}
+    <div class={[`${prefixCls}-option-list-wrapper`, classNames?.dropdown]} style={styles?.dropdown}>
+        <div bind:this={listbox} id={listId} {...nameAttrs} class={[`${prefixCls}-option-list`, classNames?.list]} role="listbox" style={[`max-height: ${toCssLength(maxHeight)}`, styles?.list].filter(Boolean).join('; ')} onmousedown={keepFocusOnPress}>
+            {#if loading}
+                <div class={`${prefixCls}-loading-wrapper`}>
+                    <Spin />
+                </div>
+            {:else if states().options.length === 0}
+                {@render emptyContent?.()}
+            {:else}
+                {#each visibleOptions as option, index (option.key ?? `${option.label}${option.value}${index}`)}
+                    {#if item}
+                        <Option {...optionProps(option, index)}>
+                            {@render item({ item: option._source as T, index })}
+                        </Option>
+                    {:else}
+                        <Option {...optionProps(option, index)} />
+                    {/if}
+                {/each}
+            {/if}
+        </div>
     </div>
 {/snippet}
 

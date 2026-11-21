@@ -278,7 +278,7 @@ describe('Cascader', () => {
         const styles = Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]));
         const expectParts = (names: typeof parts) => {
             for (const part of names) {
-                const el = document.querySelector(`.${prefixCls}-${selectors[part]}`);
+                const el = document.querySelector(part === 'input' ? `.${prefixCls}-${selectors[part]} input` : `.${prefixCls}-${selectors[part]}`);
                 expect(el).toHaveClass(`my-${part}`);
                 expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
             }

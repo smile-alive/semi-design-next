@@ -552,7 +552,7 @@ describe('Svelte ColorPicker 弹层', () => {
         await userEvent.click(screen.getByRole('button', { name: text.color }));
         await screen.findByRole('dialog');
         for (const part of parts) {
-            const els = document.querySelectorAll(`.${prefixCls}-${selectors[part]}`);
+            const els = document.querySelectorAll(`.${prefixCls}-${selectors[part]}${part === 'input' ? ' input' : ''}`);
             expect(els).toHaveLength(part === 'handle' ? 3 : 1);
             for (const el of els) {
                 expect(el).toHaveClass(`my-${part}`);

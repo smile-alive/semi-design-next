@@ -733,8 +733,10 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
                 addonBefore={null}
                 addonAfter={null}
                 {...own()}
-                class={clsx(`${prefix}-input`, local.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, own()?.class, local.classNames?.input)}
-                style={mergeStyles(local.multiple ? { width: state().inputValue ? `${state().inputValue.length * 16}px` : '2px' } : own()?.style, local.styles?.input)}
+                class={clsx(`${prefix}-input`, local.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, own()?.class)}
+                style={local.multiple ? { width: state().inputValue ? `${state().inputValue.length * 16}px` : '2px' } : own()?.style}
+                classNames={{ ...own()?.classNames, input: clsx(own()?.classNames?.input, local.classNames?.input) }}
+                styles={{ ...own()?.styles, input: mergeStyles(own()?.styles?.input, local.styles?.input) }}
                 inputRef={mergeRefs(setTriggerInput, own()?.inputRef)}
             />
         );

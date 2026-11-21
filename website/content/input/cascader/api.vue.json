@@ -163,8 +163,8 @@
                 "en-US": "Whether clicks on the dropdown stop bubbling."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 prefix、suffix、content、placeholder、input、tag、clear、arrow、dropdown、list、empty、item、itemContent、itemIcon，值的写法同 class，与组件自带的类名合并。content 是触发器中的已选内容区，list 是每一级的选项列表，item 系列作用于每个选项。",
-                "en-US": "Class names of the inner parts, keyed by prefix, suffix, content, placeholder, input, tag, clear, arrow, dropdown, list, empty, item, itemContent and itemIcon; values take any class binding and merge with the built-in classes. content is the selection area in the trigger, list is the option list of each level, and the item keys apply to every option."
+                "zh-CN": "内部各部位的类名，键为 prefix、suffix、content、placeholder、input、tag、clear、arrow、dropdown、list、empty、item、itemContent、itemIcon，值的写法同 class，与组件自带的类名合并。content 是触发器中的已选内容区，input 是触发器内搜索框的原生输入框，list 是每一级的选项列表，item 系列作用于每个选项。",
+                "en-US": "Class names of the inner parts, keyed by prefix, suffix, content, placeholder, input, tag, clear, arrow, dropdown, list, empty, item, itemContent and itemIcon; values take any class binding and merge with the built-in classes. content is the selection area in the trigger, input is the native input of the search field inside the trigger, list is the option list of each level, and the item keys apply to every option."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 classNames。",

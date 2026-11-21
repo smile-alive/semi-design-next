@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | addOnBlur | 焦点离开组件时，是否将输入框内容自动创建为标签。 | `boolean` | `false` |
 | allowDuplicates | 是否允许添加相同的标签。 | `boolean` | `true` |
 | autofocus | 挂载时是否自动聚焦输入框并激活组件，禁用时不生效。 | `boolean` | `false` |
-| classNames | 内部各部位的类名，键为 `prefix`、`suffix`、`content`、`tag`、`input`、`clear`，与组件自带的类名合并。`input` 落在内嵌输入框的根元素上，不是原生 input；`tag` 只作用于默认标签，`tag` 插槽渲染的节点自行控制样式。 | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TagInput", "classNames")` |
+| classNames | 内部各部位的类名，键为 `prefix`、`suffix`、`content`、`tag`、`input`、`clear`，与组件自带的类名合并。`input` 落在原生输入框上；`tag` 只作用于默认标签，`tag` 插槽渲染的节点自行控制样式。 | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TagInput", "classNames")` |
 | defaultValue | 非受控时的初始标签。 | `string[]` | `semiGlobalDefault("TagInput", "defaultValue")` |
 | disabled | 是否禁用。 | `boolean` | `undefined` |
 | draggable | 是否开启拖拽排序。 | `boolean` | `false` |

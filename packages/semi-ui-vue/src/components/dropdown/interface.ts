@@ -7,14 +7,15 @@ export type { Position, Trigger } from '../tooltip/interface';
 
 export type Type = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';
 
-// one level deep, for the same TS2589 reason as Dropdown's classNames below
-// false, null and undefined keep Vue's ClassValue and StyleValue assignable to these
+// Vue's ClassValue and StyleValue recurse through a type alias, and ref() over DropdownProps with them hits TS2589.
+// PartClass stops at one level; PartStyle recurses through an interface, which ref() unwraps lazily, so it stays
+// assignable both ways with StyleValue. The interface is exported because the emitted .vue declarations name it.
 type PartClass = string | false | null | undefined | Record<string, unknown> | unknown[];
-type PartStyle = string | false | null | undefined | CSSProperties | any[];
+type PartStyle = string | false | null | undefined | CSSProperties | PartStyleList;
+export interface PartStyleList extends Array<PartStyle> {}
 
 /** Arrow and arrow keys are fixed: no arrow, and the Dropdown alone moves focus with Up and Down. */
 export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPointAtCenter' | 'disableArrowKeyDown' | 'classNames' | 'styles'> {
-    // one level deep: ref() over the recursive ClassValue/StyleValue with the menu items hits TS2589, as in Navigation
     classNames?: Partial<Record<DropdownPart, PartClass>>;
     menu?: DropdownMenuItem[];
     /**

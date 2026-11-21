@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `true` |
 | autofocus | Focuses the input on mount, which opens the panel. | `boolean` | `false` |
 | borderless | Borderless mode. | `boolean` | `false` |
-| classNames | Class names of the inner parts, keyed by dropdown (the panel card of the popup), input (the root element of the input), header (the title area at the top of the panel), content (the area holding the columns), item (each time option in a column) and footer (the bottom area of the panel); in range mode both panels apply them. Values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by dropdown (the panel card of the popup), input (the native input of the trigger), header (the title area at the top of the panel), content (the area holding the columns), item (each time option in a column) and footer (the bottom area of the panel); in range mode both panels apply them. Values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Custom clear icon; effective when showClear is true. | `Snippet` | - |
 | disabled | Disables all interaction. | `boolean` | - |
 | disabledHours | Returns the hours that cannot be selected. | <ApiType detail={"() => number[]"}>Type</ApiType> | - |

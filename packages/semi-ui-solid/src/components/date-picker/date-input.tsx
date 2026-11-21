@@ -169,8 +169,8 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         inputRef={setRangeStartInput}
-                        class={props.classNames?.input}
-                        style={props.styles?.input}
+                        classNames={{ input: props.classNames?.input }}
+                        styles={{ input: props.styles?.input }}
                         autofocus={props.autofocus}
                         disabled={props.disabled}
                         placeholder={placeholders()[0]}
@@ -214,8 +214,8 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         inputRef={props.rangeInputEndRef}
-                        class={props.classNames?.input}
-                        style={props.styles?.input}
+                        classNames={{ input: props.classNames?.input }}
+                        styles={{ input: props.styles?.input }}
                         disabled={props.disabled}
                         placeholder={placeholders()[1]}
                         readOnly={props.inputReadOnly}
@@ -315,10 +315,9 @@ export default function DateInput(rawProps: DateInputProps) {
             aria-invalid={props['aria-invalid']}
             aria-required={props['aria-required']}
             inputRef={props.inputRef}
-            class={clsx(inputCls(), props.classNames?.input)}
-            style={props.styles?.input}
-            classNames={{ suffix: props.classNames?.suffix, clear: props.classNames?.clear }}
-            styles={{ suffix: props.styles?.suffix, clear: props.styles?.clear }}
+            class={inputCls()}
+            classNames={{ input: props.classNames?.input, suffix: props.classNames?.suffix, clear: props.classNames?.clear }}
+            styles={{ input: props.styles?.input, suffix: props.styles?.suffix, clear: props.styles?.clear }}
             autofocus={props.autofocus}
             borderless={props.borderless}
             clearIcon={props.clearIcon}

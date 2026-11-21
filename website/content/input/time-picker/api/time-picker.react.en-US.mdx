@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoFocus | Focuses the input once mounted; passed through to the input's `autoFocus`. | `boolean` | - |
 | borderless | Borderless mode. | `boolean` | `false` |
 | className | Class name of the root element. | `string` | `""` |
-| classNames | Class names of the inner parts, keyed by `dropdown` (the panel card of the popup), `input` (the root element of the input), `header` (the title area at the top of the panel), `content` (the area holding the columns), `item` (each time option in a column) and `footer` (the bottom area of the panel); merged with the built-in classes. In range mode both panels apply them. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `dropdown` (the panel card of the popup), `input` (the native input), `header` (the title area at the top of the panel), `content` (the area holding the columns), `item` (each time option in a column) and `footer` (the bottom area of the panel); merged with the built-in classes. In range mode both panels apply them. | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom clear icon; effective when `showClear` is `true`. | `React.ReactNode` | - |
 | defaultOpen | Whether the panel is open by default when uncontrolled. | `boolean` | - |
 | defaultValue | Initial time when uncontrolled, in the same forms as `value`; an array when `type` is `timeRange`. | `BaseValueType \| BaseValueType[]` | - |

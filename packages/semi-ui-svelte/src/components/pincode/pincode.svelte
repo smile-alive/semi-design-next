@@ -123,13 +123,13 @@
             autofocus={autofocus && index === 0}
             bind:this={inputs[index]}
             bind:value={() => states().valueList[index] ?? '', () => {}}
-            class={classNames?.input}
+            classNames={{ input: classNames?.input }}
             composition
             {disabled}
             inputmode={format === 'number' ? 'numeric' : 'text'}
             showClear={false}
             {size}
-            style={styles?.input}
+            styles={{ input: styles?.input }}
             {validateStatus}
             {...cellAttrs(index)}
             onChange={(text, event) => handleCellChange(index, text, event)}

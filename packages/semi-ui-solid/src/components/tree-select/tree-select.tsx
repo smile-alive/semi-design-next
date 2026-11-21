@@ -728,7 +728,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         } as const;
     };
 
-    const searchClass = () => clsx({ [`${prefixTree}-input`]: isDropdownPositionSearch(), [`${prefix}-inputTrigger`]: !isDropdownPositionSearch() }, !isDropdownPositionSearch() && local.classNames?.input);
+    const searchClass = () => clsx({ [`${prefixTree}-input`]: isDropdownPositionSearch(), [`${prefix}-inputTrigger`]: !isDropdownPositionSearch() });
 
     const searchPlaceholder = () => (isDropdownPositionSearch() ? local.searchPlaceholder || locale().locale.searchPlaceholder : '');
 
@@ -808,7 +808,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                             {...searchAttrs()}
                             inputRef={setSearchInput}
                             class={searchClass()}
-                            style={isDropdownPositionSearch() ? undefined : local.styles?.input}
+                            classNames={{ input: isDropdownPositionSearch() ? undefined : local.classNames?.input }}
+                            styles={{ input: isDropdownPositionSearch() ? undefined : local.styles?.input }}
                             placeholder={searchPlaceholder()}
                             value={state().inputValue}
                             preventScroll={local.preventScroll}
@@ -840,8 +841,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             ref={setTagInput}
             aria-autocomplete="list"
             autofocus={local.searchAutoFocus}
-            class={local.classNames?.input}
-            style={local.styles?.input}
+            classNames={{ input: local.classNames?.input }}
+            styles={{ input: local.styles?.input }}
             disabled={local.disabled}
             placeholder={local.placeholder}
             value={triggerRenderKeys()}

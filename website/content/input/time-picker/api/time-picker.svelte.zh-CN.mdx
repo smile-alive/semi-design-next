@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `true` |
 | autofocus | 挂载时让输入框获得焦点，同时打开面板。 | `boolean` | `false` |
 | borderless | 无边框模式。 | `boolean` | `false` |
-| classNames | 内部各部位的类名，键为 dropdown（弹出层的面板卡片）、input（输入框的根元素）、header（面板顶部的标题区）、content（放置各列的区域）、item（每一列里的单个时间选项）、footer（面板底部区域），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。范围模式下左右两个面板都会应用。 | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 dropdown（弹出层的面板卡片）、input（输入框的原生输入框）、header（面板顶部的标题区）、content（放置各列的区域）、item（每一列里的单个时间选项）、footer（面板底部区域），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。范围模式下左右两个面板都会应用。 | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除图标，showClear 为 true 时有效。 | `Snippet` | - |
 | disabled | 禁用全部操作。 | `boolean` | - |
 | disabledHours | 返回禁止选择的小时。 | <ApiType detail={"() => number[]"}>Type</ApiType> | - |

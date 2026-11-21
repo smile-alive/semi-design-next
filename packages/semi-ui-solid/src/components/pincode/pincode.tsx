@@ -115,8 +115,8 @@ export default function PinCode(rawProps: PinCodeProps) {
                     <Input
                         inputRef={(node) => (inputs[index] = node)}
                         id={index === 0 ? local.id : undefined}
-                        class={local.classNames?.input}
-                        style={local.styles?.input}
+                        classNames={{ input: local.classNames?.input }}
+                        styles={{ input: local.styles?.input }}
                         aria-describedby={local['aria-describedby']}
                         aria-errormessage={local['aria-errormessage']}
                         aria-invalid={local['aria-invalid']}

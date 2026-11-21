@@ -21,7 +21,7 @@ const getValues = () => getInputs().map((input) => input.value);
 describe('PinCode', () => {
     it('classNames 与 styles 按部位落到对应元素', () => {
         render(<PinCode classNames={{ input: 'my-input' }} styles={{ input: { order: 2 } }} count={3} />);
-        const cells = Array.from(document.querySelectorAll(`${wrapperSelector} > .${BASE_CLASS_PREFIX}-input-wrapper`));
+        const cells = Array.from(document.querySelectorAll(`${wrapperSelector} > .${BASE_CLASS_PREFIX}-input-wrapper > input`));
         expect(cells).toHaveLength(3);
         for (const cell of cells) {
             expect(cell).toHaveClass('my-input');

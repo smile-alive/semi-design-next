@@ -195,8 +195,8 @@
                 "en-US": "Whether click events on the dropdown stop propagating; a string is treated as a boolean."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、item、itemTitle、itemSwitcher，值的写法同 class，与组件自带的类名合并。content 是触发器中间的已选内容区；input 是 searchPosition=\"trigger\" 时触发器内的搜索框（多选时为 TagInput）；search 是下拉层顶部的搜索区域；list 是 role=\"tree\" 的元素；item、itemTitle、itemSwitcher 作用到下拉里的每个节点。",
-                "en-US": "Class names of the inner parts, keyed by prefix, suffix, content, placeholder, input, search, tag, clear, arrow, dropdown, list, empty, item, itemTitle and itemSwitcher; values take any class binding and merge with the built-in classes. content is the selection area in the middle of the trigger; input is the search box inside the trigger when searchPosition=\"trigger\" (the TagInput when multiple); search is the search area at the top of the dropdown; list is the element with role=\"tree\"; item, itemTitle and itemSwitcher apply to every node in the dropdown."
+                "zh-CN": "内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、item、itemTitle、itemSwitcher，值的写法同 class，与组件自带的类名合并。content 是触发器中间的已选内容区；input 是 searchPosition=\"trigger\" 时触发器内搜索框的原生输入框（多选时为 TagInput 的原生输入框）；search 是下拉层顶部的搜索区域；list 是 role=\"tree\" 的元素；item、itemTitle、itemSwitcher 作用到下拉里的每个节点。",
+                "en-US": "Class names of the inner parts, keyed by prefix, suffix, content, placeholder, input, search, tag, clear, arrow, dropdown, list, empty, item, itemTitle and itemSwitcher; values take any class binding and merge with the built-in classes. content is the selection area in the middle of the trigger; input is the native input of the search box inside the trigger when searchPosition=\"trigger\" (that of the TagInput when multiple); search is the search area at the top of the dropdown; list is the element with role=\"tree\"; item, itemTitle and itemSwitcher apply to every node in the dropdown."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 classNames。",

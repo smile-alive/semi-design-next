@@ -8,7 +8,7 @@ import { getOptionId, isInnerControlKey, toCssLength, getDataAttr, type Size } f
 import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { useWatch } from '../../primitives/index';
-import { callHandler, isNativeInputKey, omitFormInjected, splitControlAttrs, forwardFocus, hasContent, mergeRefs } from '../../utils/index';
+import { callHandler, isNativeInputKey, omitFormInjected, splitControlAttrs, forwardFocus, hasContent, mergeRefs, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import type { InputGroupContextValue } from '../input/context';
 import InputGroupBoundary from '../input/group-boundary';
@@ -326,11 +326,7 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
         return visible && !local.loading && focusIndex !== -1 && focusIndex < shownOptions().length ? optionId(focusIndex) : undefined;
     };
 
-    const listStyle = (): JSX.CSSProperties | string => {
-        const maxHeight = toCssLength(local.maxHeight);
-        const own = local.styles?.dropdown;
-        return typeof own === 'string' ? `max-height: ${maxHeight}; ${own}` : { 'max-height': maxHeight, ...own };
-    };
+    const listStyle = () => mergeStyles({ 'max-height': toCssLength(local.maxHeight) }, local.styles?.list);
 
     const position = () => local.position ?? (config().direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
 
@@ -427,43 +423,45 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
     );
 
     const renderList = () => (
-        <div ref={setListbox} id={listboxId} class={clsx(`${prefixCls}-option-list`, local.classNames?.dropdown)} style={listStyle()} aria-label={name()['aria-label']} aria-labelledby={name()['aria-labelledby']} role="listbox" onMouseDown={handleListMouseDown}>
-            <Show
-                when={!local.loading}
-                fallback={
-                    <div class={`${prefixCls}-loading-wrapper`}>
-                        <Spin />
-                    </div>
-                }
-            >
-                <Show when={state().options.length > 0} fallback={local.emptyContent}>
-                    <For each={shownOptions()}>
-                        {(option, index) => (
-                            <OptionView
-                                // item fields named like the row's own props (selected, empty, inputValue) stay out
-                                {...getDataAttr(option)}
-                                class={option.class as string | undefined}
-                                style={option.style as JSX.CSSProperties | string | undefined}
-                                disabled={option.disabled as boolean | undefined}
-                                // the highlighted option is the combobox's active descendant, which APG marks selected
-                                current={index() === state().focusIndex}
-                                focused={index() === state().focusIndex}
-                                prefixCls={cssClasses.PREFIX_OPTION}
-                                parentClassNames={local.classNames}
-                                parentStyles={local.styles}
-                                semiOptionId={optionId(index())}
-                                showTick={false}
-                                onMouseEnter={() => foundation.handleOptionMouseEnter(index())}
-                                onSelect={() => foundation.handleSelect(option, index())}
-                            >
-                                <Show when={local.renderItem} keyed fallback={(option.label ?? option.value) as BaseDataItem['label']}>
-                                    {(render) => render(option._source as T)}
-                                </Show>
-                            </OptionView>
-                        )}
-                    </For>
+        <div class={clsx(`${prefixCls}-option-list-wrapper`, local.classNames?.dropdown)} style={local.styles?.dropdown}>
+            <div ref={setListbox} id={listboxId} class={clsx(`${prefixCls}-option-list`, local.classNames?.list)} style={listStyle()} aria-label={name()['aria-label']} aria-labelledby={name()['aria-labelledby']} role="listbox" onMouseDown={handleListMouseDown}>
+                <Show
+                    when={!local.loading}
+                    fallback={
+                        <div class={`${prefixCls}-loading-wrapper`}>
+                            <Spin />
+                        </div>
+                    }
+                >
+                    <Show when={state().options.length > 0} fallback={local.emptyContent}>
+                        <For each={shownOptions()}>
+                            {(option, index) => (
+                                <OptionView
+                                    // item fields named like the row's own props (selected, empty, inputValue) stay out
+                                    {...getDataAttr(option)}
+                                    class={option.class as string | undefined}
+                                    style={option.style as JSX.CSSProperties | string | undefined}
+                                    disabled={option.disabled as boolean | undefined}
+                                    // the highlighted option is the combobox's active descendant, which APG marks selected
+                                    current={index() === state().focusIndex}
+                                    focused={index() === state().focusIndex}
+                                    prefixCls={cssClasses.PREFIX_OPTION}
+                                    parentClassNames={local.classNames}
+                                    parentStyles={local.styles}
+                                    semiOptionId={optionId(index())}
+                                    showTick={false}
+                                    onMouseEnter={() => foundation.handleOptionMouseEnter(index())}
+                                    onSelect={() => foundation.handleSelect(option, index())}
+                                >
+                                    <Show when={local.renderItem} keyed fallback={(option.label ?? option.value) as BaseDataItem['label']}>
+                                        {(render) => render(option._source as T)}
+                                    </Show>
+                                </OptionView>
+                            )}
+                        </For>
+                    </Show>
                 </Show>
-            </Show>
+            </div>
         </div>
     );
 

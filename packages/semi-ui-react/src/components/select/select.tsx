@@ -509,8 +509,7 @@ function Select(rawProps: SelectBodyProps) {
                 [`${prefixcls}-input-single`]: !multiple,
                 [`${prefixcls}-input-multiple`]: multiple,
             },
-            inputProps?.className,
-            classNames?.input
+            inputProps?.className
         );
 
         const selectInputProps: Record<string, any> = {
@@ -527,7 +526,9 @@ function Select(rawProps: SelectBodyProps) {
             addonAfter: null,
             ...inputProps,
             className: inputcls,
-            style: { ...(multiple && { width: inputValue ? `${inputValue.length * 16}px` : '2px' }), ...styles?.input },
+            classNames: { ...inputProps?.classNames, input: clsx(inputProps?.classNames?.input, classNames?.input) },
+            style: { ...(multiple && { width: inputValue ? `${inputValue.length * 16}px` : '2px' }) },
+            styles: { ...inputProps?.styles, input: { ...inputProps?.styles?.input, ...styles?.input } },
             ref: triggerInputRef,
         };
 

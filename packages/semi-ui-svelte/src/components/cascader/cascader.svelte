@@ -565,7 +565,7 @@
             <div class={[`${cls}-search-wrapper`, { [`${cls}-search-wrapper-${size}`]: size !== 'default' }]}>
                 {@render selectionText(inputPlaceholder, selectionTextId)}
                 {#if view.showInput}
-                    <Input bind:this={searchInput} bind:value={() => view.inputValue, () => {}} {...searchInputAttrs} class={[`${cls}-input`, classNames?.input]} {disabled} onChange={foundation.handleInputChange} {size} style={styles?.input} />
+                    <Input bind:this={searchInput} bind:value={() => view.inputValue, () => {}} {...searchInputAttrs} class={`${cls}-input`} classNames={{ input: classNames?.input }} {disabled} onChange={foundation.handleInputChange} {size} styles={{ input: styles?.input }} />
                 {/if}
             </div>
         {:else if triggerSearch}
@@ -577,7 +577,8 @@
                 {...comboboxAttrs}
                 addOnBlur={false}
                 aria-autocomplete="list"
-                class={[`${cls}-tagInput-wrapper`, classNames?.input]}
+                class={`${cls}-tagInput-wrapper`}
+                classNames={{ input: classNames?.input }}
                 {disabled}
                 draggable={false}
                 expandRestTagsOnClick={false}
@@ -590,7 +591,7 @@
                 showClear={false}
                 {showRestTagsPopover}
                 {size}
-                style={styles?.input}
+                styles={{ input: styles?.input }}
                 tag={tagInputTag}
             />
         {:else if multiple}

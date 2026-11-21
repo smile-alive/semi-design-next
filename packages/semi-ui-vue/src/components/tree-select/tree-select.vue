@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T = TreeSelectValue, Multiple extends boolean | undefined = undefined">
-    import { computed, normalizeClass, shallowRef, useAttrs, useId, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
+    import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { cssClasses } from '@fibrae/semi-foundation/components/tree-select/constants';
     import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/components/tree-select/foundation';
@@ -308,7 +308,7 @@
             // the selected text sits beside the input, which is empty until the user types, so the combobox has no
             // value of its own; the text is exposed as the description
             'aria-describedby': joinIds(attrs['aria-describedby'], view.value.inputValue ? undefined : singleSearchTextId),
-            class: normalizeClass([`${prefix}-inputTrigger`, props.classNames?.input]),
+            class: `${prefix}-inputTrigger`,
             placeholder: '',
             showClear: false,
             autofocus: props.searchAutoFocus,
@@ -570,7 +570,7 @@
                             :addOnBlur="false"
                             aria-autocomplete="list"
                             :autofocus="props.searchAutoFocus"
-                            :class="props.classNames?.input"
+                            :classNames="{ input: props.classNames?.input }"
                             :disabled="looks.disabled"
                             :draggable="false"
                             :expandRestTagsOnClick="false"
@@ -583,7 +583,7 @@
                             :showClear="false"
                             :showRestTagsPopover="props.showRestTagsPopover"
                             :size="looks.size"
-                            :style="props.styles?.input"
+                            :styles="{ input: props.styles?.input }"
                             @inputChange="search($event)"
                             @remove="foundation.removeTag"
                         >
@@ -616,7 +616,7 @@
                                 <template v-if="parts.searchNodes">
                                     <component :is="node" v-for="[node, key] in parts.searchNodes" :key="key" />
                                 </template>
-                                <Input v-else :ref="setSearchInput" v-bind="inputBindings()" :style="props.styles?.input" />
+                                <Input v-else :ref="setSearchInput" v-bind="inputBindings()" :classNames="{ input: props.classNames?.input }" :styles="{ input: props.styles?.input }" />
                             </div>
                             <template v-for="(single, s) in view.inputValue ? [] : [singleContent()]" :key="s">
                                 <span

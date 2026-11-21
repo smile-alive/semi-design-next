@@ -501,7 +501,8 @@ describe('Svelte TimePicker 输入框', () => {
         expect(dropdown).toHaveClass(`${prefixCls}-panel`);
         expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         const input = getElement('.my-input');
-        expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper`);
+        expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input`);
+        expect(input.tagName).toBe('INPUT');
         expect(input).toHaveStyle({ color: 'rgb(0, 0, 255)' });
         const parts = [
             ['header', `${scrollListCls}-header`, 'rgb(0, 128, 0)'],

@@ -489,8 +489,10 @@
         {size}
         value={states().inputValue}
         {...inputProps}
-        class={[`${cls}-input`, multiple ? `${cls}-input-multiple` : `${cls}-input-single`, inputProps?.class, classNames?.input]}
-        style={joinStyles(multiple ? `width: ${states().inputValue ? `${states().inputValue.length * 16}px` : '2px'}` : inputProps?.style, styles?.input)}
+        class={[`${cls}-input`, multiple ? `${cls}-input-multiple` : `${cls}-input-single`, inputProps?.class]}
+        classNames={{ ...inputProps?.classNames, input: [inputProps?.classNames?.input, classNames?.input] }}
+        style={multiple ? `width: ${states().inputValue ? `${states().inputValue.length * 16}px` : '2px'}` : inputProps?.style}
+        styles={{ ...inputProps?.styles, input: joinStyles(inputProps?.styles?.input, styles?.input) }}
     />
 {/snippet}
 

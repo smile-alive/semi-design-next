@@ -450,8 +450,9 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     const renderTagInput = () => (
         <TagInput
             ref={tagInputRef}
-            className={clsx(`${prefixcls}-tagInput-wrapper`, classNames?.input)}
-            style={styles?.input}
+            className={`${prefixcls}-tagInput-wrapper`}
+            classNames={{ input: classNames?.input }}
+            styles={{ input: styles?.input }}
             {...comboboxProps}
             aria-autocomplete="list"
             disabled={disabled}
@@ -501,8 +502,9 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 {showInput && (
                     <Input
                         ref={inputRef}
-                        className={clsx(`${prefixcls}-input`, classNames?.input)}
-                        style={styles?.input}
+                        className={`${prefixcls}-input`}
+                        classNames={{ input: classNames?.input }}
+                        styles={{ input: styles?.input }}
                         addonAfter={null}
                         addonBefore={null}
                         insetLabel={null}

@@ -436,7 +436,7 @@ describe(`DatePicker`, () => {
         const parts = ['dropdown', 'input', 'suffix', 'clear', 'header', 'body', 'item', 'presets', 'switch', 'footer'] as const;
         const selectors = {
             dropdown: `.${BASE_CLASS_PREFIX}-popover .${dp}`,
-            input: `.${BASE_CLASS_PREFIX}-input-wrapper`,
+            input: `input.${BASE_CLASS_PREFIX}-input`,
             suffix: `.${BASE_CLASS_PREFIX}-input-suffix`,
             clear: `.${BASE_CLASS_PREFIX}-input-clearbtn`,
             header: `.${dp}-navigation`,
@@ -467,7 +467,7 @@ describe(`DatePicker`, () => {
     it('范围选择的 input、separator、suffix、clear 部位落在自己渲染的元素上', async () => {
         const parts = ['input', 'suffix', 'clear', 'separator', 'header', 'body'] as const;
         const selectors = {
-            input: `.${BASE_CLASS_PREFIX}-input-wrapper`,
+            input: `input.${BASE_CLASS_PREFIX}-input`,
             suffix: `.${dp}-range-input-suffix`,
             clear: `.${dp}-range-input-clearbtn`,
             separator: `.${dp}-range-input-separator`,

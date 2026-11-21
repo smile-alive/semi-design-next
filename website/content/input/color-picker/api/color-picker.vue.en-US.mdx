@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | alpha | Whether to enable transparency selection. | `boolean` | `true` |
-| classNames | Class names of the inner parts, keyed by `area` (saturation and brightness area), `hue` (hue slider), `alpha` (alpha slider), `handle` (the round handle shared by all three), `preview` (color preview block), `input` (color value input), `format` (format select), `trigger` (default trigger button) and `dropdown` (the popup with `usePopover`); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cColorPickerPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("ColorPicker", "classNames")` |
+| classNames | Class names of the inner parts, keyed by `area` (saturation and brightness area), `hue` (hue slider), `alpha` (alpha slider), `handle` (the round handle shared by all three), `preview` (color preview block), `input` (the native input of the color value), `format` (format select), `trigger` (default trigger button) and `dropdown` (the popup with `usePopover`); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cColorPickerPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("ColorPicker", "classNames")` |
 | defaultFormat | Color format used by default for manual input: rgba, hex or hsva. | `ColorFormat` | `"hex"` |
 | defaultValue | Initial value when uncontrolled, an object holding hsva, hex and rgba; defaults to the color object of #39c5bb. | `ColorValue` | `DEFAULT_COLOR` |
 | eyeDropper | Whether to enable the eyedropper color picker; requires a secure context and Chromium 95 or later. | `boolean` | `true` |

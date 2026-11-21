@@ -470,7 +470,18 @@
                                     <template v-else>{{ display.text }}</template>
                                 </span>
                             </template>
-                            <Input v-if="view.showInput" ref="searchInput" v-bind="searchInputBindings()" :class="[`${prefix}-input`, props.classNames?.input]" :disabled="looks.disabled" :modelValue="view.inputValue" :size="looks.size" :style="props.styles?.input" @change="foundation.handleInputChange" />
+                            <Input
+                                v-if="view.showInput"
+                                ref="searchInput"
+                                v-bind="searchInputBindings()"
+                                :class="`${prefix}-input`"
+                                :classNames="{ input: props.classNames?.input }"
+                                :disabled="looks.disabled"
+                                :modelValue="view.inputValue"
+                                :size="looks.size"
+                                :styles="{ input: props.styles?.input }"
+                                @change="foundation.handleInputChange"
+                            />
                         </div>
                         <!-- the trigger draws its own clear button and its search text only becomes a search: global TagInput defaults must not add a clear button, drag handles or add-on-blur tags -->
                         <TagInput
@@ -479,7 +490,8 @@
                             v-bind="comboboxAttrs()"
                             :addOnBlur="false"
                             aria-autocomplete="list"
-                            :class="[`${prefix}-tagInput-wrapper`, props.classNames?.input]"
+                            :class="`${prefix}-tagInput-wrapper`"
+                            :classNames="{ input: props.classNames?.input }"
                             :disabled="looks.disabled"
                             :draggable="false"
                             :expandRestTagsOnClick="false"
@@ -492,7 +504,7 @@
                             :showClear="false"
                             :showRestTagsPopover="props.showRestTagsPopover"
                             :size="looks.size"
-                            :style="props.styles?.input"
+                            :styles="{ input: props.styles?.input }"
                             @inputChange="foundation.handleInputChange"
                             @remove="foundation.handleTagRemoveByKey"
                         >

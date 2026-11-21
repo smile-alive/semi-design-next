@@ -160,7 +160,7 @@ describe('Select', async () => {
         expectPart(`.${prefixCls}-prefix`, 'prefix');
         expectPart(`.${prefixCls}-suffix`, 'suffix');
         expectPart(`.${prefixCls}-selection`, 'content');
-        expectPart(`.${prefixCls}-input`, 'input');
+        expectPart(`.${prefixCls}-input input`, 'input');
         expectPart(`.${BASE_CLASS_PREFIX}-tag`, 'tag');
         expectPart(`.${prefixCls}-clear`, 'clear');
         expectPart(`.${prefixCls}-arrow`, 'arrow');

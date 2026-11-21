@@ -47,7 +47,7 @@ function setupModes(mode: 'bind' | 'function' | 'one-way' | 'uncontrolled', valu
 describe('Svelte PinCode 部位', () => {
     it('classNames 与 styles 按部位落到对应元素', () => {
         mount({ count: 3, classNames: { input: 'my-input' }, styles: { input: 'order: 2' } });
-        const cells = Array.from(document.querySelectorAll(`${wrapperSelector} > .${BASE_CLASS_PREFIX}-input-wrapper`));
+        const cells = Array.from(document.querySelectorAll(`${wrapperSelector} > .${BASE_CLASS_PREFIX}-input-wrapper > input`));
         expect(cells).toHaveLength(3);
         for (const cell of cells) {
             expect(cell).toHaveClass('my-input');

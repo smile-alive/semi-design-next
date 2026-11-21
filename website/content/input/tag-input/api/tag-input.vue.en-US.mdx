@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | addOnBlur | Whether the input text becomes a tag when the focus leaves the component. | `boolean` | `false` |
 | allowDuplicates | Whether the same tag can be added more than once. | `boolean` | `true` |
 | autofocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `false` |
-| classNames | Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `tag`, `input` and `clear`; merged with the built-in classes. `input` lands on the root element of the inner Input, not the native input; `tag` applies to the default tags only, nodes from the `tag` slot are styled by the caller. | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TagInput", "classNames")` |
+| classNames | Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `tag`, `input` and `clear`; merged with the built-in classes. `input` lands on the native input; `tag` applies to the default tags only, nodes from the `tag` slot are styled by the caller. | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TagInput", "classNames")` |
 | defaultValue | Initial tags when uncontrolled. | `string[]` | `semiGlobalDefault("TagInput", "defaultValue")` |
 | disabled | Whether the component is disabled. | `boolean` | `undefined` |
 | draggable | Whether tags can be reordered by dragging. | `boolean` | `false` |

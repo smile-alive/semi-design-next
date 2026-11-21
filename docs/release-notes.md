@@ -216,6 +216,7 @@
 
 - 新增 `classNames`、`styles` 部位：`suffix`、`clear`、`separator`、`header`、`body`、`item`、`presets`、`switch`、`footer`。单输入框的 `suffix`、`clear` 落在内部 Input 的对应部位，范围输入落在 DatePicker 自己渲染的元素；范围类型下 `header`、`body` 在左右两个面板上都有。
 - 破坏性：`triggerRender` 收到的 props 中 `inputClassName`、`inputStyle` 改为 `classNames`、`styles`。
+- 破坏性：`classNames.input`、`styles.input` 改为落在原生输入框上（原为输入框的根元素），范围选择的两个输入框都带。
 - 破坏性：删除 `dropdownClassName`、`dropdownStyle`、`inputStyle`，改用 `classNames`、`styles` 的 `dropdown`（面板）、`input`（输入框外层，范围模式下两个输入框都有）键。
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`dropdownMargin`，面板在 top layer。ref 改为 `DatePickerHandle { open, close, focus, blur }`，删除 `BaseDatePicker` 导出；受控 `open` 时 `open()`、`close()` 不改变可见性。
 - 破坏性：删除 `onChangeWithDateFirst`，`onChange` 固定为 `(date, dateString)`；React 删除 `locale`、`localeCode`、`dateFnsLocale` 属性，改经 `LocaleProvider`、`ConfigProvider` 设置。
@@ -709,7 +710,7 @@
 ### TimePicker
 
 - 新增 `classNames`、`styles` 部位：`header`、`content`（各列所在区域）、`item`（每个时间选项）、`footer`；范围模式下左右面板同时生效。
-- 破坏性：删除 `inputStyle`、`popupClassName`、`popupStyle`，改用 `classNames`、`styles` 的 `input`、`dropdown` 键；`styles.dropdown` 落在面板卡片上，原 `popupStyle` 落在外层定位元素。
+- 破坏性：删除 `inputStyle`、`popupClassName`、`popupStyle`，改用 `classNames`、`styles` 的 `input`、`dropdown` 键；`input` 落在原生输入框上，`styles.dropdown` 落在面板卡片上，原 `popupStyle` 落在外层定位元素。
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`dropdownMargin`（面板在 top layer）、`onChangeWithDateFirst`（`onChange` 固定为 `(value, valueString)`）、无效的 `clearText`。
 - 破坏性（类型）：`TimePickerProps` 改为类型别名（`interface X extends TimePickerProps` 改交叉类型），`onChange` 按 `type` 判别为 `(Date, string)` 或 `(Date[], string[])`；删除无效的 `locale`、`localeCode`、`dateFnsLocale`（改用 `LocaleProvider`、`ConfigProvider`）；`scrollItemProps` 收窄为 `cycled`、`mode`、`motion`、`transform`；`triggerRender` 参数改为 `TimePickerTriggerRenderProps`；ref 为 `TimePickerHandle { focus, blur }`。
 - `timeRange` 只选一侧时 `value` 固定长度 2，空侧为 `undefined`，字符串为 `['07:00:00', '']`，`disabledTime` 收到 `[date, undefined]`；按 `length === 1` 判断的代码需调整。
@@ -962,7 +963,7 @@
 ### OverflowList、Select
 
 - OverflowList 新增 `classNames`、`styles` 部位：`item`（collapse 模式下每个可见项的外层 div）、`overflow`（collapse 模式下放置溢出内容的 div）。
-- Select 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`list`、`empty`、`groupLabel`、`item`、`itemIcon`、`itemContent`；`input` 落在触发器内搜索框的根元素上，与 Input 的 `input`（原生输入框）不同。
+- Select 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`list`、`empty`、`groupLabel`、`item`、`itemIcon`、`itemContent`；`input` 落在触发器内搜索框的原生输入框上，与 Input 的 `input` 同义。
 - `item`、`itemIcon`、`itemContent` 作用到全部选项，`Select.Option` 自己的 `classNames`、`styles`（键为 `icon`、`content`，Svelte 写在 `optionList` 条目上）在其后生效。
 - 破坏性：OverflowList 删除 `wrapperClassName`、`wrapperStyle`，改用 `classNames.wrapper`、`styles.wrapper`，落在滚动容器上。
 - 破坏性：Select 删除 `dropdownClassName`、`dropdownStyle`，改用 `classNames.dropdown`、`styles.dropdown`，落在弹出层元素上。
@@ -1106,10 +1107,11 @@
 
 ### AutoComplete、TagInput、Avatar、PinCode
 
-- AutoComplete 新增 `classNames`、`styles` 部位：`input`（原生输入框）、`prefix`、`suffix`、`clear`（这四个转发给内部 Input 的同名部位）、`item`（单个候选项）。
-- TagInput 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`content`、`tag`、`input`、`clear`；`input` 落在内嵌 Input 的根元素，`tag` 只作用于默认标签，`renderTagItem`（Vue 为 `tag` 插槽、Svelte 为 `tag` snippet）自定义的节点不受影响。
+- AutoComplete 新增 `classNames`、`styles` 部位：`input`（原生输入框）、`prefix`、`suffix`、`clear`（这四个转发给内部 Input 的同名部位）、`list`（`role="listbox"` 选项列表，`styles.list` 与 `maxHeight` 合并）、`item`（单个候选项）。
+- AutoComplete 破坏性：弹出内容在列表外新增一层 `semi-autocomplete-option-list-wrapper`，`classNames.dropdown`、`styles.dropdown` 改为落在这层上（原落在列表上），与 Select、Cascader、TreeSelect 的 `dropdown` 同义；原来写在 `dropdown` 上的列表样式改用 `list`。
+- TagInput 新增 `classNames`、`styles` 部位：`prefix`、`suffix`、`content`、`tag`、`input`、`clear`；`input` 落在内嵌 Input 的原生输入框，`tag` 只作用于默认标签，`renderTagItem`（Vue 为 `tag` 插槽、Svelte 为 `tag` snippet）自定义的节点不受影响。
 - Avatar 新增 `classNames`、`styles` 部位：`image`、`label`、`mask`、`border`；AvatarGroup 为 `more`（超出 `maxCount` 的「+N」头像，自定义 `renderMore` 时同样生效）。
-- PinCode 新增 `classNames`、`styles` 部位 `input`，作用到每个输入格的根元素（不是原生 input）。
+- PinCode 新增 `classNames`、`styles` 部位 `input`，作用到每个输入格的原生输入框。
 - 破坏性：AutoComplete 删除 `dropdownClassName`、`dropdownStyle`，改用 `classNames.dropdown`、`styles.dropdown`，落在 `role="listbox"` 元素上，样式与 `maxHeight` 合并且 `styles.dropdown` 优先。
 - PinCode：格子间距改为逻辑属性；ConfigProvider 的 `direction` 为 `rtl` 时左右方向键反向（ArrowLeft 移到下一格）。
 - 破坏性：AutoComplete 删除 `getPopupContainer`、`zIndex`、`AutoComplete.Option` 与 `children`（改用 `Select.Option`），删除深路径 `@fibrae/semi-ui-react/auto-complete/option`、`@fibrae/semi-foundation/auto-complete/optionFoundation`；`style.width` 不再复制为下拉最小宽度。

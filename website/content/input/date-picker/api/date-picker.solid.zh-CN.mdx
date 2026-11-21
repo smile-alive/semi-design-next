@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | 无边框模式。 | `boolean` | `false` |
 | bottomSlot | 渲染底部额外区域，传入 JSX 元素。 | `JSX.Element` | - |
 | class | 根元素的类名。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `dropdown`、`input`、`suffix`、`clear`、`separator`、`header`、`body`、`item`、`presets`、`switch`、`footer`，与组件自带的类名合并。`dropdown` 是弹出的日期面板，`input` 是输入框的根元素（范围选择的两个输入框都带），`header` 是面板顶部导航栏，`body` 是日期网格（范围选择有左右两个），`item` 是单个日期格子，`switch` 是带时间的类型下切换日期与时间的按钮组，`separator` 仅范围选择有。 | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `dropdown`、`input`、`suffix`、`clear`、`separator`、`header`、`body`、`item`、`presets`、`switch`、`footer`，与组件自带的类名合并。`dropdown` 是弹出的日期面板，`input` 是原生输入框（范围选择的两个输入框都带），`header` 是面板顶部导航栏，`body` 是日期网格（范围选择有左右两个），`item` 是单个日期格子，`switch` 是带时间的类型下切换日期与时间的按钮组，`separator` 仅范围选择有。 | <ApiType detail={"Partial\u003cRecord\u003cDatePickerPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮的图标，showClear 为 true 时有效。传入 JSX 元素。 | `JSX.Element` | - |
 | defaultOpen | 面板默认显示或隐藏。 | `boolean` | `false` |
 | defaultPickerValue | 默认面板日期。按内容比较，内容变化时面板回到该日期；每次渲染都传 `new Date()` 会被视为变化。 | `ValueType` | - |
