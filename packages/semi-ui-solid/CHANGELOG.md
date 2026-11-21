@@ -1,5 +1,33 @@
 # @fibrae/semi-ui-solid
 
+## 0.12.0
+
+### Minor Changes
+
+- 054f85c: 所有带内部元素的组件都支持 `classNames`、`styles`，按部位名设置内部元素的类名与内联样式，便于配合 Tailwind 等工具类定制，部位清单见各组件 API 文档中 `classNames` 的说明。复合组件的父组件用 `item` 开头的键作用到全部子项（如 Steps 的 `itemTitle`、`itemDescription`），子项组件自己的 `classNames` 用不带前缀的键，写在父级之后。
+
+    破坏性：
+
+    - Radio 的 `addon` 部位改名为 `label`，TreeSelect 的 `optionList` 部位改名为 `list`。
+    - DatePicker 的 `triggerRender`、Tabs 的 `renderTabBar` 收到的参数改为传完整的 `classNames`、`styles`；Upload 不再经 `className`、`style` 把文件项样式传给自定义 `renderFileItem`。
+
+- 42da4aa: 同名部位跨组件同义：`dropdown` 落在弹出内容的根元素，选项列表用 `list`；`input` 只指原生 `<input>`。
+
+    破坏性：
+
+    - AutoComplete 的弹出内容在列表外新增一层 `semi-autocomplete-option-list-wrapper`，`dropdown` 改为落在这层上，列表改用新增的 `list` 部位。
+    - Select、Cascader、TreeSelect、TagInput、PinCode、TimePicker、DatePicker、ColorPicker 的 `input` 改为落在原生输入框上（原为输入框组件的根元素）。
+
+- b00b90d: 破坏性：Steps 删除旧版 `type="fill"`，默认类型改为 `basic`。
+
+### Patch Changes
+
+- Updated dependencies [054f85c]
+- Updated dependencies [42da4aa]
+- Updated dependencies [b00b90d]
+    - @fibrae/semi-foundation@0.12.0
+    - @fibrae/semi-icons-solid@0.12.0
+
 ## 0.11.0
 
 ### Minor Changes
