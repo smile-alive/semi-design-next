@@ -146,12 +146,16 @@ export default function Slider(rawProps: SliderProps) {
         const a11y = SliderFoundation.getHandleA11y({ range, pos, id, ariaLabel, ariaLabelledby, generatedId, endName: pos === 'min' ? locale.rangeStart : locale.rangeEnd });
         return (
             // closeOnEsc off: the slider drives this tip, which Escape cannot hide, so the key goes on to the layer below
-            <Tooltip className={`${cssClasses.HANDLE}-tooltip`} closeOnEsc={false} content={tipChildren[pos]} position="top" showArrow={showArrow} trigger="custom" visible={isInRenderTree && (tipVisible[pos] || focusVisibleHandle === pos)}>
+            <Tooltip className={clsx(`${cssClasses.HANDLE}-tooltip`, classNames?.dropdown)} style={styles?.dropdown} closeOnEsc={false} content={tipChildren[pos]} position="top" showArrow={showArrow} trigger="custom" visible={isInRenderTree && (tipVisible[pos] || focusVisibleHandle === pos)}>
                 <span
-                    className={clsx(cssClasses.HANDLE, {
-                        [`${cssClasses.HANDLE}-clicked`]: chooseMovePos === pos && isDrag,
-                    })}
-                    style={{ [layout.startProp]: layout.handles[pos].start, zIndex: layout.handles[pos].zIndex }}
+                    className={clsx(
+                        cssClasses.HANDLE,
+                        {
+                            [`${cssClasses.HANDLE}-clicked`]: chooseMovePos === pos && isDrag,
+                        },
+                        classNames?.handle
+                    )}
+                    style={{ [layout.startProp]: layout.handles[pos].start, zIndex: layout.handles[pos].zIndex, ...styles?.handle }}
                     aria-describedby={undefined}
                     // the input is the control: the wrapping Tooltip would otherwise make this span a Tab stop
                     tabIndex={-1}
@@ -231,7 +235,7 @@ export default function Slider(rawProps: SliderProps) {
             onMouseLeave={foundation.handleWrapperLeave}
         >
             <div className={clsx(`${prefixCls}-rail`, classNames?.rail)} style={styles?.rail} onClick={foundation.handleWrapClick} />
-            <div className={cssClasses.TRACK} style={trackStyle} onClick={foundation.handleWrapClick} />
+            <div className={clsx(cssClasses.TRACK, classNames?.track)} style={{ ...trackStyle, ...styles?.track }} onClick={foundation.handleWrapClick} />
             {markKeys.length > 0 && (
                 <div className={cssClasses.DOTS}>
                     {markKeys.map((mark) => {
@@ -242,10 +246,14 @@ export default function Slider(rawProps: SliderProps) {
                         const dotDOM = (
                             <span
                                 key={mark}
-                                className={clsx(`${prefixCls}-dot`, {
-                                    [`${prefixCls}-dot-active`]: activeResult === 'active',
-                                })}
-                                style={{ [layout.startProp]: `calc(${SliderFoundation.getMarkPercent(props, Number(mark))}% - 2px)` }}
+                                className={clsx(
+                                    `${prefixCls}-dot`,
+                                    {
+                                        [`${prefixCls}-dot-active`]: activeResult === 'active',
+                                    },
+                                    classNames?.dot
+                                )}
+                                style={{ [layout.startProp]: `calc(${SliderFoundation.getMarkPercent(props, Number(mark))}% - 2px)`, ...styles?.dot }}
                                 // Tooltip would otherwise inject tabIndex 0
                                 tabIndex={-1}
                                 onClick={foundation.handleWrapClick}
@@ -269,7 +277,7 @@ export default function Slider(rawProps: SliderProps) {
                 <div className={cssClasses.MARKS + layout.reverse}>
                     {markKeys.map((mark) =>
                         SliderFoundation.isMarkActive(props, currentValue, Number(mark)) ? (
-                            <span key={mark} className={`${prefixCls}-mark${layout.reverse}`} style={{ [layout.startProp]: `${SliderFoundation.getMarkPercent(props, Number(mark))}%` }} onClick={() => foundation.handleMarkClick(Number(mark))}>
+                            <span key={mark} className={clsx(`${prefixCls}-mark${layout.reverse}`, classNames?.mark)} style={{ [layout.startProp]: `${SliderFoundation.getMarkPercent(props, Number(mark))}%`, ...styles?.mark }} onClick={() => foundation.handleMarkClick(Number(mark))}>
                                 {marks[mark]}
                             </span>
                         ) : null

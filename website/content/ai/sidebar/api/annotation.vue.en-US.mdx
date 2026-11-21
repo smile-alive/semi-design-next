@@ -2,19 +2,21 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property    | Description                                                                                            | Type                                                                                                                                  | Default                                          |
-| ----------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| activeKey   | Keys of the expanded groups; bind it with v-model:activeKey.                                           | `string \| string[]`                                                                                                                  | `semiGlobalDefault("Annotation", "activeKey")`   |
-| closeOnEsc  | Whether pressing Esc emits cancel.                                                                     | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "closeOnEsc")`  |
-| defaultSize | Initial width and height; applies only when resizable is true.                                         | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Annotation", "defaultSize")` |
-| info        | Groups of references; each has a header, a key and its annotations.                                    | `AnnotationInfo[]`                                                                                                                    | `semiGlobalDefault("Annotation", "info")`        |
-| maxWidth    | Maximum width when resizing; applies only when resizable is true.                                      | `string \| number`                                                                                                                    | `semiGlobalDefault("Annotation", "maxWidth")`    |
-| minWidth    | Minimum width when resizing; applies only when resizable is true.                                      | `string \| number`                                                                                                                    | `semiGlobalDefault("Annotation", "minWidth")`    |
-| motion      | Whether showing and hiding use the expand animation.                                                   | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "motion")`      |
-| resizable   | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "resizable")`   |
-| showClose   | Whether the header shows the close button.                                                             | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "showClose")`   |
-| title       | Plain-text title, the locale's references text by default; the title slot takes precedence.            | `string`                                                                                                                              | `semiGlobalDefault("Annotation", "title")`       |
-| visible     | Whether it is shown; bind it with v-model:visible.                                                     | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "visible")`     |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | Keys of the expanded groups; bind it with v-model:activeKey. | `string \| string[]` | `semiGlobalDefault("Annotation", "activeKey")` |
+| classNames | Class names of the inner parts, keyed by header, title, close, content, groupHeader, groupContent, item, itemTitle, itemDetail and itemFooter; merged with the built-in classes. Values take the same forms as class. The first four apply to the outer container, the group* keys to every source group, and the item* keys to every source card. | <ApiType detail={"Partial\u003cRecord\u003cAnnotationPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Annotation", "classNames")` |
+| closeOnEsc | Whether pressing Esc emits cancel. | `boolean` | `semiGlobalDefault("Annotation", "closeOnEsc")` |
+| defaultSize | Initial width and height; applies only when resizable is true. | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Annotation", "defaultSize")` |
+| info | Groups of references; each has a header, a key and its annotations. | `AnnotationInfo[]` | `semiGlobalDefault("Annotation", "info")` |
+| maxWidth | Maximum width when resizing; applies only when resizable is true. | `string \| number` | `semiGlobalDefault("Annotation", "maxWidth")` |
+| minWidth | Minimum width when resizing; applies only when resizable is true. | `string \| number` | `semiGlobalDefault("Annotation", "minWidth")` |
+| motion | Whether showing and hiding use the expand animation. | `boolean` | `semiGlobalDefault("Annotation", "motion")` |
+| resizable | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean` | `semiGlobalDefault("Annotation", "resizable")` |
+| showClose | Whether the header shows the close button. | `boolean` | `semiGlobalDefault("Annotation", "showClose")` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cAnnotationPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Annotation", "styles")` |
+| title | Plain-text title, the locale's references text by default; the title slot takes precedence. | `string` | `semiGlobalDefault("Annotation", "title")` |
+| visible | Whether it is shown; bind it with v-model:visible. | `boolean` | `semiGlobalDefault("Annotation", "visible")` |
 
 **Events**
 

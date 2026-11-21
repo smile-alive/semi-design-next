@@ -327,4 +327,22 @@ describe('Svelte Checkbox', () => {
         render(Checkbox, { props: { type: 'default', children: label } });
         expect(getWrapper()).not.toHaveClass(`${prefixCls}-cardType`);
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['icon', 'label', 'extra'] as const;
+        const selectors = { icon: 'inner-display', label: 'addon', extra: 'extra' };
+        render(Checkbox, {
+            props: {
+                children: label,
+                extra: text('more'),
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            },
+        });
+        for (const part of parts) {
+            const el = getElement(`.${prefixCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
 });

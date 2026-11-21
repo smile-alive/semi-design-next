@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | canSend | 是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。 | `boolean` | - |
 | className | 根元素的类名。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `templates`（模版面板），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `references`（引用列表）、`reference`（单个引用）、`attachments`（附件列表）、`attachment`（单个附件）、`editor`（输入区域）、`footer`（底部栏）、`configure`（配置区）、`actions`（操作区）、`upload`（默认上传按钮）、`send`（发送与停止按钮）、`templates`（模板面板）、`skills`、`skillItem`（技能列表与单项）、`suggestions`、`suggestionItem`（联想列表与单项），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, string>>"}>Type</ApiType> | - |
 | clearContentOnGenerating | generating 从 false 变为 true 时，是否清空输入框内容和附件。设为 false 可保留输入内容（适用于无限画布等非对话场景）。 | `boolean` | `true` |
 | defaultContent | 输入框默认内容，支持 html string 以及 json 格式，同 Tiptap 的 Content；只在创建编辑器时读取。 | `TiptapContent` | - |
 | dropdownMatchTriggerWidth | 下拉弹出层是否与输入框宽度一致。 | `boolean` | `true` |
@@ -47,7 +47,7 @@ import ApiType from '#/components/ApiType.astro';
 | skillHotKey | 输入框为空时按下该键唤起技能面板，需要同时提供 skills。 | `string` | - |
 | skills | 技能列表，每项的 icon 为 ReactNode。 | `Skill[]` | - |
 | style | 根元素的样式。 | `React.CSSProperties` | - |
-| styles | 内部各部位的内联样式，键同 `classNames`；`templates` 与默认的最大高度合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, React.CSSProperties>>"}>Type</ApiType> | - |
+| styles | 内部各部位的内联样式，键同 `classNames`；`templates`、`skills`、`suggestions` 与默认的最大高度合并。 | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | suggestions | 建议列表。列表变化且不为空时显示建议面板，为空时隐藏。 | `Suggestion[]` | - |
 | topSlotPosition | 顶部区域相对于引用区域与上传文件区域的位置，可选 `top`、`middle` 或 `bottom`。 | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | 自定义扩展的转换规则，用于保证 onContentChange 得到的节点数据符合预期。 | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |

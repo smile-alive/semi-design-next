@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
 import DropdownMenuFoundation, { type DropdownContextAdapter } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { type ElementProps, useFoundation } from '../../base/index';
-import { callHandler } from '../../utils/index';
+import { callHandler, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { menuContext, useDropdownContext } from './context';
 
@@ -14,7 +14,7 @@ type Adapter = DropdownContextAdapter<DropdownMenuProps, Record<string, never>>;
 const prefix = cssClasses.PREFIX;
 
 export default function DropdownMenu(props: DropdownMenuProps) {
-    const [local, rest] = splitProps(props, ['children', 'class', 'onKeyDown']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'style', 'onKeyDown']);
 
     const context = useDropdownContext();
     const config = useConfig();
@@ -33,7 +33,8 @@ export default function DropdownMenu(props: DropdownMenuProps) {
             aria-orientation="vertical"
             role="menu"
             {...rest}
-            class={clsx(`${prefix}-menu`, local.class)}
+            class={clsx(`${prefix}-menu`, local.class, context?.view().classNames?.menu)}
+            style={mergeStyles(context?.view().styles?.menu, local.style)}
             onKeyDown={(e) => {
                 callHandler(local.onKeyDown, e);
                 foundation.onMenuKeydown(e);

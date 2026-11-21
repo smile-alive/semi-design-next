@@ -16,6 +16,8 @@ type Adapter = PreviewFooterAdapter<FooterProps>;
 interface FooterButtonProps {
     label: string;
     showTooltip: boolean;
+    class?: string;
+    style?: JSX.CSSProperties | string;
     disabled?: boolean;
     gap?: boolean;
     onClick?: () => void;
@@ -46,10 +48,15 @@ function FooterButton(props: FooterButtonProps) {
         <button
             {...triggerProps}
             type="button"
-            class={clsx(`${footerPrefixCls}-button`, {
-                [`${prefixCls}-tooltip-children-wrapper`]: props.showTooltip,
-                [`${footerPrefixCls}-gap`]: props.gap,
-            })}
+            class={clsx(
+                `${footerPrefixCls}-button`,
+                {
+                    [`${prefixCls}-tooltip-children-wrapper`]: props.showTooltip,
+                    [`${footerPrefixCls}-gap`]: props.gap,
+                },
+                props.class
+            )}
+            style={props.style}
             aria-disabled={props.disabled || undefined}
             aria-label={props.label}
             onClick={() => {
@@ -100,29 +107,29 @@ export default function Footer(rawProps: FooterProps) {
 
     // built once: every binding inside stays live, so a custom menu that places them needs no re-render
     const menuItems = [
-        <FooterButton label={props.prevTip ?? locale().locale.prevTip} showTooltip={props.showTooltip} disabled={props.disabledPrev} onClick={() => props.onPrev?.()}>
+        <FooterButton label={props.prevTip ?? locale().locale.prevTip} showTooltip={props.showTooltip} class={props.classNames?.action} style={props.styles?.action} disabled={props.disabledPrev} onClick={() => props.onPrev?.()}>
             <IconChevronLeft class={props.disabledPrev ? disabledCls : ''} size="large" />
         </FooterButton>,
-        <div class={`${footerPrefixCls}-page`} aria-atomic="true" aria-live="polite">
+        <div class={clsx(`${footerPrefixCls}-page`, props.classNames?.page)} style={props.styles?.page} aria-atomic="true" aria-live="polite">
             {props.curPage}/{props.totalNum}
         </div>,
-        <FooterButton label={props.nextTip ?? locale().locale.nextTip} showTooltip={props.showTooltip} disabled={props.disabledNext} onClick={() => props.onNext?.()}>
+        <FooterButton label={props.nextTip ?? locale().locale.nextTip} showTooltip={props.showTooltip} class={props.classNames?.action} style={props.styles?.action} disabled={props.disabledNext} onClick={() => props.onNext?.()}>
             <IconChevronRight class={props.disabledNext ? disabledCls : ''} size="large" />
         </FooterButton>,
-        <FooterButton label={props.zoomOutTip ?? locale().locale.zoomOutTip} showTooltip={props.showTooltip} disabled={disabledZoomOut()} onClick={handleMinusClick}>
+        <FooterButton label={props.zoomOutTip ?? locale().locale.zoomOutTip} showTooltip={props.showTooltip} class={props.classNames?.action} style={props.styles?.action} disabled={disabledZoomOut()} onClick={handleMinusClick}>
             <IconMinus class={disabledZoomOut() ? disabledCls : ''} size="large" />
         </FooterButton>,
         <Slider aria-label={locale().locale.zoom} max={props.max} min={props.min} step={props.step} value={props.zoom} getAriaValueText={tipFormatter} tipFormatter={tipFormatter} tooltipVisible={props.showTooltip ? undefined : false} onChange={(value) => value !== undefined && foundation.handleSlideChange(value)} />,
-        <FooterButton label={props.zoomInTip ?? locale().locale.zoomInTip} showTooltip={props.showTooltip} disabled={disabledZoomIn()} onClick={handlePlusClick}>
+        <FooterButton label={props.zoomInTip ?? locale().locale.zoomInTip} showTooltip={props.showTooltip} class={props.classNames?.action} style={props.styles?.action} disabled={disabledZoomIn()} onClick={handlePlusClick}>
             <IconPlus class={disabledZoomIn() ? disabledCls : ''} size="large" />
         </FooterButton>,
-        <FooterButton label={isAdaptation() ? (props.originTip ?? locale().locale.originTip) : (props.adaptiveTip ?? locale().locale.adaptiveTip)} showTooltip={props.showTooltip} gap onClick={foundation.handleRatioClick}>
+        <FooterButton label={isAdaptation() ? (props.originTip ?? locale().locale.originTip) : (props.adaptiveTip ?? locale().locale.adaptiveTip)} showTooltip={props.showTooltip} class={props.classNames?.action} style={props.styles?.action} gap onClick={foundation.handleRatioClick}>
             {isAdaptation() ? <IconRealSizeStroked size="large" /> : <IconWindowAdaptionStroked size="large" />}
         </FooterButton>,
-        <FooterButton label={props.rotateTip ?? locale().locale.rotateTip} showTooltip={props.showTooltip} onClick={handleRotateLeft}>
+        <FooterButton label={props.rotateTip ?? locale().locale.rotateTip} showTooltip={props.showTooltip} class={props.classNames?.action} style={props.styles?.action} onClick={handleRotateLeft}>
             <IconRotate size="large" />
         </FooterButton>,
-        <FooterButton label={props.downloadTip ?? locale().locale.downloadTip} showTooltip={props.showTooltip} disabled={props.disableDownload} gap onClick={() => props.onDownload?.()}>
+        <FooterButton label={props.downloadTip ?? locale().locale.downloadTip} showTooltip={props.showTooltip} class={props.classNames?.action} style={props.styles?.action} disabled={props.disableDownload} gap onClick={() => props.onDownload?.()}>
             <IconDownload class={props.disableDownload ? disabledCls : ''} size="large" />
         </FooterButton>,
     ];
@@ -180,9 +187,16 @@ export default function Footer(rawProps: FooterProps) {
     return (
         <section
             ref={(node) => props.ref?.(node)}
-            class={clsx(footerPrefixCls, `${footerPrefixCls}-wrapper`, props.class, {
-                [`${footerPrefixCls}-content`]: !props.renderPreviewMenu,
-            })}
+            class={clsx(
+                footerPrefixCls,
+                `${footerPrefixCls}-wrapper`,
+                props.class,
+                {
+                    [`${footerPrefixCls}-content`]: !props.renderPreviewMenu,
+                },
+                props.classNames?.footer
+            )}
+            style={props.styles?.footer}
         >
             <Show keyed when={props.renderPreviewMenu} fallback={[...menuItems.slice(0, 3), <Divider layout="vertical" />, ...menuItems.slice(3, 7), <Divider layout="vertical" />, ...menuItems.slice(7)]}>
                 {(render) => render(menuProps)}

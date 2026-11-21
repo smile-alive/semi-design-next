@@ -44,6 +44,23 @@ describe('Banner', () => {
         }
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['icon', 'title', 'description', 'close', 'extra'] as const;
+        const view = render(Banner, {
+            props: {
+                title: 't',
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+            },
+            slots: { default: () => 'extra', description: () => 'd' },
+        });
+        for (const part of parts) {
+            const el = view.container.querySelector(`.${prefix}-${part}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
     it('class 与 style 落在根元素', () => {
         const view = render(Banner, { attrs: { class: 'test', style: { color: 'red' } } });
         expect(view.container.querySelector('div.test')).toBe(getRoot(view.container));

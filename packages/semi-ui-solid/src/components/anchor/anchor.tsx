@@ -34,7 +34,30 @@ const defaultProps = {
 
 export default function Anchor(rawProps: AnchorProps) {
     const props = useDefaultProps('Anchor', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['autoCollapse', 'children', 'class', 'defaultAnchor', 'getContainer', 'maxHeight', 'maxWidth', 'offsetTop', 'onChange', 'onClick', 'position', 'railTheme', 'ref', 'scrollIntoViewOptions', 'scrollMotion', 'showTooltip', 'size', 'style', 'targetOffset']);
+
+    const [local, rest] = splitProps(props, [
+        'autoCollapse',
+        'children',
+        'class',
+        'classNames',
+        'defaultAnchor',
+        'getContainer',
+        'maxHeight',
+        'maxWidth',
+        'offsetTop',
+        'onChange',
+        'onClick',
+        'position',
+        'railTheme',
+        'ref',
+        'scrollIntoViewOptions',
+        'scrollMotion',
+        'showTooltip',
+        'size',
+        'style',
+        'styles',
+        'targetOffset',
+    ]);
 
     const locale = useLocale('Anchor');
 
@@ -61,9 +84,11 @@ export default function Anchor(rawProps: AnchorProps) {
             activeLink: state().activeLink,
             autoCollapse: local.autoCollapse,
             childMap: childMap(),
+            classNames: local.classNames,
             position: local.position,
             showTooltip: local.showTooltip,
             size: local.size,
+            styles: local.styles,
         }),
         undefined,
         { equals: shallowEqualObjects }
@@ -96,15 +121,21 @@ export default function Anchor(rawProps: AnchorProps) {
                 role="navigation"
             >
                 <div class={`${prefixCls}-rail-wrapper`}>
-                    <div class={clsx(`${prefixCls}-slide`, `${prefixCls}-slide-${local.railTheme}`)} aria-hidden="true">
+                    <div class={clsx(`${prefixCls}-slide`, `${prefixCls}-slide-${local.railTheme}`, local.classNames?.rail)} style={local.styles?.rail} aria-hidden="true">
                         <span
-                            class={clsx(`${prefixCls}-slide-bar`, `${prefixCls}-slide-bar-${local.size}`, `${prefixCls}-slide-bar-${local.railTheme}`, {
-                                [`${prefixCls}-slide-bar-active`]: state().activeLink,
-                            })}
-                            style={{ top: state().slideBarTop }}
+                            class={clsx(
+                                `${prefixCls}-slide-bar`,
+                                `${prefixCls}-slide-bar-${local.size}`,
+                                `${prefixCls}-slide-bar-${local.railTheme}`,
+                                {
+                                    [`${prefixCls}-slide-bar-active`]: state().activeLink,
+                                },
+                                local.classNames?.indicator
+                            )}
+                            style={mergeStyles({ top: state().slideBarTop }, local.styles?.indicator)}
                         />
                     </div>
-                    <div ref={setLinkWrapper} class={`${prefixCls}-link-wrapper`} role="list">
+                    <div ref={setLinkWrapper} class={clsx(`${prefixCls}-link-wrapper`, local.classNames?.list)} style={local.styles?.list} role="list">
                         <Entries entries={entries()} level={1} />
                     </div>
                 </div>

@@ -20,6 +20,7 @@
 
     // `class`, `style` and the other native attributes stay in `rest` and land on the toast element (F2)
     let {
+        classNames = defaults('classNames'),
         close,
         content = defaults('content', ''),
         direction = defaults('direction'),
@@ -32,6 +33,7 @@
         showClose = defaults('showClose', true),
         stack = false,
         stackExpanded = false,
+        styles = defaults('styles'),
         textMaxWidth = defaults('textMaxWidth', 450),
         theme = defaults('theme', 'normal'),
         type = defaults('type'),
@@ -87,6 +89,7 @@
     // A spread, because a bound `dir` of undefined would still write dir="" on the element
     const dirAttr = $derived(dir ? { dir } : {});
     const toastStyle = $derived([rest.style, `transform: ${getStackLayerTransform(positionInList)}`].filter(Boolean).join('; '));
+    const textStyle = $derived([`max-width: ${toCssLength(textMaxWidth)}`, styles?.text].filter(Boolean).join('; '));
 
     const handleAnimationEnd = (event: AnimationEvent) => {
         if (event.target !== event.currentTarget) return;
@@ -125,7 +128,7 @@
 <div bind:this={outer} class={[stack && `${prefix}-zero-height-wrapper`, stack && stackExpanded && `${prefix}-zero-height-wrapper-expanded`, !motion && `${prefix}-no-motion`, phase && `${prefix}-animation-${phase}`]} onanimationend={handleAnimationEnd}>
     <!-- A status element inserted with its text is announced unreliably; the list's live region announces it -->
     <div bind:this={toastEl} {...rest} aria-label={ariaLabel} aria-live={isAlert ? undefined : 'off'} class={[prefix, rest.class, type && `${prefix}-${type}`, theme === 'light' && `${prefix}-light`]} {...dirAttr} role={isAlert ? 'alert' : 'status'} style={toastStyle}>
-        <div class={`${prefix}-content`}>
+        <div class={[`${prefix}-content`, classNames?.content]} style={styles?.content}>
             {#if customIcon}
                 {#if typeof customIcon === 'string'}
                     {customIcon}
@@ -133,9 +136,9 @@
                     {@render customIcon()}
                 {/if}
             {:else if TypeIcon}
-                <TypeIcon class={[`${prefix}-icon`, `${prefix}-icon-${type}`]} size="large" />
+                <TypeIcon class={[`${prefix}-icon`, `${prefix}-icon-${type}`, classNames?.icon]} size="large" style={styles?.icon} />
             {/if}
-            <span class={`${prefix}-content-text`} style:max-width={toCssLength(textMaxWidth)} x-semi-prop="content">
+            <span class={[`${prefix}-content-text`, classNames?.text]} style={textStyle} x-semi-prop="content">
                 {#if typeof content === 'string'}
                     {content}
                 {:else if content}
@@ -143,7 +146,7 @@
                 {/if}
             </span>
             {#if showClose}
-                <div class={`${prefix}-close-button`}>
+                <div class={[`${prefix}-close-button`, classNames?.close]} style={styles?.close}>
                     <IconButton aria-label={locale().locale.close} size="small" theme="borderless" type="tertiary" onclick={foundation.close}>
                         {#snippet icon()}
                             <IconClose x-semi-prop="icon" />

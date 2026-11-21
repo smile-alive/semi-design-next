@@ -19,6 +19,32 @@ afterEach(() => {
 });
 
 describe('Avatar', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const classNames = { image: 'c-image', label: 'c-label', mask: 'c-mask', border: 'c-border' };
+        const styles = { image: { opacity: 0.5 }, label: { opacity: 0.4 }, mask: { opacity: 0.3 }, border: { opacity: 0.2 } };
+        const view = render(Fixture, { props: { src, imgAttr: { class: 'own-image', style: { opacity: 0.9 } }, border: { motion: true }, classNames, styles } });
+        await fireEvent.mouseEnter(getElement(`.${prefix}-wrapper`, view.container));
+        const image = view.container.querySelector('img');
+        expect(image).toHaveClass('own-image', 'c-image');
+        expect(image).toHaveStyle({ opacity: '0.5' });
+        const mask = view.container.querySelector(`.${prefix}-hover`);
+        expect(mask).toHaveClass('c-mask');
+        expect(mask).toHaveStyle({ opacity: '0.3' });
+        const borders = view.container.querySelectorAll(`.${prefix}-additionalBorder`);
+        expect(borders).toHaveLength(2);
+        borders.forEach((border) => {
+            expect(border).toHaveClass('c-border');
+            expect(border).toHaveStyle({ opacity: '0.2' });
+        });
+        expect(root(view.container)).not.toHaveClass('c-image', 'c-mask', 'c-border');
+        view.unmount();
+
+        const text = render(Fixture, { props: { classNames, styles } });
+        const label = text.container.querySelector(`.${prefix}-label`);
+        expect(label).toHaveClass('c-label');
+        expect(label).toHaveStyle({ opacity: '0.4' });
+    });
+
     it('无包装头像的模板 ref.$el 始终是头像 span', async () => {
         const view = render(AvatarRoot);
         const element = root(view.container);

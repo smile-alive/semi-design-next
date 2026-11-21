@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 icon（图标容器），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"icon\", ClassValue>>"}>Type</ApiType> | `undefined` |
 | code | 是否被 code 元素包裹。 | `boolean` | `false` |
 | component | 自定义渲染元素，可以是标签名或 Vue 组件，默认 span；内容含 p 等块级元素时使用 div。 | `string \| Component` | `undefined` |
 | copyable | 是否可复制；传对象时见 Copyable Config。 | `boolean \| TypographyCopyableConfig` | `false` |
@@ -16,6 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | rule | 解析规则：text 仅取整，numbers 过滤非数字字符，bytes-decimal、bytes-binary 换算字节单位，percentages 转百分比，exponential 转科学计数法。 | <ApiType detail={"\"bytes-binary\" \u007c \"bytes-decimal\" \u007c \"exponential\" \u007c \"numbers\" \u007c \"percentages\" \u007c \"text\""}>Type</ApiType> | `"text"` |
 | size | 文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸。 | `"inherit" \| "normal" \| "small"` | `"normal"` |
 | strong | 是否加粗。 | `boolean` | `false` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003c\"icon\", StyleValue>>"}>Type</ApiType> | `undefined` |
 | truncate | 小数点后保留位的取整方式，对应 Math.round、Math.ceil、Math.floor。 | `"ceil" \| "floor" \| "round"` | `"round"` |
 | type | 文本类型。 | <ApiType detail={"\"danger\" \u007c \"primary\" \u007c \"quaternary\" \u007c \"secondary\" \u007c \"success\" \u007c \"tertiary\" \u007c \"warning\""}>Type</ApiType> | `"primary"` |
 | underline | 添加下划线样式。 | `boolean` | `false` |

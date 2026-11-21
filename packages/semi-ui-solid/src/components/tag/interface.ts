@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
+import type { strings, TagPart } from '@fibrae/semi-foundation/components/tag/constants';
 import type { ElementProps } from '../../base/index';
 import type { PopoverProps } from '../popover';
 
@@ -11,6 +11,8 @@ export type TagShape = 'circle' | 'square';
 export type TagCloseEvent = (MouseEvent | KeyboardEvent) & { currentTarget: HTMLElement; target: Element };
 
 export interface TagProps extends ElementProps<'div', 'onClose'> {
+    classNames?: Partial<Record<TagPart, string>>;
+    styles?: Partial<Record<TagPart, JSX.CSSProperties | string>>;
     tagKey?: string | number;
     size?: TagSize;
     color?: TagColor;

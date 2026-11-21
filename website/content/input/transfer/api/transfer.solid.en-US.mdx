@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `source`, `selected`, `filter`, `header`, `title`, `action`, `list`, `groupTitle`, `item`, `itemDragHandle`, `itemRemove` and `empty`; merged with the built-in classes. `source` and `selected` are the left and right panels, and `item` applies to the option rows on both sides. | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, string>>"}>Type</ApiType> | - |
 | dataSource | Data source: an array of items for `list`, an array of groups for `groupList`, or tree data with `children` for `treeList`. The data is derived from the array reference, so an in-place change is not seen; pass a new array. | `DataSource` | `[]` |
 | defaultValue | The values selected initially, read once when the Transfer is created. | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | `[]` |
 | disabled | Whether the whole transfer is disabled. | `boolean` | - |
@@ -27,6 +28,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSourceItem | Renders one candidate on the left; called once per item. The argument is the item and also carries `onChange` and `checked`; `checked` is a getter, read it in the returned JSX. | <ApiType detail={"(item: RenderSourceItemProps) => JSX.Element"}>Type</ApiType> | - |
 | renderSourcePanel | Replaces the whole left panel; called once with a live object (SourcePanelProps). Read its fields in the JSX: destructuring takes only the values of the first render. | <ApiType detail={"(sourcePanelProps: SourcePanelProps) => JSX.Element"}>Type</ApiType> | - |
 | showPath | `treeList` only: whether the selected items on the right show their path from the root. | `boolean` | `false` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | tabIndex | Set on the search box, including a value injected by a wrapping Tooltip; the root element is not a focus target. | `number \| string` | - |
 | treeProps | `treeList` only: props passed to the Tree on the left, overriding the defaults `multiple`, `disableStrictly`, `leafOnly`, `filterTreeNode`, `defaultExpandAll` and `searchRender` (`false`). `value`, `treeData`, `keyMaps`, `treeDataSimpleJson`, `onChangeWithObject`, `onChange` and `ref` belong to Transfer and are ignored. | <ApiType detail={"Omit\u003cTreeProps, 'keyMaps' \u007c 'onChange' \u007c 'onChangeWithObject' \u007c 'ref' \u007c 'treeData' \u007c 'treeDataSimpleJson' \u007c 'value'>"}>Type</ApiType> | - |
 | type | Transfer type: `list`, `groupList` or `treeList`. | `Type` | `"list"` |

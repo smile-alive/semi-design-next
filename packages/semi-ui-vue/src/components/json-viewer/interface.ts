@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { JsonViewerPart } from '@fibrae/semi-foundation/components/json-viewer/constants';
 import type { FindMatch, JsonViewerOptions as CoreOptions, SearchOptions, TokenRenderType } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 
 export type JsonViewerSearchOptions = SearchOptions;
@@ -15,6 +16,8 @@ export interface JsonViewerOptions extends Omit<CoreOptions, 'customRenderRule' 
 }
 
 export interface JsonViewerProps {
+    classNames?: Partial<Record<JsonViewerPart, ClassValue>>;
+    styles?: Partial<Record<JsonViewerPart, StyleValue>>;
     /** The editor's text; a value different from the editor's current text re-creates it */
     modelValue?: string;
     width?: number | string;

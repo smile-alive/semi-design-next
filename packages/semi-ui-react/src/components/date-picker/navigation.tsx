@@ -1,4 +1,5 @@
 import type React from 'react';
+import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
@@ -10,6 +11,8 @@ import IconButton from '../icon-button';
 const prefixCls = cssClasses.NAVIGATION;
 
 interface NavigationProps {
+    className?: string;
+    style?: React.CSSProperties;
     monthText?: string;
     /** on the month button, whose text names the month grid */
     titleId?: string;
@@ -24,7 +27,7 @@ interface NavigationProps {
     locale: Locale['DatePicker'];
 }
 
-export default function Navigation({ monthText = '', titleId, onMonthClick = noop, onNextMonth = noop, onPrevMonth = noop, onPrevYear = noop, onNextYear = noop, density, shouldBimonthSwitch, panelType, locale }: NavigationProps) {
+export default function Navigation({ className, style, monthText = '', titleId, onMonthClick = noop, onNextMonth = noop, onPrevMonth = noop, onPrevYear = noop, onNextYear = noop, density, shouldBimonthSwitch, panelType, locale }: NavigationProps) {
     const btnTheme = 'borderless';
     const iconBtnSize = density === 'compact' ? 'default' : 'large';
     const buttonSize = density === 'compact' ? 'small' : 'default';
@@ -34,7 +37,7 @@ export default function Navigation({ monthText = '', titleId, onMonthClick = noo
     const rightButtonStyle: React.CSSProperties = shouldBimonthSwitch && panelType === strings.PANEL_TYPE_LEFT ? { visibility: 'hidden' } : {};
 
     return (
-        <div className={prefixCls}>
+        <div className={clsx(prefixCls, className)} style={style}>
             <IconButton key="double-chevron-left" style={leftButtonStyle} aria-label={locale.prevYear} noHorizontalPadding size={buttonSize} theme={btnTheme} icon={<IconDoubleChevronLeft size={iconBtnSize} />} onClick={onPrevYear} />
             <IconButton key="chevron-left" style={leftButtonStyle} aria-label={locale.prevMonth} noHorizontalPadding size={buttonSize} theme={btnTheme} icon={<IconChevronLeft size={iconBtnSize} />} onClick={onPrevMonth} />
             <div className={`${prefixCls}-month`}>

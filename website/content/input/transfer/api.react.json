@@ -14,6 +14,14 @@
                 "zh-CN": "是否禁用整个穿梭框，包括搜索框、选项和操作按钮。",
                 "en-US": "Whether the whole transfer is disabled, including the search box, the options and the action buttons."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `source`、`selected`、`filter`、`header`、`title`、`action`、`list`、`groupTitle`、`item`、`itemDragHandle`、`itemRemove`、`empty`，与组件自带的类名合并。`source`、`selected` 是左右两个面板，`item` 同时作用于两侧的选项行。",
+                "en-US": "Class names of the inner parts, keyed by `source`, `selected`, `filter`, `header`, `title`, `action`, `list`, `groupTitle`, `item`, `itemDragHandle`, `itemRemove` and `empty`; merged with the built-in classes. `source` and `selected` are the left and right panels, and `item` applies to the option rows on both sides."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "dataSource": {
                 "zh-CN": "数据源。`list` 类型为数据项数组，`groupList` 为分组数组，`treeList` 为带 `children` 的树形数据。",
                 "en-US": "Data source: an array of items for `list`, an array of groups for `groupList`, or tree data with `children` for `treeList`."

@@ -1,18 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property       | Description                                                                                                      | Type               | Default                                           |
-| -------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------- |
-| displayValue   | Display date. When omitted it is the current date and updates at midnight.                                       | `Date`             | `semiGlobalDefault("Calendar", "displayValue")`   |
-| events         | Events to render, see Event Object.                                                                              | `EventObject[]`    | `[]`                                              |
-| height         | Height of the calendar; a number is in pixels.                                                                   | `string \| number` | `600`                                             |
-| markWeekend    | Shows weekend columns in grey to tell them from weekdays.                                                        | `boolean`          | `false`                                           |
-| minEventHeight | Minimum height in pixels of events in the day, range and week views.                                             | `number`           | `semiGlobalDefault("Calendar", "minEventHeight")` |
-| mode           | View mode: day, week, month or range. The view switches as soon as it changes.                                   | `CalendarMode`     | `"week"`                                          |
-| range          | Date range shown in range mode, left-closed and right-open. Required in range mode.                              | `Date[]`           | `semiGlobalDefault("Calendar", "range")`          |
-| scrollTop      | Default scroll offset of the content in the day, week and range views.                                           | `number`           | `400`                                             |
-| showCurrTime   | Shows the red line of the current time in the day, week and range views.                                         | `boolean`          | `true`                                            |
-| weekStartsOn   | Day of the week that starts the week, 0 for Sunday, 1 for Monday and so on. Applies to the month and week views. | `WeekStartsOn`     | `0`                                               |
-| width          | Width of the calendar; a number is in pixels.                                                                    | `string \| number` | `semiGlobalDefault("Calendar", "width")`          |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by header, headerCell, allDay, timeColumn, timeLabel, day, event, currentTimeLine, currentTimeDot, more and dropdown; values take any class binding and merge with the built-in classes. Parts appear per view: the day view has no header or headerCell, and the month view has no allDay, timeColumn, timeLabel, currentTimeLine or currentTimeDot. day is the time column of one day in the day, week and range views and a date cell in the month view; dropdown is the event card that opens from "N more". | <ApiType detail={"Partial\u003cRecord\u003cCalendarPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Calendar", "classNames")` |
+| displayValue | Display date. When omitted it is the current date and updates at midnight. | `Date` | `semiGlobalDefault("Calendar", "displayValue")` |
+| events | Events to render, see Event Object. | `EventObject[]` | `[]` |
+| height | Height of the calendar; a number is in pixels. | `string \| number` | `600` |
+| markWeekend | Shows weekend columns in grey to tell them from weekdays. | `boolean` | `false` |
+| minEventHeight | Minimum height in pixels of events in the day, range and week views. | `number` | `semiGlobalDefault("Calendar", "minEventHeight")` |
+| mode | View mode: day, week, month or range. The view switches as soon as it changes. | `CalendarMode` | `"week"` |
+| range | Date range shown in range mode, left-closed and right-open. Required in range mode. | `Date[]` | `semiGlobalDefault("Calendar", "range")` |
+| scrollTop | Default scroll offset of the content in the day, week and range views. | `number` | `400` |
+| showCurrTime | Shows the red line of the current time in the day, week and range views. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cCalendarPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Calendar", "styles")` |
+| weekStartsOn | Day of the week that starts the week, 0 for Sunday, 1 for Monday and so on. Applies to the month and week views. | `WeekStartsOn` | `0` |
+| width | Width of the calendar; a number is in pixels. | `string \| number` | `semiGlobalDefault("Calendar", "width")` |
 
 **Events**
 

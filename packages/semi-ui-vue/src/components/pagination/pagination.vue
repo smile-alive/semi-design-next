@@ -23,6 +23,8 @@
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<PaginationProps & /* @vue-ignore */ ElementProps<'nav', keyof PaginationProps | EmitHandlers<PaginationEmits>>>(), {
+        classNames: semiGlobalDefault('Pagination', 'classNames'),
+        styles: semiGlobalDefault('Pagination', 'styles'),
         total: () => semiDefault('Pagination', 'total', 1),
         showTotal: () => semiDefault('Pagination', 'showTotal', false),
         pageSize: semiGlobalDefault('Pagination', 'pageSize'),
@@ -76,11 +78,13 @@
         }))
     );
 
+    const dropdownParts = computed(() => ({ classNames: { content: props.classNames?.dropdown }, styles: { content: props.styles?.dropdown } }));
+
     const pageLabel = (page: number) => formatLocale(text.value.pageN, { page });
 
     const isRest = (page: number | '...') => page === '...' && !props.disabled;
 
-    const restPopoverProps = (page: number | '...') => (isRest(page) ? { position: props.popoverPosition, trigger: 'hover' as const } : {});
+    const restPopoverProps = (page: number | '...') => (isRest(page) ? { ...dropdownParts.value, position: props.popoverPosition, trigger: 'hover' as const } : {});
 
     // Only plain text names the button; icons and elements keep the locale name, empty text falls back to the default icon
     const textView = (slot: PaginationSlots['prevText']) => {
@@ -108,16 +112,17 @@
 
 <template>
     <nav v-if="!view.hidden" v-bind="$attrs" :aria-label="($attrs['aria-label'] as string | undefined) ?? text.label" :class="`${prefix}-wrapper`">
-        <ul :class="[prefix, { [`${prefix}-small`]: props.size === 'small', [`${prefix}-disabled`]: props.disabled }]">
-            <li v-if="props.showTotal && props.size !== 'small'" :class="`${prefix}-total`">
+        <ul :class="[prefix, { [`${prefix}-small`]: props.size === 'small', [`${prefix}-disabled`]: props.disabled }, props.classNames?.list]" :style="props.styles?.list">
+            <li v-if="props.showTotal && props.size !== 'small'" :class="[`${prefix}-total`, props.classNames?.total]" :style="props.styles?.total">
                 {{ formatLocale(text.total, { total: view.totalPageNum }) }}
             </li>
             <!-- one-item list: the slot runs once per render; the constant key keeps the button and its focus -->
             <li v-for="(prev, i) in [textView($slots.prevText)]" :key="i">
                 <button
                     :aria-label="prev.namedByContent ? undefined : text.prev"
-                    :class="[`${prefix}-item`, `${prefix}-prev`, { [`${prefix}-item-disabled`]: disabledState.prevDisabled || props.disabled }]"
+                    :class="[`${prefix}-item`, `${prefix}-prev`, { [`${prefix}-item-disabled`]: disabledState.prevDisabled || props.disabled }, props.classNames?.prev]"
                     :disabled="disabledState.prevDisabled || props.disabled"
+                    :style="props.styles?.prev"
                     type="button"
                     x-semi-prop="prevText"
                     @click="foundation.goPrev"
@@ -129,13 +134,13 @@
                 </button>
             </li>
             <li v-if="props.size === 'small'">
-                <Popover v-if="props.hoverShowPageSelect && !props.disabled">
-                    <button :class="[`${prefix}-item`, `${prefix}-item-small`]" type="button">{{ smallText }}</button>
+                <Popover v-if="props.hoverShowPageSelect && !props.disabled" v-bind="dropdownParts">
+                    <button :class="[`${prefix}-item`, `${prefix}-item-small`, props.classNames?.item]" :style="props.styles?.item" type="button">{{ smallText }}</button>
                     <template #content>
                         <RestPages :count="view.totalPageNum" :start="1" @select="foundation.goPage" />
                     </template>
                 </Popover>
-                <div v-else :class="[`${prefix}-item`, `${prefix}-item-small`, { [`${prefix}-item-all-disabled`]: props.disabled }]">
+                <div v-else :class="[`${prefix}-item`, `${prefix}-item-small`, { [`${prefix}-item-all-disabled`]: props.disabled }, props.classNames?.item]" :style="props.styles?.item">
                     {{ smallText }}
                 </div>
             </li>
@@ -151,9 +156,13 @@
                                     [`${prefix}-item-active`]: page === state.currentPage,
                                     [`${prefix}-item-all-disabled`]: props.disabled,
                                     [`${prefix}-item-all-disabled-active`]: page === state.currentPage && props.disabled,
+                                    [`${prefix}-item-ellipsis`]: page === '...',
                                 },
+                                props.classNames?.item,
+                                page === '...' && props.classNames?.ellipsis,
                             ]"
                             :disabled="props.disabled"
+                            :style="[props.styles?.item, page === '...' && props.styles?.ellipsis]"
                             type="button"
                             @click="foundation.goPage(page)"
                         >
@@ -168,8 +177,9 @@
             <li v-for="(next, i) in [textView($slots.nextText)]" :key="i">
                 <button
                     :aria-label="next.namedByContent ? undefined : text.next"
-                    :class="[`${prefix}-item`, `${prefix}-next`, { [`${prefix}-item-disabled`]: disabledState.nextDisabled || props.disabled }]"
+                    :class="[`${prefix}-item`, `${prefix}-next`, { [`${prefix}-item-disabled`]: disabledState.nextDisabled || props.disabled }, props.classNames?.next]"
                     :disabled="disabledState.nextDisabled || props.disabled"
+                    :style="props.styles?.next"
                     type="button"
                     x-semi-prop="nextText"
                     @click="foundation.goNext"
@@ -180,13 +190,13 @@
                     <IconChevronRight v-else size="large" />
                 </button>
             </li>
-            <li v-if="view.sizeChangerShown" :class="`${prefix}-switch`">
+            <li v-if="view.sizeChangerShown" :class="[`${prefix}-switch`, props.classNames?.sizeChanger]" :style="props.styles?.sizeChanger">
                 <!-- changePageSize takes one number: global Select defaults must not make it search, create or object-valued, nor add a clear button -->
                 <Select
                     :allowCreate="false"
                     :aria-label="text.pageSizeSelector"
                     :changeWithObject="false"
-                    :classNames="{ dropdown: `${prefix}-select-dropdown` }"
+                    :classNames="{ dropdown: [`${prefix}-select-dropdown`, props.classNames?.sizeChangerDropdown] }"
                     clickToHide
                     :disabled="props.disabled"
                     :filter="false"
@@ -194,10 +204,11 @@
                     :optionList="sizeOptions"
                     :position="view.switchPosition"
                     :showClear="false"
+                    :styles="{ dropdown: props.styles?.sizeChangerDropdown }"
                     @change="changePageSize"
                 />
             </li>
-            <li v-if="props.showQuickJumper" :class="[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: view.quickJumpDisabled }]">
+            <li v-if="props.showQuickJumper" :class="[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: view.quickJumpDisabled }, props.classNames?.quickJumper]" :style="props.styles?.quickJumper">
                 <span>{{ text.jumpTo }}</span>
                 <InputNumber :aria-label="text.jumpTo" :class="`${prefix}-quickjump-input-number`" :disabled="view.quickJumpDisabled" hideButtons :modelValue="state.quickJumpPage" :showClear="false" @blur="foundation.handleQuickJumpBlur" @change="foundation.handleQuickJumpNumberChange" @keydown="onQuickJumpKeydown" />
                 <span>{{ text.page }}</span>

@@ -41,6 +41,8 @@
         width?: number;
         height?: number | string;
         component?: TableComponent;
+        /** The cell belongs to a data row, so `classNames.cell` and `styles.cell` apply */
+        dataCell?: boolean;
         cellAttrs?: Record<string, unknown>;
     }>();
 
@@ -54,7 +56,7 @@
 
     const cellView = (): CellView | null => {
         const { column, record, index } = props;
-        const { direction, prefixCls, splitTable, indentSize } = table.view.value;
+        const { direction, prefixCls, splitTable, indentSize, classNames, styles } = table.view.value;
         const isRTL = direction === 'rtl';
         const fixedLeft = typeof props.fixedLeft === 'number';
         const fixedRight = typeof props.fixedRight === 'number';
@@ -106,6 +108,7 @@
                 class: [
                     column.class,
                     `${prefixCls}-row-cell`,
+                    props.dataCell && classNames?.cell,
                     customClass,
                     {
                         [`${prefixCls}-cell-fixed-left`]: isFixedLeft,
@@ -125,7 +128,7 @@
                 title: shouldShowEllipsisTitle(column.ellipsis!) && typeof shownText === 'string' ? shownText : undefined,
                 onClick,
                 ...merged,
-                style: [position, { width: toCssLength(props.width), height: toCssLength(props.height) }, customStyle as StyleValue, extraStyle as StyleValue, align],
+                style: [position, { width: toCssLength(props.width), height: toCssLength(props.height) }, props.dataCell && styles?.cell, customStyle as StyleValue, extraStyle as StyleValue, align],
             },
             indentWidth: fullRender ? 0 : indent,
             expandIcon: !fullRender && props.showExpandIcon ? expandIcon : null,

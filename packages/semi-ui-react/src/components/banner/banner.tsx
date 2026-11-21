@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/banner/constants';
+import { cssClasses, type BannerPart } from '@fibrae/semi-foundation/components/banner/constants';
 import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/components/banner/foundation';
 import { findFocusAfter } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/banner/banner.scss';
@@ -22,6 +22,7 @@ export type Type = 'info' | 'danger' | 'warning' | 'success';
 export interface BannerProps extends ElementProps<'div', 'title'> {
     type?: Type;
     className?: string;
+    classNames?: Partial<Record<BannerPart, string>>;
     children?: React.ReactNode;
     fullMode?: boolean;
     title?: React.ReactNode;
@@ -29,6 +30,7 @@ export interface BannerProps extends ElementProps<'div', 'title'> {
     icon?: React.ReactNode;
     closeIcon?: React.ReactNode;
     style?: React.CSSProperties;
+    styles?: Partial<Record<BannerPart, React.CSSProperties>>;
     bordered?: boolean;
     onClose?(e: React.MouseEvent): void;
     /** Attached to the root element */
@@ -51,7 +53,7 @@ const iconMap = {
 
 export default function Banner(rawProps: BannerProps) {
     const props = useDefaultProps('Banner', rawProps, defaultProps);
-    const { ref, children, type, className, style, bordered, title, description, fullMode, icon, closeIcon, onClose, ...rest } = props;
+    const { ref, children, type, className, classNames, style, styles, bordered, title, description, fullMode, icon, closeIcon, onClose, ...rest } = props;
 
     const { locale } = useLocale('Banner');
 
@@ -98,27 +100,27 @@ export default function Banner(rawProps: BannerProps) {
             <div ref={handoverFocus} className={`${prefixCls}-content-wrapper`}>
                 <div className={`${prefixCls}-content`}>
                     {hasContent(iconNode) && (
-                        <div className={`${prefixCls}-icon`} x-semi-prop="icon">
+                        <div className={clsx(`${prefixCls}-icon`, classNames?.icon)} style={styles?.icon} x-semi-prop="icon">
                             {iconNode}
                         </div>
                     )}
                     <div className={`${prefixCls}-content-body`}>
                         {hasContent(title) && (
-                            <Typography.Title component="div" className={`${prefixCls}-title`} heading={5} x-semi-prop="title">
+                            <Typography.Title component="div" className={clsx(`${prefixCls}-title`, classNames?.title)} style={styles?.title} heading={5} x-semi-prop="title">
                                 {title}
                             </Typography.Title>
                         )}
                         {hasContent(description) && (
-                            <Typography.Paragraph component="div" className={`${prefixCls}-description`} x-semi-prop="description">
+                            <Typography.Paragraph component="div" className={clsx(`${prefixCls}-description`, classNames?.description)} style={styles?.description} x-semi-prop="description">
                                 {description}
                             </Typography.Paragraph>
                         )}
                     </div>
                 </div>
-                {!(closeIcon === null) && <Button type="tertiary" className={`${prefixCls}-close`} aria-label={locale.close} size="small" theme="borderless" icon={closeIcon || <IconClose x-semi-prop="closeIcon" />} onClick={remove} />}
+                {!(closeIcon === null) && <Button type="tertiary" className={clsx(`${prefixCls}-close`, classNames?.close)} style={styles?.close} aria-label={locale.close} size="small" theme="borderless" icon={closeIcon || <IconClose x-semi-prop="closeIcon" />} onClick={remove} />}
             </div>
             {hasContent(children) && (
-                <div className={`${prefixCls}-extra`} x-semi-prop="children">
+                <div className={clsx(`${prefixCls}-extra`, classNames?.extra)} style={styles?.extra} x-semi-prop="children">
                     {children}
                 </div>
             )}

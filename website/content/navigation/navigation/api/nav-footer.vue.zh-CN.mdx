@@ -1,8 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性           | 说明                                                                                 | 类型      | 默认值  |
-| -------------- | ------------------------------------------------------------------------------------ | --------- | ------- |
-| collapseButton | 是否展示底部的收起侧边栏按钮，仅 mode 为 vertical 且 Footer 没有默认插槽内容时有效。 | `boolean` | `false` |
+| 属性           | 说明                                                                                                                         | 类型                                                                                         | 默认值      |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------- |
+| classNames     | 内部各部位的类名，键为 `collapseButton`（内置折叠按钮的外层容器，`collapseButton` 为 `true` 时渲染），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"collapseButton\", ClassValue>>"}>Type</ApiType> | `undefined` |
+| collapseButton | 是否展示底部的收起侧边栏按钮，仅 mode 为 vertical 且 Footer 没有默认插槽内容时有效。                                         | `boolean`                                                                                    | `false`     |
+| styles         | 内部各部位的内联样式，键同 `classNames`。                                                                                    | <ApiType detail={"Partial\u003cRecord\u003c\"collapseButton\", StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

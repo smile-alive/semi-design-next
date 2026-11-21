@@ -19,6 +19,8 @@
     const props = withDefaults(defineProps<ContainerProps & /* @vue-ignore */ ElementProps<'div', keyof ContainerProps | EmitHandlers<ContainerEmits> | 'style'>>(), {
         visible: false,
         title: undefined,
+        classNames: undefined,
+        styles: undefined,
         motion: true,
         resizable: true,
         minWidth: 150,
@@ -115,17 +117,17 @@
         <Transition appear :css="props.motion" :enterActiveClass="`${prefix}-animation-content_show`" :leaveActiveClass="`${prefix}-animation-content_hide`" :name="prefix" type="animation" @afterLeave="foundation.handleAnimationEnd" @enter="foundation.handleAnimationEnd">
             <div v-show="props.visible" ref="root" v-bind="$attrs" :class="`${prefix}-container`" :role="namedRole($attrs)">
                 <slot v-if="hasSlotContent($slots.header)" name="header" />
-                <div v-else :class="`${prefix}-container-header`">
-                    <div :class="`${prefix}-container-header-title`">
+                <div v-else :class="[`${prefix}-container-header`, props.classNames?.header]" :style="props.styles?.header">
+                    <div :class="[`${prefix}-container-header-title`, props.classNames?.title]" :style="props.styles?.title">
                         <slot name="title">{{ props.title }}</slot>
                     </div>
-                    <Button v-if="props.showClose" :aria-label="locale.locale.close" :class="`${prefix}-container-header-closeBtn`" size="small" theme="borderless" type="tertiary" @click="cancel">
+                    <Button v-if="props.showClose" :aria-label="locale.locale.close" :class="[`${prefix}-container-header-closeBtn`, props.classNames?.close]" size="small" :style="props.styles?.close" theme="borderless" type="tertiary" @click="cancel">
                         <template #icon>
                             <IconClose />
                         </template>
                     </Button>
                 </div>
-                <div :class="`${prefix}-container-content`">
+                <div :class="[`${prefix}-container-content`, props.classNames?.content]" :style="props.styles?.content">
                     <slot />
                 </div>
             </div>

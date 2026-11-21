@@ -1,14 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property   | Description                                                                                                                     | Type               | Default     |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----------- |
-| badge      | Badge props, same as Badge without children. class, style, onclick, onmouseenter and onmouseleave reach the Badge root element. | `FloatButtonBadge` | -           |
-| badgeCount | Snippet for custom badge content, in place of badge.count.                                                                      | `Snippet`          | -           |
-| colorful   | Colorful float button.                                                                                                          | `boolean`          | `false`     |
-| disabled   | Disabled state.                                                                                                                 | `boolean`          | `false`     |
-| href       | Link address. Renders an a element when set; a disabled link drops it.                                                          | `string`           | -           |
-| icon       | Snippet for the button icon.                                                                                                    | `Snippet`          | -           |
-| rel        | Relationship to the link target. Only takes effect with href.                                                                   | `string`           | -           |
-| shape      | Shape: round or square.                                                                                                         | `FloatButtonShape` | `"round"`   |
-| size       | Size: default, small or large.                                                                                                  | `FloatButtonSize`  | `"default"` |
-| target     | Where to display the linked URL. Only takes effect with href.                                                                   | `string`           | -           |
+| Property   | Description                                                                                                                                    | Type                                                                                      | Default     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------- |
+| badge      | Badge props, same as Badge without children. class, style, onclick, onmouseenter and onmouseleave reach the Badge root element.                | `FloatButtonBadge`                                                                        | -           |
+| badgeCount | Snippet for custom badge content, in place of badge.count.                                                                                     | `Snippet`                                                                                 | -           |
+| classNames | Class names of the inner parts, keyed by `body`; merged with the built-in classes. `body` is the visible body of the button, holding the icon. | <ApiType detail={"Partial\u003cRecord\u003cFloatButtonPart, ClassValue>>"}>Type</ApiType> | -           |
+| colorful   | Colorful float button.                                                                                                                         | `boolean`                                                                                 | `false`     |
+| disabled   | Disabled state.                                                                                                                                | `boolean`                                                                                 | `false`     |
+| href       | Link address. Renders an a element when set; a disabled link drops it.                                                                         | `string`                                                                                  | -           |
+| icon       | Snippet for the button icon.                                                                                                                   | `Snippet`                                                                                 | -           |
+| rel        | Relationship to the link target. Only takes effect with href.                                                                                  | `string`                                                                                  | -           |
+| shape      | Shape: round or square.                                                                                                                        | `FloatButtonShape`                                                                        | `"round"`   |
+| size       | Size: default, small or large.                                                                                                                 | `FloatButtonSize`                                                                         | `"default"` |
+| styles     | Inline styles (strings) of the inner parts, keyed like `classNames`.                                                                           | <ApiType detail={"Partial\u003cRecord\u003cFloatButtonPart, string>>"}>Type</ApiType>     | -           |
+| target     | Where to display the linked URL. Only takes effect with href.                                                                                  | `string`                                                                                  | -           |

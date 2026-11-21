@@ -92,12 +92,84 @@ describe('Svelte TreeSelect 渲染', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        setup({ classNames: { dropdown: 'my-drop', optionList: 'my-list' }, styles: { dropdown: 'color: red', optionList: 'max-height: 100px' } });
+        setup({ classNames: { dropdown: 'my-drop', list: 'my-list' }, styles: { dropdown: 'color: red', list: 'max-height: 100px' } });
         await settle();
         expect(getPopover()).toHaveClass('my-drop');
         expect(getPopover()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(getTree()).toHaveClass('my-list');
         expect(getTree()).toHaveStyle({ maxHeight: '100px' });
+    });
+
+    describe('部位', () => {
+        const partProps = (selectors: Record<string, string>) => {
+            const parts = Object.keys(selectors);
+            return {
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            };
+        };
+        const expectParts = (selectors: Record<string, string>) => {
+            const parts = Object.keys(selectors);
+            for (const part of parts) {
+                const el = document.querySelector(`.my-${part}`);
+                expect([part, el?.matches(selectors[part])]).toEqual([part, true]);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+
+        it('classNames 与 styles 按部位落到对应元素', async () => {
+            const selectors = {
+                prefix: `.${prefixCls}-prefix`,
+                suffix: `.${prefixCls}-suffix`,
+                content: `.${prefixCls}-selection`,
+                clear: `.${prefixCls}-clearbtn`,
+                arrow: `.${prefixCls}-arrow`,
+                dropdown: `.${prefixCls}-popover`,
+                search: `.${treePrefixCls}-search-wrapper`,
+                list: `.${treePrefixCls}-option-list`,
+                item: `li.${treePrefixCls}-option`,
+                itemTitle: `.${treePrefixCls}-option-label-text`,
+                itemSwitcher: `.${treePrefixCls}-option-expand-icon`,
+            };
+            setup({ showClear: true, prefix: snippet('pre'), suffix: snippet('suf'), filterTreeNode: true, defaultExpandAll: true, ...partProps(selectors) }, { value: 'Beijing' });
+            await settle();
+            expectParts(selectors);
+        });
+
+        it('classNames.placeholder 落在未选择时的占位文本上', async () => {
+            const selectors = { placeholder: `.${prefixCls}-selection-placeholder` };
+            setup({ defaultOpen: false, placeholder: 'ph', ...partProps(selectors) });
+            await settle();
+            expectParts(selectors);
+        });
+
+        it('classNames.empty 落在无数据时的空状态上', async () => {
+            const selectors = { empty: `ul.${treePrefixCls}-option-empty`, list: `.${treePrefixCls}-option-list` };
+            setup({ treeData: [], ...partProps(selectors) });
+            await settle();
+            expectParts(selectors);
+        });
+
+        it('searchPosition 为 trigger 时 classNames.input 落在单选搜索框上', async () => {
+            const selectors = { input: `.${prefixCls}-inputTrigger` };
+            setup({ defaultOpen: false, filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) });
+            await settle();
+            expectParts(selectors);
+        });
+
+        it('多选时 classNames.input 落在 TagInput 上，classNames.tag 落在已选标签上', async () => {
+            const selectors = { input: `.${BASE_CLASS_PREFIX}-tagInput`, tag: `.${prefixCls}-selection-tag` };
+            setup({ defaultOpen: false, multiple: true, filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) }, { value: ['Beijing'] });
+            await settle();
+            expectParts(selectors);
+        });
+
+        it('多选的已选标签组里 classNames.tag 落在标签上', async () => {
+            const selectors = { tag: `.${BASE_CLASS_PREFIX}-tag` };
+            setup({ defaultOpen: false, multiple: true, ...partProps(selectors) }, { value: ['Beijing'] });
+            await settle();
+            expectParts(selectors);
+        });
     });
 
     it('dropdownMatchSelectWidth 控制下拉的最小宽度', async () => {

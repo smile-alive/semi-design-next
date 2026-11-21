@@ -1,4 +1,5 @@
 import type { JSX } from 'solid-js';
+import type { TimelineItemPart, TimelinePart } from '@fibrae/semi-foundation/components/timeline/constants';
 import type { TimelineMode } from '@fibrae/semi-foundation/components/timeline/utils';
 import type { ElementProps } from '../../base/index';
 
@@ -9,6 +10,9 @@ export interface TimelineItemProps extends ElementProps<'li', 'content' | 'type'
     dot?: JSX.Element;
     extra?: JSX.Element;
     position?: 'left' | 'right';
+    /** Applied after the `item*` classNames of the parent Timeline */
+    classNames?: Partial<Record<TimelineItemPart, string>>;
+    styles?: Partial<Record<TimelineItemPart, JSX.CSSProperties | string>>;
 }
 
 export interface Data extends Omit<TimelineItemProps, 'children' | 'dot' | 'extra' | 'time'> {
@@ -20,6 +24,9 @@ export interface Data extends Omit<TimelineItemProps, 'children' | 'dot' | 'extr
 export interface TimelineProps extends ElementProps<'ul'> {
     mode?: TimelineMode;
     dataSource?: Data[];
+    /** `item*` keys apply to every Timeline.Item, before the item's own classNames */
+    classNames?: Partial<Record<TimelinePart, string>>;
+    styles?: Partial<Record<TimelinePart, JSX.CSSProperties | string>>;
     /** Content of each dataSource item; defaults to `item.content` */
     renderContent?: (item: Data, index: number) => JSX.Element;
     renderDot?: (item: Data, index: number) => JSX.Element;

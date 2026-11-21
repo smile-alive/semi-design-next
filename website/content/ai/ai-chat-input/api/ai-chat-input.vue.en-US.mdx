@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | canSend | Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count. | `boolean` | `semiGlobalDefault("AIChatInput", "canSend")` |
-| classNames | Class names of the inner parts, keyed by templates (the template panel); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"templates\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "classNames")` |
+| classNames | Class names of the inner parts, keyed by references (reference list), reference (one reference), attachments (attachment list), attachment (one attachment), editor (input area), footer (bottom bar), configure (configure area), actions (action area), upload (default upload button), send (send and stop button), templates (template panel), skills and skillItem (skill list and item), suggestions and suggestionItem (suggestion list and item); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "classNames")` |
 | clearContentOnGenerating | Whether the input content and attachments are cleared when generating turns on. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas). | `boolean` | `true` |
 | defaultContent | Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created. | `Content` | `semiGlobalDefault("AIChatInput", "defaultContent")` |
 | dropdownMatchTriggerWidth | Whether the dropdown layer has the same width as the input. | `boolean` | `true` |
@@ -24,7 +24,7 @@ import ApiType from '#/components/ApiType.astro';
 | showUploadFile | Whether the uploaded files area is shown; use it together with #topSlot. | `boolean` | `true` |
 | skillHotKey | Hotkey that opens the skill panel in the input. | `string` | `semiGlobalDefault("AIChatInput", "skillHotKey")` |
 | skills | Skills. A skill holds data only; its icon goes through the #skillIcon slot. | `Skill[]` | `semiGlobalDefault("AIChatInput", "skills")` |
-| styles | Inline styles of the inner parts, keyed like classNames; templates is merged over the panel's default max height. | <ApiType detail={"Partial\u003cRecord\u003c\"templates\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "styles")` |
+| styles | Inline styles of the inner parts, keyed like classNames; templates, skills and suggestions are merged over the panel's default max height. | <ApiType detail={"Partial\u003cRecord\u003cAIChatInputPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "styles")` |
 | suggestions | Suggestions, each a string or an object with content. | `Suggestion[]` | `semiGlobalDefault("AIChatInput", "suggestions")` |
 | topSlotPosition | Position of #topSlot relative to the reference area and the uploaded files area. | `"bottom" \| "middle" \| "top"` | `"top"` |
 | transformer | Transform rules of custom extensions: the key is the node name, the value turns the node into a contentChange item. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "transformer")` |

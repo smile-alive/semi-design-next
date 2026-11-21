@@ -75,12 +75,12 @@
     {#if loading}
         <output aria-label={locale().locale.loading} class={`${prefixCls}-wrapper`}>
             {#if indicator}
-                <div class={`${prefixCls}-animate`} x-semi-prop="indicator">{@render indicator()}</div>
+                <div class={[`${prefixCls}-animate`, classNames?.indicator]} style={styles?.indicator} x-semi-prop="indicator">{@render indicator()}</div>
             {:else}
-                <SpinIcon />
+                <SpinIcon class={classNames?.indicator} style={styles?.indicator} />
             {/if}
             {#if tip}
-                <div x-semi-prop="tip">{@render tip()}</div>
+                <div class={classNames?.tip} style={styles?.tip} x-semi-prop="tip">{@render tip()}</div>
             {/if}
         </output>
     {/if}

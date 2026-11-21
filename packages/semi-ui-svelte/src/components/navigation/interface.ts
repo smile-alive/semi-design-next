@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
-import type { NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
+import type { NavFooterPart, NavHeaderPart, NavItemPart, NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { IconSize } from '@fibrae/semi-icons-svelte';
 import type { DropdownProps } from '../dropdown/index.js';
@@ -21,6 +21,7 @@ interface EntryAttributes extends DataAttributes, AriaAttributes {
 export type NavLinkOptions = HTMLAnchorAttributes;
 
 export interface NavItemProps extends Omit<HTMLAttributes<HTMLLIElement>, 'children'> {
+    classNames?: Partial<Record<NavItemPart, ClassValue>>;
     disabled?: boolean;
     indent?: boolean;
     /** Or'ed with the collapsed state of the Nav */
@@ -30,6 +31,7 @@ export interface NavItemProps extends Omit<HTMLAttributes<HTMLLIElement>, 'child
     level?: number;
     link?: string;
     linkOptions?: NavLinkOptions;
+    styles?: Partial<Record<NavItemPart, string>>;
     /** The item's text and payload of `onSelect` and `onClick`; `label` replaces what is shown */
     text?: string | number;
     tooltipHideDelay?: number;
@@ -80,8 +82,10 @@ export interface SubNavProps extends Omit<HTMLAttributes<HTMLLIElement>, 'childr
 }
 
 export interface NavHeaderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+    classNames?: Partial<Record<NavHeaderPart, ClassValue>>;
     link?: string;
     linkOptions?: NavLinkOptions;
+    styles?: Partial<Record<NavHeaderPart, string>>;
     /** Also names the header link while the Nav is collapsed and the text is hidden; other content goes in children */
     text?: string | number;
     logo?: Snippet;
@@ -89,6 +93,8 @@ export interface NavHeaderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
 }
 
 export interface NavFooterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+    classNames?: Partial<Record<NavFooterPart, ClassValue>>;
+    styles?: Partial<Record<NavFooterPart, string>>;
     /** Shows the collapse button while the footer has no children and the Nav is vertical; a snippet replaces the built-in one */
     collapseButton?: boolean | Snippet;
     /** Text of the built-in collapse button; a text-only result also names the icon-only button */
@@ -97,6 +103,8 @@ export interface NavFooterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
 }
 
 export interface NavCollapseButtonProps {
+    class?: ClassValue;
+    style?: string;
     collapsed: boolean;
     collapseText?: Snippet<[{ collapsed: boolean }]>;
     onToggle: () => void;

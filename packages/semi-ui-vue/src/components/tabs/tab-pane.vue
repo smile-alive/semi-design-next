@@ -55,8 +55,9 @@
         :id="getPanelId(view.tabsId, props.itemKey ?? '')"
         :aria-hidden="active ? 'false' : 'true'"
         :aria-labelledby="getTabId(view.tabsId, props.itemKey ?? '')"
-        :class="[cssClasses.TABS_PANE, active ? cssClasses.TABS_PANE_ACTIVE : cssClasses.TABS_PANE_INACTIVE]"
+        :class="[cssClasses.TABS_PANE, active ? cssClasses.TABS_PANE_ACTIVE : cssClasses.TABS_PANE_INACTIVE, view.classNames?.pane]"
         role="tabpanel"
+        :style="view.styles?.pane"
         :tabindex="($attrs.tabindex as number | string | undefined) ?? 0"
         x-semi-prop="children"
     >

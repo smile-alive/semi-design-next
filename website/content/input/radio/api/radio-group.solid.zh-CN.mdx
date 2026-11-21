@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | buttonSize | type 为 button 时按钮的尺寸，可选 small、middle、large。 | `RadioGroupButtonSize` | `"middle"` |
+| classNames | 内部各部位的类名，键为 item（每个 Radio 的根元素）、itemIcon、itemLabel、itemExtra，作用于组内全部 Radio，与 Radio 自己的 classNames 合并，组的类名在前。 | <ApiType detail={"Partial\u003cRecord\u003cRadioGroupPart, string>>"}>Type</ApiType> | - |
 | defaultValue | 非受控时默认选中的值。 | `string \| number \| boolean` | - |
 | direction | 组内 Radio 的排列方向，可选 horizontal 或 vertical；type 为 button 时不支持。 | `'horizontal' \| 'vertical'` | `"horizontal"` |
 | disabled | 是否禁用整组。 | `boolean` | `false` |
@@ -14,5 +15,6 @@ import ApiType from '#/components/ApiType.astro';
 | options | 以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, addonId, classNames, styles, extraId }`，label、extra 只放字符串或数字，其他内容用 renderLabel、renderExtra；设置后忽略 children。 | `Options` | - |
 | renderExtra | 渲染 options 中一项的副文本，参数为该项与序号；按钮型没有副文本，不会调用。 | <ApiType detail={"(option: OptionItem, index: number) => JSX.Element"}>Type</ApiType> | - |
 | renderLabel | 渲染 options 中一项的标签，参数为该项与序号。 | <ApiType detail={"(option: OptionItem, index: number) => JSX.Element"}>Type</ApiType> | - |
+| styles | 内部各部位的内联样式，键同 classNames，Radio 自己的 styles 后写；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。 | <ApiType detail={"Partial\u003cRecord\u003cRadioGroupPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | type | 组内所有 Radio 的样式类型，可选 default、button、card、pureCard。 | `RadioType` | `"default"` |
 | value | 选中的值，受控使用。 | `string \| number \| boolean` | - |

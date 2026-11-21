@@ -120,10 +120,11 @@
             [`${table.prefixCls}-row-hovered`]: hovered || highlighted,
             [`${table.prefixCls}-row-hidden`]: displayNone,
         },
+        table.classNames?.row,
     ]}
     data-row-key={rowKey}
     role="row"
-    style={joinStyles(style, attrs.customStyle as string | undefined)}
+    style={joinStyles(style, table.styles?.row, attrs.customStyle as string | undefined)}
     onclick={handleClick}
     oncontextmenu={handleContextMenu}
     ondblclick={handleDoubleClick}
@@ -132,11 +133,12 @@
 >
     {#each cells as cell, columnIndex (columnIndex)}
         {#if cell.empty}
-            <TableCell column={cell.column} tag={table.components.body.cell} />
+            <TableCell column={cell.column} dataCell tag={table.components.body.cell} />
         {:else}
             <TableCell
                 column={cell.column}
                 columnsToEnd={cell.columnsToEnd}
+                dataCell
                 expandIconArgs={cell.expandIcon ? { isNested: true } : undefined}
                 firstFixedRight={cell.firstFixedRight}
                 fixedLeft={cell.fixedLeft}

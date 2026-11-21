@@ -9,7 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | <ApiType detail={"Omit\u003cCheckboxGroupProps, 'value'>"}>Type</ApiType> | - |
 | children | type 为 custom 时的反馈内容。 | `React.ReactNode` | - |
 | className | 弹层根元素的类名，与内置类名合并。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `mask`、`header`、`body`，与组件自带的类名合并，透传给当前模式的 Modal 或 SideSheet。 | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `mask`、`content`（`role="dialog"` 的面板本体）、`header`、`title`、`close`、`body`、`footer`、`emoji`（`type` 为 `emoji` 时的单个表情选项），与组件自带的类名合并。除 `emoji` 外的键透传给当前模式的 Modal 或 SideSheet。 | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, string>>"}>Type</ApiType> | - |
 | closable | 是否显示关闭按钮，透传给当前模式的 Modal 或 SideSheet。 | `boolean` | - |
 | closeIcon | 关闭按钮中的图标，透传给当前模式的 Modal 或 SideSheet。 | `ReactNode` | - |
 | closeOnEsc | 按 Esc 是否关闭弹层，透传给当前模式的 Modal 或 SideSheet。popup 模式需设为 true 才会在按 Esc 时触发 onCancel。 | `boolean` | - |
@@ -30,7 +30,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderContent | 包裹反馈内容：参数为内置内容（type 为 custom 时是 children），返回包裹后的节点。 | <ApiType detail={"(content: React.ReactNode) => React.ReactNode"}>Type</ApiType> | - |
 | size | 弹层尺寸，透传给当前模式的 Modal 或 SideSheet。 | `Size` | - |
 | style | 内联样式，落点随模式不同：popup 模式在 `role="dialog"` 元素上，modal 模式在 `.semi-modal` 对话框盒子上。 | `CSSProperties` | - |
-| styles | 内部各部位的内联样式，键同 `classNames`，透传给当前模式的 Modal 或 SideSheet。 | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, React.CSSProperties>>"}>Type</ApiType> | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | textAreaProps | type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。输入的 onChange 由 Feedback 接管，使用方的 onChange 仍会被调用。 | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |
 | title | 弹层标题。 | `ReactNode` | - |
 | type | 反馈内容的类型，可选 `emoji`、`text`、`radio`、`checkbox` 或 `custom`。custom 时内容写在 children 中，或由 renderContent 生成。 | `'checkbox' \| 'custom' \| 'emoji' \| 'radio' \| 'text'` | `"emoji"` |

@@ -5,9 +5,11 @@
     import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { useFoundation, useKeepAliveFoundation } from '../../base/index';
     import { useCalendarContext } from './context';
-    import type { CalendarSlots } from './interface';
+    import type { CalendarProps, CalendarSlots } from './interface';
 
     interface DayColProps {
+        classNames?: CalendarProps['classNames'];
+        styles?: CalendarProps['styles'];
         displayValue: Date;
         events: DailyEventLayout[];
         scrollHeight: number;
@@ -46,11 +48,11 @@
 </script>
 
 <template>
-    <div :class="prefixCls" role="cell">
+    <div :class="[prefixCls, props.classNames?.day]" role="cell" :style="props.styles?.day">
         <div :class="`${prefixCls}-content`">
             <template v-if="props.showCurrTime && state.showCurrTime">
-                <div :class="`${prefixCls}-curr-circle`" :style="{ top: `${state.currPos * props.scrollHeight}px` }" />
-                <div :class="`${prefixCls}-curr-line`" :style="{ top: `${state.currPos * props.scrollHeight}px` }" />
+                <div :class="[`${prefixCls}-curr-circle`, props.classNames?.currentTimeDot]" :style="[{ top: `${state.currPos * props.scrollHeight}px` }, props.styles?.currentTimeDot]" />
+                <div :class="[`${prefixCls}-curr-line`, props.classNames?.currentTimeLine]" :style="[{ top: `${state.currPos * props.scrollHeight}px` }, props.styles?.currentTimeLine]" />
             </template>
             <div :class="[`${prefixCls}-skeleton`, { [`${cssClasses.PREFIX}-weekend`]: props.isWeekend }]">
                 <template v-for="hour in hours" :key="hour">
@@ -64,12 +66,15 @@
                 <li
                     v-for="layout in props.events"
                     :key="layout.key"
-                    :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-day`]"
-                    :style="{
-                        top: `${layout.startPos * props.scrollHeight}px`,
-                        height: `${Math.max(props.minEventHeight ?? Number.MIN_SAFE_INTEGER, (layout.endPos - layout.startPos) * props.scrollHeight)}px`,
-                        insetInlineStart: toCssLength(layout.left),
-                    }"
+                    :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-day`, props.classNames?.event]"
+                    :style="[
+                        {
+                            top: `${layout.startPos * props.scrollHeight}px`,
+                            height: `${Math.max(props.minEventHeight ?? Number.MIN_SAFE_INTEGER, (layout.endPos - layout.startPos) * props.scrollHeight)}px`,
+                            insetInlineStart: toCssLength(layout.left),
+                        },
+                        props.styles?.event,
+                    ]"
                 >
                     <slot :event="eventOf(layout)" name="event">{{ layout.children }}</slot>
                 </li>

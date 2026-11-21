@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 `editor`、`searchTrigger`、`searchBox`、`searchInput`、`searchOptions`、`replaceInput`，与组件自带的类名合并；`editor` 是挂载编辑器的元素，搜索面板的部位只在面板打开时存在。 | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, string>>"}>Type</ApiType> | - |
 | height | 高度，数字按 px 处理，字符串原样使用。 | `number \| string` | `400` |
 | limitSearchButtonBounds | 是否限制搜索按钮的拖动范围在组件容器内。 | `boolean` | - |
 | onChange | 编辑内容变化时触发，参数为编辑器当前文本。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
@@ -11,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | ref | 根元素，类型为 `JsonViewerElement`，上面挂载着 JsonViewerHandle 的方法。 | <ApiType detail={"Ref\u003cJsonViewerElement>"}>Type</ApiType> | - |
 | renderSearchButton | 自定义渲染搜索按钮。第一个参数是创建默认按钮的函数，在插入处调用；第二个参数 `controls` 为搜索状态与方法；`controls.showSearchBar` 是 getter，需在返回的 JSX 内读取。 | <ApiType detail={"(defaultSearchButton: () => JSX.Element, searchControls: JsonViewerSearchControls) => JSX.Element"}>Type</ApiType> | - |
 | showSearch | 是否显示搜索按钮。 | `boolean` | `true` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | value | 展示与编辑的 JSON 文本，未传时按空文本创建。只有 value 变为与编辑器当前内容不同的值时才会重建编辑器，把 onChange 的值写回 value 不会丢失光标。 | `string` | `""` |
 | width | 宽度，数字按 px 处理，字符串原样使用。 | `number \| string` | `400` |
 

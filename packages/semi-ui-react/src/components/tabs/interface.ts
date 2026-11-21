@@ -61,20 +61,18 @@ export interface TabBarProps extends ElementProps<'div'> {
     'aria-label'?: string;
     'aria-labelledby'?: string;
     className?: string;
-    /** Only `visibleTabs` is read: the scroll wrapper that holds the visible tabs */
-    classNames?: Partial<Record<'visibleTabs', string>>;
+    /** The bar reads every key except the ones TabItem and TabPane read from the Tabs context (`item*`, `pane`, `content`) */
+    classNames?: Partial<Record<TabsPart, string>>;
     collapsible?: boolean | 'auto';
     list?: Array<PlainTab>;
     onTabClick?: (activeKey: string, event: MouseEvent) => void;
     showRestInDropdown?: boolean;
     size?: TabSize;
     style?: CSSProperties;
-    styles?: Partial<Record<'visibleTabs', CSSProperties>>;
+    styles?: Partial<Record<TabsPart, CSSProperties>>;
     tabBarExtraContent?: ReactNode;
     tabPosition?: TabPosition;
     type?: TabType;
-    dropdownClassName?: string;
-    dropdownStyle?: CSSProperties;
     deleteTabItem?: (tabKey: string, event: MouseEvent) => void;
     handleKeyDown?: (event: React.KeyboardEvent, itemKey: string, closable: boolean) => void;
     more?: TabsProps['more'];
@@ -102,6 +100,8 @@ export interface TabPaneProps extends ElementProps<'div'> {
 
 export interface TabContextValue {
     activeKey?: string | null;
+    classNames?: TabsProps['classNames'];
+    styles?: TabsProps['styles'];
     type?: TabType;
     /** Default close handler for TabItems that are not given deleteTabItem, e.g. in a custom renderTabBar */
     deleteTabItem?: (tabKey: string, event: MouseEvent) => void;

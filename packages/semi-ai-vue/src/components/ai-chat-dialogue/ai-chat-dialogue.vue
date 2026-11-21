@@ -10,7 +10,7 @@
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useFocusHandover, useLocale } from '@fibrae/semi-ui-vue/composables';
     import { handOnSlots } from '@fibrae/semi-ui-vue/utils';
-    import { provideAIChatDialogueContext } from './context';
+    import { provideAIChatDialogueContext, provideCodePart } from './context';
     import DialogueHint from './dialogue/dialogue-hint.vue';
     import Dialogue from './dialogue/dialogue.vue';
     import type { AIChatDialogueEmits, AIChatDialogueHandle, AIChatDialogueProps, AIChatDialogueSlots } from './interface';
@@ -83,9 +83,13 @@
     // a busy log defers announcements, so a streamed reply is read once it settles
     const streaming = computed(() => isUnfinishedStatus(chats.value.at(-1)?.status));
 
+    provideCodePart(computed(() => ({ class: props.classNames?.code, style: props.styles?.code })));
+
     provideAIChatDialogueContext({
         view: computed(() => ({
             align: props.align,
+            classNames: props.classNames,
+            styles: props.styles,
             disabledFileItemClick: props.disabledFileItemClick,
             escapeHtml: props.escapeHtml,
             markdownRenderProps: props.markdownRenderProps,
@@ -122,7 +126,7 @@
 
 <template>
     <div :class="prefix" :role="namedRole($attrs)">
-        <div ref="list" :aria-busy="streaming" :aria-label="locale.locale.messages" :class="`${prefix}-list`" role="log" tabindex="-1" @scroll="foundation.containerScroll">
+        <div ref="list" :aria-busy="streaming" :aria-label="locale.locale.messages" :class="[`${prefix}-list`, props.classNames?.messages]" role="log" :style="props.styles?.messages" tabindex="-1" @scroll="foundation.containerScroll">
             <component :is="dialogueNode(chat, index)" v-for="(chat, index) in chats" :key="chat.id" />
             <DialogueHint v-if="hints.length > 0" :class="props.classNames?.hint" :hints="hints" :selecting="props.selecting" :style="props.styles?.hint" @hintClick="foundation.handleHintClick">
                 <template v-if="$slots.hintBox" #hintBox="slotProps">
@@ -131,7 +135,7 @@
             </DialogueHint>
         </div>
         <span v-if="state.backBottomVisible" :ref="handoverBackBottomFocus" :class="`${prefix}-backBottom`">
-            <Button :aria-label="locale.locale.backToBottom" :class="`${prefix}-backBottom-button`" type="tertiary" @click="foundation.scrollToBottomWithAnimation">
+            <Button :aria-label="locale.locale.backToBottom" :class="[`${prefix}-backBottom-button`, props.classNames?.backBottom]" :style="props.styles?.backBottom" type="tertiary" @click="foundation.scrollToBottomWithAnimation">
                 <template #icon>
                     <IconChevronDown size="extra-large" />
                 </template>

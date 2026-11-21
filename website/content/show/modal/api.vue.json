@@ -16,8 +16,8 @@
             },
             "centered": { "zh-CN": "是否垂直居中显示。", "en-US": "Whether the dialog is vertically centered." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 mask、content、header、body、footer，值的写法同 class，与组件自带的类名合并；使用 #header 插槽时没有 header 部位。",
-                "en-US": "Class names of the inner parts, keyed by mask, content, header, body and footer; values take anything class takes and merge with the built-in classes. There is no header part when the #header slot is used."
+                "zh-CN": "内部各部位的类名，键为 mask、content、header、title、icon、close、body、footer，值的写法同 class，与组件自带的类名合并；使用 #header 插槽时没有 header、title、icon、close 部位。",
+                "en-US": "Class names of the inner parts, keyed by mask, content, header, title, icon, close, body and footer; values take anything class takes and merge with the built-in classes. There are no header, title, icon and close parts when the #header slot is used."
             },
             "closable": {
                 "zh-CN": "是否显示右上角的关闭按钮。",

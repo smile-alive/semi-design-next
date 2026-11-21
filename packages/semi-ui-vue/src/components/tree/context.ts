@@ -1,4 +1,5 @@
-import type { ComputedRef } from 'vue';
+import type { ClassValue, ComputedRef, StyleValue } from 'vue';
+import type { TreeNodePart } from '@fibrae/semi-foundation/components/tree/constants';
 import type { ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import { createContext } from '../../base/index';
 import type { TreeRowProps } from './interface';
@@ -14,6 +15,8 @@ export interface TreeContextView {
     labelEllipsis: boolean;
     dragOverNodeKey: string | null;
     dropPosition: number | null;
+    classNames?: Partial<Record<TreeNodePart, ClassValue>>;
+    styles?: Partial<Record<TreeNodePart, StyleValue>>;
 }
 
 /** A host without the optional methods (TreeSelect) leaves those interactions out */

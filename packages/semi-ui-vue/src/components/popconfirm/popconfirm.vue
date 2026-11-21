@@ -105,7 +105,7 @@
         ariaLabel: props.ariaLabel,
         arrowPointAtCenter: props.arrowPointAtCenter,
         autoAdjustOverflow: props.autoAdjustOverflow,
-        classNames: props.classNames,
+        classNames: { content: props.classNames?.content, arrow: props.classNames?.arrow },
         clickToHide: props.clickToHide,
         closeOnEsc: props.closeOnEsc,
         condition: props.condition,
@@ -121,7 +121,7 @@
         showArrow: props.showArrow,
         spacing: props.spacing,
         stopPropagation: props.stopPropagation,
-        styles: props.styles,
+        styles: { content: props.styles?.content, arrow: props.styles?.arrow },
     }));
 
     const prefixCls = cssClasses.PREFIX;
@@ -207,27 +207,27 @@
             <div :class="[prefixCls, $attrs.class]" :style="$attrs.style as CSSProperties" @click.stop @vue:before-mount="bindTooltipFocus(slotProps.initialFocusRef)">
                 <div :class="`${prefixCls}-inner`">
                     <template v-for="(part, i) in [{ icon: !$slots.icon || hasSlotContent($slots.icon), title: hasTitle(), content: hasContent() }]" :key="i">
-                        <div :class="`${prefixCls}-header`">
-                            <i v-if="part.icon" :class="`${prefixCls}-header-icon`" x-semi-prop="icon">
+                        <div :class="[`${prefixCls}-header`, props.classNames?.header]" :style="props.styles?.header">
+                            <i v-if="part.icon" :class="[`${prefixCls}-header-icon`, props.classNames?.icon]" :style="props.styles?.icon" x-semi-prop="icon">
                                 <slot v-if="$slots.icon" name="icon" />
                                 <IconAlertTriangle v-else size="extra-large" />
                             </i>
                             <div :class="`${prefixCls}-header-body`">
-                                <div v-if="part.title" :id="titleId" :class="`${prefixCls}-header-title`" x-semi-prop="title">
+                                <div v-if="part.title" :id="titleId" :class="[`${prefixCls}-header-title`, props.classNames?.title]" :style="props.styles?.title" x-semi-prop="title">
                                     <slot name="title">{{ props.title }}</slot>
                                 </div>
                             </div>
-                            <Button v-if="props.showCloseIcon" :aria-label="i18n.locale.close" :class="`${prefixCls}-btn-close`" size="small" theme="borderless" :type="props.cancelType" @click="foundation.handleCancel">
+                            <Button v-if="props.showCloseIcon" :aria-label="i18n.locale.close" :class="[`${prefixCls}-btn-close`, props.classNames?.close]" size="small" :style="props.styles?.close" theme="borderless" :type="props.cancelType" @click="foundation.handleCancel">
                                 <template #icon>
                                     <IconClose />
                                 </template>
                             </Button>
                         </div>
-                        <div v-if="part.content" :id="contentId" :class="[`${prefixCls}-body`, { [`${prefixCls}-body-withIcon`]: part.icon }]" x-semi-prop="content">
+                        <div v-if="part.content" :id="contentId" :class="[`${prefixCls}-body`, { [`${prefixCls}-body-withIcon`]: part.icon }, props.classNames?.body]" :style="props.styles?.body" x-semi-prop="content">
                             <slot name="content" v-bind="contentSlotProps" />
                         </div>
                     </template>
-                    <div ref="footer" :class="`${prefixCls}-footer`">
+                    <div ref="footer" :class="[`${prefixCls}-footer`, props.classNames?.footer]" :style="props.styles?.footer">
                         <Button v-bind="cancelProps" @click="foundation.handleCancel">
                             {{ props.cancelText || i18n.locale.cancel }}
                         </Button>

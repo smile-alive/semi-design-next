@@ -10,6 +10,10 @@
                 "zh-CN": "根元素（`role=\"group\"`）的类名。",
                 "en-US": "Class name of the root element (`role=\"group\"`)."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `input`，与组件自带的类名合并。`input` 作用到每个输入格的根元素，不是原生 input。",
+                "en-US": "Class names of the inner parts, keyed by `input`; merged with the built-in classes. `input` lands on the root element of every cell, not the native input."
+            },
             "count": {
                 "zh-CN": "验证码位数，即输入框的个数。",
                 "en-US": "Number of digits, which is also the number of inputs."
@@ -45,6 +49,10 @@
             "style": {
                 "zh-CN": "根元素的样式。",
                 "en-US": "Style of the root element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "validateStatus": {
                 "zh-CN": "校验状态，传给每个输入框；`error` 时显示错误样式。`FormPinCode` 会自动注入。",

@@ -1,4 +1,6 @@
-import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import type { CSSProperties } from 'react';
+import clsx from 'clsx';
+import { cssClasses, type ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/components/color-picker/data-part-foundation';
 import type { ColorFormat } from '@fibrae/semi-foundation/components/color-picker/interface';
 import { IconEyedropper } from '@fibrae/semi-icons-react';
@@ -13,10 +15,13 @@ import Select from '../select';
 type Foundation = DataPartFoundation<DataPartBaseProps>;
 type Adapter = DataPartAdapter<DataPartBaseProps>;
 
-export interface DataPartProps extends DataPartBaseProps {}
+export interface DataPartProps extends DataPartBaseProps {
+    classNames?: Partial<Record<ColorPickerPart, string>>;
+    styles?: Partial<Record<ColorPickerPart, CSSProperties>>;
+}
 
 export default function DataPart(props: DataPartProps) {
-    const { currentColor, width, alpha, eyeDropper } = props;
+    const { currentColor, width, alpha, eyeDropper, classNames, styles } = props;
 
     const { locale } = useLocale('ColorPicker');
 
@@ -36,16 +41,18 @@ export default function DataPart(props: DataPartProps) {
     return (
         <div className={`${cssClasses.PREFIX}-dataPart`} style={{ width }}>
             <div
-                className={`${cssClasses.PREFIX}-colorDemoBlock`}
+                className={clsx(`${cssClasses.PREFIX}-colorDemoBlock`, classNames?.preview)}
                 style={{
                     minWidth: 20,
                     minHeight: 20,
                     backgroundColor: `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`,
+                    ...styles?.preview,
                 }}
             />
             <InputGroup className={`${cssClasses.PREFIX}-inputGroup`} size="small">
                 <Input
-                    className={`${cssClasses.PREFIX}-colorPickerInput`}
+                    className={clsx(`${cssClasses.PREFIX}-colorPickerInput`, classNames?.input)}
+                    style={styles?.input}
                     aria-label={locale.color}
                     value={state.inputValue}
                     // the inputs share one compact group: the adornments and showClear are set so global Input and
@@ -76,7 +83,8 @@ export default function DataPart(props: DataPartProps) {
                     />
                 )}
                 <Select
-                    className={`${cssClasses.PREFIX}-formatSelect`}
+                    className={clsx(`${cssClasses.PREFIX}-formatSelect`, classNames?.format)}
+                    style={styles?.format}
                     aria-label={locale.format}
                     multiple={false}
                     value={format}

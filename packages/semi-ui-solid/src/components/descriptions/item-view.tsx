@@ -2,6 +2,7 @@ import { type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
 import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
+import { mergeStyles } from '../../utils/index';
 import { useDescriptionsContext } from './context';
 import type { DescriptionsItemProps } from './interface';
 
@@ -14,7 +15,13 @@ export default function DescriptionsItemView(props: DescriptionsItemProps) {
 
     const view = useDescriptionsContext();
 
-    const keyClass = () => clsx(keyCls, local.classNames?.key);
+    const keyClass = () => clsx(keyCls, view().classNames?.itemKey, local.classNames?.key);
+
+    const valueClass = () => clsx(valCls, view().classNames?.itemValue, local.classNames?.value);
+
+    const keyStyle = () => mergeStyles(view().styles?.itemKey, local.styles?.key);
+
+    const valueStyle = () => mergeStyles(view().styles?.itemValue, local.styles?.value);
 
     // Solid calls a function child when it inserts it; the type only widens JSX.Element for the Methods docs and React parity
     const value = () => local.children as JSX.Element;
@@ -26,21 +33,25 @@ export default function DescriptionsItemView(props: DescriptionsItemProps) {
             fallback={
                 <>
                     <th class={`${prefixCls}-item ${prefixCls}-item-th`}>
-                        <span class={keyClass()} style={local.styles?.key}>
+                        <span class={keyClass()} style={keyStyle()}>
                             {local.itemKey}
                         </span>
                     </th>
                     <td class={`${prefixCls}-item ${prefixCls}-item-td`} colSpan={local.span ? local.span * 2 - 1 : 1}>
-                        <span class={valCls}>{value()}</span>
+                        <span class={valueClass()} style={valueStyle()}>
+                            {value()}
+                        </span>
                     </td>
                 </>
             }
         >
             <td class={`${prefixCls}-item`} colSpan={local.span || 1}>
-                <span class={keyClass()} style={local.styles?.key}>
+                <span class={keyClass()} style={keyStyle()}>
                     {local.itemKey}:
                 </span>
-                <span class={valCls}>{value()}</span>
+                <span class={valueClass()} style={valueStyle()}>
+                    {value()}
+                </span>
             </td>
         </Show>
     );

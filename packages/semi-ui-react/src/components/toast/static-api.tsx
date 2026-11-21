@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { CSSProperties } from 'react';
+import type { ToastPart } from '@fibrae/semi-foundation/components/toast/constants';
 import ToastApi from '@fibrae/semi-foundation/components/toast/toast-api-foundation';
 import type { ConfigProps, ToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { assertClient } from '@fibrae/semi-foundation/utils';
@@ -12,6 +13,8 @@ import useToast from './use-toast';
 export interface ToastReactProps extends ToastProps, ElementProps<'div', 'content' | 'style' | 'className' | 'id' | 'children' | 'dangerouslySetInnerHTML' | 'onAnimationEnd' | 'onAnimationStart'> {
     id?: string;
     style?: CSSProperties;
+    classNames?: Partial<Record<ToastPart, string>>;
+    styles?: Partial<Record<ToastPart, CSSProperties>>;
     icon?: React.ReactNode;
     content: React.ReactNode;
     motion?: boolean;

@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-labelledby | 引用标签元素的 id，作为滑块的可访问名称；`range` 模式下每个滑块的名称为该标签加上起点或终点。 | `string` | - |
 | aria-valuetext | 为当前值提供用户友好的名称；设置了 `getAriaValueText` 时以其结果为准。 | `string` | - |
 | className | `.semi-slider-wrapper` 元素的类名。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `rail`（轨道），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `rail`、`track`、`handle`、`dot`、`mark`、`dropdown`，与组件自带的类名合并；`dropdown` 是悬停、拖动或聚焦手柄时显示当前值的提示弹出层。 | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
 | defaultValue | 非受控时的初始取值，未设置时为 `min`。 | `number \| number[]` | - |
 | disabled | 滑块是否禁用。 | `boolean` | `false` |
 | getAriaValueText | 为滑块的当前值提供用户友好的名称，参数为该滑块的值与顺序，优先于 `aria-valuetext`。 | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |

@@ -10,6 +10,8 @@
     import MenuBar from './menu-bar.vue';
 
     const props = withDefaults(defineProps<FileItemProps & /* @vue-ignore */ ElementProps<'div', keyof FileItemProps | EmitHandlers<FileItemEmits>>>(), {
+        classNames: undefined,
+        styles: undefined,
         name: undefined,
         content: undefined,
         editable: true,
@@ -64,7 +66,7 @@
 
 <template>
     <div :class="prefix">
-        <MenuBar v-if="props.editable && editor" :canUpload="canUpload" :editor="editor" />
-        <EditorContent :class="`${prefix}-editor`" :editor="editor" />
+        <MenuBar v-if="props.editable && editor" :canUpload="canUpload" :class="props.classNames?.menuBar" :editor="editor" :style="props.styles?.menuBar" />
+        <EditorContent :class="[`${prefix}-editor`, props.classNames?.editor]" :editor="editor" :style="props.styles?.editor" />
     </div>
 </template>

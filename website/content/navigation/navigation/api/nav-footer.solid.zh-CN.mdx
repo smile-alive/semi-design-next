@@ -2,7 +2,9 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性           | 说明                                                                                                                  | 类型                                                                    | 默认值 |
-| -------------- | --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------ |
-| collapseButton | 是否展示收起侧边栏按钮，`true` 时展示内置按钮，也可以传入节点替换它。仅 `mode` 为 `vertical` 且底部没有子元素时生效。 | `JSX.Element`                                                           | -      |
-| collapseText   | 内置收起按钮的文案，参数为是否收起。只含文本时也作为图标按钮的可访问名称。                                            | <ApiType detail={"(collapsed?: boolean) => JSX.Element"}>Type</ApiType> | -      |
+| 属性           | 说明                                                                                                                         | 类型                                                                                                         | 默认值 |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------ |
+| classNames     | 内部各部位的类名，键为 `collapseButton`（内置折叠按钮的外层容器，`collapseButton` 为 `true` 时渲染），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cNavFooterPart, string>>"}>Type</ApiType>                          | -      |
+| collapseButton | 是否展示收起侧边栏按钮，`true` 时展示内置按钮，也可以传入节点替换它。仅 `mode` 为 `vertical` 且底部没有子元素时生效。        | `JSX.Element`                                                                                                | -      |
+| collapseText   | 内置收起按钮的文案，参数为是否收起。只含文本时也作为图标按钮的可访问名称。                                                   | <ApiType detail={"(collapsed?: boolean) => JSX.Element"}>Type</ApiType>                                      | -      |
+| styles         | 内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。                                                          | <ApiType detail={"Partial\u003cRecord\u003cNavFooterPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |

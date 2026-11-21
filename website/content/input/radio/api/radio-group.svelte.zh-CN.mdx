@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | buttonSize | type 为 button 时按钮的尺寸，可选 small、middle、large。 | `RadioGroupButtonSize` | `"middle"` |
 | children | 组内的 Radio；设置 options 时忽略。 | `Snippet` | - |
+| classNames | 内部各部位的类名，键为 item（每个 Radio 的根元素）、itemIcon、itemLabel、itemExtra，作用于组内全部 Radio，值的写法同 class（字符串、数组或对象），与 Radio 自己的 classNames 合并，组的类名在前。 | <ApiType detail={"Partial\u003cRecord\u003cRadioGroupPart, ClassValue>>"}>Type</ApiType> | - |
 | direction | 组内 Radio 的排列方向，可选 horizontal 或 vertical；type 为 button 时不支持。 | `RadioDirection` | `"horizontal"` |
 | disabled | 是否禁用整组。 | `boolean` | `false` |
 | extra | 自定义 options 中每一项辅助文本的 snippet，参数为 `{ option, index }`。 | <ApiType detail={"Snippet\u003c[RadioGroupOptionSnippetParams]>"}>Type</ApiType> | - |
@@ -14,6 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | name | 组内所有原生 input 的 name；未设置时每组生成唯一值。 | `string` | - |
 | onBlur | 焦点离开整个分组时的回调，在组内 Radio 之间移动焦点不触发。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
 | onChange | 选中的值变化时的回调，参数的 `target.value` 为新的选中值；mode 为 advanced 且取消选中时为 undefined。 | <ApiType detail={"(event: RadioChangeEvent) => void"}>Type</ApiType> | - |
-| options | 以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, classNames, styles, addonId, extraId }`，其中 `style` 为字符串；`classNames`、`styles` 的键为 addon，写法同 Radio 的同名属性。 | <ApiType detail={"Array\u003cstring \u007c RadioOptionItem>"}>Type</ApiType> | - |
+| options | 以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, classNames, styles, addonId, extraId }`，其中 `style` 为字符串；`classNames`、`styles` 的键与写法同 Radio 的同名属性。 | <ApiType detail={"Array\u003cstring \u007c RadioOptionItem>"}>Type</ApiType> | - |
+| styles | 内部各部位的样式字符串，键同 classNames，Radio 自己的 styles 后写。 | <ApiType detail={"Partial\u003cRecord\u003cRadioGroupPart, string>>"}>Type</ApiType> | - |
 | type | 组内所有 Radio 的样式类型，可选 default、button、card、pureCard。 | `RadioType` | `"default"` |
 | value | 选中的值，可用 `bind:value` 双向绑定，与 Radio 的 value 匹配。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值。 | `RadioValue` | - |

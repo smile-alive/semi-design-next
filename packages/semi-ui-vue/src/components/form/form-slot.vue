@@ -52,7 +52,7 @@
 
 <template>
     <div v-bind="{ ...$attrs, ...rootAria() }" :class="[`${prefix}-field`, `${prefix}-slot`]" :x-label-pos="labelPosition">
-        <FieldGrid :labelAlign="formProps.labelAlign" :labelCol="formProps.labelCol" :labelPosition="labelPosition" :mainClass="[`${prefix}-field-main`, `${prefix}-slot-main`]" :wrapperCol="formProps.wrapperCol">
+        <FieldGrid :labelAlign="formProps.labelAlign" :labelCol="formProps.labelCol" :labelPosition="labelPosition" :mainClass="[`${prefix}-field-main`, `${prefix}-slot-main`, formProps.classNames?.content]" :mainStyle="formProps.styles?.content" :wrapperCol="formProps.wrapperCol">
             <template #label>
                 <FormLabel v-if="!props.noLabel" v-bind="labelProps" :id="labelShown() ? labelId : undefined">
                     <template v-if="$slots.label" #default>

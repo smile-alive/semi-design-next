@@ -45,6 +45,7 @@ export default function Avatar(rawProps: AvatarProps) {
             size: rawProps.size ?? moreItem.size,
             shape: rawProps.shape ?? moreItem.shape,
             className: clsx(rawProps.className, moreItem.className),
+            style: { ...moreItem.style, ...rawProps.style },
         };
     } else if (isListItem && item) {
         // A wrapper component around Avatar already received the class through the group's cloneElement and forwards it
@@ -53,7 +54,7 @@ export default function Avatar(rawProps: AvatarProps) {
     }
 
     const props = useDefaultProps('Avatar', own, defaultProps);
-    const { ref, shape, children, size, color, className, hoverMask, onClick, onError, onMouseEnter, onMouseLeave, imgAttr, src, srcSet, style, alt, gap, bottomSlot, topSlot, border, contentMotion, ...rest } = props;
+    const { ref, shape, children, size, color, className, hoverMask, onClick, onError, onMouseEnter, onMouseLeave, imgAttr, src, srcSet, style, alt, gap, bottomSlot, topSlot, border, contentMotion, classNames, styles, ...rest } = props;
 
     const rootRef = useRef<HTMLSpanElement>(null);
     const contentRef = useRef<HTMLSpanElement>(null);
@@ -135,7 +136,8 @@ export default function Avatar(rawProps: AvatarProps) {
                 src={src}
                 srcSet={srcSet}
                 {...imgAttr}
-                className={clsx(imgAttr?.className, focusCls)}
+                className={clsx(imgAttr?.className, focusCls, classNames?.image)}
+                style={{ ...imgAttr?.style, ...styles?.image }}
                 onError={(e) => {
                     imgAttr?.onError?.(e);
                     foundation.handleImgLoadError(e);
@@ -147,7 +149,7 @@ export default function Avatar(rawProps: AvatarProps) {
         const label = alt ?? text;
         content = (
             <span ref={contentRef} className={`${prefixCls}-content`} style={{ transform: `scale(${scale})` }}>
-                <span className={clsx(`${prefixCls}-label`, focusCls)} aria-label={label} role="img" {...a11yFocusProps} x-semi-prop="children">
+                <span className={clsx(`${prefixCls}-label`, focusCls, classNames?.label)} style={styles?.label} aria-label={label} role="img" {...a11yFocusProps} x-semi-prop="children">
                     {text}
                 </span>
             </span>
@@ -180,7 +182,7 @@ export default function Avatar(rawProps: AvatarProps) {
         <span role={isListItem ? 'listitem' : undefined} {...rootProps} ref={mergedRef} className={avatarCls} style={shouldWrap ? {} : customStyle} {...(shouldWrap ? {} : mouseEvent)}>
             {content}
             {hasContent(hoverContent) && (
-                <div className={`${prefixCls}-hover`} x-semi-prop="hoverContent">
+                <div className={clsx(`${prefixCls}-hover`, classNames?.mask)} style={styles?.mask} x-semi-prop="hoverContent">
                     {hoverContent}
                 </div>
             )}
@@ -188,10 +190,15 @@ export default function Avatar(rawProps: AvatarProps) {
     );
 
     if (border) {
-        const borderStyle: React.CSSProperties = typeof border === 'object' ? { borderColor: border.color } : {};
-        const borderCls = clsx(`${prefixCls}-additionalBorder`, `${prefixCls}-additionalBorder-${size}`, {
-            [`${prefixCls}-${shape}`]: shape,
-        });
+        const borderStyle: React.CSSProperties = { ...(typeof border === 'object' ? { borderColor: border.color } : {}), ...styles?.border };
+        const borderCls = clsx(
+            `${prefixCls}-additionalBorder`,
+            `${prefixCls}-additionalBorder-${size}`,
+            {
+                [`${prefixCls}-${shape}`]: shape,
+            },
+            classNames?.border
+        );
         avatar = (
             // the caller's style stays on the wrapper; applying it here would double margins and padding
             <div style={{ position: 'relative', ...sizeStyle }}>

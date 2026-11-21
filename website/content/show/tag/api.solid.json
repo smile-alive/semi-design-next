@@ -10,6 +10,11 @@
                 "zh-CN": "头像的资源地址，设置后生成头像标签。",
                 "en-US": "Avatar image URL. Setting it makes an avatar tag."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `prefix`、`avatar`、`content`、`suffix`、`close`，与组件自带的类名合并；`avatar` 落在头像的根元素上。",
+                "en-US": "Class names of the inner parts, keyed by `prefix`, `avatar`, `content`, `suffix` and `close`; merged with the built-in classes. `avatar` lands on the root element of the avatar."
+            },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "closable": {
                 "zh-CN": "标签是否可以关闭。",
                 "en-US": "Whether the tag can be closed."

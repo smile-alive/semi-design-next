@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | chatBoxRenderConfig | 消息框各部分的自定义渲染函数，类型见 `ChatBoxRenderConfig`。 | `ChatBoxRenderConfig` | - |
 | chats | 受控的对话列表，配合 `onChatsChange` 回写。应整体替换数组，而不是就地修改同一数组。 | `Message[]` | - |
 | className | 根元素的类名，与组件自身的类名合并。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `hint`（提示区最外层）、`inputBox`（输入框），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cChatPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `messages`、`dropArea`、`item`、`itemAvatar`、`itemTitle`、`itemContent`、`itemActions`、`divider`、`hint`、`hintItem`、`backBottom`、`stop`、`inputBox`、`input`、`send`，与组件自带的类名合并。`messages` 是可滚动的消息列表，`item*` 作用到每一条消息，`hint` 是提示词列表容器，`inputBox` 是底部输入区域的根元素。 | <ApiType detail={"Partial\u003cRecord\u003cChatPart, string>>"}>Type</ApiType> | - |
 | customMarkDownComponents | 自定义 Markdown 渲染组件，键为元素名，透传给消息内容的 MarkdownRender。 | `OriginMarkdownRenderProps['components']` | - |
 | enableUpload | 是否启用上传。布尔值同时控制粘贴、点击和拖拽上传；传对象时分别设置 `pasteUpload`、`clickUpload`、`dragUpload`，未设置的项为 `true`。未设置本属性时三种上传都启用。 | `boolean \| EnableUploadProps` | - |
 | escapeHtml | 是否转义用户消息中的 HTML 标签，防止被 Markdown 解析器当作 HTML 处理导致内容丢失。只作用于用户消息。 | `boolean` | `true` |

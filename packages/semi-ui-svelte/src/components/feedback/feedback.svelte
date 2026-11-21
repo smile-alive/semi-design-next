@@ -63,6 +63,17 @@
     // A forwarded `undefined` would replace the preset values (okText, mask, placement) of the Modal or SideSheet.
     const passthrough = $derived(Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== undefined)));
 
+    // `emoji` is Feedback's own part and lies outside the Modal and SideSheet types
+    const overlayClassNames = $derived.by(() => {
+        const { emoji: _emoji, ...others } = classNames ?? {};
+        return others;
+    });
+
+    const overlayStyles = $derived.by(() => {
+        const { emoji: _emoji, ...others } = styles ?? {};
+        return others;
+    });
+
     const closeAfter = (result: unknown) => {
         if (isPromise(result)) {
             (result as Promise<unknown>).then(
@@ -146,6 +157,8 @@
         {checkboxGroupProps}
         {checkboxLabel}
         {children}
+        emojiClass={classNames?.emoji}
+        emojiStyle={styles?.emoji}
         onCheckboxChange={foundation.handleCheckboxChange}
         onEmojiChange={foundation.handleEmojiChange}
         onRadioChange={foundation.handleRadioChange}
@@ -187,7 +200,7 @@
         cancelButtonProps={modalCancelProps}
         children={body}
         class={[prefix, `${prefix}-${type}`, rest.class]}
-        {classNames}
+        classNames={overlayClassNames}
         {closeIcon}
         {footer}
         {header}
@@ -196,7 +209,7 @@
         okButtonProps={modalOkProps}
         onCancel={foundation.handleModalCancel}
         onOk={foundation.handleModalOk}
-        {styles}
+        styles={overlayStyles}
         {title}
     />
 {:else}
@@ -213,11 +226,11 @@
         bind:visible={() => open, () => {}}
         children={body}
         class={[prefix, `${prefix}-${type}`, rest.class]}
-        {classNames}
+        classNames={overlayClassNames}
         {closeIcon}
         footer={footer === undefined ? popupFooter : (footer ?? undefined)}
         onCancel={foundation.handleCancel}
-        {styles}
+        styles={overlayStyles}
         {title}
     />
 {/if}

@@ -7,8 +7,8 @@
                 "en-US": "Content to wrap. With content, Spin acts as a wrapper; while loading, the content is `inert` and cannot be focused or operated."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `child`（包裹内容的子元素），追加在自带类名之后。",
-                "en-US": "Class names of the inner parts, keyed by `child` (the element wrapping the content), appended after the built-in class names."
+                "zh-CN": "内部各部位的类名，键为 `child`（包裹内容的子元素）、`indicator`（加载指示器，传入 `indicator` 时为其外层包裹元素）、`tip`（提示文字），追加在自带类名之后。",
+                "en-US": "Class names of the inner parts, keyed by `child` (the element wrapping the content), `indicator` (the loading indicator, or the element wrapping a given `indicator`) and `tip` (the tip text), appended after the built-in class names."
             },
             "delay": {
                 "zh-CN": "延迟显示加载效果的时间，单位毫秒。",
@@ -39,8 +39,8 @@
                 "en-US": "Inline style of the root element."
             },
             "styles": {
-                "zh-CN": "内部各部位的内联样式，键为 `child`（包裹内容的子元素）。",
-                "en-US": "Inline styles of the inner parts, keyed by `child` (the element wrapping the content)."
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "tip": {
                 "zh-CN": "加载中显示在指示符下方的描述文字，常在 Spin 作为包裹元素时使用，传入 ReactNode。",

@@ -2,19 +2,21 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性           | 说明                                                                                                                         | 类型                                                                | 默认值                                                                |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| direction      | 条状进度条的方向，可选 horizontal、vertical。                                                                                | `'horizontal' \| 'vertical'`                                        | `"horizontal"`                                                        |
-| format         | 格式化函数，入参为当前显示的百分比（限制在 0 到 100），返回的 JSX 渲染在环形进度条中心或条状进度条右侧；只在显示文字时执行。 | <ApiType detail={"(percent: number) => JSX.Element"}>Type</ApiType> | <ApiType detail={"(percent: number) => `${percent}%`"}>Type</ApiType> |
-| indeterminate  | 是否为不确定状态。开启后 percent 不再控制进度长度，且不展示文字，aria-valuenow 省略。                                        | `boolean`                                                           | `false`                                                               |
-| motion         | 文字数字是否以动画过渡到新的 percent；关闭后直接跳到目标值。                                                                 | `boolean`                                                           | `true`                                                                |
-| orbitStroke    | 进度条轨道的填充色。                                                                                                         | `string`                                                            | -                                                                     |
-| percent        | 进度百分比；超出 0 到 100 的值会被截断。更新为 NaN 时抛出错误。                                                              | `number`                                                            | `0`                                                                   |
-| showInfo       | 是否显示文字：环形显示在中间，条状显示在右侧。小号（size 为 small）的环形进度条不显示文字。                                  | `boolean`                                                           | `false`                                                               |
-| size           | 尺寸，可选 default、small（仅 type 为 circle 时生效）、large（仅 type 为 line 时生效）。                                     | `Size`                                                              | `"default"`                                                           |
-| stroke         | 填充色。数组形式为 `{ percent, color }` 的区间列表，color 可为任意 CSS 颜色或 Semi 色板名。                                  | `string \| StrokeArr`                                               | -                                                                     |
-| strokeGradient | 是否自动生成渐变色补齐区间颜色，需要 stroke 至少设置一个颜色区间。                                                           | `boolean`                                                           | `false`                                                               |
-| strokeLinecap  | 环形进度条端点形状，可选 round、square；条状进度条不生效。                                                                   | `'round' \| 'square'`                                               | `"round"`                                                             |
-| strokeWidth    | 环形进度条的线宽。                                                                                                           | `number`                                                            | `4`                                                                   |
-| type           | 类型，可选 line、circle。                                                                                                    | `'circle' \| 'line'`                                                | `"line"`                                                              |
-| width          | 环形进度条的直径；缺省时，size 为 small 取 24，否则取 72。                                                                   | `number`                                                            | -                                                                     |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 rail（底轨，表示总长度）、track（已完成的部分）、text（百分比文字），与组件自带的类名合并。这里的 rail、track 与自带类名 semi-progress-track（底轨）的叫法相反。 | <ApiType detail={"Partial\u003cRecord\u003cProgressPart, string>>"}>Type</ApiType> | - |
+| direction | 条状进度条的方向，可选 horizontal、vertical。 | `'horizontal' \| 'vertical'` | `"horizontal"` |
+| format | 格式化函数，入参为当前显示的百分比（限制在 0 到 100），返回的 JSX 渲染在环形进度条中心或条状进度条右侧；只在显示文字时执行。 | <ApiType detail={"(percent: number) => JSX.Element"}>Type</ApiType> | <ApiType detail={"(percent: number) => `${percent}%`"}>Type</ApiType> |
+| indeterminate | 是否为不确定状态。开启后 percent 不再控制进度长度，且不展示文字，aria-valuenow 省略。 | `boolean` | `false` |
+| motion | 文字数字是否以动画过渡到新的 percent；关闭后直接跳到目标值。 | `boolean` | `true` |
+| orbitStroke | 进度条轨道的填充色。 | `string` | - |
+| percent | 进度百分比；超出 0 到 100 的值会被截断。更新为 NaN 时抛出错误。 | `number` | `0` |
+| showInfo | 是否显示文字：环形显示在中间，条状显示在右侧。小号（size 为 small）的环形进度条不显示文字。 | `boolean` | `false` |
+| size | 尺寸，可选 default、small（仅 type 为 circle 时生效）、large（仅 type 为 line 时生效）。 | `Size` | `"default"` |
+| stroke | 填充色。数组形式为 `{ percent, color }` 的区间列表，color 可为任意 CSS 颜色或 Semi 色板名。 | `string \| StrokeArr` | - |
+| strokeGradient | 是否自动生成渐变色补齐区间颜色，需要 stroke 至少设置一个颜色区间。 | `boolean` | `false` |
+| strokeLinecap | 环形进度条端点形状，可选 round、square；条状进度条不生效。 | `'round' \| 'square'` | `"round"` |
+| strokeWidth | 环形进度条的线宽。 | `number` | `4` |
+| styles | 内部各部位的内联样式，键同 classNames，每个值可以是对象（键使用 kebab-case）或字符串。环形进度条的 rail、track 是 SVG 圆，需用 stroke 等 SVG 属性。 | <ApiType detail={"Partial\u003cRecord\u003cProgressPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
+| type | 类型，可选 line、circle。 | `'circle' \| 'line'` | `"line"` |
+| width | 环形进度条的直径；缺省时，size 为 small 取 24，否则取 72。 | `number` | - |

@@ -2,7 +2,7 @@ import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import CheckboxFoundation, { type CheckboxAdapter, type BasicCheckboxEvent, type BasicTargetObject, type BaseCheckboxProps, type CheckboxBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
-import { checkboxClasses as css } from '@fibrae/semi-foundation/components/checkbox/constants';
+import { checkboxClasses as css, type CheckboxPart } from '@fibrae/semi-foundation/components/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -29,6 +29,8 @@ export interface CheckboxProps extends BaseCheckboxProps, ElementProps<'span', '
     children?: React.ReactNode;
     onChange?: (e: CheckboxEvent) => any;
     style?: React.CSSProperties;
+    classNames?: Partial<Record<CheckboxPart, string>>;
+    styles?: Partial<Record<CheckboxPart, React.CSSProperties>>;
     extra?: React.ReactNode;
     /** Attached to the native input; inside a group the group's name wins */
     name?: string;
@@ -59,7 +61,9 @@ export default function Checkbox(rawProps: CheckboxProps) {
     const {
         disabled: disabledProp,
         style,
+        styles,
         className,
+        classNames,
         indeterminate,
         children,
         onMouseEnter,
@@ -111,8 +115,9 @@ export default function Checkbox(rawProps: CheckboxProps) {
 
     const { checked, disabled, name, isCardType, isPureCardType, ariaInvalid, ariaErrormessage } = CheckboxFoundation.deriveView({ checked: checkedProp, disabled: disabledProp, name: nameProp, type, value, 'aria-invalid': ariaInvalidProp, 'aria-errormessage': ariaErrormessageProp }, state, context.checkboxGroup);
     const prefix = css.PREFIX;
+    const { classNames: groupClassNames, styles: groupStyles } = context;
 
-    const wrapper = clsx(prefix, className, {
+    const wrapper = clsx(prefix, groupClassNames?.item, className, {
         [`${prefix}-disabled`]: disabled,
         [`${prefix}-indeterminate`]: indeterminate,
         [`${prefix}-checked`]: checked,
@@ -127,9 +132,14 @@ export default function Checkbox(rawProps: CheckboxProps) {
     const hasChildren = hasContent(children);
     const hasExtra = hasContent(extra);
 
-    const extraCls = clsx(`${prefix}-extra`, {
-        [`${prefix}-cardType_extra_noChildren`]: isCardType && !hasChildren,
-    });
+    const extraCls = clsx(
+        `${prefix}-extra`,
+        {
+            [`${prefix}-cardType_extra_noChildren`]: isCardType && !hasChildren,
+        },
+        groupClassNames?.itemExtra,
+        classNames?.extra
+    );
 
     const addonId = addonIdProp || `addon-${uid}`;
     const extraId = extraIdProp || `extra-${uid}`;
@@ -148,7 +158,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
         <span
             {...rest}
             className={wrapper}
-            style={style}
+            style={{ ...groupStyles?.item, ...style }}
             role={role}
             onClick={(e) => {
                 onClick?.(e);
@@ -164,6 +174,8 @@ export default function Checkbox(rawProps: CheckboxProps) {
                 ref={inputRef}
                 id={id}
                 name={name}
+                iconClassName={clsx(groupClassNames?.itemIcon, classNames?.icon)}
+                iconStyle={{ ...groupStyles?.itemIcon, ...styles?.icon }}
                 aria-describedby={ariaDescribedby}
                 aria-errormessage={ariaErrormessage}
                 aria-invalid={ariaInvalid}
@@ -182,12 +194,12 @@ export default function Checkbox(rawProps: CheckboxProps) {
             {(hasChildren || hasExtra) && (
                 <div className={`${prefix}-content`}>
                     {hasChildren && (
-                        <span id={addonId} className={`${prefix}-addon`} x-semi-prop={childrenAlias || 'children'}>
+                        <span id={addonId} className={clsx(`${prefix}-addon`, groupClassNames?.itemLabel, classNames?.label)} style={{ ...groupStyles?.itemLabel, ...styles?.label }} x-semi-prop={childrenAlias || 'children'}>
                             {children}
                         </span>
                     )}
                     {hasExtra && (
-                        <div id={extraId} className={extraCls} x-semi-prop="extra">
+                        <div id={extraId} className={extraCls} style={{ ...groupStyles?.itemExtra, ...styles?.extra }} x-semi-prop="extra">
                             {extra}
                         </div>
                     )}

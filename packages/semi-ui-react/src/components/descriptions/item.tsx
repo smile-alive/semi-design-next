@@ -13,6 +13,7 @@ export interface DescriptionsItemProps extends ElementProps<'tr', 'children'> {
     style?: React.CSSProperties;
     itemKey?: React.ReactNode;
     span?: number;
+    /** Applied after the `itemKey` and `itemValue` classNames of the parent Descriptions */
     classNames?: Partial<Record<DescriptionsItemPart, string>>;
     styles?: Partial<Record<DescriptionsItemPart, React.CSSProperties>>;
     /** Attached to the tr; unused in horizontal layout, which renders only cells */
@@ -24,20 +25,25 @@ const keyCls = `${prefixCls}-key`;
 const valCls = `${prefixCls}-value`;
 
 function Item({ ref, itemKey, hidden, span, children, classNames, styles, ...rest }: DescriptionsItemProps) {
-    const { align, layout } = useDescriptionsContext();
+    const { align, layout, classNames: parentClassNames, styles: parentStyles } = useDescriptionsContext();
 
-    const keyClassName = clsx(keyCls, classNames?.key);
+    const keyClassName = clsx(keyCls, parentClassNames?.itemKey, classNames?.key);
+    const keyStyle = { ...parentStyles?.itemKey, ...styles?.key };
 
     if (hidden) {
         return null;
     }
 
-    const value = <span className={valCls}>{typeof children === 'function' ? children() : children}</span>;
+    const value = (
+        <span className={clsx(valCls, parentClassNames?.itemValue, classNames?.value)} style={{ ...parentStyles?.itemValue, ...styles?.value }}>
+            {typeof children === 'function' ? children() : children}
+        </span>
+    );
 
     const cells =
         align === 'plain' ? (
             <td className={`${prefixCls}-item`} colSpan={span || 1}>
-                <span className={keyClassName} style={styles?.key}>
+                <span className={keyClassName} style={keyStyle}>
                     {itemKey}:
                 </span>
                 {value}
@@ -45,7 +51,7 @@ function Item({ ref, itemKey, hidden, span, children, classNames, styles, ...res
         ) : (
             <>
                 <th className={`${prefixCls}-item ${prefixCls}-item-th`}>
-                    <span className={keyClassName} style={styles?.key}>
+                    <span className={keyClassName} style={keyStyle}>
                         {itemKey}
                     </span>
                 </th>

@@ -18,6 +18,10 @@
                 "zh-CN": "picker 根元素的类名；使用 usePopover 时位于弹层内。",
                 "en-US": "Class name of the picker root element; it is inside the popover when `usePopover`."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `area`（选色区）、`hue`（色相滑条）、`alpha`（透明度滑条）、`handle`（三处共用的圆形手柄）、`preview`（颜色预览块）、`input`（颜色值输入框）、`format`（格式选择器）、`trigger`（默认触发按钮）、`dropdown`（usePopover 时的弹出层），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `area` (saturation and brightness area), `hue` (hue slider), `alpha` (alpha slider), `handle` (the round handle shared by all three), `preview` (color preview block), `input` (color value input), `format` (format select), `trigger` (default trigger button) and `dropdown` (the popup with `usePopover`); merged with the built-in classes."
+            },
             "defaultFormat": {
                 "zh-CN": "手动输入时默认使用的颜色格式，可选 `rgba`、`hex`、`hsva`。",
                 "en-US": "Color format used by default for manual input: `rgba`, `hex` or `hsva`."
@@ -49,6 +53,10 @@
             "style": {
                 "zh-CN": "picker 根元素的样式；使用 usePopover 时位于弹层内。",
                 "en-US": "Style of the picker root element; it is inside the popover when `usePopover`."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "topSlot": {
                 "zh-CN": "顶部渲染额外元素。",

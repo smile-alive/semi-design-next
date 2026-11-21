@@ -7,4 +7,4 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type SpinPart = 'child';
+export type SpinPart = 'child' | 'indicator' | 'tip';

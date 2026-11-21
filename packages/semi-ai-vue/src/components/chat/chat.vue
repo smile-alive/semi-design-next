@@ -118,11 +118,13 @@
     provideChatContext({
         view: computed(() => ({
             align: props.align,
+            classNames: props.classNames,
             customMarkDownComponents: props.customMarkDownComponents,
             escapeHtml: props.escapeHtml,
             markdownRenderProps: props.markdownRenderProps,
             mode: props.mode,
             roleConfig: props.roleConfig,
+            styles: props.styles,
         })),
         toast,
         likeMessage: foundation.likeMessage,
@@ -142,21 +144,21 @@
 
 <template>
     <div :class="PREFIX" :role="namedRole($attrs)" @dragend="foundation.handleDragEnd" @dragover="foundation.handleDragOver" @dragstart="foundation.handleDragStart">
-        <div v-if="upload.dragUpload && state.uploadAreaVisible" ref="dropArea" :class="`${PREFIX}-dropArea`" @dragleave="foundation.handleContainerDragLeave" @dragover="foundation.handleContainerDragOver" @drop="foundation.handleContainerDrop">
+        <div v-if="upload.dragUpload && state.uploadAreaVisible" ref="dropArea" :class="[`${PREFIX}-dropArea`, props.classNames?.dropArea]" :style="props.styles?.dropArea" @dragleave="foundation.handleContainerDragLeave" @dragover="foundation.handleContainerDragOver" @drop="foundation.handleContainerDrop">
             <span :class="`${PREFIX}-dropArea-text`">{{ i18n.locale.dropAreaText }}</span>
         </div>
         <div :class="`${PREFIX}-inner`">
             <slot name="topSlot" />
             <div :class="`${PREFIX}-content`">
-                <div ref="container" :aria-busy="streaming" :aria-label="i18n.locale.messages" :class="`${PREFIX}-container`" role="log" tabindex="-1" @scroll="foundation.containerScroll">
+                <div ref="container" :aria-busy="streaming" :aria-label="i18n.locale.messages" :class="[`${PREFIX}-container`, props.classNames?.messages]" role="log" :style="props.styles?.messages" tabindex="-1" @scroll="foundation.containerScroll">
                     <template v-for="(item, index) in chats" :key="item.id">
                         <template v-if="item.role === ROLE.DIVIDER">
                             <slot v-if="$slots.divider" :message="item" name="divider" />
-                            <Divider v-else :class="PREFIX_DIVIDER">{{ i18n.locale.clearContext }}</Divider>
+                            <Divider v-else :class="[PREFIX_DIVIDER, props.classNames?.divider]" :style="props.styles?.divider">{{ i18n.locale.clearContext }}</Divider>
                         </template>
                         <component :is="chatBoxNode(item, index)" v-else />
                     </template>
-                    <Hint v-if="props.hints?.length" :class="props.classNames?.hint" :hints="props.hints" :style="props.styles?.hint" @hintClick="foundation.handleHintClick">
+                    <Hint v-if="props.hints?.length" :class="props.classNames?.hint" :hints="props.hints" :itemClass="props.classNames?.hintItem" :itemStyle="props.styles?.hintItem" :style="props.styles?.hint" @hintClick="foundation.handleHintClick">
                         <template v-if="$slots.hintBox" #hintBox="p">
                             <slot name="hintBox" v-bind="p" />
                         </template>
@@ -166,14 +168,14 @@
                 <div :class="`${PREFIX}-toast`"><Holder /></div>
             </div>
             <span v-if="showBackBottom" ref="backBottom" :class="`${PREFIX}-action`">
-                <Button :aria-label="i18n.locale.backToBottom" :class="[`${PREFIX}-action-content`, `${PREFIX}-action-backBottom`]" type="tertiary" @click="foundation.scrollToBottomWithAnimation">
+                <Button :aria-label="i18n.locale.backToBottom" :class="[`${PREFIX}-action-content`, `${PREFIX}-action-backBottom`, props.classNames?.backBottom]" :style="props.styles?.backBottom" type="tertiary" @click="foundation.scrollToBottomWithAnimation">
                     <template #icon>
                         <IconChevronDown size="extra-large" />
                     </template>
                 </Button>
             </span>
             <span v-if="generating" ref="stop" :class="`${PREFIX}-action`">
-                <Button :class="[`${PREFIX}-action-content`, `${PREFIX}-action-stop`]" type="tertiary" @click="foundation.stopGenerate">
+                <Button :class="[`${PREFIX}-action-content`, `${PREFIX}-action-stop`, props.classNames?.stop]" :style="props.styles?.stop" type="tertiary" @click="foundation.stopGenerate">
                     <template #icon>
                         <IconDisc size="extra-large" />
                     </template>
@@ -188,9 +190,13 @@
                 :dragUpload="upload.dragUpload"
                 :inputBoxClass="props.classNames?.inputBox"
                 :inputBoxStyle="props.styles?.inputBox"
+                :inputClass="props.classNames?.input"
+                :inputStyle="props.styles?.input"
                 :pasteUpload="upload.pasteUpload"
                 :placeholder="props.placeholder"
+                :sendClass="props.classNames?.send"
                 :sendHotKey="props.sendHotKey"
+                :sendStyle="props.styles?.send"
                 :showClearContext="props.showClearContext"
                 :uploadProps="props.uploadProps"
                 :uploadTipProps="props.uploadTipProps"

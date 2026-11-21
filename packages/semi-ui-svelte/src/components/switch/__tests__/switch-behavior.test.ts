@@ -24,6 +24,24 @@ describe('Svelte Switch', () => {
         semiGlobal.config.overrideDefaultProps = {};
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const props: SwitchProps = { classNames: { indicator: 'my-indicator', content: ['my-content'] }, styles: { indicator: 'order: 1', content: 'order: 2' } };
+        const { store } = setup(props, true);
+        const query = (cls: string) => document.querySelector(`.${prefixCls}-${cls}`);
+        expect(query('knob')).toHaveClass('my-indicator');
+        expect(query('knob')).toHaveStyle({ order: '1' });
+        expect(query('unchecked-text')).toHaveClass('my-content');
+        expect(query('unchecked-text')).toHaveStyle({ order: '2' });
+        store.props = { ...props, checked: true };
+        flushSync();
+        expect(query('checked-text')).toHaveClass('my-content');
+        expect(query('checked-text')).toHaveStyle({ order: '2' });
+        store.props = { ...props, loading: true };
+        flushSync();
+        expect(query('loading-spin')).toHaveClass('my-indicator');
+        expect(query('loading-spin')).toHaveStyle({ order: '1' });
+    });
+
     describe('全局默认值', () => {
         it('模块单例：默认值生效且显式 props 优先', () => {
             semiGlobal.config.overrideDefaultProps = { Switch: { size: 'large', checked: true } };

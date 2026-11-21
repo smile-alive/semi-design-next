@@ -42,7 +42,7 @@ export interface RatingItemProps extends BaseProps {
 }
 
 export default function Item(props: RatingItemProps) {
-    const { ref, index, prefixCls, character, count, value, displayValue, disabled, allowHalf, size, unitOf, preventScroll, firstTabStop, onClick, onSelect, onHover, onFocus } = props;
+    const { ref, className, style, index, prefixCls, character, count, value, displayValue, disabled, allowHalf, size, unitOf, preventScroll, firstTabStop, onClick, onSelect, onHover, onFocus } = props;
 
     const { locale } = useLocale('Rating');
 
@@ -53,11 +53,15 @@ export default function Item(props: RatingItemProps) {
     const { isHalf, isFull, firstWidth, firstValue, secondValue, setSize, firstTabIndex, secondTabIndex, secondPosInSet } = RatingFoundation.getItemModel({ index, count, allowHalf, value, displayValue, disabled, firstTabStop });
     const isCustomSize = typeof size === 'number';
 
-    const starCls = clsx(prefixCls, {
-        [`${prefixCls}-half`]: isHalf,
-        [`${prefixCls}-full`]: isFull,
-        [`${prefixCls}-${size}`]: !isCustomSize,
-    });
+    const starCls = clsx(
+        prefixCls,
+        {
+            [`${prefixCls}-half`]: isHalf,
+            [`${prefixCls}-full`]: isFull,
+            [`${prefixCls}-${size}`]: !isCustomSize,
+        },
+        className
+    );
 
     const sizeStyle = isCustomSize ? { width: size, height: size, fontSize: size } : {};
     const iconSize = isCustomSize ? 'inherit' : size === 'small' ? 'default' : 'extra-large';
@@ -103,7 +107,7 @@ export default function Item(props: RatingItemProps) {
     );
 
     return (
-        <li ref={liRef} className={starCls} style={sizeStyle} role="none">
+        <li ref={liRef} className={starCls} style={{ ...sizeStyle, ...style }} role="none">
             <div className={starWrapCls} role="presentation" onClick={disabled ? null : handleClick} onKeyDown={disabled ? null : handleKeyDown} onMouseMove={disabled ? null : (e) => onHover(e, index)}>
                 {allowHalf && !isEmpty && (
                     <div

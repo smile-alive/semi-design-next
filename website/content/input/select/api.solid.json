@@ -59,8 +59,8 @@
                 "en-US": "Whether the Select is disabled. Falls back to the InputGroup it is in."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `dropdown`（下拉弹出层），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown popup); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`dropdown`、`list`、`empty`、`groupLabel`、`item`、`itemIcon`、`itemContent`，与组件自带的类名合并。`content` 是触发器中间的已选内容区，`input` 是触发器内搜索框的根元素（与 Input 的 `input` 不同，后者是原生输入框），`search` 是 `searchPosition=\"dropdown\"` 时下拉层顶部的搜索区域，`dropdown` 是弹出层最外层，`list` 是选项列表。`item`、`itemIcon`、`itemContent` 作用到全部选项，先于 `Select.Option` 自己的 `classNames` 生效，对 `renderOptionItem`、`renderCreateItem` 自定义渲染的选项不生效。",
+                "en-US": "Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `placeholder`, `input`, `search`, `tag`, `clear`, `arrow`, `dropdown`, `list`, `empty`, `groupLabel`, `item`, `itemIcon` and `itemContent`; merged with the built-in classes. `content` is the selection area in the middle of the trigger, `input` is the root element of the search field inside the trigger (unlike `input` of Input, which is the native input), `search` is the search area at the top of the dropdown when `searchPosition=\"dropdown\"`, `dropdown` is the outermost layer of the popup, and `list` is the option list. `item`, `itemIcon` and `itemContent` apply to every option and come before the `classNames` of `Select.Option`; they do not apply to options drawn by `renderOptionItem` or `renderCreateItem`."
             },
             "dropdownMatchSelectWidth": {
                 "zh-CN": "下拉弹出层的最小宽度是否等于选择框。",
@@ -329,6 +329,10 @@
                 "zh-CN": "选项行的类名。",
                 "en-US": "Class name of the option row."
             },
+            "classNames": {
+                "zh-CN": "选项内部各部位的类名，键为 `icon`（选中的对勾图标容器）、`content`（children 为字符串时的文本元素），在 Select 的 `item*` 类名之后追加。",
+                "en-US": "Class names of the inner parts of the option, keyed by `icon` (the tick icon container) and `content` (the text element, present when children is a string); appended after the `item*` class names of Select."
+            },
             "disabled": {
                 "zh-CN": "是否禁用。",
                 "en-US": "Whether the option is disabled."
@@ -344,6 +348,10 @@
             "style": {
                 "zh-CN": "选项行的样式。",
                 "en-US": "Style of the option row."
+            },
+            "styles": {
+                "zh-CN": "选项内部各部位的样式，键同 `classNames`，值可以是键为 kebab-case 的对象，也可以是字符串。",
+                "en-US": "Styles of the inner parts of the option, keyed like `classNames`; a value is an object with kebab-case keys or a string."
             },
             "value": {
                 "zh-CN": "选项的值，用来识别选项，每个选项都应声明。",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Text, type VNode, normalizeClass } from 'vue';
+    import { Text, type VNode, computed, normalizeClass } from 'vue';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-vue';
@@ -7,17 +7,21 @@
     import { code as MarkdownCode } from '@fibrae/semi-ui-vue/markdown-render/components/index';
     import { codeText } from '@fibrae/semi-ui-vue/markdown-render/index';
     import { slotNodes } from '@fibrae/semi-ui-vue/utils';
+    import { useCodePartContext } from '../../context';
 
     // markdown attributes belong to the wrapped code element, which reads the language from class; the mark lets the
     // markdown pre drop its wrapper, which may not hold the div
     defineOptions({ inheritAttrs: false, elementType: 'MarkdownRender.Code' });
     const slots = defineSlots<{ default?: () => VNode[] }>();
 
+    const part = useCodePartContext();
     const locale = useLocale('AIChatDialogue');
 
     const [copied, copy] = useCopied(() => 2000);
 
     const { PREFIX_CODE } = cssClasses;
+    const wrapperClass = computed(() => [PREFIX_CODE, part?.value.class]);
+    const wrapperStyle = computed(() => part?.value.style);
 
     const language = (cls: unknown) => MarkdownRenderFoundation.getCodeLanguage(normalizeClass(cls));
 
@@ -28,7 +32,7 @@
 </script>
 
 <template>
-    <div v-if="language($attrs.class) && isPlainText()" :class="PREFIX_CODE">
+    <div v-if="language($attrs.class) && isPlainText()" :class="wrapperClass" :style="wrapperStyle">
         <div :class="`${PREFIX_CODE}-topSlot`">
             <span :class="`${PREFIX_CODE}-topSlot-type`">{{ language($attrs.class) }}</span>
             <span :class="`${PREFIX_CODE}-topSlot-copy`">

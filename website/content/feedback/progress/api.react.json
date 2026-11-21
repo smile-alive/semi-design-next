@@ -3,6 +3,10 @@
         "source": "packages/semi-ui-react/src/components/progress/progress.tsx",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `rail`（底轨，表示总长度）、`track`（已完成的部分）、`text`（百分比文字），与组件自带的类名合并。这里的 `rail`、`track` 与自带类名 `semi-progress-track`（底轨）的叫法相反。",
+                "en-US": "Class names of the inner parts, keyed by `rail` (the full-length groove), `track` (the completed part) and `text` (the percentage text); merged with the built-in classes. `rail` and `track` here are the reverse of the built-in class `semi-progress-track`, which is the groove."
+            },
             "direction": { "zh-CN": "条状进度条的方向，可选 `horizontal` 或 `vertical`。", "en-US": "Direction of the line progress bar: `horizontal` or `vertical`." },
             "format": {
                 "zh-CN": "格式化函数，入参为当前显示的百分比（截断到 0 到 100，动画过程中为中间值），返回值渲染在环形进度条中心或条状进度条右侧。每次渲染都会调用，即使 `showInfo` 为 `false`。",
@@ -41,6 +45,10 @@
             },
             "strokeWidth": { "zh-CN": "环形进度条的线宽。", "en-US": "Stroke width of the circle progress bar." },
             "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。环形进度条的 `rail`、`track` 是 SVG 圆，需用 `stroke` 等 SVG 属性。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`. In a circle, `rail` and `track` are SVG circles, so use SVG properties such as `stroke`."
+            },
             "type": { "zh-CN": "类型，可选 `line` 或 `circle`。", "en-US": "Type: `line` or `circle`." },
             "width": {
                 "zh-CN": "环形进度条的直径，仅 `type` 为 `circle` 时生效；未设置时，`size` 为 `small` 取 24，否则取 72。",

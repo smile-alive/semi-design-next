@@ -79,9 +79,9 @@ export interface TabBarProps {
     showRestInDropdown: boolean;
     more?: number | TabsMore;
     arrowPosition: 'both' | 'start' | 'end';
-    /** Only `visibleTabs` is read: the scroll wrapper that holds the visible tabs */
-    classNames?: Partial<Record<'visibleTabs', ClassValue>>;
-    styles?: Partial<Record<'visibleTabs', StyleValue>>;
+    /** The bar reads every key except the ones TabItem and TabPane read from the Tabs context (`item*`, `pane`, `content`) */
+    classNames?: Partial<Record<TabsPart, ClassValue>>;
+    styles?: Partial<Record<TabsPart, StyleValue>>;
     dropdownProps?: TabsDropdownProps;
     class?: ClassValue;
     style?: StyleValue;

@@ -19,7 +19,7 @@ const prefix = cssClasses.PREFIX;
 const { PREFIX_ACTION } = cssClasses;
 
 export default function DialogueAction(props: AIChatDialogueActionProps) {
-    const { message, isLastChat, customRenderFunc, showReset: showResetProp = true } = props;
+    const { message, isLastChat, customRenderFunc, className, style, showReset: showResetProp = true } = props;
 
     const { locale } = useLocale('AIChatDialogue');
 
@@ -143,5 +143,9 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
         });
     }
 
-    return <div className={wrapCls}>{getDialogueActionKeys(flags, false).map((key) => nodes[key])}</div>;
+    return (
+        <div className={clsx(wrapCls, className)} style={style}>
+            {getDialogueActionKeys(flags, false).map((key) => nodes[key])}
+        </div>
+    );
 }

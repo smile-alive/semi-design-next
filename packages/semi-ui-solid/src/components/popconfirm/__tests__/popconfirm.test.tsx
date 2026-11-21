@@ -46,8 +46,21 @@ describe('Popconfirm', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        renderPopconfirm({ classNames: { content: 'my-content', arrow: 'my-arrow' }, styles: { content: { order: 2 }, arrow: { backgroundColor: 'red' } }, motion: false, showArrow: true, visible: true });
+        const parts = ['header', 'icon', 'title', 'close', 'body', 'footer'] as const;
+        const selectors = { header: 'header', icon: 'header-icon', title: 'header-title', close: 'btn-close', body: 'body', footer: 'footer' };
+        renderPopconfirm({
+            classNames: { content: 'my-content', arrow: 'my-arrow', ...Object.fromEntries(parts.map((p) => [p, `my-${p}`])) },
+            styles: { content: { order: 2 }, arrow: { backgroundColor: 'red' }, ...Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 3) }])) },
+            motion: false,
+            showArrow: true,
+            visible: true,
+        });
         await waitFor(() => expect(getPopconfirm()).not.toBeNull());
+        for (const part of parts) {
+            const el = getElement(`.${BASE_CLASS_PREFIX}-popconfirm-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el.style.order).toBe(String(parts.indexOf(part) + 3));
+        }
         const card = getElement(`.${BASE_CLASS_PREFIX}-popover`);
         expect(card).toHaveClass('my-content');
         expect(card.style.order).toBe('2');

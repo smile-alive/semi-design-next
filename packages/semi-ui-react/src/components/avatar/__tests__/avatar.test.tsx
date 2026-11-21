@@ -22,6 +22,36 @@ describe('Avatar', () => {
         expectTypeOf<{ text?: undefined }>().not.toExtend<NonNullable<AvatarProps['topSlot']>>();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const classNames = { image: 'c-image', label: 'c-label', mask: 'c-mask', border: 'c-border' };
+        const styles = { image: { opacity: 0.5 }, label: { opacity: 0.4 }, mask: { opacity: 0.3 }, border: { opacity: 0.2 } };
+        const { container, unmount } = render(<Avatar classNames={classNames} styles={styles} border={{ motion: true }} hoverMask="m" imgAttr={{ className: 'own-image', style: { opacity: 0.9 } }} src={src} />);
+        await userEvent.hover(getAvatar());
+        const image = container.querySelector('img');
+        expect(image).toHaveClass('own-image', 'c-image');
+        expect(image).toHaveStyle({ opacity: '0.5' });
+        const mask = container.querySelector(`.${avartarPrefix}-hover`);
+        expect(mask).toHaveClass('c-mask');
+        expect(mask).toHaveStyle({ opacity: '0.3' });
+        const borders = container.querySelectorAll(`.${avartarPrefix}-additionalBorder`);
+        expect(borders).toHaveLength(2);
+        borders.forEach((border) => {
+            expect(border).toHaveClass('c-border');
+            expect(border).toHaveStyle({ opacity: '0.2' });
+        });
+        expect(getAvatar()).not.toHaveClass('c-image', 'c-mask', 'c-border');
+        unmount();
+
+        render(
+            <Avatar classNames={classNames} styles={styles}>
+                U
+            </Avatar>
+        );
+        const label = document.querySelector(`.${avartarPrefix}-label`);
+        expect(label).toHaveClass('c-label');
+        expect(label).toHaveStyle({ opacity: '0.4' });
+    });
+
     it('hoverMask 为 0 时悬停后照常渲染', async () => {
         const { container } = render(<Avatar hoverMask={0} />);
         await userEvent.hover(getAvatar());

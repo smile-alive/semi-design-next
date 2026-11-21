@@ -8,7 +8,7 @@
     import type { CalendarViewProps } from './interface.js';
     import { withKeys } from './unique-keys.js';
 
-    interface Props extends Pick<CalendarViewProps, 'event' | 'dateGrid'> {
+    interface Props extends Pick<CalendarViewProps, 'event' | 'dateGrid' | 'classNames' | 'styles'> {
         displayValue: Date;
         events: DailyEventLayout[];
         scrollHeight: number;
@@ -22,7 +22,7 @@
     type Foundation = CalendarFoundation<CalendarBaseProps>;
     type Adapter = CalendarAdapter<CalendarBaseProps>;
 
-    let { displayValue, events, scrollHeight, isWeekend, minEventHeight, showCurrTime, today, onSlotClick, event, dateGrid }: Props = $props();
+    let { displayValue, events, scrollHeight, isWeekend, minEventHeight, showCurrTime, today, onSlotClick, event, dateGrid, classNames, styles }: Props = $props();
 
     const calendar = getCalendarContext();
 
@@ -53,11 +53,12 @@
     const slotClick = (mouseEvent: MouseEvent, hour: number, minute: number) => onSlotClick(mouseEvent, CalendarFoundation.formatCbValue([displayValue, hour, minute, 0]));
 </script>
 
-<div class={prefixCls} role="cell">
+<div class={[prefixCls, classNames?.day]} role="cell" style={styles?.day}>
     <div class={`${prefixCls}-content`}>
         {#if showCurrTime && states().showCurrTime}
-            <div class={`${prefixCls}-curr-circle`} style:top={`${states().currPos * scrollHeight}px`}></div>
-            <div class={`${prefixCls}-curr-line`} style:top={`${states().currPos * scrollHeight}px`}></div>
+            <!-- a style attribute plus style: directives would let the directives win; the caller's style goes last instead -->
+            <div class={[`${prefixCls}-curr-circle`, classNames?.currentTimeDot]} style={`top: ${states().currPos * scrollHeight}px;${styles?.currentTimeDot ?? ''}`}></div>
+            <div class={[`${prefixCls}-curr-line`, classNames?.currentTimeLine]} style={`top: ${states().currPos * scrollHeight}px;${styles?.currentTimeLine ?? ''}`}></div>
         {/if}
         <div class={[`${prefixCls}-skeleton`, { [`${cssClasses.PREFIX}-weekend`]: isWeekend }]}>
             <!-- pointer-only time slots: the cell has no keyboard way to pick a time, as in React -->
@@ -70,10 +71,8 @@
         <ul class={`${cssClasses.PREFIX}-event-items`}>
             {#each withKeys(events, 'day') as { id, item: layout } (id)}
                 <li
-                    class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-day`]}
-                    style:height={`${Math.max(minEventHeight ?? Number.MIN_SAFE_INTEGER, (layout.endPos - layout.startPos) * scrollHeight)}px`}
-                    style:inset-inline-start={toCssLength(layout.left)}
-                    style:top={`${layout.startPos * scrollHeight}px`}
+                    class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-day`, classNames?.event]}
+                    style={`height: ${Math.max(minEventHeight ?? Number.MIN_SAFE_INTEGER, (layout.endPos - layout.startPos) * scrollHeight)}px; inset-inline-start: ${toCssLength(layout.left)}; top: ${layout.startPos * scrollHeight}px;${styles?.event ?? ''}`}
                 >
                     {#if event}
                         {@render event({ event: calendar.eventOf(layout) })}

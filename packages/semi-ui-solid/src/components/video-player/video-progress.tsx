@@ -5,6 +5,7 @@ import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressB
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
 import '@fibrae/semi-foundation/components/video-player/video-player.scss';
 import { useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';
 import type { VideoProgressProps } from './interface';
@@ -58,7 +59,8 @@ export default function VideoProgress(props: VideoProgressProps) {
             {(getTriggerProps) => (
                 <div
                     {...getTriggerProps({ ref: (node: HTMLDivElement) => (slider = node) })}
-                    class={clsx(prefixCls, { [`${prefixCls}-dragging`]: state().isDragging })}
+                    class={clsx(prefixCls, { [`${prefixCls}-dragging`]: state().isDragging }, props.classNames?.progress)}
+                    style={props.styles?.progress}
                     aria-label={text().progress}
                     aria-valuemax={props.max}
                     aria-valuemin={0}
@@ -83,13 +85,13 @@ export default function VideoProgress(props: VideoProgressProps) {
                                     style={{ left: marker().left, width: marker().width }}
                                 >
                                     <div class={`${prefixCls}-slider-list`} />
-                                    <div class={`${prefixCls}-slider-buffered`} style={{ width: VideoProgressFoundation.getValueWidth(marker(), props.bufferedValue) }} />
-                                    <div class={`${prefixCls}-slider-played`} style={{ width: VideoProgressFoundation.getValueWidth(marker(), props.value) }} />
+                                    <div class={clsx(`${prefixCls}-slider-buffered`, props.classNames?.progressBuffered)} style={mergeStyles({ width: VideoProgressFoundation.getValueWidth(marker(), props.bufferedValue) }, props.styles?.progressBuffered)} />
+                                    <div class={clsx(`${prefixCls}-slider-played`, props.classNames?.progressPlayed)} style={mergeStyles({ width: VideoProgressFoundation.getValueWidth(marker(), props.value) }, props.styles?.progressPlayed)} />
                                 </div>
                             )}
                         </Index>
                     </div>
-                    <div class={`${prefixCls}-handle`} style={{ left: VideoProgressFoundation.getHandleLeft(props.value, props.max) }} />
+                    <div class={clsx(`${prefixCls}-handle`, props.classNames?.progressHandle)} style={mergeStyles({ left: VideoProgressFoundation.getHandleLeft(props.value, props.max) }, props.styles?.progressHandle)} />
                 </div>
             )}
         </Tooltip>

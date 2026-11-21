@@ -8,6 +8,8 @@ const prefixCls = cssClasses.PREFIX;
 interface SkillItemProps {
     skill: Skill;
     active: boolean;
+    partClass?: string;
+    partStyle?: JSX.CSSProperties;
     id: string;
     renderSkillIcon?: (skill: Skill) => JSX.Element;
     renderSkillItem?: (props: RenderSkillItemProps) => JSX.Element;
@@ -16,7 +18,7 @@ interface SkillItemProps {
 }
 
 export default function SkillItem(props: SkillItemProps) {
-    const className = () => clsx(`${prefixCls}-skill-item`, { [`${prefixCls}-skill-item-active`]: props.active });
+    const className = () => clsx(`${prefixCls}-skill-item`, { [`${prefixCls}-skill-item-active`]: props.active }, props.partClass);
 
     const handleClick = () => props.onClick(props.skill);
 
@@ -45,7 +47,7 @@ export default function SkillItem(props: SkillItemProps) {
             when={props.renderSkillItem}
             keyed
             fallback={
-                <div id={props.id} class={className()} aria-selected={props.active} role="option" onClick={handleClick} onMouseEnter={handleMouseEnter}>
+                <div id={props.id} class={className()} style={props.partStyle} aria-selected={props.active} role="option" onClick={handleClick} onMouseEnter={handleMouseEnter}>
                     {props.renderSkillIcon?.(props.skill)}
                     <div class={`${prefixCls}-skill-item-content`}>{props.skill.label}</div>
                 </div>

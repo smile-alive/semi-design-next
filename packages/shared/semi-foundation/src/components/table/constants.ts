@@ -5,7 +5,7 @@ export const cssClasses = {
 } as const;
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type TablePart = 'header';
+export type TablePart = 'header' | 'title' | 'row' | 'cell' | 'footer' | 'pagination' | 'empty';
 
 export const strings = {
     SIZE_SMALL: 'small',

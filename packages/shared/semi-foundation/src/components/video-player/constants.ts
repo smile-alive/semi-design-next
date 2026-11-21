@@ -6,6 +6,9 @@ export const cssClasses = {
     PREFIX_PROGRESS: `${BASE_CLASS_PREFIX}-videoPlayer-progress`,
 } as const;
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style`. `progressBuffered` and `progressPlayed` apply to every marker segment */
+export type VideoPlayerPart = 'video' | 'poster' | 'playIcon' | 'error' | 'notification' | 'controls' | 'progress' | 'progressBuffered' | 'progressPlayed' | 'progressHandle' | 'time' | 'volumeDropdown' | 'dropdown';
+
 export const strings = {
     DARK: 'dark',
     PLAY: 'play',

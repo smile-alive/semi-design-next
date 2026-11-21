@@ -26,6 +26,8 @@
         options: semiGlobalDefault('CheckboxGroup', 'options'),
         direction: () => semiDefault('CheckboxGroup', 'direction', 'vertical'),
         type: () => semiDefault('CheckboxGroup', 'type', 'default'),
+        classNames: semiGlobalDefault('CheckboxGroup', 'classNames'),
+        styles: semiGlobalDefault('CheckboxGroup', 'styles'),
     });
 
     const emit = defineEmits<CheckboxGroupEmits>();
@@ -80,6 +82,8 @@
             ariaInvalid: aria.value.invalid,
             ariaErrormessage: aria.value.errormessage,
         })),
+        classNames: computed(() => props.classNames),
+        styles: computed(() => props.styles),
         onChange: foundation.handleChange,
     });
 

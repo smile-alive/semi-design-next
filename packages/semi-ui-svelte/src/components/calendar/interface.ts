@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { CalendarPart, strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 
 export type CalendarMode = ArrayElement<typeof strings.MODE>;
@@ -38,6 +38,8 @@ export interface CalendarAllDayEventsArgs {
 
 // onClick, onClose and onMoreClick have Semi's signatures; the lowercase DOM listeners they would collide with are not props
 export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onclick' | 'onclose'> {
+    classNames?: Partial<Record<CalendarPart, ClassValue>>;
+    styles?: Partial<Record<CalendarPart, string>>;
     displayValue?: Date;
     range?: Date[];
     events?: EventObject[];
@@ -66,7 +68,7 @@ export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
     allDayEvents?: Snippet<[CalendarAllDayEventsArgs]>;
 }
 
-export interface CalendarViewProps extends Pick<CalendarProps, 'width' | 'height' | 'header' | 'event' | 'dateGrid' | 'onClick'>, Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onclick' | 'onclose'> {
+export interface CalendarViewProps extends Pick<CalendarProps, 'width' | 'height' | 'header' | 'event' | 'dateGrid' | 'onClick' | 'classNames' | 'styles'>, Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onclick' | 'onclose'> {
     events: EventObject[];
     markWeekend: boolean;
     /** The timestamp of today's local midnight; `null` until mounted */

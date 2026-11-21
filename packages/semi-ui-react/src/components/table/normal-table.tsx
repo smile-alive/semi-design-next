@@ -585,7 +585,11 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
 
     const tablePagination =
         mergedPagination && propPagination ? (
-            <LocaleConsumer componentName="Table">{(locale: TableLocale) => <TablePagination info={TableFoundation.formatPaginationInfo(mergedPagination, locale.pageText, (propPagination as TablePaginationProps)?.formatPageText)} pagination={mergedPagination} renderPagination={renderPagination} />}</LocaleConsumer>
+            <LocaleConsumer componentName="Table">
+                {(locale: TableLocale) => (
+                    <TablePagination className={classNames?.pagination} style={styles?.pagination} info={TableFoundation.formatPaginationInfo(mergedPagination, locale.pageText, (propPagination as TablePaginationProps)?.formatPageText)} pagination={mergedPagination} renderPagination={renderPagination} />
+                )}
+            </LocaleConsumer>
         ) : null;
 
     const paginationPosition = (propPagination as TablePaginationProps | undefined)?.position ?? 'bottom';
@@ -596,7 +600,7 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
             <LocaleConsumer key="emptyText" componentName="Table">
                 {(locale: TableLocale) => (
                     <div className={`${prefixCls}-placeholder`}>
-                        <div className={`${prefixCls}-empty`} x-semi-prop="empty">
+                        <div className={clsx(`${prefixCls}-empty`, classNames?.empty)} style={styles?.empty} x-semi-prop="empty">
                             {empty || locale.emptyText}
                         </div>
                     </div>
@@ -612,7 +616,7 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
                         <div ref={wrapRef} className={wrapCls}>
                             {['top', 'both'].includes(paginationPosition) && tablePagination}
                             {hasContent(titleNode) && (
-                                <div id={titleNamesTable ? titleId : undefined} className={`${prefixCls}-title`} x-semi-prop="title">
+                                <div id={titleNamesTable ? titleId : undefined} className={clsx(`${prefixCls}-title`, classNames?.title)} style={styles?.title} x-semi-prop="title">
                                     {titleNode}
                                 </div>
                             )}
@@ -675,7 +679,7 @@ export default function NormalTable<RecordType extends Record<string, any>>(prop
                                     onRowMouseLeave={onRowMouseLeave}
                                 />
                                 {hasContent(footerNode) && (
-                                    <div className={`${prefixCls}-footer`} x-semi-prop="footer">
+                                    <div className={clsx(`${prefixCls}-footer`, classNames?.footer)} style={styles?.footer} x-semi-prop="footer">
                                         {footerNode}
                                     </div>
                                 )}

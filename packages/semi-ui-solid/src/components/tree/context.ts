@@ -1,4 +1,5 @@
-import type { Accessor } from 'solid-js';
+import type { Accessor, JSX } from 'solid-js';
+import type { TreeNodePart } from '@fibrae/semi-foundation/components/tree/constants';
 import type { ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import { createContext } from '../../base/index';
 import type { TreeProps, TreeRowProps } from './interface';
@@ -16,6 +17,8 @@ export interface TreeContextView {
     dropPosition: number | null;
     renderLabel?: TreeProps['renderLabel'];
     renderFullLabel?: TreeProps['renderFullLabel'];
+    classNames?: Partial<Record<TreeNodePart, string>>;
+    styles?: Partial<Record<TreeNodePart, JSX.CSSProperties | string>>;
 }
 
 /** A host without the optional methods (TreeSelect) leaves those interactions out */

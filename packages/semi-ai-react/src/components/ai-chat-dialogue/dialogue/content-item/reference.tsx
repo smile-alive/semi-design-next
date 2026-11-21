@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import clsx from 'clsx';
 import { cssClasses, type DialogueIconKind, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
@@ -7,6 +8,8 @@ import Image from '@fibrae/semi-ui-react/image/index';
 
 export interface ReferenceWidgetProps {
     references: Reference[];
+    className?: string;
+    style?: CSSProperties;
 }
 
 const prefixCls = cssClasses.PREFIX_REFERENCES;
@@ -15,7 +18,7 @@ const referencePrefixCls = cssClasses.PREFIX_REFERENCE;
 // A thumbnail replaces the icon for images, so the image kind has none
 const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo } satisfies Record<DialogueIconKind, unknown>;
 
-export function ReferenceWidget({ references }: ReferenceWidgetProps) {
+export function ReferenceWidget({ references, className, style }: ReferenceWidgetProps) {
     const renderReferenceIcon = (name: string) => {
         const kind = getDialogueFileKind(getFileSuffix(name));
         const Icon = kind && kind !== 'image' ? ICONS[kind] : undefined;
@@ -36,7 +39,7 @@ export function ReferenceWidget({ references }: ReferenceWidgetProps) {
     };
 
     return (
-        <div className={prefixCls}>
+        <div className={clsx(prefixCls, className)} style={style}>
             {references.map((reference) => (
                 // Known limitation: background color and items per row are not specified by design yet
                 <div key={reference.id} className={referencePrefixCls}>

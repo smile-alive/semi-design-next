@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { TransferPart } from '@fibrae/semi-foundation/components/transfer/constants';
 import type { InputProps } from '../input/interface.js';
 import type { TreeProps } from '../tree/interface.js';
 
@@ -59,6 +60,8 @@ export type TransferTreeProps = Omit<TreeProps, 'value' | 'onChange' | 'keyMaps'
 type NativeKeys = 'onchange' | 'onselect' | 'children';
 
 export interface TransferProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeKeys> {
+    classNames?: Partial<Record<TransferPart, ClassValue>>;
+    styles?: Partial<Record<TransferPart, string>>;
     /** Bindable; leave it out for an uncontrolled transfer. `bind:value={get, set}` makes it fully controlled */
     value?: TransferValue;
     dataSource?: TransferDataSource;

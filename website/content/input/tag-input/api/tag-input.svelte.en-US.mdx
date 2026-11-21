@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | addOnBlur | Whether the input text becomes a tag when the focus leaves the component. | `boolean` | `false` |
 | allowDuplicates | Whether the same tag can be added more than once. | `boolean` | `true` |
 | autofocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `false` |
+| classNames | Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `tag`, `input` and `clear`; merged with the built-in classes. `input` lands on the root element of the inner Input, not the native input; `tag` applies to the default tags only, nodes from the `tag` snippet are styled by the caller. | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | Snippet that replaces the icon in the clear button; empty content keeps the default icon. | `Snippet` | - |
 | disabled | Whether the component is disabled. | `boolean` | - |
 | draggable | Whether tags can be reordered by dragging. | `boolean` | `false` |
@@ -37,6 +38,7 @@ import ApiType from '#/components/ApiType.astro';
 | showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `true` |
 | size | Size: small, default or large. | `TagInputSize` | - |
 | split | Custom split function that returns the split strings. | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
+| styles | Inline styles (strings) of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, string>>"}>Type</ApiType> | - |
 | suffix | Snippet for the suffix of the input; text or an icon gets side spacing automatically. | `Snippet` | - |
 | tag | Snippet that replaces each tag as a whole, receiving `{ value, index, onClose }`; empty content renders no tag and does not fall back to the default tag. | <ApiType detail={"Snippet\u003c[TagInputTagSnippetProps]>"}>Type</ApiType> | - |
 | validateStatus | Validation status, which only affects styling; error also sets aria-invalid on the input. | `TagInputValidateStatus` | `"default"` |

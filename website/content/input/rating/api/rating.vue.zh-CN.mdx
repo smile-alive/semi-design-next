@@ -2,19 +2,21 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性          | 说明                                                                                               | 类型                             | 默认值                                         |
-| ------------- | -------------------------------------------------------------------------------------------------- | -------------------------------- | ---------------------------------------------- |
-| allowClear    | 是否允许再次点击后清除。                                                                           | `boolean`                        | `true`                                         |
-| allowHalf     | 是否允许半选。                                                                                     | `boolean`                        | `false`                                        |
-| ariaLabel     | radiogroup 的可访问名称；缺省时名称概括当前取值。                                                  | `string`                         | `semiGlobalDefault("Rating", "ariaLabel")`     |
-| autofocus     | 挂载时自动获取焦点。                                                                               | `boolean`                        | `semiGlobalDefault("Rating", "autofocus")`     |
-| count         | 星的总数。                                                                                         | `number`                         | `5`                                            |
-| defaultValue  | 非受控时的初始值。                                                                                 | `number`                         | `0`                                            |
-| disabled      | 只读，无法进行交互，也无法获得焦点。                                                               | `boolean`                        | `false`                                        |
-| modelValue    | 当前值，配合 v-model 使用；传入后由该值决定显示，变回 undefined 时回到 defaultValue 并转为非受控。 | `number`                         | `undefined`                                    |
-| preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的聚焦。                                   | `boolean`                        | `semiGlobalDefault("Rating", "preventScroll")` |
-| size          | 尺寸，可选 default、small，也可传入 number 自定义尺寸。                                            | `number \| "default" \| "small"` | `"default"`                                    |
-| tooltips      | 每一项的提示信息。                                                                                 | `string[]`                       | `semiGlobalDefault("Rating", "tooltips")`      |
+| 属性          | 说明                                                                                                                                | 类型                                                                                 | 默认值                                         |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| allowClear    | 是否允许再次点击后清除。                                                                                                            | `boolean`                                                                            | `true`                                         |
+| allowHalf     | 是否允许半选。                                                                                                                      | `boolean`                                                                            | `false`                                        |
+| ariaLabel     | radiogroup 的可访问名称；缺省时名称概括当前取值。                                                                                   | `string`                                                                             | `semiGlobalDefault("Rating", "ariaLabel")`     |
+| autofocus     | 挂载时自动获取焦点。                                                                                                                | `boolean`                                                                            | `semiGlobalDefault("Rating", "autofocus")`     |
+| classNames    | 内部各部位的类名，键为 `item`、`dropdown`，与组件自带的类名合并。`item` 是单颗星，`dropdown` 是设置 `tooltips` 后出现的提示弹出层。 | <ApiType detail={"Partial\u003cRecord\u003cRatingPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Rating", "classNames")`    |
+| count         | 星的总数。                                                                                                                          | `number`                                                                             | `5`                                            |
+| defaultValue  | 非受控时的初始值。                                                                                                                  | `number`                                                                             | `0`                                            |
+| disabled      | 只读，无法进行交互，也无法获得焦点。                                                                                                | `boolean`                                                                            | `false`                                        |
+| modelValue    | 当前值，配合 v-model 使用；传入后由该值决定显示，变回 undefined 时回到 defaultValue 并转为非受控。                                  | `number`                                                                             | `undefined`                                    |
+| preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的聚焦。                                                                    | `boolean`                                                                            | `semiGlobalDefault("Rating", "preventScroll")` |
+| size          | 尺寸，可选 default、small，也可传入 number 自定义尺寸。                                                                             | `number \| "default" \| "small"`                                                     | `"default"`                                    |
+| styles        | 内部各部位的内联样式，键同 `classNames`。                                                                                           | <ApiType detail={"Partial\u003cRecord\u003cRatingPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Rating", "styles")`        |
+| tooltips      | 每一项的提示信息。                                                                                                                  | `string[]`                                                                           | `semiGlobalDefault("Rating", "tooltips")`      |
 
 **Events**
 

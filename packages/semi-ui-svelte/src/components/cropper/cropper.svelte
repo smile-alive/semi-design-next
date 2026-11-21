@@ -124,7 +124,7 @@
         <!-- the cropping surface, not content: there is no description to give -->
         <img {...imgAttrs} alt={imgProps?.alt ?? ''} bind:this={img} class={[cssClasses.IMG, imgProps?.class]} {src} style={[imgProps?.style, imgStyle].filter(Boolean).join('; ')} onload={handleLoad} />
     </div>
-    <div class={cssClasses.MASK} onlostpointercapture={foundation.handleMaskLostPointerCapture} onpointerdown={foundation.handleMaskPointerDown} onpointermove={foundation.handleMaskPointerMove}></div>
+    <div class={[cssClasses.MASK, classNames?.mask]} style={styles?.mask} onlostpointercapture={foundation.handleMaskLostPointerCapture} onpointerdown={foundation.handleMaskPointerDown} onpointermove={foundation.handleMaskPointerMove}></div>
     <!-- not a widget role: the box has no single value, so it is a named group that says how to use it -->
     <div
         aria-describedby="{uid}-help"
@@ -146,7 +146,7 @@
         </div>
         {#if states().loaded && showResizeBox}
             {#each corners as corner (corner)}
-                <div class={[cssClasses.CORNER, `${cssClasses.CORNER}-${corner}`]} data-dir={corner} onlostpointercapture={foundation.handleCornerLostPointerCapture} onpointerdown={foundation.handleCornerPointerDown} onpointermove={foundation.handleCornerPointerMove}></div>
+                <div class={[cssClasses.CORNER, `${cssClasses.CORNER}-${corner}`, classNames?.handle]} data-dir={corner} style={styles?.handle} onlostpointercapture={foundation.handleCornerLostPointerCapture} onpointerdown={foundation.handleCornerPointerDown} onpointermove={foundation.handleCornerPointerMove}></div>
             {/each}
         {/if}
     </div>

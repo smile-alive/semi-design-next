@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/components/float-button/constants';
+import type { ClassValue, HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
+import type { FloatButtonGroupPart, FloatButtonPart, strings } from '@fibrae/semi-foundation/components/float-button/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { BadgeProps } from '../badge/interface.js';
 
@@ -12,6 +12,7 @@ export type FloatButtonBadge = Omit<BadgeProps, 'children'>;
 
 export interface FloatButtonProps extends Omit<HTMLButtonAttributes, 'children' | 'type' | 'form' | 'formaction' | 'formenctype' | 'formmethod' | 'formnovalidate' | 'formtarget'> {
     badge?: FloatButtonBadge;
+    classNames?: Partial<Record<FloatButtonPart, ClassValue>>;
     colorful?: boolean;
     disabled?: boolean;
     /** Renders a link instead of a button; a disabled link drops it */
@@ -19,6 +20,7 @@ export interface FloatButtonProps extends Omit<HTMLButtonAttributes, 'children' 
     rel?: string;
     shape?: FloatButtonShape;
     size?: FloatButtonSize;
+    styles?: Partial<Record<FloatButtonPart, string>>;
     target?: string;
     badgeCount?: Snippet;
     icon?: Snippet;
@@ -47,8 +49,10 @@ export interface FloatButtonGroupItemSnippetArgs {
 }
 
 export interface FloatButtonGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+    classNames?: Partial<Record<FloatButtonGroupPart, ClassValue>>;
     disabled?: boolean;
     items: FloatButtonGroupItem[];
+    styles?: Partial<Record<FloatButtonGroupPart, string>>;
     /** Called with the clicked item's `value`, which is optional; not called for clicks outside an item */
     onClick?: (value: string | undefined, event: MouseEvent) => void;
     badgeCount?: Snippet<[FloatButtonGroupItemSnippetArgs]>;

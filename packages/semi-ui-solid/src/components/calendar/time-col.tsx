@@ -21,11 +21,11 @@ export default function TimeCol(props: TimeColProps) {
     };
 
     return (
-        <div class={clsx(props.class, prefixCls)} role="cell">
+        <div class={clsx(props.class, prefixCls, props.classNames?.timeColumn)} style={props.styles?.timeColumn} role="cell">
             <div class={`${prefixCls}-items`}>
                 <For each={hours}>
                     {(hour) => (
-                        <div class={`${prefixCls}-item`}>
+                        <div class={clsx(`${prefixCls}-item`, props.classNames?.timeLabel)} style={props.styles?.timeLabel}>
                             {/* the grid starts at 00:00, which has no label */}
                             <span>{hour === 0 ? '' : formatTime(hour)}</span>
                         </div>

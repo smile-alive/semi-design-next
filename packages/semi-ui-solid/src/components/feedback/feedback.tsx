@@ -71,7 +71,7 @@ const defaultProps = {
 
 export default function Feedback(rawProps: FeedbackProps) {
     const props = useDefaultProps('Feedback', rawProps, defaultProps) as AnyFeedbackProps;
-    const [local, rest] = splitProps(props, ['afterClose', 'afterVisibleChange', 'cancelButtonProps', 'checkboxGroupProps', 'children', 'class', 'mode', 'okButtonProps', 'onCancel', 'onOk', 'onValueChange', 'radioGroupProps', 'renderContent', 'textAreaProps', 'type']);
+    const [local, rest] = splitProps(props, ['afterClose', 'afterVisibleChange', 'cancelButtonProps', 'checkboxGroupProps', 'children', 'class', 'classNames', 'mode', 'okButtonProps', 'onCancel', 'onOk', 'onValueChange', 'radioGroupProps', 'renderContent', 'styles', 'textAreaProps', 'type']);
 
     const locale = useLocale('Feedback');
 
@@ -96,6 +96,11 @@ export default function Feedback(rawProps: FeedbackProps) {
     // mergeProps ignores an `undefined` written after a spread, so a consumer's `value` would show through while nothing is chosen
     const radioGroupRest = createMemo(() => omit((local.radioGroupProps ?? {}) as RadioGroupProps, ['value']));
 
+    // `emoji` is Feedback's own part and lies outside the Modal and SideSheet types
+    const overlayClassNames = () => omit(local.classNames ?? {}, ['emoji']);
+
+    const overlayStyles = () => omit(local.styles ?? {}, ['emoji']);
+
     const disabledOkButton = () => isFeedbackValueEmpty(state().value);
 
     // a consumer's `onChange` is called by the foundation; the value and handlers written after the spreads keep a consumer's from replacing Feedback's
@@ -109,7 +114,7 @@ export default function Feedback(rawProps: FeedbackProps) {
                 <div class={`${prefixCls}-emoji-container`} aria-label={locale().locale.rating} role="radiogroup">
                     <For each={Object.entries(Emoji)}>
                         {([name, item]) => (
-                            <label class={clsx(`${prefixCls}-emoji-item`, { [`${prefixCls}-emoji-item-selected`]: item === shown().emoji })} data-value={item}>
+                            <label class={clsx(`${prefixCls}-emoji-item`, local.classNames?.emoji, { [`${prefixCls}-emoji-item-selected`]: item === shown().emoji })} style={local.styles?.emoji} data-value={item}>
                                 <input name={emojiGroupName} type="radio" class={`${prefixCls}-emoji-input`} aria-label={locale().locale[name as keyof typeof Emoji]} checked={item === shown().emoji} value={item} onChange={() => foundation.handleEmojiChange(item)} />
                                 <span class={`${prefixCls}-emoji-glyph`} aria-hidden="true">
                                     {item}
@@ -157,6 +162,8 @@ export default function Feedback(rawProps: FeedbackProps) {
             fallback={
                 <SideSheet
                     class={rootClass()}
+                    classNames={overlayClassNames()}
+                    styles={overlayStyles()}
                     canVerticalSetWidth
                     closeOnEsc
                     disableScroll={false}
@@ -204,7 +211,19 @@ export default function Feedback(rawProps: FeedbackProps) {
                 </SideSheet>
             }
         >
-            <Modal class={rootClass()} cancelText={locale().locale.cancel} okText={locale().locale.submit} {...(rest as ModalProps)} afterClose={local.afterClose} cancelButtonProps={local.cancelButtonProps} okButtonProps={modalOkButtonProps()} onCancel={foundation.handleModalCancel} onOk={foundation.handleModalOk}>
+            <Modal
+                class={rootClass()}
+                classNames={overlayClassNames()}
+                styles={overlayStyles()}
+                cancelText={locale().locale.cancel}
+                okText={locale().locale.submit}
+                {...(rest as ModalProps)}
+                afterClose={local.afterClose}
+                cancelButtonProps={local.cancelButtonProps}
+                okButtonProps={modalOkButtonProps()}
+                onCancel={foundation.handleModalCancel}
+                onOk={foundation.handleModalOk}
+            >
                 {body()}
             </Modal>
         </Show>

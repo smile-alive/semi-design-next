@@ -1,4 +1,5 @@
-import type { StyleValue, VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { CheckboxGroupPart, CheckboxPart } from '@fibrae/semi-foundation/components/checkbox/constants';
 
 export type CheckboxValue = string | number | boolean;
 export type CheckboxType = 'default' | 'card' | 'pureCard';
@@ -11,6 +12,8 @@ export interface CheckboxProps {
     disabled?: boolean;
     indeterminate?: boolean;
     type?: CheckboxType;
+    classNames?: Partial<Record<CheckboxPart, ClassValue>>;
+    styles?: Partial<Record<CheckboxPart, StyleValue>>;
     addonId?: string;
     extraId?: string;
     preventScroll?: boolean;
@@ -62,6 +65,8 @@ export interface CheckboxGroupProps {
     options?: Array<string | CheckboxOptionItem>;
     direction?: CheckboxDirection;
     type?: CheckboxType;
+    classNames?: Partial<Record<CheckboxGroupPart, ClassValue>>;
+    styles?: Partial<Record<CheckboxGroupPart, StyleValue>>;
 }
 
 export interface CheckboxGroupOptionSlotProps {

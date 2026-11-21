@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import Divider from '@fibrae/semi-ui-react/divider/index';
@@ -13,7 +14,7 @@ interface ChatContentProps extends CommonChatsProps {
     toast: ChatBoxProps['toast'];
 }
 
-function ChatContent({ chats, onMessageBadFeedback, onMessageCopy, mode, onChatsChange, onMessageDelete, onMessageGoodFeedback, onMessageReset, roleConfig, chatBoxRenderConfig, align, customMarkDownComponents, renderDivider, markdownRenderProps, escapeHtml, toast }: ChatContentProps) {
+function ChatContent({ chats, onMessageBadFeedback, onMessageCopy, mode, onChatsChange, onMessageDelete, onMessageGoodFeedback, onMessageReset, roleConfig, chatBoxRenderConfig, align, customMarkDownComponents, renderDivider, markdownRenderProps, escapeHtml, toast, classNames, styles }: ChatContentProps) {
     return (
         <>
             {chats.map((item, index) => {
@@ -22,13 +23,15 @@ function ChatContent({ chats, onMessageBadFeedback, onMessageCopy, mode, onChats
                     renderDivider ? (
                         <Fragment key={item.id}>{renderDivider(item)}</Fragment>
                     ) : (
-                        <Divider key={item.id} className={PREFIX_DIVIDER}>
+                        <Divider key={item.id} className={clsx(PREFIX_DIVIDER, classNames?.divider)} style={styles?.divider}>
                             <LocaleConsumer componentName="Chat">{(locale: Locale['Chat']) => locale['clearContext']}</LocaleConsumer>
                         </Divider>
                     )
                 ) : (
                     <ChatBox
                         key={item.id}
+                        classNames={classNames}
+                        styles={styles}
                         align={align}
                         chatBoxRenderConfig={chatBoxRenderConfig}
                         customMarkDownComponents={customMarkDownComponents}

@@ -92,6 +92,22 @@ describe('Switch', () => {
         expect(getWrapper()).not.toHaveAttribute(key);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const props = { classNames: { indicator: 'my-indicator', content: 'my-content' }, styles: { indicator: { order: 1 }, content: { order: 2 } } };
+        const query = (cls: string) => document.querySelector(`.${prefixCls}-${cls}`);
+        const view = render(Switch, { props, slots: textSlots });
+        expect(query('knob')).toHaveClass('my-indicator');
+        expect(query('knob')).toHaveStyle({ order: '1' });
+        expect(query('unchecked-text')).toHaveClass('my-content');
+        expect(query('unchecked-text')).toHaveStyle({ order: '2' });
+        await view.rerender({ ...props, modelValue: true });
+        expect(query('checked-text')).toHaveClass('my-content');
+        expect(query('checked-text')).toHaveStyle({ order: '2' });
+        await view.rerender({ ...props, loading: true });
+        expect(query('loading-spin')).toHaveClass('my-indicator');
+        expect(query('loading-spin')).toHaveStyle({ order: '1' });
+    });
+
     it('loading 保持可聚焦并阻止切换与通知', async () => {
         const change = vi.fn<SwitchChange>();
         const update = vi.fn<(checked: boolean) => void>();

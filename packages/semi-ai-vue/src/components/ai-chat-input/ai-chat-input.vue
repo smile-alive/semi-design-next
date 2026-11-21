@@ -127,7 +127,7 @@
     const skillListId = `${prefix}-skill-${popupId}`;
     const suggestionListId = `${prefix}-suggestion-${popupId}`;
     const placeholder = computed(() => props.placeholder ?? readSemiDefault(semi, 'AIChatInput', 'placeholder'));
-    const actionCls = `${prefix}-footer-action`;
+    const actionCls = computed(() => [`${prefix}-footer-action`, props.classNames?.actions]);
     const listbox = computed(() => getListbox(state.value, props, { skillListId, suggestionListId }));
 
     const popoverBindings = computed(() => {
@@ -165,7 +165,7 @@
         const active = kind === 'skill' ? state.value.activeSkillIndex === index : state.value.activeSuggestionIndex === index;
         return {
             id: getOptionId(kind === 'skill' ? skillListId : suggestionListId, index),
-            class: [`${prefix}-${kind}-item`, { [`${prefix}-${kind}-item-active`]: active }],
+            class: [`${prefix}-${kind}-item`, { [`${prefix}-${kind}-item-active`]: active }, props.classNames?.[`${kind}Item` as const]],
             role: 'option' as const,
             'aria-selected': active,
             onClick: select,
@@ -198,10 +198,12 @@
         attachments: state.value.attachments ?? [],
         tipProps: props.uploadTipProps,
         hidden: !props.showUploadButton,
+        buttonClass: props.classNames?.upload,
+        buttonStyle: props.styles?.upload,
     });
 
     const actionNodes = () => {
-        const send = h(SendButton, { generating: props.generating, canSend: sendEnabled.value, onClick: onSendClick });
+        const send = h(SendButton, { generating: props.generating, canSend: sendEnabled.value, class: props.classNames?.send, style: props.styles?.send, onClick: onSendClick });
         // the slots interface has no index signature, so h() takes a plain-object copy
         return [h(UploadButton, { ...uploadButtonProps(), ref: 'upload', onChange: foundation.onUploadChange }, { ...slots }), send];
     };
@@ -236,10 +238,10 @@
         <!-- the textbox is the Tab stop; Tooltip would add tabIndex 0 here -->
         <div ref="trigger" v-bind="$attrs" :class="prefix" :role="namedRole($attrs)" tabindex="-1" @click="foundation.handleContainerClick" @mousedown="foundation.handleContainerMouseDown">
             <slot v-if="props.topSlotPosition === 'top'" name="topSlot" v-bind="topSlotProps()" />
-            <div v-if="props.showReference && props.references?.length" :class="`${prefix}-references`">
+            <div v-if="props.showReference && props.references?.length" :class="[`${prefix}-references`, props.classNames?.references]" :style="props.styles?.references">
                 <template v-for="(item, index) in props.references" :key="item.id">
                     <slot v-if="$slots.reference" :index="index" :item="item" name="reference" />
-                    <div v-else :class="`${prefix}-reference`">
+                    <div v-else :class="[`${prefix}-reference`, props.classNames?.reference]" :style="props.styles?.reference">
                         <IconSendMsgStroked />
                         <button :class="`${prefix}-reference-content`" type="button" @click="foundation.handleReferenceClick(item)">
                             <template v-if="item.type !== 'text'">
@@ -260,8 +262,8 @@
                 </template>
             </div>
             <slot v-if="props.topSlotPosition === 'middle'" name="topSlot" v-bind="topSlotProps()" />
-            <HorizontalScroller v-if="props.showUploadFile && state.attachments?.length">
-                <div v-for="item in state.attachments" :key="item.uid" :class="`${prefix}-attachment`">
+            <HorizontalScroller v-if="props.showUploadFile && state.attachments?.length" :class="[`${prefix}-attachments`, props.classNames?.attachments]" :style="props.styles?.attachments">
+                <div v-for="item in state.attachments" :key="item.uid" :class="[`${prefix}-attachment`, props.classNames?.attachment]" :style="props.styles?.attachment">
                     <img v-if="isImageFile(item.name, item.fileInstance?.type)" alt="" :class="`${prefix}-attachment-img`" :src="item.url" />
                     <span v-else :class="[`${prefix}-attachment-icon`, `${prefix}-ref-icon`, `${prefix}-ref-icon-${iconType(item)}`]">
                         <component :is="fileIcon(iconType(item))" size="large" />
@@ -283,12 +285,14 @@
                 :id="editorId"
                 ref="richText"
                 :activeDescendant="listbox?.activeId"
+                :class="props.classNames?.editor"
                 :controls="listbox?.id"
                 :defaultContent="props.defaultContent"
                 :extensions="props.extensions"
                 :handleKeyDown="foundation.handleKeyDown"
                 :placeholder="placeholder"
                 :showPlaceholderWhenSkillOnly="props.showPlaceholderWhenSkillOnly"
+                :style="props.styles?.editor"
                 @blur="foundation.handleBlur"
                 @change="foundation.handleContentChange"
                 @create="onEditorCreate"
@@ -296,8 +300,8 @@
                 @paste="(...args) => emit('paste', ...args)"
                 @pasteFiles="foundation.handlePaste"
             />
-            <div :class="[`${prefix}-footer`, { [`${prefix}-footer-round`]: props.round }]">
-                <div :class="cssClasses.FOOTER_CONFIGURE">
+            <div :class="[`${prefix}-footer`, { [`${prefix}-footer-round`]: props.round }, props.classNames?.footer]" :style="props.styles?.footer">
+                <div :class="[cssClasses.FOOTER_CONFIGURE, props.classNames?.configure]" :style="props.styles?.configure">
                     <Configure ref="configure" @change="foundation.onConfigureChange">
                         <slot name="configureArea" />
                     </Configure>
@@ -322,7 +326,7 @@
                     </Button>
                 </div>
                 <slot v-if="$slots.actionArea" name="actionArea" v-bind="{ menuItem: actionNodes(), class: actionCls }" />
-                <div v-else :class="actionCls">
+                <div v-else :class="actionCls" :style="props.styles?.actions">
                     <UploadButton ref="upload" v-bind="uploadButtonProps()" @change="foundation.onUploadChange">
                         <template v-if="$slots.uploadButton" #uploadButton="p">
                             <slot name="uploadButton" v-bind="p" />
@@ -331,7 +335,7 @@
                             <slot name="uploadTip" />
                         </template>
                     </UploadButton>
-                    <SendButton :canSend="sendEnabled" :generating="props.generating" @click="onSendClick" />
+                    <SendButton :canSend="sendEnabled" :class="props.classNames?.send" :generating="props.generating" :style="props.styles?.send" @click="onSendClick" />
                 </div>
             </div>
         </div>
@@ -339,20 +343,20 @@
             <div v-if="state.templateVisible" :class="[`${prefix}-template`, props.classNames?.templates]" :style="[{ maxHeight: `${numbers.TEMPLATE_MAX_HEIGHT}px` }, props.styles?.templates]">
                 <slot name="template" :onTemplateClick="foundation.setContent" :skill="state.skill" />
             </div>
-            <div v-else-if="state.skillVisible" :id="skillListId" ref="skillPanel" :aria-labelledby="editorId" :class="`${prefix}-skill`" role="listbox" :style="{ maxHeight: `${numbers.SKILL_MAX_HEIGHT}px` }">
+            <div v-else-if="state.skillVisible" :id="skillListId" ref="skillPanel" :aria-labelledby="editorId" :class="[`${prefix}-skill`, props.classNames?.skills]" role="listbox" :style="[{ maxHeight: `${numbers.SKILL_MAX_HEIGHT}px` }, props.styles?.skills]">
                 <template v-for="(item, index) in props.skills" :key="`${index}-${item.value}`">
                     <slot v-if="$slots.skillItem" name="skillItem" v-bind="skillOption(item, index)" />
-                    <div v-else v-bind="optionAttrs('skill', index, () => foundation.handleSkillSelect(item))">
+                    <div v-else v-bind="optionAttrs('skill', index, () => foundation.handleSkillSelect(item))" :style="props.styles?.skillItem">
                         <slot :index="index" :item="item" name="skillIcon" />
                         <div :class="`${prefix}-skill-item-content`">{{ item.label }}</div>
                     </div>
                 </template>
             </div>
-            <div v-else-if="state.suggestionVisible" :id="suggestionListId" ref="suggestionPanel" :aria-labelledby="editorId" :class="`${prefix}-suggestion`" role="listbox" :style="{ maxHeight: `${numbers.SUGGESTION_MAX_HEIGHT}px` }">
+            <div v-else-if="state.suggestionVisible" :id="suggestionListId" ref="suggestionPanel" :aria-labelledby="editorId" :class="[`${prefix}-suggestion`, props.classNames?.suggestions]" role="listbox" :style="[{ maxHeight: `${numbers.SUGGESTION_MAX_HEIGHT}px` }, props.styles?.suggestions]">
                 <!-- the index is part of the key: the same text may appear twice -->
                 <template v-for="(item, index) in props.suggestions" :key="`${index}-${typeof item === 'string' ? item : item.content}`">
                     <slot v-if="$slots.suggestionItem" name="suggestionItem" v-bind="suggestionOption(item, index)" />
-                    <div v-else v-bind="optionAttrs('suggestion', index, () => foundation.handleSuggestionSelect(item))">
+                    <div v-else v-bind="optionAttrs('suggestion', index, () => foundation.handleSuggestionSelect(item))" :style="props.styles?.suggestionItem">
                         {{ typeof item === 'string' ? item : item.content }}
                     </div>
                 </template>

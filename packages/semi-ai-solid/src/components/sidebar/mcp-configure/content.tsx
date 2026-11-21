@@ -1,6 +1,6 @@
 import { type Accessor, type JSX, Index, Show, createMemo } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { type MCPConfigurePart, cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import MCPConfigureContentFoundation, { type MCPConfigureContentAdapter, type MCPConfigureContentProps, type MCPConfigureContentState, type MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
 import { getShowOptions } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
 import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
@@ -13,6 +13,7 @@ import Input from '@fibrae/semi-ui-solid/input/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import Radio, { RadioGroup } from '@fibrae/semi-ui-solid/radio/index';
 import Tooltip from '@fibrae/semi-ui-solid/tooltip/index';
+import type { PartStyle } from '../interface';
 
 const prefixCls = cssClasses.MCP_CONFIGURE_CONTENT;
 const buttonCls = buttonClasses.PREFIX;
@@ -32,7 +33,9 @@ export interface MCPRenderItemProps {
 
 export interface MCPConfigureContentSolidProps extends Omit<MCPConfigureContentProps, 'className' | 'style' | 'options' | 'customOptions' | 'filter' | 'onStatusChange' | 'onAddClick' | 'onConfigureClick' | 'onEditClick' | 'renderItem'> {
     class?: string;
+    classNames?: Partial<Record<MCPConfigurePart, string>>;
     style?: JSX.CSSProperties | string;
+    styles?: Partial<Record<MCPConfigurePart, PartStyle>>;
     options?: MCPSolidOption[];
     customOptions?: MCPSolidOption[];
     filter?: (inputValue: string, option: MCPSolidOption) => boolean;
@@ -74,7 +77,20 @@ export default function MCPConfigureContent(props: MCPConfigureContentSolidProps
     const activatedCount = () => options().filter((option) => option.active).length + customOptions().filter((option) => option.active).length;
 
     // the adornments and showClear are set so global Input defaults cannot add them around the search icon
-    const searchInput = () => <Input class={isCustom() ? undefined : `${prefixCls}-search`} placeholder={props.placeholder ?? text().searchPlaceholder} value={state().inputValue} addonAfter={null} addonBefore={null} showClear={false} prefix={<IconSearch />} suffix={null} onChange={foundation.handleSearch} />;
+    const searchInput = () => (
+        <Input
+            class={isCustom() ? undefined : clsx(`${prefixCls}-search`, props.classNames?.search)}
+            style={isCustom() ? undefined : props.styles?.search}
+            placeholder={props.placeholder ?? text().searchPlaceholder}
+            value={state().inputValue}
+            addonAfter={null}
+            addonBefore={null}
+            showClear={false}
+            prefix={<IconSearch />}
+            suffix={null}
+            onChange={foundation.handleSearch}
+        />
+    );
 
     const addButton = () => (
         <Button type="primary" theme="solid" icon={<IconPlus />} onClick={foundation.handleAddClick}>
@@ -87,12 +103,18 @@ export default function MCPConfigureContent(props: MCPConfigureContentSolidProps
         const theme = () => (option().active ? 'light' : 'solid');
         const icon = () => (option().active ? <IconMinus /> : <IconPlus />);
         return (
-            <Show when={option().disabled} fallback={<Button type="primary" class={`${prefixCls}-item-button`} aria-label={label()} theme={theme()} icon={icon()} onClick={() => foundation.handleStatusChange(option(), !option().active)} />}>
+            <Show when={option().disabled} fallback={<Button type="primary" class={clsx(`${prefixCls}-item-button`, props.classNames?.itemAction)} style={props.styles?.itemAction} aria-label={label()} theme={theme()} icon={icon()} onClick={() => foundation.handleStatusChange(option(), !option().active)} />}>
                 {/* Keeps a focusable trigger so the tooltip reason reaches the keyboard; Button's native disabled leaves the
                     Tab order. Styled as a disabled primary icon-only Button; no click handler since the status cannot change. */}
                 <Tooltip content={text().defaultMcpInfo}>
                     {(getTriggerProps) => (
-                        <button {...getTriggerProps({ type: 'button' })} class={clsx(buttonCls, `${buttonCls}-${theme()}`, `${buttonCls}-disabled`, `${buttonCls}-primary-disabled`, `${buttonCls}-with-icon`, `${buttonCls}-with-icon-only`, `${prefixCls}-item-button`)} aria-disabled="true" aria-label={label()}>
+                        <button
+                            {...getTriggerProps({ type: 'button' })}
+                            class={clsx(buttonCls, `${buttonCls}-${theme()}`, `${buttonCls}-disabled`, `${buttonCls}-primary-disabled`, `${buttonCls}-with-icon`, `${buttonCls}-with-icon-only`, `${prefixCls}-item-button`, props.classNames?.itemAction)}
+                            style={props.styles?.itemAction}
+                            aria-disabled="true"
+                            aria-label={label()}
+                        >
                             <span class={`${buttonCls}-content`}>{icon()}</span>
                         </button>
                     )}
@@ -103,27 +125,35 @@ export default function MCPConfigureContent(props: MCPConfigureContentSolidProps
 
     // the render calls sit in JSX expressions, so they run again with the row's new option or mode
     const optionItem = (option: Accessor<MCPSolidOption>, renderArgs: Accessor<MCPRenderItemProps>) => (
-        <div class={`${prefixCls}-item`}>
+        <div class={clsx(`${prefixCls}-item`, props.classNames?.item)} style={props.styles?.item}>
             <Show
                 when={props.renderIcon}
                 keyed
                 fallback={
-                    <Show when={option().icon} fallback={<div class={`${prefixCls}-item-sign`} />}>
-                        {(src) => <img class={`${prefixCls}-item-sign`} alt="" src={src()} />}
+                    <Show when={option().icon} fallback={<div class={clsx(`${prefixCls}-item-sign`, props.classNames?.itemIcon)} style={props.styles?.itemIcon} />}>
+                        {(src) => <img class={clsx(`${prefixCls}-item-sign`, props.classNames?.itemIcon)} style={props.styles?.itemIcon} alt="" src={src()} />}
                     </Show>
                 }
             >
-                {(render) => <div class={`${prefixCls}-item-sign`}>{render(renderArgs())}</div>}
+                {(render) => (
+                    <div class={clsx(`${prefixCls}-item-sign`, props.classNames?.itemIcon)} style={props.styles?.itemIcon}>
+                        {render(renderArgs())}
+                    </div>
+                )}
             </Show>
             <div class={`${prefixCls}-item-content`}>
-                <div class={`${prefixCls}-item-content-label`}>{option().label}</div>
-                <div class={`${prefixCls}-item-content-desc`}>{props.renderDesc ? props.renderDesc(renderArgs()) : option().desc}</div>
+                <div class={clsx(`${prefixCls}-item-content-label`, props.classNames?.itemTitle)} style={props.styles?.itemTitle}>
+                    {option().label}
+                </div>
+                <div class={clsx(`${prefixCls}-item-content-desc`, props.classNames?.itemDescription)} style={props.styles?.itemDescription}>
+                    {props.renderDesc ? props.renderDesc(renderArgs()) : option().desc}
+                </div>
             </div>
             <Show when={option().configure}>
-                <Button class={`${prefixCls}-item-button ${prefixCls}-item-button-configure`} aria-label={text().configure} icon={<IconSetting />} onClick={(e) => foundation.onConfigureButtonClick(e, option())} />
+                <Button class={clsx(`${prefixCls}-item-button ${prefixCls}-item-button-configure`, props.classNames?.itemAction)} style={props.styles?.itemAction} aria-label={text().configure} icon={<IconSetting />} onClick={(e) => foundation.onConfigureButtonClick(e, option())} />
             </Show>
             <Show when={isCustom()}>
-                <Button class={`${prefixCls}-item-button ${prefixCls}-item-button-configure`} aria-label={text().edit} icon={<IconEdit />} onClick={(e) => foundation.onEditButtonClick(e, option())} />
+                <Button class={clsx(`${prefixCls}-item-button ${prefixCls}-item-button-configure`, props.classNames?.itemAction)} style={props.styles?.itemAction} aria-label={text().edit} icon={<IconEdit />} onClick={(e) => foundation.onEditButtonClick(e, option())} />
             </Show>
             {statusButton(option)}
         </div>
@@ -131,12 +161,12 @@ export default function MCPConfigureContent(props: MCPConfigureContentSolidProps
 
     return (
         <div class={clsx(prefixCls, props.class)} style={props.style}>
-            <div class={`${prefixCls}-header`}>
+            <div class={clsx(`${prefixCls}-header`, props.classNames?.toolbar)} style={props.styles?.toolbar}>
                 <RadioGroup type="button" aria-label={text().mcpConfigure} value={state().mode} onChange={(e) => foundation.handleModeChange(e.target.value)}>
                     <Radio value={strings.MCP_MODE.INNER}>{text().mcpServers}</Radio>
                     <Radio value={strings.MCP_MODE.CUSTOM}>{text().newMcpAdd}</Radio>
                 </RadioGroup>
-                <span class={`${prefixCls}-header-count`}>
+                <span class={clsx(`${prefixCls}-header-count`, props.classNames?.count)} style={props.styles?.count}>
                     {text().activeMCPNumber} {activatedCount()}/{options().length + customOptions().length}
                 </span>
             </div>
@@ -149,13 +179,13 @@ export default function MCPConfigureContent(props: MCPConfigureContentSolidProps
                         </Empty>
                     }
                 >
-                    <div class={`${prefixCls}-search ${prefixCls}-search-container`}>
+                    <div class={clsx(`${prefixCls}-search ${prefixCls}-search-container`, props.classNames?.search)} style={props.styles?.search}>
                         {searchInput()}
                         {addButton()}
                     </div>
                 </Show>
             </Show>
-            <div class={`${prefixCls}-item-container`}>
+            <div class={clsx(`${prefixCls}-item-container`, props.classNames?.list)} style={props.styles?.list}>
                 {/* Rows follow positions, as React's value keys do when the owner replaces a toggled option: the focused
                     status button stays in the document */}
                 <Index each={showOptions()}>

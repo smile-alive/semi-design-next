@@ -8,6 +8,14 @@
             },
             "autoPlay": { "zh-CN": "是否自动播放。", "en-US": "Whether to play automatically." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `controls`、`playButton`、`cover`、`title`、`error`、`sliderTrack`、`sliderProgress`、`sliderThumb`、`toolbar`、`speed`、`volumeDropdown`、`speedDropdown`，与组件自带的类名合并。`slider*` 同时作用于进度条与音量条；`speedDropdown` 落在倍速菜单容器上。",
+                "en-US": "Class names of the inner parts, keyed by `controls`, `playButton`, `cover`, `title`, `error`, `sliderTrack`, `sliderProgress`, `sliderThumb`, `toolbar`, `speed`, `volumeDropdown` and `speedDropdown`; merged with the built-in classes. The `slider*` keys apply to both the progress and the volume slider; `speedDropdown` lands on the playback rate menu container."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "ref": { "zh-CN": "根元素 `div` 的引用。", "en-US": "Reference to the root `div` element." },
             "showToolbar": {
                 "zh-CN": "是否显示工具栏，即音量、后退、前进、倍速与重新加载按钮。",

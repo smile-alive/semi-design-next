@@ -6,6 +6,10 @@
                 "zh-CN": "对齐方式，可选 center、justify、left、plain；row 为 true 时无效。",
                 "en-US": "Alignment: center, justify, left or plain; ignored when row is true."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 itemKey、itemValue，分别作用到全部条目的键与值，值的写法同 class（字符串、数组或对象），与组件自带的类名合并，排在 `data` 项自己的 classNames 之前。",
+                "en-US": "Class names of the inner parts, keyed by itemKey and itemValue, applied to the key and value of every item; values take anything class takes (string, array or object) and merge with the built-in classes, coming before the data item's own classNames."
+            },
             "column": {
                 "zh-CN": "横向布局下每行的总列数。",
                 "en-US": "Total number of columns per row in the horizontal layout."
@@ -29,6 +33,10 @@
             "size": {
                 "zh-CN": "双行显示时的尺寸，可选 small、medium、large。",
                 "en-US": "Size in two-row mode: small, medium or large."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的样式字符串，键同 classNames；`data` 项自己的 styles 后写。",
+                "en-US": "Style strings of the inner parts, keyed like classNames; the data item's own styles are applied after."
             },
             "value": {
                 "zh-CN": "每个数据项值的 snippet，参数为 `{ item, index }`，`index` 是该项在 `data` 中的位置（含 hidden 的项）；默认渲染 item.value。",

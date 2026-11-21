@@ -31,7 +31,7 @@
 </script>
 
 <template>
-    <div v-if="props.item === 'page'" aria-atomic="true" aria-live="polite" :class="`${footerCls}-page`">{{ props.view.curPage }}/{{ props.view.totalNum }}</div>
+    <div v-if="props.item === 'page'" aria-atomic="true" aria-live="polite" :class="[`${footerCls}-page`, props.view.classNames?.page]" :style="props.view.styles?.page">{{ props.view.curPage }}/{{ props.view.totalNum }}</div>
     <Slider
         v-else-if="props.item === 'slider'"
         :ariaLabel="props.view.zoomLabel"
@@ -56,7 +56,9 @@
                     [`${prefixCls}-tooltip-children-wrapper`]: props.view.showTooltip,
                     [`${footerCls}-gap`]: props.item === 'ratio' || props.item === 'download',
                 },
+                props.view.classNames?.action,
             ]"
+            :style="props.view.styles?.action"
             type="button"
             @click="props.view.buttons[props.item].disabled || props.view.buttons[props.item].onClick()"
         >

@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
-import type { SelectPart } from '@fibrae/semi-foundation/components/select/constants';
+import type { OptionPart, SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { InputProps, ValidateStatus } from '../input/index.js';
 import type { PopoverProps } from '../popover/index.js';
@@ -36,6 +36,8 @@ export interface SelectOptionProps {
     class?: ClassValue;
     /** On the option row */
     style?: string;
+    classNames?: Partial<Record<OptionPart, ClassValue>>;
+    styles?: Partial<Record<OptionPart, string>>;
     [key: string]: any;
 }
 

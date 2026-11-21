@@ -31,6 +31,10 @@
                 "zh-CN": "根元素的类名，与内置类名合并。",
                 "en-US": "Class name of the root element, merged with the built-in class names."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`、`indicators`、`indicator`、`arrows`、`prevArrow`、`nextArrow`，与组件自带的类名合并；`indicators` 是指示器的 tablist 容器，`indicator` 是单个指示点，`arrows` 是两个箭头按钮所在的容器。",
+                "en-US": "Class names of the inner parts, keyed by `content`, `indicators`, `indicator`, `arrows`, `prevArrow` and `nextArrow`; merged with the built-in classes. `indicators` is the tablist holding the indicator dots, `indicator` is a single dot and `arrows` is the container of the two arrow buttons."
+            },
             "defaultActiveIndex": {
                 "zh-CN": "初始展示的索引，非受控时使用。",
                 "en-US": "Index of the slide shown initially, used when uncontrolled."
@@ -70,6 +74,10 @@
                 "en-US": "Slide direction when the animation is `slide`: `left` or `right`."
             },
             "speed": { "zh-CN": "切换速度，单位为毫秒。", "en-US": "Transition duration in milliseconds." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "theme": {
                 "zh-CN": "指示器和箭头的主题，可选 `primary`、`light` 或 `dark`。",
                 "en-US": "Theme of the indicator and arrows: `primary`, `light` or `dark`."

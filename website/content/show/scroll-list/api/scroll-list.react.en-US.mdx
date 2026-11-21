@@ -2,12 +2,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property   | Description                                                                | Type                                                              | Default |
-| ---------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
-| bodyHeight | Height of the list body; a number is in px. Unset, the stylesheet decides. | `number \| string`                                                | -       |
-| children   | The ScrollItem columns.                                                    | `React.ReactNode`                                                 | -       |
-| className  | Class name of the root element.                                            | `string`                                                          | -       |
-| footer     | Footer content; any ReactNode.                                             | `React.ReactNode`                                                 | -       |
-| header     | Header content; any ReactNode.                                             | `React.ReactNode`                                                 | -       |
-| ref        | Reference to the root `div` element.                                       | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
-| style      | Style of the root element.                                                 | `CSSProperties`                                                   | -       |
+| Property   | Description                                                                                                        | Type                                                                                              | Default |
+| ---------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ------- |
+| bodyHeight | Height of the list body; a number is in px. Unset, the stylesheet decides.                                         | `number \| string`                                                                                | -       |
+| children   | The ScrollItem columns.                                                                                            | `React.ReactNode`                                                                                 | -       |
+| className  | Class name of the root element.                                                                                    | `string`                                                                                          | -       |
+| classNames | Class names of the inner parts, keyed by `header`, `title`, `body` and `footer`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, string>>"}>Type</ApiType>              | -       |
+| footer     | Footer content; any ReactNode.                                                                                     | `React.ReactNode`                                                                                 | -       |
+| header     | Header content; any ReactNode.                                                                                     | `React.ReactNode`                                                                                 | -       |
+| ref        | Reference to the root `div` element.                                                                               | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                                 | -       |
+| style      | Style of the root element.                                                                                         | `CSSProperties`                                                                                   | -       |
+| styles     | Inline styles of the inner parts, keyed like `classNames`.                                                         | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, React.CSSProperties>>"}>Type</ApiType> | -       |

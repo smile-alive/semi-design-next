@@ -253,6 +253,8 @@
             decorations: tags,
             linkClass: linkClass.value,
             iconSize: realSize.value === 'small' ? ('small' as const) : ('default' as const),
+            classNames: props.classNames,
+            styles: props.styles,
             action: expandButton.value,
             copy: copyConfig.value,
             onToggle: toggle,

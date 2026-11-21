@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | arrowPosition | 折叠模式下，左右切换箭头的位置，可选 `start`、`end` 或 `both`。 | `TabBarProps['arrowPosition']` | `"both"` |
 | children | TabPane 子元素，必须是 Tabs 的直接子元素；其余节点按原顺序作为内容渲染。传了 tabList 时，TabPane 子元素被忽略，其余节点是当前标签页的内容。 | <ApiType detail={"ReactNode \u007c Array\u003cReactNode>"}>Type</ApiType> | `[]` |
 | className | 根元素的类名。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `tabBar`（标签栏）、`content`（内容区域外层）、`visibleTabs`（折叠模式下整体滚动区域），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTabsPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `tabBar`（标签栏）、`content`（内容区域外层）、`visibleTabs`（折叠模式下整体滚动区域）、`item`（每个标签）、`itemIcon`（标签图标）、`itemClose`（标签关闭图标）、`pane`（每个标签页的面板）、`extra`（`tabBarExtraContent` 的容器）、`arrow`（折叠模式下的翻页箭头，两端都生效）、`more`（`more` 模式的「更多」按钮）、`dropdown`（箭头与「更多」的下拉浮层），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTabsPart, string>>"}>Type</ApiType> | - |
 | collapsible | 是否开启滚动折叠（仅水平模式）。传 `auto` 时在标签溢出或换行时自动折叠，放得下时自动退出。 | `boolean \| 'auto'` | `false` |
 | defaultActiveKey | 非受控时初始选中的 itemKey。不传时取第一个启用且有 itemKey 的标签页。 | `string` | - |
 | dropdownProps | 折叠模式下，分别透传给起始侧（`start`）与末尾侧（`end`）箭头下拉菜单的 Dropdown 属性。 | `TabsDropdownProps` | - |

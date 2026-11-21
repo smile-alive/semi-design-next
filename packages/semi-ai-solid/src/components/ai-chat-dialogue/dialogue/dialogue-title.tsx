@@ -1,4 +1,5 @@
 import { Show } from 'solid-js';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { useAIChatDialogueContext } from '../context';
@@ -9,7 +10,11 @@ const prefix = cssClasses.PREFIX;
 export default function DialogueTitle(props: { role?: Metadata; message: Message }) {
     const { view } = useAIChatDialogueContext();
 
-    const title = () => <span class={`${prefix}-title`}>{props.role?.name}</span>;
+    const title = () => (
+        <span class={clsx(`${prefix}-title`, view().classNames?.itemTitle)} style={view().styles?.itemTitle}>
+            {props.role?.name}
+        </span>
+    );
 
     return (
         <Show when={view().dialogueRenderConfig?.renderDialogueTitle} keyed fallback={title()}>

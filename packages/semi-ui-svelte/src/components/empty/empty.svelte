@@ -44,15 +44,15 @@
     <div class={`${prefixCls}-content`}>
         {#if title}
             <!-- styled as a heading but not one: a fixed level would break the page outline -->
-            <TypographyTitle class={`${prefixCls}-title`} component="div" heading={hasImage ? 4 : 6} style={hasImage ? undefined : 'font-weight: 400'} x-semi-prop="title">
+            <TypographyTitle class={[`${prefixCls}-title`, classNames?.title]} component="div" heading={hasImage ? 4 : 6} style={[hasImage ? undefined : 'font-weight: 400', styles?.title].filter(Boolean).join('; ') || undefined} x-semi-prop="title">
                 {#if typeof title === 'function'}{@render title()}{:else}{title}{/if}
             </TypographyTitle>
         {/if}
         {#if description}
-            <div class={`${prefixCls}-description`} x-semi-prop="description">{@render description()}</div>
+            <div class={[`${prefixCls}-description`, classNames?.description]} style={styles?.description} x-semi-prop="description">{@render description()}</div>
         {/if}
         {#if children}
-            <div class={`${prefixCls}-footer`} x-semi-prop="children">{@render children()}</div>
+            <div class={[`${prefixCls}-footer`, classNames?.footer]} style={styles?.footer} x-semi-prop="children">{@render children()}</div>
         {/if}
     </div>
 </div>

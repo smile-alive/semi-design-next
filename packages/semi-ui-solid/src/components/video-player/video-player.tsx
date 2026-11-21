@@ -45,6 +45,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
         'autoPlay',
         'captionsSrc',
         'class',
+        'classNames',
         'clickToPlay',
         'controlsList',
         'crossOrigin',
@@ -71,6 +72,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
         'seekTime',
         'src',
         'style',
+        'styles',
         'theme',
         'volume',
         'width',
@@ -115,7 +117,8 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
     const renderVolume = () => (
         <Show when={shows(strings.VOLUME)}>
             <Popover
-                class={`${controlsCls}-popover`}
+                class={clsx(`${controlsCls}-popover`, local.classNames?.volumeDropdown)}
+                style={local.styles?.volumeDropdown}
                 // the popup holds an interactive range, which a tooltip may not contain
                 aria-label={text().volume}
                 role="dialog"
@@ -175,6 +178,8 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
             <div class={clsx(`${prefixCls}-wrapper`, { [`${prefixCls}-wrapper-${local.theme}`]: local.theme })}>
                 <video
                     ref={mergeRefs(local.ref, (node: HTMLVideoElement) => (video = node))}
+                    class={clsx(`${prefixCls}-video`, local.classNames?.video)}
+                    style={local.styles?.video}
                     autoplay={local.autoPlay}
                     controls={false}
                     crossOrigin={local.crossOrigin}
@@ -195,20 +200,25 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
             </div>
             <Show when={!state().isPlaying && local.poster}>
                 <img
-                    class={clsx(`${prefixCls}-poster`, {
-                        [`${prefixCls}-poster-hide`]: state().currentTime > 0 && state().currentTime < state().totalTime,
-                    })}
+                    class={clsx(
+                        `${prefixCls}-poster`,
+                        {
+                            [`${prefixCls}-poster-hide`]: state().currentTime > 0 && state().currentTime < state().totalTime,
+                        },
+                        local.classNames?.poster
+                    )}
+                    style={local.styles?.poster}
                     alt={text().poster}
                     src={local.poster}
                 />
             </Show>
             <Show when={!state().isPlaying && !state().isError}>
-                <div class={`${prefixCls}-pause`}>
+                <div class={clsx(`${prefixCls}-pause`, local.classNames?.playIcon)} style={local.styles?.playIcon}>
                     <IconPlayCircle />
                 </div>
             </Show>
             <Show when={state().isError}>
-                <div class={clsx(`${prefixCls}-error`, { [`${prefixCls}-error-${local.theme}`]: local.theme })} role="alert">
+                <div class={clsx(`${prefixCls}-error`, { [`${prefixCls}-error-${local.theme}`]: local.theme }, local.classNames?.error)} style={local.styles?.error} role="alert">
                     <div class={`${prefixCls}-error-svg`}>
                         <ErrorSvg />
                     </div>
@@ -218,11 +228,13 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
             {/* a live region announces changes only once it exists, so it stays while the notification comes and goes */}
             <div role="status">
                 <Show when={state().showNotification && state().notificationContent}>
-                    <div class={`${prefixCls}-notification`}>{state().notificationContent}</div>
+                    <div class={clsx(`${prefixCls}-notification`, local.classNames?.notification)} style={local.styles?.notification}>
+                        {state().notificationContent}
+                    </div>
                 </Show>
             </div>
-            <div class={clsx(controlsCls, { [`${controlsCls}-hide`]: !state().showControls })}>
-                <VideoProgress max={state().totalTime} step={local.seekTime} value={state().currentTime} bufferedValue={state().bufferedValue} markers={local.markers} onChange={foundation.handleTimeChange} />
+            <div class={clsx(controlsCls, { [`${controlsCls}-hide`]: !state().showControls }, local.classNames?.controls)} style={local.styles?.controls}>
+                <VideoProgress classNames={local.classNames} styles={local.styles} max={state().totalTime} step={local.seekTime} value={state().currentTime} bufferedValue={state().bufferedValue} markers={local.markers} onChange={foundation.handleTimeChange} />
                 <div class={`${controlsCls}-menu`}>
                     <div class={`${controlsCls}-menu-left`}>
                         {iconButton(
@@ -242,21 +254,21 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                             )}
                         </Show>
                         <Show when={shows(strings.TIME)}>
-                            <div class={`${controlsCls}-time`}>
+                            <div class={clsx(`${controlsCls}-time`, local.classNames?.time)} style={local.styles?.time}>
                                 {formatTime(state().currentTime)} / {formatTime(state().totalTime)}
                             </div>
                         </Show>
                         {renderVolume()}
                         <Show when={shows(strings.PLAYBACK_RATE)}>
-                            <ControlsMenu current={state().playbackRate} label={text().playbackRate} list={local.playbackRateList} onSelect={(option) => foundation.handleRateChange(option, text())} />
+                            <ControlsMenu classNames={local.classNames} current={state().playbackRate} label={text().playbackRate} list={local.playbackRateList} styles={local.styles} onSelect={(option) => foundation.handleRateChange(option, text())} />
                         </Show>
                     </div>
                     <div class={`${controlsCls}-menu-right`}>
                         <Show when={shows(strings.QUALITY) && local.qualityList?.length}>
-                            <ControlsMenu current={state().currentQuality} label={text().quality} list={local.qualityList ?? []} onSelect={(option) => foundation.handleQualityChange(option, text())} />
+                            <ControlsMenu classNames={local.classNames} current={state().currentQuality} label={text().quality} list={local.qualityList ?? []} styles={local.styles} onSelect={(option) => foundation.handleQualityChange(option, text())} />
                         </Show>
                         <Show when={shows(strings.ROUTE) && local.routeList?.length}>
-                            <ControlsMenu current={state().currentRoute} label={text().route} list={local.routeList ?? []} onSelect={(option) => foundation.handleRouteChange(option, text())} />
+                            <ControlsMenu classNames={local.classNames} current={state().currentRoute} label={text().route} list={local.routeList ?? []} styles={local.styles} onSelect={(option) => foundation.handleRouteChange(option, text())} />
                         </Show>
                         {iconButton(
                             () => (

@@ -15,7 +15,7 @@ import Modal from '../modal';
 import { useSpecialTrigger } from '../tooltip/context';
 import type { ShowTooltip } from '../typography/interface';
 import AddArea from './add-area';
-import { type AddAreaContextValue, AddAreaContext } from './context';
+import { type AddAreaContextValue, type UploadContextValue, AddAreaContext, UploadContext } from './context';
 import FileCard from './file-card';
 import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, CropProps, CustomError, FileItem, OnChangeProps, PromptPositionType, RenderFileItemProps, RenderFileListTitleProps, RenderPictureCloseProps, UploadCropModalProps, UploadCustomRequestArgs, UploadListType } from './interface';
 
@@ -300,6 +300,15 @@ export default function Upload(rawProps: UploadProps) {
         onDrop: (e: DragEvent) => foundation.handleDrop(e),
     };
 
+    const partsContext: UploadContextValue = {
+        get classNames() {
+            return local.classNames;
+        },
+        get styles() {
+            return local.styles;
+        },
+    };
+
     const isPicture = () => local.listType === strings.FILE_LIST_PIC;
 
     const showAdd = () => local.limit === undefined || local.limit > fileList().length;
@@ -370,12 +379,6 @@ export default function Upload(rawProps: UploadProps) {
                 get listType() {
                     return local.listType;
                 },
-                get class() {
-                    return local.classNames?.item;
-                },
-                get style() {
-                    return local.styles?.item;
-                },
                 get disabled() {
                     return local.disabled;
                 },
@@ -432,11 +435,16 @@ export default function Upload(rawProps: UploadProps) {
         <AddArea
             {...(local.draggable ? dragHandlers : {})}
             ref={(node) => (addArea = node)}
-            class={clsx(`${prefixCls}-add`, `${prefixCls}-picture-add`, {
-                [`${prefixCls}-picture-add-disabled`]: local.disabled,
-                [`${dragAreaCls}-legal`]: local.draggable && dragLegal(),
-            })}
-            style={{ height: toCssLength(local.picHeight), width: toCssLength(local.picWidth) }}
+            class={clsx(
+                `${prefixCls}-add`,
+                `${prefixCls}-picture-add`,
+                {
+                    [`${prefixCls}-picture-add-disabled`]: local.disabled,
+                    [`${dragAreaCls}-legal`]: local.draggable && dragLegal(),
+                },
+                local.classNames?.trigger
+            )}
+            style={{ height: toCssLength(local.picHeight), width: toCssLength(local.picWidth), ...local.styles?.trigger }}
             describedby={addDescribedby()}
             disabled={local.disabled}
             label={locale().locale.upload}
@@ -455,14 +463,14 @@ export default function Upload(rawProps: UploadProps) {
         const mainText = children(() => local.dragMainText);
         return (
             <>
-                <div class={`${dragAreaCls}-icon`} x-semi-prop="dragIcon">
+                <div class={clsx(`${dragAreaCls}-icon`, local.classNames?.dragIcon)} style={local.styles?.dragIcon} x-semi-prop="dragIcon">
                     {hasContent(icon()) ? icon() : <IconUpload size="extra-large" />}
                 </div>
                 <div class={`${dragAreaCls}-text`}>
-                    <div class={`${dragAreaCls}-main-text`} x-semi-prop="dragMainText">
+                    <div class={clsx(`${dragAreaCls}-main-text`, local.classNames?.dragMainText)} style={local.styles?.dragMainText} x-semi-prop="dragMainText">
                         {hasContent(mainText()) ? mainText() : locale().locale.mainText}
                     </div>
-                    <div class={`${dragAreaCls}-sub-text`} x-semi-prop="dragSubText">
+                    <div class={clsx(`${dragAreaCls}-sub-text`, local.classNames?.dragSubText)} style={local.styles?.dragSubText} x-semi-prop="dragSubText">
                         {local.dragSubText}
                     </div>
                     <div class={`${dragAreaCls}-tips`}>
@@ -483,10 +491,15 @@ export default function Upload(rawProps: UploadProps) {
                 {...dragHandlers}
                 context={area}
                 ref={(node) => (addArea = node)}
-                class={clsx(dragAreaCls, {
-                    [`${dragAreaCls}-legal`]: dragLegal(),
-                    [`${dragAreaCls}-custom`]: hasContent(content()),
-                })}
+                class={clsx(
+                    dragAreaCls,
+                    {
+                        [`${dragAreaCls}-legal`]: dragLegal(),
+                        [`${dragAreaCls}-custom`]: hasContent(content()),
+                    },
+                    local.classNames?.trigger
+                )}
+                style={local.styles?.trigger}
                 describedby={addDescribedby()}
                 disabled={local.disabled}
                 label={locale().locale.upload}
@@ -525,7 +538,7 @@ export default function Upload(rawProps: UploadProps) {
                     <>
                         <span class={`${prefixCls}-file-list-title-choosen`}>{hasContent(title()) ? title() : locale().locale.selectedFiles}</span>
                         <Show when={local.showClear && !local.disabled}>
-                            <button type="button" class={`${prefixCls}-file-list-title-clear`} onClick={foundation.handleClear}>
+                            <button type="button" class={clsx(`${prefixCls}-file-list-title-clear`, local.classNames?.clear)} style={local.styles?.clear} onClick={foundation.handleClear}>
                                 {locale().locale.clear}
                             </button>
                         </Show>
@@ -583,7 +596,17 @@ export default function Upload(rawProps: UploadProps) {
                 <Show
                     when={local.draggable}
                     fallback={
-                        <AddArea ref={(node) => (addArea = node)} class={`${prefixCls}-add`} describedby={addDescribedby()} disabled={local.disabled} label={locale().locale.upload} tabIndex={local.tabIndex} onControlChange={setAddAreaHasControl} onOpen={openFileDialog}>
+                        <AddArea
+                            ref={(node) => (addArea = node)}
+                            class={clsx(`${prefixCls}-add`, local.classNames?.trigger)}
+                            style={local.styles?.trigger}
+                            describedby={addDescribedby()}
+                            disabled={local.disabled}
+                            label={locale().locale.upload}
+                            tabIndex={local.tabIndex}
+                            onControlChange={setAddAreaHasControl}
+                            onOpen={openFileDialog}
+                        >
                             {local.children}
                         </AddArea>
                     }
@@ -592,43 +615,47 @@ export default function Upload(rawProps: UploadProps) {
                 </Show>
             </Show>
             <Show when={hasContent(prompt())}>
-                <div class={`${prefixCls}-prompt`} x-semi-prop="prompt">
+                <div class={clsx(`${prefixCls}-prompt`, local.classNames?.prompt)} style={local.styles?.prompt} x-semi-prop="prompt">
                     {prompt()}
                 </div>
             </Show>
             <Show when={hasContent(validateMessage())}>
-                <div class={`${prefixCls}-validate-message`} x-semi-prop="validateMessage">
+                <div class={clsx(`${prefixCls}-validate-message`, local.classNames?.validateMessage)} style={local.styles?.validateMessage} x-semi-prop="validateMessage">
                     {validateMessage()}
                 </div>
             </Show>
-            <Show when={isPicture()}>
-                <Show when={local.showUploadList} fallback={<Show when={showAdd()}>{pictureAdd()}</Show>}>
-                    {/* The wrappers stay when the list is empty, so adding the first file keeps the add button mounted and focused */}
-                    <div class={clsx(`${prefixCls}-file-list`, `${prefixCls}-picture-file-list`)} onFocusIn={trackFocus} onFocusOut={untrackFocus}>
-                        <div class={`${prefixCls}-file-list-main`}>
-                            <Show when={showAdd() && local.hotSpotLocation === 'start'}>{pictureAdd()}</Show>
-                            {/* a list owns only its items, so the add button sits beside it; display: contents keeps the
+            <UploadContext.Provider value={partsContext}>
+                <Show when={isPicture()}>
+                    <Show when={local.showUploadList} fallback={<Show when={showAdd()}>{pictureAdd()}</Show>}>
+                        {/* The wrappers stay when the list is empty, so adding the first file keeps the add button mounted and focused */}
+                        <div class={clsx(`${prefixCls}-file-list`, `${prefixCls}-picture-file-list`, local.classNames?.list)} style={local.styles?.list} onFocusIn={trackFocus} onFocusOut={untrackFocus}>
+                            <div class={`${prefixCls}-file-list-main`}>
+                                <Show when={showAdd() && local.hotSpotLocation === 'start'}>{pictureAdd()}</Show>
+                                {/* a list owns only its items, so the add button sits beside it; display: contents keeps the
                                 pictures and the button in one wrapping row */}
-                            <Show when={fileList().length > 0}>
-                                <div class={`${prefixCls}-picture-list`} aria-label={locale().locale.pictureList} role="list">
-                                    <Index each={fileList()}>{renderCard}</Index>
-                                </div>
-                            </Show>
-                            <Show when={showAdd() && local.hotSpotLocation === 'end'}>{pictureAdd()}</Show>
+                                <Show when={fileList().length > 0}>
+                                    <div class={`${prefixCls}-picture-list`} aria-label={locale().locale.pictureList} role="list">
+                                        <Index each={fileList()}>{renderCard}</Index>
+                                    </div>
+                                </Show>
+                                <Show when={showAdd() && local.hotSpotLocation === 'end'}>{pictureAdd()}</Show>
+                            </div>
+                        </div>
+                    </Show>
+                </Show>
+                <Show when={local.listType === strings.FILE_LIST_DEFAULT && local.showUploadList && fileList().length > 0}>
+                    <div class={clsx(`${prefixCls}-file-list`, local.classNames?.list)} style={local.styles?.list} onFocusIn={trackFocus} onFocusOut={untrackFocus}>
+                        <Show when={local.limit !== 1}>
+                            <div class={clsx(`${prefixCls}-file-list-title`, local.classNames?.listTitle)} style={local.styles?.listTitle}>
+                                {listTitle()}
+                            </div>
+                        </Show>
+                        <div class={`${prefixCls}-file-list-main`} aria-label={locale().locale.fileList} role="list">
+                            <Index each={fileList()}>{renderCard}</Index>
                         </div>
                     </div>
                 </Show>
-            </Show>
-            <Show when={local.listType === strings.FILE_LIST_DEFAULT && local.showUploadList && fileList().length > 0}>
-                <div class={`${prefixCls}-file-list`} onFocusIn={trackFocus} onFocusOut={untrackFocus}>
-                    <Show when={local.limit !== 1}>
-                        <div class={`${prefixCls}-file-list-title`}>{listTitle()}</div>
-                    </Show>
-                    <div class={`${prefixCls}-file-list-main`} aria-label={locale().locale.fileList} role="list">
-                        <Index each={fileList()}>{renderCard}</Index>
-                    </div>
-                </div>
-            </Show>
+            </UploadContext.Provider>
             <Modal
                 {...local.cropModalProps}
                 styles={{ ...local.cropModalProps?.styles, body: { height: '400px', ...local.cropModalProps?.styles?.body } }}

@@ -1,4 +1,5 @@
-import type { Component, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { ClassValue, Component, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { TransferPart } from '@fibrae/semi-foundation/components/transfer/constants';
 import type { InputProps } from '../input/interface';
 import type { TreeProps } from '../tree/interface';
 
@@ -62,6 +63,8 @@ export type TransferTreeProps = Omit<TreeProps, 'modelValue' | 'defaultValue' | 
 };
 
 export interface TransferProps {
+    classNames?: Partial<Record<TransferPart, ClassValue>>;
+    styles?: Partial<Record<TransferPart, StyleValue>>;
     modelValue?: TransferValue;
     defaultValue?: TransferValue;
     dataSource?: TransferDataSource;

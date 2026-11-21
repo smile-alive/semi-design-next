@@ -2,12 +2,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性       | 说明                                                  | 类型                                                              | 默认值 |
-| ---------- | ----------------------------------------------------- | ----------------------------------------------------------------- | ------ |
-| bodyHeight | 列表主体的高度，数字单位为 px；未设置时由样式表决定。 | `number \| string`                                                | -      |
-| children   | 列表中的 ScrollItem。                                 | `React.ReactNode`                                                 | -      |
-| className  | 根元素的类名。                                        | `string`                                                          | -      |
-| footer     | 底部内容，可传任意 ReactNode。                        | `React.ReactNode`                                                 | -      |
-| header     | 头部内容，可传任意 ReactNode。                        | `React.ReactNode`                                                 | -      |
-| ref        | 根元素（`div`）的引用。                               | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -      |
-| style      | 根元素的样式。                                        | `CSSProperties`                                                   | -      |
+| 属性       | 说明                                                                               | 类型                                                                                              | 默认值 |
+| ---------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------ |
+| bodyHeight | 列表主体的高度，数字单位为 px；未设置时由样式表决定。                              | `number \| string`                                                                                | -      |
+| children   | 列表中的 ScrollItem。                                                              | `React.ReactNode`                                                                                 | -      |
+| className  | 根元素的类名。                                                                     | `string`                                                                                          | -      |
+| classNames | 内部各部位的类名，键为 `header`、`title`、`body`、`footer`，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, string>>"}>Type</ApiType>              | -      |
+| footer     | 底部内容，可传任意 ReactNode。                                                     | `React.ReactNode`                                                                                 | -      |
+| header     | 头部内容，可传任意 ReactNode。                                                     | `React.ReactNode`                                                                                 | -      |
+| ref        | 根元素（`div`）的引用。                                                            | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                                 | -      |
+| style      | 根元素的样式。                                                                     | `CSSProperties`                                                                                   | -      |
+| styles     | 内部各部位的内联样式，键同 `classNames`。                                          | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, React.CSSProperties>>"}>Type</ApiType> | -      |

@@ -1,3 +1,5 @@
+import type { JSX } from 'solid-js';
+import type { TypographyTextPart } from '@fibrae/semi-foundation/components/typography/constants';
 import type { ElementProps } from '../../base/index';
 import Base, { type BaseTypographyProps } from './base';
 import type { OmitTypographyProps, TypographyBaseSize, TypographyCommonProps, TypographyEllipsisProps, TypographyIcon } from './interface';
@@ -5,6 +7,8 @@ import type { OmitTypographyProps, TypographyBaseSize, TypographyCommonProps, Ty
 export interface TextProps extends ElementProps<'span', OmitTypographyProps>, TypographyCommonProps, TypographyEllipsisProps {
     code?: boolean;
     icon?: TypographyIcon;
+    classNames?: Partial<Record<TypographyTextPart, string>>;
+    styles?: Partial<Record<TypographyTextPart, JSX.CSSProperties | string>>;
     size?: TypographyBaseSize;
     weight?: number;
 }

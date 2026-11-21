@@ -1,4 +1,4 @@
-import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
+import type { CalendarPart, strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import type { DailyEventLayout, EventObject, WeekStartsOn } from '@fibrae/semi-foundation/components/calendar/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ElementProps, BaseProps } from '../../base/index';
@@ -7,6 +7,8 @@ export interface CalendarProps extends ElementProps<'div', 'onClick' | 'children
     displayValue?: Date;
     range?: Date[];
     header?: React.ReactNode;
+    classNames?: Partial<Record<CalendarPart, string>>;
+    styles?: Partial<Record<CalendarPart, React.CSSProperties>>;
     events?: EventObject[];
     mode?: ArrayElement<typeof strings.MODE>;
     showCurrTime?: boolean;
@@ -30,7 +32,7 @@ export interface CalendarProps extends ElementProps<'div', 'onClick' | 'children
 
 export type DayCalendarProps = Omit<CalendarProps, 'mode'>;
 
-type DayCalendarPropsKeys = 'displayValue' | 'showCurrTime' | 'mode' | 'dateGridRender' | 'minEventHeight';
+type DayCalendarPropsKeys = 'displayValue' | 'showCurrTime' | 'mode' | 'dateGridRender' | 'minEventHeight' | 'classNames' | 'styles';
 export interface DayColProps extends Pick<CalendarProps, DayCalendarPropsKeys>, BaseProps {
     events: DailyEventLayout[];
     scrollHeight: number;
@@ -45,6 +47,8 @@ export type RangeCalendarProps = CalendarProps;
 
 export interface TimeColProps {
     className?: string;
+    classNames?: CalendarProps['classNames'];
+    styles?: CalendarProps['styles'];
     renderTimeDisplay?: CalendarProps['renderTimeDisplay'];
 }
 

@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { ProgressPart } from '@fibrae/semi-foundation/components/progress/constants';
 import type { StrokeArr } from '@fibrae/semi-foundation/components/progress/generates';
 import type { Size } from '@fibrae/semi-foundation/utils';
 
@@ -9,6 +10,7 @@ export type ProgressType = 'line' | 'circle';
 export type ProgressDirection = 'horizontal' | 'vertical';
 
 export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
+    classNames?: Partial<Record<ProgressPart, ClassValue>>;
     direction?: ProgressDirection;
     indeterminate?: boolean;
     motion?: boolean;
@@ -20,6 +22,7 @@ export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
     strokeGradient?: boolean;
     strokeLinecap?: 'round' | 'square';
     strokeWidth?: number;
+    styles?: Partial<Record<ProgressPart, string>>;
     type?: ProgressType;
     width?: number;
     /** Replaces the text; `percent` is the shown number clamped to 0-100 */

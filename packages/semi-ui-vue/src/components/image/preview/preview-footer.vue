@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { computed, h } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import { computed, h, type ClassValue, type StyleValue } from 'vue';
+    import { cssClasses, type ImagePreviewPart } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterBaseProps, type PreviewFooterState } from '@fibrae/semi-foundation/components/image/preview-footer-foundation';
     import { useFoundation } from '../../../base/index';
     import Divider from '../../divider';
@@ -22,6 +22,8 @@
         disableDownload?: boolean;
         showTooltip?: boolean;
         hidden: boolean;
+        classNames?: Partial<Record<ImagePreviewPart, ClassValue>>;
+        styles?: Partial<Record<ImagePreviewPart, StyleValue>>;
         prevTip?: string;
         nextTip?: string;
         zoomInTip?: string;
@@ -95,6 +97,8 @@
             step: props.step,
             ratio: props.ratio,
             zoomLabel: text.zoom,
+            classNames: props.classNames,
+            styles: props.styles,
             buttons: {
                 prev: { label: props.prevTip ?? text.prevTip, disabled: props.disabledPrev, onClick: onPrev },
                 next: { label: props.nextTip ?? text.nextTip, disabled: props.disabledNext, onClick: onNext },
@@ -148,7 +152,7 @@
 </script>
 
 <template>
-    <section :class="[cls, `${cls}-wrapper`, { [`${cls}-content`]: !$slots.previewMenu, [`${cssClasses.PREFIX}-preview-hide`]: props.hidden }]">
+    <section :class="[cls, `${cls}-wrapper`, { [`${cls}-content`]: !$slots.previewMenu, [`${cssClasses.PREFIX}-preview-hide`]: props.hidden }, props.classNames?.footer]" :style="props.styles?.footer">
         <slot v-if="$slots.previewMenu" name="previewMenu" v-bind="menuProps()" />
         <template v-else>
             <template v-for="(item, index) in FOOTER_ITEMS" :key="item">

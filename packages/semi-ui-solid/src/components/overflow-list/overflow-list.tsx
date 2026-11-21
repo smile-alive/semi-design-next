@@ -77,10 +77,10 @@ const toDeclarations = (style: Record<string, string | undefined>) =>
         .map(([name, value]) => `${name}: ${value}`)
         .join('; ');
 
-function OverflowBox(props: { content: Accessor<ResolvedChildren>; onResize: (entry: ResizeObserverEntry) => void }) {
+function OverflowBox(props: { content: Accessor<ResolvedChildren>; onResize: (entry: ResizeObserverEntry) => void; class?: string; style?: JSX.CSSProperties | string }) {
     return (
         <Show when={hasContent(props.content())}>
-            <MeasuredBox class={`${prefixCls}-overflow`} onResize={props.onResize}>
+            <MeasuredBox class={clsx(`${prefixCls}-overflow`, props.class)} style={props.style} onResize={props.onResize}>
                 {props.content()}
             </MeasuredBox>
         </Show>
@@ -199,20 +199,20 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
         <div {...rest} role={namedRole(rest)} ref={mergeRefs(local.ref, (node: HTMLDivElement) => setRoot(node))} class={clsx(prefixCls, local.class)} style={rootStyle()}>
             <Show when={!isScroll()}>
                 <Show when={local.collapseFrom === 'start'}>
-                    <OverflowBox content={collapseOverflow} onResize={handleOverflowResize} />
+                    <OverflowBox content={collapseOverflow} class={local.classNames?.overflow} style={local.styles?.overflow} onResize={handleOverflowResize} />
                 </Show>
                 <For each={visibleKeys()}>
                     {(key) => {
                         const entry = entryOf(key);
                         return (
-                            <MeasuredBox class={`${prefixCls}-item`} onResize={(resized) => handleItemResize(resized, key)}>
+                            <MeasuredBox class={clsx(`${prefixCls}-item`, local.classNames?.item)} style={local.styles?.item} onResize={(resized) => handleItemResize(resized, key)}>
                                 {visibleItemRenderer()(entry().item, entry().index)}
                             </MeasuredBox>
                         );
                     }}
                 </For>
                 <Show when={local.collapseFrom === 'end'}>
-                    <OverflowBox content={collapseOverflow} onResize={handleOverflowResize} />
+                    <OverflowBox content={collapseOverflow} class={local.classNames?.overflow} style={local.styles?.overflow} onResize={handleOverflowResize} />
                 </Show>
             </Show>
             {/* each scroll part is its own insert: in one array, reconcileArrays replaces the wrapper while both sides change, which detaches it and resets its scroll position */}

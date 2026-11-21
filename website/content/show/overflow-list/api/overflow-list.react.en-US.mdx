@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | className | Class name of the root element. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `wrapper` (the scroll wrapper in scroll mode); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cOverflowListPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `wrapper` (the scroll wrapper in scroll mode), `item` (the div around each visible item in collapse mode) and `overflow` (the div holding the overflow content in collapse mode); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cOverflowListPart, string>>"}>Type</ApiType> | - |
 | collapseFrom | Collapse direction in collapse mode: `start` or `end`. | `'end' \| 'start'` | `"end"` |
 | itemKey | Property name of each item's key, or a function returning it. Defaults to the key property, then the item's position in items. | <ApiType detail={"string \u007c number \u007c ((item: T) => string \u007c number)"}>Type</ApiType> | - |
 | items | Items to render. They are data, not nodes; visibleItemRenderer renders them. Scroll mode requires a key on each item, the field named by itemKey when it is set. | <ApiType detail={"Array\u003cT>"}>Type</ApiType> | `[]` |

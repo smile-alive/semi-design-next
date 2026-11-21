@@ -56,20 +56,26 @@ describe('Svelte Table 基本渲染', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        mountTable({
-            classNames: { header: 'custom-head' },
-            styles: { header: 'color: red; font-weight: 700' },
-            columns: [
-                { title: 'Name', dataIndex: 'name', onHeaderCell: () => ({ style: 'color: blue' }) },
-                { title: 'Age', dataIndex: 'age' },
-            ],
-            dataSource: getData(),
-            pagination: false,
-        });
+        const parts = ['header', 'title', 'row', 'cell', 'footer', 'pagination', 'empty'] as const;
+        const selectors = { header: `.${P}-thead .${P}-row-head`, title: `.${P}-title`, row: `.${P}-tbody .${P}-row`, cell: `.${P}-row-cell`, footer: `.${P}-footer`, pagination: `.${P}-pagination-outer`, empty: `.${P}-empty` };
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`]));
+        const columns = [
+            { title: 'Name', dataIndex: 'name', onHeaderCell: () => ({ style: 'color: blue' }) },
+            { title: 'Age', dataIndex: 'age' },
+        ];
+        mountTable({ classNames, styles: { ...styles, header: `${styles.header}; color: red` }, columns, dataSource: getData(), pagination: { pageSize: 10 }, title: 't', footer: 'f' });
+        mountTable({ classNames, styles, columns, dataSource: [], pagination: false });
+        for (const part of parts) {
+            const els = queryAll(selectors[part]);
+            expect(els.length).toBeGreaterThan(0);
+            for (const el of els) {
+                expect(el.classList.contains(`my-${part}`)).toBe(true);
+                expect(el.style.order).toBe(String(parts.indexOf(part) + 1));
+            }
+        }
         const heads = getHeads();
-        expect(heads[0].classList.contains('custom-head')).toBe(true);
-        expect(heads[1].classList.contains('custom-head')).toBe(true);
-        expect(heads[0].getAttribute('style')).toContain('font-weight: 700');
+        expect(heads[0].classList.contains('my-header')).toBe(true);
         expect(heads[0].style.color).toBe('blue');
         expect(heads[1].style.color).toBe('red');
     });

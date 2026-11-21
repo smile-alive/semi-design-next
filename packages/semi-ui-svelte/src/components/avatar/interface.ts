@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLImgAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
+import type { ClassValue, HTMLAttributes, HTMLImgAttributes } from 'svelte/elements';
+import type { AvatarGroupPart, AvatarPart, strings } from '@fibrae/semi-foundation/components/avatar/constants';
 
 export type AvatarShape = 'circle' | 'square';
 export type AvatarSize = (typeof strings.SIZE)[number];
@@ -37,6 +37,8 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'chil
     bottomSlot?: AvatarBottomSlot;
     border?: boolean | { color?: string; motion?: boolean };
     contentMotion?: boolean;
+    classNames?: Partial<Record<AvatarPart, ClassValue>>;
+    styles?: Partial<Record<AvatarPart, string>>;
     /** Returning `false` keeps the broken image instead of falling back to the content */
     onError?: (event: Event) => boolean | void;
     onMouseEnter?: (event: MouseEvent) => void;
@@ -69,6 +71,8 @@ export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, '
     size?: string;
     overlapFrom?: AvatarGroupOverlapFrom;
     maxCount?: number;
+    classNames?: Partial<Record<AvatarGroupPart, ClassValue>>;
+    styles?: Partial<Record<AvatarGroupPart, string>>;
     items?: AvatarGroupItem[];
     /** Content of every avatar, taking precedence over the item's own `children` */
     item?: Snippet<[AvatarGroupItemContext]>;

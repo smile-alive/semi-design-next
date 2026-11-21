@@ -31,8 +31,8 @@
                 "en-US": "The list of hints. Clicking one adds it to the conversation as a new user message and calls `onHintClick`."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `hint`（提示区最外层）、`inputBox`（输入框），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `hint` (the outermost hint area) and `inputBox` (the input box); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `messages`、`dropArea`、`item`、`itemAvatar`、`itemTitle`、`itemContent`、`itemActions`、`divider`、`hint`、`hintItem`、`backBottom`、`stop`、`inputBox`、`input`、`send`，与组件自带的类名合并。`messages` 是可滚动的消息列表，`item*` 作用到每一条消息，`hint` 是提示词列表容器，`inputBox` 是底部输入区域的根元素。",
+                "en-US": "Class names of the inner parts, keyed by `messages`, `dropArea`, `item`, `itemAvatar`, `itemTitle`, `itemContent`, `itemActions`, `divider`, `hint`, `hintItem`, `backBottom`, `stop`, `inputBox`, `input` and `send`; merged with the built-in classes. `messages` is the scrollable message list, `item*` apply to every message, `hint` is the hint list container and `inputBox` is the root of the bottom input area."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 `classNames`。",

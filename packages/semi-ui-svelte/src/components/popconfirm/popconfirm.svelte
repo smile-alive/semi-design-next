@@ -206,9 +206,9 @@
 {#snippet card({ initialFocusRef }: RenderContentProps)}
     <div {@attach holdFocusRef(initialFocusRef)} class={[prefixCls, className]} {style}>
         <div class={`${prefixCls}-inner`}>
-            <div class={`${prefixCls}-header`}>
+            <div class={[`${prefixCls}-header`, classNames?.header]} style={styles?.header}>
                 {#if icon !== null}
-                    <i class={`${prefixCls}-header-icon`} x-semi-prop="icon">
+                    <i class={[`${prefixCls}-header-icon`, classNames?.icon]} style={styles?.icon} x-semi-prop="icon">
                         {#if icon}
                             {@render icon()}
                         {:else}
@@ -218,7 +218,7 @@
                 {/if}
                 <div class={`${prefixCls}-header-body`}>
                     {#if hasTitle}
-                        <div class={`${prefixCls}-header-title`} id={titleId} x-semi-prop="title">
+                        <div class={[`${prefixCls}-header-title`, classNames?.title]} id={titleId} style={styles?.title} x-semi-prop="title">
                             {#if typeof title === 'function'}
                                 {@render title()}
                             {:else}
@@ -228,15 +228,15 @@
                     {/if}
                 </div>
                 {#if showCloseIcon}
-                    <Button {@attach onClick(undefined, foundation.handleCancel)} aria-label={locale().locale.close} class={`${prefixCls}-btn-close`} icon={closeIcon} size="small" theme="borderless" type={cancelType} />
+                    <Button {@attach onClick(undefined, foundation.handleCancel)} aria-label={locale().locale.close} class={[`${prefixCls}-btn-close`, classNames?.close]} icon={closeIcon} size="small" style={styles?.close} theme="borderless" type={cancelType} />
                 {/if}
             </div>
             {#if content}
-                <div class={[`${prefixCls}-body`, { [`${prefixCls}-body-withIcon`]: icon !== null }]} id={contentId} x-semi-prop="content">
+                <div class={[`${prefixCls}-body`, { [`${prefixCls}-body-withIcon`]: icon !== null }, classNames?.body]} id={contentId} style={styles?.body} x-semi-prop="content">
                     {@render content(contentProps)}
                 </div>
             {/if}
-            <div bind:this={footer} class={`${prefixCls}-footer`}>
+            <div bind:this={footer} class={[`${prefixCls}-footer`, classNames?.footer]} style={styles?.footer}>
                 <Button {...cancelProps} {@attach onClick(cancelButtonProps, foundation.handleCancel)}>
                     {cancelText || locale().locale.cancel}
                 </Button>
@@ -263,7 +263,7 @@
     {child}
     {children}
     class={cssClasses.POPOVER}
-    {classNames}
+    classNames={{ content: classNames?.content, arrow: classNames?.arrow }}
     {clickToHide}
     {closeOnEsc}
     {condition}
@@ -284,6 +284,6 @@
     {showArrow}
     {spacing}
     {stopPropagation}
-    {styles}
+    styles={{ content: styles?.content, arrow: styles?.arrow }}
     trigger={disabled ? 'custom' : trigger}
 />

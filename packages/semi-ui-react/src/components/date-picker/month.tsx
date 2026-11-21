@@ -2,7 +2,7 @@ import type React from 'react';
 import { useId, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { cssClasses, strings, type DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import { type BaseProps, useFoundation } from '../../base/index';
@@ -15,12 +15,14 @@ export interface MonthProps extends MonthFoundationProps, BaseProps {
     /** on the role="grid" div */
     ref?: React.Ref<HTMLDivElement>;
     locale: Locale['DatePicker'];
+    classNames?: Partial<Record<DatePickerPart, string>>;
+    styles?: Partial<Record<DatePickerPart, React.CSSProperties>>;
     /** the id of the month title that names the grid; a range shows two grids */
     labelledby?: string;
 }
 
 export default function Month(props: MonthProps) {
-    const { ref, labelledby, month, weekStartsOn, locale, multiple, renderDate, renderFullDate, selected, rangeStart, rangeEnd, offsetRangeStart, offsetRangeEnd, disabledDate, hoverDay, rangeInputFocus, focusRecords, timeZone, onDayHover, onWeeksRowNumChange } = props;
+    const { ref, classNames, styles, labelledby, month, weekStartsOn, locale, multiple, renderDate, renderFullDate, selected, rangeStart, rangeEnd, offsetRangeStart, offsetRangeEnd, disabledDate, hoverDay, rangeInputFocus, focusRecords, timeZone, onDayHover, onWeeksRowNumChange } = props;
 
     const context = useConfigContext();
 
@@ -65,7 +67,7 @@ export default function Month(props: MonthProps) {
         const { fullDate, dayNumber } = day;
         if (!fullDate) {
             return (
-                <div key={(dayNumber as number) + dayIndex} className={cssClasses.DAY} role="gridcell">
+                <div key={(dayNumber as number) + dayIndex} className={clsx(cssClasses.DAY, classNames?.item)} style={styles?.item} role="gridcell">
                     <span />
                 </div>
             );
@@ -81,7 +83,8 @@ export default function Month(props: MonthProps) {
             <div
                 key={dayOfMonth + dayIndex}
                 id={dayId(fullDate)}
-                className={!customRender ? dayCls : clsx(cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: isActive })}
+                className={clsx(!customRender ? dayCls : clsx(cssClasses.DAY, { [cssClasses.DAY_ACTIVE]: isActive }), classNames?.item)}
+                style={styles?.item}
                 aria-disabled={dayStatus.isDisabled}
                 aria-label={fullDate}
                 // a range keeps its value in rangeStart and rangeEnd, not in `selected`
@@ -105,7 +108,7 @@ export default function Month(props: MonthProps) {
     });
 
     return (
-        <div ref={ref} className={cssClasses.MONTH} aria-activedescendant={dayId(activeDate)} aria-labelledby={labelledby} aria-multiselectable={multiple} role="grid" tabIndex={0} onKeyDown={(event) => foundation.handleKeyDown(event, todayText)}>
+        <div ref={ref} className={clsx(cssClasses.MONTH, classNames?.body)} style={styles?.body} aria-activedescendant={dayId(activeDate)} aria-labelledby={labelledby} aria-multiselectable={multiple} role="grid" tabIndex={0} onKeyDown={(event) => foundation.handleKeyDown(event, todayText)}>
             <div className={cssClasses.WEEKDAY} role="row">
                 {weekdaysText.map((text, i) => (
                     <div key={text + i} className={`${prefixCls}-weekday-item`} role="columnheader">

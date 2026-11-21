@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | bordered | 是否展示外边框和列边框。 | `boolean` | `false` |
 | childrenRecordName | 树形表格中，数据项里表示子级数据的字段名。 | `string` | `"children"` |
-| classNames | 内部各部位的类名，键为 `header`（每个表头单元格 `<th>`，包括固定表头），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"header\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Table", "classNames")` |
+| classNames | 内部各部位的类名，键为 `header`、`title`、`row`、`cell`、`footer`、`pagination`、`empty`，与组件自带的类名合并；`header` 落在每个表头单元格 `<th>`（包括固定表头），`row` 和 `cell` 只作用于数据行与数据单元格。 | <ApiType detail={"Partial\u003cRecord\u003cTablePart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Table", "classNames")` |
 | clickGroupedRowToExpand | 点击分组行时展开或收起该组。 | `boolean` | `semiGlobalDefault("Table", "clickGroupedRowToExpand")` |
 | columns | 列配置，详见 Column。传入时（包括空数组）优先于 Table.Column 子项。 | <ApiType detail={"ColumnProps\u003cR>[]"}>Type</ApiType> | `semiGlobalDefault("Table", "columns")` |
 | components | 覆盖 Table 的组成元素，如 table、body、row、td、th，值为标签名或 Vue 组件，组件会收到被替换元素的属性与监听器。 | `TableComponents` | `semiGlobalDefault("Table", "components")` |
@@ -41,7 +41,7 @@ import ApiType from '#/components/ApiType.astro';
 | showHeader | 是否显示表头。 | `boolean` | `true` |
 | size | 表格尺寸，影响单元格的内边距。 | `"default" \| "middle" \| "small"` | `"default"` |
 | sticky | 将表头固定在页面顶部，传对象时 top 为距离滚动容器顶部的距离。 | `TableSticky` | `semiGlobalDefault("Table", "sticky")` |
-| styles | 内部各部位的内联样式，键同 classNames；列的 onHeaderCell 返回的 style 优先级更高。 | <ApiType detail={"Partial\u003cRecord\u003c\"header\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Table", "styles")` |
+| styles | 内部各部位的内联样式，键同 classNames；onHeaderCell、onRow、onCell 返回的 style 优先级更高。 | <ApiType detail={"Partial\u003cRecord\u003cTablePart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Table", "styles")` |
 | title | 纯文本表格标题，title 插槽优先。 | `string` | `semiGlobalDefault("Table", "title")` |
 | virtualized | 开启虚拟化，需同时传 scroll.y（数字）。对象形式可配置行高 itemSize 与额外渲染的行数 overscanCount。 | `TableVirtualized` | `semiGlobalDefault("Table", "virtualized")` |
 

@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T = TreeSelectValue, Multiple extends boolean | undefined = undefined">
-    import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
+    import { computed, normalizeClass, shallowRef, useAttrs, useId, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { cssClasses } from '@fibrae/semi-foundation/components/tree-select/constants';
     import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/components/tree-select/foundation';
@@ -219,6 +219,8 @@
             labelEllipsis: props.labelEllipsis ?? virtualized.value,
             dragOverNodeKey: null,
             dropPosition: null,
+            classNames: { empty: props.classNames?.empty, item: props.classNames?.item, itemTitle: props.classNames?.itemTitle, itemSwitcher: props.classNames?.itemSwitcher },
+            styles: { empty: props.styles?.empty, item: props.styles?.item, itemTitle: props.styles?.itemTitle, itemSwitcher: props.styles?.itemSwitcher },
         })),
         onNodeExpand: foundation.handleNodeExpand,
         onNodeSelect: foundation.handleNodeSelect,
@@ -306,7 +308,7 @@
             // the selected text sits beside the input, which is empty until the user types, so the combobox has no
             // value of its own; the text is exposed as the description
             'aria-describedby': joinIds(attrs['aria-describedby'], view.value.inputValue ? undefined : singleSearchTextId),
-            class: `${prefix}-inputTrigger`,
+            class: normalizeClass([`${prefix}-inputTrigger`, props.classNames?.input]),
             placeholder: '',
             showClear: false,
             autofocus: props.searchAutoFocus,
@@ -552,13 +554,14 @@
                     <div
                         v-if="parts.kinds.prefix || parts.kinds.insetLabel"
                         :id="prefixId()"
-                        :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: parts.kinds.insetLabel, [`${prefix}-prefix-text`]: (parts.kinds.prefix ?? parts.kinds.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (parts.kinds.prefix ?? parts.kinds.insetLabel) === 'icon' }]"
+                        :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: parts.kinds.insetLabel, [`${prefix}-prefix-text`]: (parts.kinds.prefix ?? parts.kinds.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (parts.kinds.prefix ?? parts.kinds.insetLabel) === 'icon' }, props.classNames?.prefix]"
+                        :style="props.styles?.prefix"
                         x-semi-prop="prefix,insetLabel"
                     >
                         <slot v-if="parts.kinds.prefix" name="prefix" />
                         <slot v-else name="insetLabel" />
                     </div>
-                    <div :class="`${prefix}-selection`">
+                    <div :class="[`${prefix}-selection`, props.classNames?.content]" :style="props.styles?.content">
                         <!-- the trigger draws its own clear button and its search text only becomes a search: global TagInput defaults must not add a clear button, drag handles or add-on-blur tags -->
                         <TagInput
                             v-if="triggerSearch && multiple"
@@ -567,6 +570,7 @@
                             :addOnBlur="false"
                             aria-autocomplete="list"
                             :autofocus="props.searchAutoFocus"
+                            :class="props.classNames?.input"
                             :disabled="looks.disabled"
                             :draggable="false"
                             :expandRestTagsOnClick="false"
@@ -579,6 +583,7 @@
                             :showClear="false"
                             :showRestTagsPopover="props.showRestTagsPopover"
                             :size="looks.size"
+                            :style="props.styles?.input"
                             @inputChange="search($event)"
                             @remove="foundation.removeTag"
                         >
@@ -588,7 +593,16 @@
                                     <template v-if="entry && entry.whole">
                                         <component :is="node" v-for="[node, nodeKey] in entry.nodes" :key="nodeKey" />
                                     </template>
-                                    <Tag v-else-if="entry" :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: looks.disabled }]" :closable="!entry.slotProps.disabled" color="white" :size="tagSize()" :tagKey="key" @close="entry.slotProps.onClose($event)">
+                                    <Tag
+                                        v-else-if="entry"
+                                        :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: looks.disabled }, props.classNames?.tag]"
+                                        :closable="!entry.slotProps.disabled"
+                                        color="white"
+                                        :size="tagSize()"
+                                        :style="props.styles?.tag"
+                                        :tagKey="key"
+                                        @close="entry.slotProps.onClose($event)"
+                                    >
                                         <template v-if="entry.nodes">
                                             <component :is="node" v-for="[node, nodeKey] in entry.nodes" :key="nodeKey" />
                                         </template>
@@ -602,12 +616,17 @@
                                 <template v-if="parts.searchNodes">
                                     <component :is="node" v-for="[node, key] in parts.searchNodes" :key="key" />
                                 </template>
-                                <Input v-else :ref="setSearchInput" v-bind="inputBindings()" />
+                                <Input v-else :ref="setSearchInput" v-bind="inputBindings()" :style="props.styles?.input" />
                             </div>
                             <template v-for="(single, s) in view.inputValue ? [] : [singleContent()]" :key="s">
                                 <span
                                     :id="singleSearchTextId"
-                                    :class="[`${prefix}-selection-TriggerSearchItem`, { [`${prefix}-selection-TriggerSearchItem-placeholder`]: (view.inputTriggerFocus || !single.shown) && !looks.disabled, [`${prefix}-selection-TriggerSearchItem-disabled`]: looks.disabled }]"
+                                    :class="[
+                                        `${prefix}-selection-TriggerSearchItem`,
+                                        { [`${prefix}-selection-TriggerSearchItem-placeholder`]: (view.inputTriggerFocus || !single.shown) && !looks.disabled, [`${prefix}-selection-TriggerSearchItem-disabled`]: looks.disabled },
+                                        !single.shown && props.classNames?.placeholder,
+                                    ]"
+                                    :style="single.shown ? undefined : props.styles?.placeholder"
                                     @click="foundation.onClickSingleTriggerSearchItem"
                                 >
                                     <template v-if="!single.shown">{{ props.placeholder }}</template>
@@ -619,7 +638,7 @@
                             </template>
                         </template>
                         <template v-for="(single, s) in [singleContent()]" v-else-if="!multiple || !hasValue" :key="s">
-                            <span :class="[`${prefix}-selection-content`, { [`${prefix}-selection-placeholder`]: !single.shown }]">
+                            <span :class="[`${prefix}-selection-content`, { [`${prefix}-selection-placeholder`]: !single.shown }, !single.shown && props.classNames?.placeholder]" :style="single.shown ? undefined : props.styles?.placeholder">
                                 <template v-if="!single.shown">{{ props.placeholder }}</template>
                                 <template v-else-if="single.nodes">
                                     <component :is="node" v-for="[node, key] in single.nodes" :key="key" />
@@ -634,7 +653,7 @@
                                         <template v-if="entry.whole">
                                             <component :is="node" v-for="[node, nodeKey] in entry.nodes" :key="nodeKey" />
                                         </template>
-                                        <Tag v-else :closable="!entry.slotProps.disabled" color="white" :size="tagSize()" :tagKey="entry.key" @close="entry.slotProps.onClose($event)">
+                                        <Tag v-else :class="props.classNames?.tag" :closable="!entry.slotProps.disabled" color="white" :size="tagSize()" :style="props.styles?.tag" :tagKey="entry.key" @close="entry.slotProps.onClose($event)">
                                             <template v-if="entry.nodes">
                                                 <component :is="node" v-for="[node, nodeKey] in entry.nodes" :key="nodeKey" />
                                             </template>
@@ -645,16 +664,16 @@
                             </TagGroup>
                         </template>
                     </div>
-                    <div v-if="parts.kinds.suffix" :class="[`${prefix}-suffix`, { [`${prefix}-suffix-text`]: parts.kinds.suffix === 'text', [`${prefix}-suffix-icon`]: parts.kinds.suffix === 'icon' }]" x-semi-prop="suffix">
+                    <div v-if="parts.kinds.suffix" :class="[`${prefix}-suffix`, { [`${prefix}-suffix-text`]: parts.kinds.suffix === 'text', [`${prefix}-suffix-icon`]: parts.kinds.suffix === 'icon' }, props.classNames?.suffix]" :style="props.styles?.suffix" x-semi-prop="suffix">
                         <slot name="suffix" />
                     </div>
                     <!-- .stop keeps the button's own Enter and Space from the owner's keydown listeners on the combobox -->
-                    <button v-if="clearable" :ref="clearHandover" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="handleClearClick" @keydown.enter.space.stop>
+                    <button v-if="clearable" :ref="clearHandover" :aria-label="locale.locale.clear" :class="[`${prefix}-clearbtn`, props.classNames?.clear]" :style="props.styles?.clear" type="button" @click="handleClearClick" @keydown.enter.space.stop>
                         <slot name="clearIcon">
                             <IconClear />
                         </slot>
                     </button>
-                    <div v-if="!$slots.arrowIcon || hasSlotContent($slots.arrowIcon)" :class="`${prefix}-arrow`" x-semi-prop="arrowIcon">
+                    <div v-if="!$slots.arrowIcon || hasSlotContent($slots.arrowIcon)" :class="[`${prefix}-arrow`, props.classNames?.arrow]" :style="props.styles?.arrow" x-semi-prop="arrowIcon">
                         <slot name="arrowIcon">
                             <IconChevronDown />
                         </slot>
@@ -668,7 +687,7 @@
                     <slot name="outerTopSlot" />
                     <template v-if="!$slots.outerTopSlot && filterTreeNode && !triggerSearch">
                         <template v-for="(nodes, n) in [searchNodes()]" :key="n">
-                            <div v-if="!nodes || nodes.length" :class="`${prefixTree}-search-wrapper`">
+                            <div v-if="!nodes || nodes.length" :class="[`${prefixTree}-search-wrapper`, props.classNames?.search]" :style="props.styles?.search">
                                 <template v-if="nodes">
                                     <component :is="node" v-for="[node, key] in nodes" :key="key" />
                                 </template>
@@ -681,14 +700,14 @@
                         </template>
                     </template>
                     <!-- the combobox's aria-controls needs an element while there is no tree -->
-                    <div v-if="noData()" :id="treeId" :class="[listClass(), props.classNames?.optionList]" role="none" :style="props.styles?.optionList">
-                        <ul v-if="!emptyHidden()" :class="[`${prefixTree}-option`, `${prefixTree}-option-empty`]">
+                    <div v-if="noData()" :id="treeId" :class="[listClass(), props.classNames?.list]" role="none" :style="props.styles?.list">
+                        <ul v-if="!emptyHidden()" :class="[`${prefixTree}-option`, `${prefixTree}-option-empty`, props.classNames?.empty]" :style="props.styles?.empty">
                             <li :class="[`${prefixTree}-option-label`, `${prefixTree}-option-label-empty`]" x-semi-prop="emptyContent">
                                 <slot name="emptyContent">{{ treeLocale.locale.emptyText }}</slot>
                             </li>
                         </ul>
                     </div>
-                    <ul v-else :id="treeId" v-bind="nameAttrs()" :aria-multiselectable="multiple" :class="[listClass(), props.classNames?.optionList]" role="tree" :style="props.styles?.optionList">
+                    <ul v-else :id="treeId" v-bind="nameAttrs()" :aria-multiselectable="multiple" :class="[listClass(), props.classNames?.list]" role="tree" :style="props.styles?.list">
                         <NodeList ref="nodeList" :flattenList="cachedRows()" :flattenNodes="rows()" :motion="props.motionExpand" :motionKeys="view.motionKeys" :motionType="view.motionType" :searchTargetIsDeep="searchTargetIsDeep()" :virtualize="props.virtualize">
                             <template #default="{ node, style }">
                                 <template v-for="(row, r) in [rowProps(node)]" :key="r">

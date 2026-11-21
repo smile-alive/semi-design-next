@@ -695,4 +695,42 @@ describe('List', () => {
         expect(li).toHaveAttribute('tabindex', '0');
         expect(li).toHaveAttribute('aria-label', 'x');
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const selectors = { header: 'header', footer: 'footer', item: 'item', itemHeader: 'item-body-header', itemMain: 'item-body-main', itemExtra: 'item-extra' };
+        const parts = Object.keys(selectors) as Array<keyof typeof selectors>;
+        const all = [...parts, 'empty'] as const;
+        const { container } = render(() => (
+            <List classNames={Object.fromEntries(all.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(all.map((p, i) => [p, { order: i + 1 }]))} footer="f" header="h">
+                <List.Item header="a" main="b" extra="c" />
+            </List>
+        ));
+        for (const [i, part] of parts.entries()) {
+            const el = query(container, `.${prefixCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(i + 1) });
+        }
+        const empty = render(() => <List classNames={{ empty: 'my-empty' }} styles={{ empty: { order: 7 } }} />);
+        expect(query(empty.container, `.${prefixCls}-empty`)).toHaveClass('my-empty');
+        expect(query(empty.container, `.${prefixCls}-empty`)).toHaveStyle({ order: '7' });
+    });
+
+    it('List.Item 的 classNames 在父级 item* 之后，样式后写', () => {
+        const { container } = render(() => (
+            <List classNames={{ item: 'p-item', itemHeader: 'p-header', itemMain: 'p-main', itemExtra: 'p-extra' }} styles={{ itemMain: { order: 1, opacity: 0.5 }, itemExtra: { order: 1 } }}>
+                <List.Item class="own" classNames={{ header: 'c-header', main: 'c-main', extra: 'c-extra' }} styles={{ main: { order: 2 }, extra: { order: 2 } }} header="a" main="b" extra="c" />
+                <List.Item main="d" />
+            </List>
+        ));
+        const [first, second] = getItems(container);
+        expect(first.className).toMatch(/p-item own$/);
+        expect(second).toHaveClass('p-item');
+        expect(first.querySelector(`.${prefixCls}-item-body-header`)?.className).toMatch(/p-header c-header$/);
+        expect(first.querySelector(`.${prefixCls}-item-body-main`)?.className).toMatch(/p-main c-main$/);
+        expect(first.querySelector(`.${prefixCls}-item-body-main`)).toHaveStyle({ order: '2', opacity: '0.5' });
+        expect(first.querySelector(`.${prefixCls}-item-extra`)?.className).toMatch(/p-extra c-extra$/);
+        expect(first.querySelector(`.${prefixCls}-item-extra`)).toHaveStyle({ order: '2' });
+        expect(second.querySelector(`.${prefixCls}-item-body-main`)).toHaveStyle({ order: '1' });
+        expect(second.querySelector(`.${prefixCls}-item-body-main`)?.className).not.toContain('c-');
+    });
 });

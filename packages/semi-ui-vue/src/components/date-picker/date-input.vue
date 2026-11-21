@@ -24,8 +24,8 @@
         showClear: true,
         showClearIgnoreDisabled: false,
         inputReadOnly: false,
-        inputClassName: undefined,
-        inputStyle: undefined,
+        classNames: undefined,
+        styles: undefined,
         insetLabelId: undefined,
         validateStatus: undefined,
         borderless: false,
@@ -50,7 +50,7 @@
     const insetStart = useTemplateRef('insetStart');
     const insetEnd = useTemplateRef('insetEnd');
 
-    // Vue's StyleValue (inputStyle) is wider than the foundation's Record<string, any>, so the props type does not match.
+    // Vue's StyleValue (styles) is wider than the foundation's Record<string, any>, so the props type does not match.
     const { foundation } = useFoundation<DateInputFoundation, DateInputAdapter, DateInputFoundationProps, Record<string, never>>(
         DateInputFoundation,
         props as Readonly<Partial<DateInputFoundationProps>>,
@@ -159,20 +159,20 @@
                 ref="rangeStartInput"
                 :autofocus="props.autofocus"
                 :borderless="props.borderless"
-                :class="props.inputClassName"
+                :class="props.classNames?.input"
                 :disabled="props.disabled"
                 :modelValue="rangeParts.start"
                 :placeholder="rangePlaceholder[0]"
                 :readOnly="props.inputReadOnly"
                 :showClear="false"
                 :size="props.size === 'large' ? 'default' : 'small'"
-                :style="props.inputStyle"
+                :style="props.styles?.input"
                 @change="changeRangeStart"
                 @enterPress="foundation.handleRangeInputEnterPress($event, rangeValue(rangeParts.start, rangeParts.end))"
                 @focus="focusRange($event, 'rangeStart')"
             />
         </div>
-        <span :class="[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: (rangeParts.start || rangeParts.end) && !props.disabled }]" @click="focusRange($event, 'rangeStart')">
+        <span :class="[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: (rangeParts.start || rangeParts.end) && !props.disabled }, props.classNames?.separator]" :style="props.styles?.separator" @click="focusRange($event, 'rangeStart')">
             <slot name="rangeSeparator">{{ props.rangeSeparator }}</slot>
         </span>
         <div :class="[inputClass, `${prefix}-range-input-wrapper-end`, `${prefix}-range-input-wrapper`, { [`${prefix}-range-input-wrapper-active`]: props.rangeInputFocus === 'rangeEnd' && !props.disabled, [`${prefix}-borderless`]: props.borderless }]" @click="focusRange($event, 'rangeEnd')">
@@ -180,26 +180,26 @@
                 v-bind="rangeAttrs($attrs)"
                 ref="rangeEndInput"
                 :borderless="props.borderless"
-                :class="props.inputClassName"
+                :class="props.classNames?.input"
                 :disabled="props.disabled"
                 :modelValue="rangeParts.end"
                 :placeholder="rangePlaceholder[1]"
                 :readOnly="props.inputReadOnly"
                 :showClear="false"
                 :size="props.size === 'large' ? 'default' : 'small'"
-                :style="props.inputStyle"
+                :style="props.styles?.input"
                 @change="changeRangeEnd"
                 @enterPress="foundation.handleRangeInputEnterPress($event, rangeValue(rangeParts.start, rangeParts.end))"
                 @focus="focusRange($event, 'rangeEnd')"
                 @keydown="foundation.handleRangeInputEndKeyPress"
             />
         </div>
-        <button v-if="allowRangeClear" :ref="clearHandover" :aria-label="locale.locale.clearRange" :class="`${prefix}-range-input-clearbtn`" type="button" @click="foundation.handleRangeInputClearClick" @mousedown="foundation.handleRangeInputClearMouseDown">
+        <button v-if="allowRangeClear" :ref="clearHandover" :aria-label="locale.locale.clearRange" :class="[`${prefix}-range-input-clearbtn`, props.classNames?.clear]" :style="props.styles?.clear" type="button" @click="foundation.handleRangeInputClearClick" @mousedown="foundation.handleRangeInputClearMouseDown">
             <slot name="clearIcon">
                 <IconClear />
             </slot>
         </button>
-        <div :class="`${prefix}-range-input-suffix`" @click="foundation.handleRangeInputAffixClick">
+        <div :class="[`${prefix}-range-input-suffix`, props.classNames?.suffix]" :style="props.styles?.suffix" @click="foundation.handleRangeInputAffixClick">
             <IconCalendarClock v-if="props.type.includes('Time')" />
             <IconCalendar v-else />
         </div>
@@ -210,7 +210,8 @@
         ref="single"
         :autofocus="props.autofocus"
         :borderless="props.borderless"
-        :class="[inputClass, props.inputClassName]"
+        :class="[inputClass, props.classNames?.input]"
+        :classNames="{ suffix: props.classNames?.suffix, clear: props.classNames?.clear }"
         :disabled="props.disabled"
         :hideSuffix="props.showClear"
         :insetLabelId="props.insetLabelId"
@@ -220,7 +221,8 @@
         :showClear="props.showClear"
         :showClearIgnoreDisabled="props.showClearIgnoreDisabled"
         :size="props.size"
-        :style="props.inputStyle"
+        :style="props.styles?.input"
+        :styles="{ suffix: props.styles?.suffix, clear: props.styles?.clear }"
         :validateStatus="props.validateStatus"
         @change="(value, event) => emit('change', value, event)"
         @clear="emit('clear', $event)"

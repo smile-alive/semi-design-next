@@ -302,6 +302,40 @@ describe('Tree', () => {
         expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', 'placeholder');
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const selectors = {
+            search: `.${BASE_CLASS_PREFIX}-tree-search-wrapper`,
+            list: `.${optionCls}-list`,
+            item: `li.${optionCls}`,
+            itemSwitcher: `.${optionCls}-expand-icon`,
+            itemCheckbox: `.${optionCls}-label > div`,
+            itemIcon: `.${optionCls}-item-icon`,
+            itemTitle: `.${optionCls}-label-text`,
+        };
+        const parts = Object.keys(selectors) as (keyof typeof selectors)[];
+        renderTree({
+            filterTreeNode: true,
+            multiple: true,
+            directory: true,
+            defaultExpandAll: true,
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+        });
+        for (const part of parts) {
+            const el = document.querySelector(`.my-${part}`);
+            expect([part, el?.matches(selectors[part])]).toEqual([part, true]);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('classNames.empty 与 classNames.list 在没有数据时落到空状态与列表上', () => {
+        renderTree({ treeData: [], classNames: { empty: 'my-empty', list: 'my-list' }, styles: { empty: { order: 1 }, list: { order: 2 } } });
+        expect(document.querySelector('.my-empty')?.matches(`ul.${optionCls}-empty`)).toBe(true);
+        expect(document.querySelector('.my-empty')).toHaveStyle({ order: '1' });
+        expect(document.querySelector('.my-list')?.matches(`.${optionCls}-list`)).toBe(true);
+        expect(document.querySelector('.my-list')).toHaveStyle({ order: '2' });
+    });
+
     it('filterTreeNode 显示正确的结果', async () => {
         const { unmount } = renderTree({ filterTreeNode: true });
         await search('北');

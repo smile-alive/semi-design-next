@@ -1,6 +1,6 @@
 import type { ContainerProps } from './interface';
 
-const keys = ['closeOnEsc', 'defaultSize', 'maxWidth', 'minWidth', 'motion', 'resizable', 'showClose', 'visible'] as const satisfies readonly (keyof ContainerProps)[];
+const keys = ['classNames', 'styles', 'closeOnEsc', 'defaultSize', 'maxWidth', 'minWidth', 'motion', 'resizable', 'showClose', 'visible'] as const satisfies readonly (keyof ContainerProps)[];
 
 /**
  * The Container props a wrapping component (Sidebar, Annotation, MCPConfigure) passes on. An undefined value makes

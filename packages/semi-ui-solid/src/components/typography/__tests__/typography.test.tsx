@@ -387,6 +387,74 @@ describe('Typography', () => {
     });
 });
 
+describe('Typography 部位', () => {
+    const selectors = { icon: `${prefixCls}-icon`, expand: `${prefixCls}-ellipsis-expand`, copy: `${prefixCls}-action-btn` };
+
+    function expectParts(container: HTMLElement, parts: readonly (keyof typeof selectors)[]) {
+        for (const [index, part] of parts.entries()) {
+            const el = container.querySelector(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(index + 1) });
+        }
+    }
+
+    const names = (parts: readonly string[]) => Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+    const orders = (parts: readonly string[]) => Object.fromEntries(parts.map((p, i) => [p, { order: i + 1 }]));
+
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        mockTextHeight(2);
+        const text = 'abcdefghijklmnopqrstuvwxyz';
+        const ellipsis = { expandable: true };
+        const style = { 'line-height': '20px' };
+        const both = ['icon', 'expand', 'copy'] as const;
+        const noIcon = ['expand', 'copy'] as const;
+
+        const { container: textContainer } = render(() => (
+            <Text icon={<IconSetting />} copyable ellipsis={ellipsis} style={style} classNames={names(both)} styles={orders(both)}>
+                {text}
+            </Text>
+        ));
+        await waitFor(() => expect(textContainer.querySelector(`.${selectors.expand}`)).not.toBeNull());
+        expectParts(textContainer, both);
+
+        const { container: titleContainer } = render(() => (
+            <Title copyable ellipsis={ellipsis} style={style} classNames={names(noIcon)} styles={orders(noIcon)}>
+                {text}
+            </Title>
+        ));
+        await waitFor(() => expect(titleContainer.querySelector(`.${selectors.expand}`)).not.toBeNull());
+        expectParts(titleContainer, noIcon);
+
+        const { container: paragraphContainer } = render(() => (
+            <Paragraph copyable ellipsis={ellipsis} style={style} classNames={names(noIcon)} styles={orders(noIcon)}>
+                {text}
+            </Paragraph>
+        ));
+        await waitFor(() => expect(paragraphContainer.querySelector(`.${selectors.expand}`)).not.toBeNull());
+        expectParts(paragraphContainer, noIcon);
+
+        const { container: numeralContainer } = render(() => (
+            <Numeral icon={<IconSetting />} classNames={names(['icon'])} styles={orders(['icon'])}>
+                1234
+            </Numeral>
+        ));
+        expectParts(numeralContainer, ['icon']);
+    });
+
+    it('copy 部位落在按钮上，copyable 的 class 与 style 仍落在外层 span', () => {
+        const { container } = render(() => (
+            <Text copyable={{ class: 'wrap', style: { order: 9 } }} classNames={{ copy: 'my-copy' }} styles={{ copy: { order: 1 } }}>
+                text
+            </Text>
+        ));
+        const button = container.querySelector(`.${selectors.copy}`);
+        expect(button).toHaveClass('my-copy');
+        expect(button!.parentElement).toHaveClass('wrap');
+        expect(button!.parentElement).toHaveStyle({ order: '9' });
+        expect(button).toHaveStyle({ order: '1' });
+    });
+});
+
 describe('Typography 行为基线', () => {
     it('非 link 时的 type、size、spacing 与装饰标签', () => {
         const { container } = render(() => (

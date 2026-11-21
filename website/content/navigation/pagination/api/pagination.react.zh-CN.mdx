@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | className | 根元素 `nav` 的类名。 | `string` | `""` |
+| classNames | 内部各部位的类名，键为 `list`、`total`、`prev`、`next`、`item`、`ellipsis`、`sizeChanger`、`sizeChangerDropdown`、`quickJumper`、`dropdown`，与组件自带的类名合并。`item` 也作用于省略号按钮，`dropdown` 是省略号与 small 型页码悬浮弹出的页码列表浮层。 | <ApiType detail={"Partial\u003cRecord\u003cPaginationPart, string>>"}>Type</ApiType> | - |
 | currentPage | 当前页码。传入后分页器受控，页码完全由该属性决定；不传（undefined）时由组件自己管理。 | `number` | - |
 | defaultCurrentPage | 非受控时的初始页码。 | `number` | `1` |
 | disabled | 是否禁用。禁用时翻页按钮、页码、每页条数选择器与快速跳转均不可用。 | `boolean` | `false` |
@@ -25,4 +26,5 @@ import ApiType from '#/components/ApiType.astro';
 | showTotal | 是否显示总页数，`size` 为 `small` 时不显示。 | `boolean` | `false` |
 | size | 尺寸，可选 `default` 或 `small`。 | `'default' \| 'small'` | `"default"` |
 | style | 根元素 `nav` 的内联样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cPaginationPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | total | 总条数。总条数变化时，非受控的分页器回到第 1 页；受控时页码以 `currentPage` 为准。 | `number` | `1` |

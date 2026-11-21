@@ -256,11 +256,16 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
             <Show when={hasContent(extraText())}>
                 <div
                     id={view().ids.extraText}
-                    class={clsx(`${prefix}-field-extra`, {
-                        [`${prefix}-field-extra-string`]: typeof extraText() === 'string',
-                        [`${prefix}-field-extra-middle`]: merged().extraTextPosition === 'middle',
-                        [`${prefix}-field-extra-bottom`]: merged().extraTextPosition === 'bottom',
-                    })}
+                    class={clsx(
+                        `${prefix}-field-extra`,
+                        {
+                            [`${prefix}-field-extra-string`]: typeof extraText() === 'string',
+                            [`${prefix}-field-extra-middle`]: merged().extraTextPosition === 'middle',
+                            [`${prefix}-field-extra-bottom`]: merged().extraTextPosition === 'bottom',
+                        },
+                        form.formProps.classNames?.extra
+                    )}
+                    style={form.formProps.styles?.extra}
                     x-semi-prop="extraText"
                 >
                     {extraText()}
@@ -330,7 +335,8 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                         labelAlign={merged().labelAlign}
                         labelCol={merged().labelCol}
                         labelPosition={labelPosition()}
-                        mainClass={`${prefix}-field-main`}
+                        mainClass={clsx(`${prefix}-field-main`, form.formProps.classNames?.content)}
+                        mainStyle={form.formProps.styles?.content}
                         row={view().wrapInRow}
                         wrapperCol={merged().wrapperCol}
                     >

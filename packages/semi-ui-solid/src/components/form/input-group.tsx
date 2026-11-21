@@ -86,11 +86,16 @@ export default function FormInputGroup(props: InputGroupProps) {
         <Show when={hasExtraText()}>
             <div
                 id={ids.extraText}
-                class={clsx(`${prefix}-field-extra`, {
-                    [`${prefix}-field-extra-string`]: typeof extraText() === 'string',
-                    [`${prefix}-field-extra-middle`]: extraTextPosition() === 'middle',
-                    [`${prefix}-field-extra-bottom`]: extraTextPosition() === 'bottom',
-                })}
+                class={clsx(
+                    `${prefix}-field-extra`,
+                    {
+                        [`${prefix}-field-extra-string`]: typeof extraText() === 'string',
+                        [`${prefix}-field-extra-middle`]: extraTextPosition() === 'middle',
+                        [`${prefix}-field-extra-bottom`]: extraTextPosition() === 'bottom',
+                    },
+                    formProps()?.classNames?.extra
+                )}
+                style={formProps()?.styles?.extra}
                 x-semi-prop="extraText"
             >
                 {extraText()}

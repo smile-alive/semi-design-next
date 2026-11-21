@@ -18,6 +18,8 @@ function Dialogue({
     role,
     selecting,
     align,
+    classNames,
+    styles,
     isSelected,
     onSelectChange,
     continueSend,
@@ -52,12 +54,14 @@ function Dialogue({
         [`${prefixCls}-container-right`]: isRightAlign,
     });
 
-    const avatar = <DialogueAvatar role={roleInfo} customRenderFunc={dialogueRenderConfig?.renderDialogueAvatar} message={message} />;
-    const title = !continueSend && <DialogueTitle role={roleInfo} customRenderFunc={dialogueRenderConfig?.renderDialogueTitle} message={message} />;
+    const avatar = <DialogueAvatar className={classNames?.itemAvatar} style={styles?.itemAvatar} role={roleInfo} customRenderFunc={dialogueRenderConfig?.renderDialogueAvatar} message={message} />;
+    const title = !continueSend && <DialogueTitle className={classNames?.itemTitle} style={styles?.itemTitle} role={roleInfo} customRenderFunc={dialogueRenderConfig?.renderDialogueTitle} message={message} />;
 
     const content = (
         <DialogueContent
             key={message.editing ? 'editing' : 'view'}
+            classNames={classNames}
+            styles={styles}
             role={roleInfo}
             customRenderFunc={dialogueRenderConfig?.renderDialogueContent}
             disabledFileItemClick={disabledFileItemClick}
@@ -79,6 +83,8 @@ function Dialogue({
 
     const action = (
         <DialogueAction
+            className={classNames?.itemActions}
+            style={styles?.itemActions}
             customRenderFunc={dialogueRenderConfig?.renderDialogueAction}
             isLastChat={isLastChat}
             message={message}
@@ -95,13 +101,18 @@ function Dialogue({
 
     return (
         <div
-            className={clsx(`${prefixCls}-wrapper`, {
-                [`${prefixCls}-wrapper-selected`]: selecting && isSelected,
-                [`${prefixCls}-wrapper-continue-send`]: continueSend,
-            })}
+            className={clsx(
+                `${prefixCls}-wrapper`,
+                {
+                    [`${prefixCls}-wrapper-selected`]: selecting && isSelected,
+                    [`${prefixCls}-wrapper-continue-send`]: continueSend,
+                },
+                classNames?.item
+            )}
+            style={styles?.item}
         >
             {selecting && (
-                <div className={`${prefixCls}-checkbox`}>
+                <div className={clsx(`${prefixCls}-checkbox`, classNames?.itemCheckbox)} style={styles?.itemCheckbox}>
                     <Checkbox aria-label={locale.selectMessage} checked={isSelected} onChange={(e) => onSelectChange(e.target.checked, message.id)} />
                 </div>
             )}

@@ -27,6 +27,24 @@ function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultP
     return { provide: { [semiGlobalKey]: semi } };
 }
 
+describe('FloatButton 部位', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const view = render(FloatButton, { props: { classNames: { body: 'my-body' }, styles: { body: { order: 1 } } }, slots: { icon } });
+        const body = view.container.querySelector(`.${prefixCls}-body`);
+        expect(body).toHaveClass('my-body');
+        expect(body).toHaveStyle({ order: '1' });
+    });
+
+    it('FloatButtonGroup 的 classNames 与 styles 按部位落到对应元素，单项的类名在后、样式后写', () => {
+        const view = render(FloatButtonGroup, { props: { classNames: { item: 'my-item' }, styles: { item: { order: 1, color: 'red' } }, items: [{ ...items[0], class: 'own', style: { color: 'blue' } }, items[1]] } });
+        const [first, second] = Array.from(view.container.querySelectorAll(`.${groupCls}-item`));
+        expect(first.className.indexOf('my-item')).toBeLessThan(first.className.indexOf('own'));
+        expect(first).toHaveStyle({ order: '1', color: 'rgb(0, 0, 255)' });
+        expect(second).toHaveClass('my-item');
+        expect(second).toHaveStyle({ order: '1', color: 'rgb(255, 0, 0)' });
+    });
+});
+
 describe('FloatButton', () => {
     it('默认在根元素与 body 上渲染 round 与 default 尺寸类名', () => {
         const view = render(FloatButton, { slots: { icon } });

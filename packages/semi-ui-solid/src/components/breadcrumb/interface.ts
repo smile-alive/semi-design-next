@@ -1,7 +1,10 @@
 import type { JSX } from 'solid-js';
+import type { BreadcrumbItemPart, BreadcrumbPart } from '@fibrae/semi-foundation/components/breadcrumb/constants';
 import type { BreadcrumbItemInfo as BaseBreadcrumbItemInfo, Route } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
 import type { ElementProps } from '../../base/index';
 import type { TooltipProps } from '../tooltip';
+
+type Style = JSX.CSSProperties | string;
 
 export interface ShowTooltipProps {
     width?: string | number;
@@ -23,6 +26,9 @@ export interface RouteProps extends Omit<Route, 'icon' | 'name' | 'separator'> {
 }
 
 export interface BreadcrumbItemProps extends ElementProps<'li', 'onClick'> {
+    /** Applied after the `item*` classNames of the parent Breadcrumb */
+    classNames?: Partial<Record<BreadcrumbItemPart, string>>;
+    styles?: Partial<Record<BreadcrumbItemPart, Style>>;
     icon?: JSX.Element;
     href?: string;
     separator?: JSX.Element;
@@ -37,6 +43,9 @@ export interface BreadcrumbItemViewProps extends BreadcrumbItemProps {
 }
 
 export interface BreadcrumbProps extends ElementProps<'nav', 'onClick'> {
+    /** `item*` keys apply to every Breadcrumb.Item, before the item's own classNames */
+    classNames?: Partial<Record<BreadcrumbPart, string>>;
+    styles?: Partial<Record<BreadcrumbPart, Style>>;
     routes?: Array<RouteProps | string>;
     /** Receives the route for `routes`, or `{ name: children, href }` for Breadcrumb.Item children */
     onClick?: (route: BreadcrumbItemInfo | RouteProps, event: MouseEvent) => void;

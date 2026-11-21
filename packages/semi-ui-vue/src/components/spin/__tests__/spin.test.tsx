@@ -131,6 +131,29 @@ describe('Spin', () => {
         expect(second.container.firstElementChild).not.toHaveClass(`${prefixCls}-hidden`);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['child', 'indicator', 'tip'] as const;
+        const props = {
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+        };
+        const { container } = render(Spin, { props, slots: { default: () => 'body', tip: () => 't' } });
+        const elements = {
+            child: container.querySelector(`.${prefixCls}-children`),
+            indicator: container.querySelector('[data-icon="spin"]'),
+            tip: container.querySelector('[x-semi-prop="tip"]'),
+        };
+        for (const part of parts) {
+            expect(elements[part]).toHaveClass(`my-${part}`);
+            expect(elements[part]).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+
+        const custom = render(Spin, { props, slots: { indicator: () => <i /> } });
+        const animate = custom.container.querySelector(`.${prefixCls}-animate`);
+        expect(animate).toHaveClass('my-indicator');
+        expect(animate).toHaveStyle({ order: '2' });
+    });
+
     it('不同实例的图标引用各自渐变', () => {
         const first = render(Spin);
         const second = render(Spin);

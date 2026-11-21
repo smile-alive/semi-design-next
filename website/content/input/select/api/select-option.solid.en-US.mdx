@@ -1,11 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                                                                                                                                                                             | Type                          | Default |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------- |
-| children | Content of the option in the dropdown and in the selection; when set it shows instead of label and can be any JSX. It is not searched and is not the label in callbacks; pass label as well for search. | `JSX.Element`                 | -       |
-| class    | Class name of the option row.                                                                                                                                                                           | `string`                      | -       |
-| disabled | Whether the option is disabled.                                                                                                                                                                         | `boolean`                     | -       |
-| label    | Text of the option, used for search, highlighting and callbacks, and shown when there are no children. value is used when it is not set.                                                                | `string \| number`            | -       |
-| showTick | Whether a tick icon shows when the option is selected; shown by default.                                                                                                                                | `boolean`                     | -       |
-| style    | Style of the option row.                                                                                                                                                                                | `JSX.CSSProperties \| string` | -       |
-| value    | The value of the option, which identifies it; every option should declare one.                                                                                                                          | `V`                           | -       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Content of the option in the dropdown and in the selection; when set it shows instead of label and can be any JSX. It is not searched and is not the label in callbacks; pass label as well for search. | `JSX.Element` | - |
+| class | Class name of the option row. | `string` | - |
+| classNames | Class names of the inner parts of the option, keyed by `icon` (the tick icon container) and `content` (the text element, present when children is a string); appended after the `item*` class names of Select. | <ApiType detail={"Partial\u003cRecord\u003cOptionPart, string>>"}>Type</ApiType> | - |
+| disabled | Whether the option is disabled. | `boolean` | - |
+| label | Text of the option, used for search, highlighting and callbacks, and shown when there are no children. value is used when it is not set. | `string \| number` | - |
+| showTick | Whether a tick icon shows when the option is selected; shown by default. | `boolean` | - |
+| style | Style of the option row. | `JSX.CSSProperties \| string` | - |
+| styles | Styles of the inner parts of the option, keyed like `classNames`; a value is an object with kebab-case keys or a string. | <ApiType detail={"Partial\u003cRecord\u003cOptionPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
+| value | The value of the option, which identifies it; every option should declare one. | `V` | - |

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Text, computed, type Slots, type VNode } from 'vue';
+    import { Text, computed, type CSSProperties, type Slots, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale';
     import { type ElementProps, usePopupLayer, semiDefault, semiGlobalDefault } from '../../base/index';
@@ -18,6 +18,8 @@
         shape: () => semiDefault('AvatarGroup', 'shape', 'circle'),
         overlapFrom: () => semiDefault('AvatarGroup', 'overlapFrom', 'start'),
         maxCount: semiGlobalDefault('AvatarGroup', 'maxCount'),
+        classNames: semiGlobalDefault('AvatarGroup', 'classNames'),
+        styles: semiGlobalDefault('AvatarGroup', 'styles'),
     });
 
     defineSlots<AvatarGroupSlots>();
@@ -26,6 +28,9 @@
     const layer = usePopupLayer();
 
     const prefix = cssClasses.PREFIX;
+
+    // AvatarGroupMore takes the one-level style type
+    const moreStyle = computed(() => props.styles?.more as CSSProperties | string | undefined);
 
     provideAvatarGroupContext(computed(() => ({ size: props.size, shape: props.shape, layer })));
 
@@ -67,10 +72,10 @@
         <template v-for="({ visible, rest }, group) in [split(slotNodes($slots.default?.() ?? []))]" :key="group">
             <component :is="node" v-for="([node, key], index) in visible" :key="key" v-bind="itemProps(node, index)" />
             <template v-if="rest.length > 0">
-                <AvatarGroupMore v-if="$slots.more" :itemClass="overlapClass(visible.length)" :shape="props.shape" :size="props.size">
+                <AvatarGroupMore v-if="$slots.more" :itemClass="[overlapClass(visible.length), props.classNames?.more]" :itemStyle="moreStyle" :shape="props.shape" :size="props.size">
                     <slot name="more" :restAvatars="rest" :restNumber="rest.length" />
                 </AvatarGroupMore>
-                <Avatar v-else :alt="moreLabel(rest)" :class="[`${prefix}-item-more`, overlapClass(visible.length)]" role="listitem" :shape="props.shape" :size="props.size">+{{ rest.length }}</Avatar>
+                <Avatar v-else :alt="moreLabel(rest)" :class="[`${prefix}-item-more`, overlapClass(visible.length), props.classNames?.more]" role="listitem" :shape="props.shape" :size="props.size" :style="props.styles?.more">+{{ rest.length }}</Avatar>
             </template>
         </template>
     </div>

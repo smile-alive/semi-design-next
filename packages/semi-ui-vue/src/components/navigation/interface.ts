@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes, ClassValue, CSSProperties, StyleValue, VNode } from 'vue';
-import type { NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
+import type { NavFooterPart, NavHeaderPart, NavItemPart, NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { DropdownProps } from '../dropdown/interface';
 
@@ -37,6 +37,7 @@ export type SubDropdownProps = DropdownProps & {
 };
 
 export interface NavItemProps {
+    classNames?: Partial<Record<NavItemPart, ClassValue>>;
     disabled?: boolean;
     indent?: boolean;
     /** Or'ed with the collapsed state of the Nav */
@@ -45,6 +46,7 @@ export interface NavItemProps {
     level?: number;
     link?: string;
     linkOptions?: NavLinkOptions;
+    styles?: Partial<Record<NavItemPart, StyleValue>>;
     text?: string | number;
     tooltipHideDelay?: number;
     tooltipShowDelay?: number;
@@ -88,8 +90,10 @@ export interface SubNavSlots {
 }
 
 export interface NavHeaderProps {
+    classNames?: Partial<Record<NavHeaderPart, ClassValue>>;
     link?: string;
     linkOptions?: NavLinkOptions;
+    styles?: Partial<Record<NavHeaderPart, StyleValue>>;
     /** Also names the header link while the Nav is collapsed and the text is hidden */
     text?: string;
 }
@@ -101,8 +105,10 @@ export interface NavHeaderSlots {
 }
 
 export interface NavFooterProps {
+    classNames?: Partial<Record<NavFooterPart, ClassValue>>;
     /** Shows the collapse button while the footer has no content and the Nav is vertical */
     collapseButton?: boolean;
+    styles?: Partial<Record<NavFooterPart, StyleValue>>;
 }
 
 export interface NavCollapseTextSlotProps {
@@ -140,9 +146,15 @@ export interface NavItemConfig extends EntryAttributes {
 /** A string entry is both the text and the itemKey of a plain item */
 export type NavItems = (string | NavItemConfig)[];
 
-export interface NavHeaderConfig extends NavHeaderProps, EntryAttributes {}
+export interface NavHeaderConfig extends NavHeaderProps, EntryAttributes {
+    classNames?: Partial<Record<NavHeaderPart, EntryAttributes['class']>>;
+    styles?: Partial<Record<NavHeaderPart, EntryAttributes['style']>>;
+}
 
-export interface NavFooterConfig extends NavFooterProps, EntryAttributes {}
+export interface NavFooterConfig extends NavFooterProps, EntryAttributes {
+    classNames?: Partial<Record<NavFooterPart, EntryAttributes['class']>>;
+    styles?: Partial<Record<NavFooterPart, EntryAttributes['style']>>;
+}
 
 export interface NavProps {
     classNames?: Partial<Record<NavPart, ClassValue>>;

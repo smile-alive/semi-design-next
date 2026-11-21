@@ -12,3 +12,9 @@ export const strings = {
     MAX_WIDTH: '200px',
     MAX_HEIGHT: '750px',
 } as const;
+
+/** Keys of `classNames` and `styles` on Anchor; the root element takes `className` and `style` */
+export type AnchorPart = 'rail' | 'indicator' | 'list' | 'item' | 'itemTitle';
+
+/** Keys of `classNames` and `styles` on Anchor.Link; the root element takes `className` and `style` */
+export type AnchorLinkPart = 'title';

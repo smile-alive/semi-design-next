@@ -1,3 +1,4 @@
+import type { ClassValue } from 'svelte/elements';
 import { createContext } from '../../base/index.js';
 import type { AvatarShape } from './interface.js';
 
@@ -5,7 +6,8 @@ export interface AvatarGroupMoreValue {
     readonly layer?: symbol;
     readonly size?: string;
     readonly shape?: AvatarShape;
-    readonly itemClass?: string;
+    readonly itemClass?: ClassValue;
+    readonly itemStyle?: string;
 }
 
 /** Set around the group's `more` content so the avatar in it becomes a list item styled like the group */

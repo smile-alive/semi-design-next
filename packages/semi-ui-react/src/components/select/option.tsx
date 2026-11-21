@@ -1,7 +1,7 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
+import { cssClasses, type OptionPart, type SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import type { BasicOptionProps, SelectRawValue } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { getDataAttr } from '@fibrae/semi-foundation/utils';
 import { IconTick } from '@fibrae/semi-icons-react';
@@ -16,17 +16,46 @@ export interface OptionProps<V extends SelectRawValue = SelectRawValue> extends 
     disabled?: boolean;
     showTick?: boolean;
     className?: string;
+    classNames?: Partial<Record<OptionPart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<OptionPart, React.CSSProperties>>;
 }
 
-/** Set by AutoComplete, kept out of the public OptionProps */
+/** Set by Select and AutoComplete, kept out of the public OptionProps */
 export interface OptionInternalProps extends OptionProps {
     /** The row aria-activedescendant points at; AutoComplete marks it aria-selected */
     current?: boolean;
+    /** The `item*` parts of the parent, applied before the option's own */
+    parentClassNames?: Partial<Record<SelectPart, string>>;
+    parentStyles?: Partial<Record<SelectPart, React.CSSProperties>>;
 }
 
 function Option(props: OptionProps): React.ReactNode {
-    const { children, disabled, value, selected, label, empty, emptyContent, onSelect, focused, showTick, className, style, onMouseEnter, prefixCls = cssClasses.PREFIX_OPTION, renderOptionItem, inputValue, semiOptionId, current, ...rest } = props as OptionInternalProps;
+    const {
+        children,
+        disabled,
+        value,
+        selected,
+        label,
+        empty,
+        emptyContent,
+        onSelect,
+        focused,
+        showTick,
+        className,
+        classNames,
+        style,
+        styles,
+        onMouseEnter,
+        prefixCls = cssClasses.PREFIX_OPTION,
+        renderOptionItem,
+        inputValue,
+        semiOptionId,
+        current,
+        parentClassNames,
+        parentStyles,
+        ...rest
+    } = props as OptionInternalProps;
 
     const { locale } = useLocale('Select');
 
@@ -38,8 +67,11 @@ function Option(props: OptionProps): React.ReactNode {
             [`${prefixCls}-focused`]: focused,
             [`${prefixCls}-empty`]: empty,
         },
+        parentClassNames?.item,
         className
     );
+
+    const optionStyle = { ...parentStyles?.item, ...style };
 
     const onClick = (event: React.MouseEvent) => {
         if (!disabled) {
@@ -52,7 +84,7 @@ function Option(props: OptionProps): React.ReactNode {
             return null;
         }
         return (
-            <div className={optionClassName} x-semi-prop="emptyContent">
+            <div className={optionClassName} style={style} x-semi-prop="emptyContent">
                 {emptyContent || locale.emptyText}
             </div>
         );
@@ -81,13 +113,19 @@ function Option(props: OptionProps): React.ReactNode {
 
     return (
         // no focus on the option: the trigger drives it via aria-activedescendant
-        <div id={semiOptionId} className={optionClassName} style={style} aria-disabled={disabled ? 'true' : 'false'} aria-selected={selected || current ? 'true' : 'false'} role="option" onClick={onClick} onMouseEnter={(e) => onMouseEnter?.(e)} {...getDataAttr(rest)}>
+        <div id={semiOptionId} className={optionClassName} style={optionStyle} aria-disabled={disabled ? 'true' : 'false'} aria-selected={selected || current ? 'true' : 'false'} role="option" onClick={onClick} onMouseEnter={(e) => onMouseEnter?.(e)} {...getDataAttr(rest)}>
             {showTick && (
-                <div className={`${prefixCls}-icon`}>
+                <div className={clsx(`${prefixCls}-icon`, parentClassNames?.itemIcon, classNames?.icon)} style={{ ...parentStyles?.itemIcon, ...styles?.icon }}>
                     <IconTick />
                 </div>
             )}
-            {typeof children === 'string' ? <div className={`${prefixCls}-text`}>{inputValue ? <Highlight classNames={{ highlight: `${prefixCls}-keyword` }} searchWords={[inputValue]} sourceString={children} /> : children}</div> : children}
+            {typeof children === 'string' ? (
+                <div className={clsx(`${prefixCls}-text`, parentClassNames?.itemContent, classNames?.content)} style={{ ...parentStyles?.itemContent, ...styles?.content }}>
+                    {inputValue ? <Highlight classNames={{ highlight: `${prefixCls}-keyword` }} searchWords={[inputValue]} sourceString={children} /> : children}
+                </div>
+            ) : (
+                children
+            )}
         </div>
     );
 }

@@ -13,3 +13,6 @@ export const cssClasses = {
     LOADING_SPIN: `${BASE_CLASS_PREFIX}-switch-loading-spin`,
     LOADING: `${BASE_CLASS_PREFIX}-switch-loading`,
 };
+
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type SwitchPart = 'indicator' | 'content';

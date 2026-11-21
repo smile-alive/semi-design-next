@@ -6,10 +6,12 @@
     import MarkdownCode from '@fibrae/semi-ui-svelte/markdown-render/components/code.svelte';
     import { isPlainText } from '@fibrae/semi-ui-svelte/markdown-render/components/tree';
     import { codeText, type MarkdownRenderElementProps } from '@fibrae/semi-ui-svelte/markdown-render/index';
+    import { getCodePartContext } from '../../context.js';
 
     // only the class (the fence language) carries meaning
     const { class: className, node, children }: { class?: string } & MarkdownRenderElementProps = $props();
 
+    const part = getCodePartContext();
     const locale = useLocale('AIChatDialogue');
 
     const copied = useCopied(() => 2000);
@@ -23,7 +25,7 @@
 
 {#if language && source !== undefined}
     <!-- The bar and the code touch: whitespace between them would become a line of its own -->
-    <div class={PREFIX_CODE}>
+    <div class={[PREFIX_CODE, part?.class]} style={part?.style}>
         <div class="{PREFIX_CODE}-topSlot">
             <span class="{PREFIX_CODE}-topSlot-type">{language}</span>
             <span class="{PREFIX_CODE}-topSlot-copy">

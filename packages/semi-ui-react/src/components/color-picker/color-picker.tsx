@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import { cssClasses, type ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
@@ -20,6 +20,8 @@ export interface ColorPickerReactProps extends ColorPickerProps, ElementProps<'d
     popoverProps?: PopoverProps;
     className?: string;
     style?: React.CSSProperties;
+    classNames?: Partial<Record<ColorPickerPart, string>>;
+    styles?: Partial<Record<ColorPickerPart, React.CSSProperties>>;
     bottomSlot?: React.ReactNode;
     topSlot?: React.ReactNode;
     /** The popover trigger when `usePopover`, a swatch of the current color by default; ignored otherwise */
@@ -43,7 +45,7 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
     const props = useDefaultProps('ColorPicker', rawProps, defaultProps);
 
     // The root is not focusable; a Tooltip around the picker injects a tabIndex that would add a Tab stop of its own
-    const { ref, value, defaultValue, onChange, alpha, width: widthProp, height, defaultFormat, eyeDropper, usePopover, popoverProps, className, style, topSlot, bottomSlot, children, tabIndex, ...rest } = props;
+    const { ref, value, defaultValue, onChange, alpha, width: widthProp, height, defaultFormat, eyeDropper, usePopover, popoverProps, className, style, classNames, styles, topSlot, bottomSlot, children, tabIndex, ...rest } = props;
 
     const { locale } = useLocale('ColorPicker');
 
@@ -62,10 +64,10 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
     const picker = (
         <div role={namedRole(rest)} {...rest} ref={ref} className={clsx(cssClasses.PREFIX, className)} style={style}>
             {topSlot}
-            <ColorChooseArea height={height ?? 280} hsva={currentColor.hsva} width={width} handleSize={20} onChange={foundation.handleAreaChange} />
-            <ColorSlider className="colorSliderWrapper" height={10} hue={currentColor.hsva.h} width={width} handleSize={18} onChange={foundation.handleHueChange} />
-            {alpha && <AlphaSlider className="alphaSliderWrapper" height={10} hsva={currentColor.hsva} width={width} handleSize={18} onChange={foundation.handleAlphaChange} />}
-            <DataPart alpha={alpha} currentColor={currentColor} defaultFormat={defaultFormat} eyeDropper={eyeDropper} width={width} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} />
+            <ColorChooseArea classNames={classNames} styles={styles} height={height ?? 280} hsva={currentColor.hsva} width={width} handleSize={20} onChange={foundation.handleAreaChange} />
+            <ColorSlider className="colorSliderWrapper" classNames={classNames} styles={styles} height={10} hue={currentColor.hsva.h} width={width} handleSize={18} onChange={foundation.handleHueChange} />
+            {alpha && <AlphaSlider className="alphaSliderWrapper" classNames={classNames} styles={styles} height={10} hsva={currentColor.hsva} width={width} handleSize={18} onChange={foundation.handleAlphaChange} />}
+            <DataPart classNames={classNames} styles={styles} alpha={alpha} currentColor={currentColor} defaultFormat={defaultFormat} eyeDropper={eyeDropper} width={width} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} />
             {bottomSlot}
         </div>
     );
@@ -78,7 +80,8 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
         <Popover
             {...popoverProps}
             ref={popoverRef}
-            className={clsx(`${cssClasses.PREFIX}-popover`, popoverProps?.className)}
+            className={clsx(`${cssClasses.PREFIX}-popover`, popoverProps?.className, classNames?.dropdown)}
+            style={{ ...popoverProps?.style, ...styles?.dropdown }}
             aria-label={popoverProps?.['aria-label'] ?? (popoverProps?.['aria-labelledby'] ? undefined : locale.color)}
             // a dialog opened by click: moving the pointer away must not close it mid-edit
             role={popoverProps?.role ?? 'dialog'}
@@ -89,7 +92,7 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
                 popoverProps?.onOpen?.();
             }}
         >
-            {children ?? <button type="button" className={clsx(`${cssClasses.PREFIX}-popover-defaultChildren`)} style={{ backgroundColor: currentColor.hex }} aria-label={locale.color} />}
+            {children ?? <button type="button" className={clsx(`${cssClasses.PREFIX}-popover-defaultChildren`, classNames?.trigger)} style={{ backgroundColor: currentColor.hex, ...styles?.trigger }} aria-label={locale.color} />}
         </Popover>
     );
 }

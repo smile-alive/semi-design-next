@@ -79,8 +79,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         closable,
         zIndex,
         visible,
-        className,
-        style,
+        classNames,
+        styles,
         src,
         maxZoom,
         minZoom,
@@ -179,7 +179,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         {
             [`${previewPrefixCls}-popup`]: !inBody,
         },
-        className
+        classNames?.preview
     );
 
     const hideViewerCls = !controlsVisible ? `${previewPrefixCls}-hide` : '';
@@ -208,7 +208,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
             <div
                 ref={wrapRef}
                 className={previewWrapperCls}
-                style={style}
+                style={styles?.preview}
                 aria-label={hasTitle ? undefined : locale.preview}
                 aria-labelledby={hasTitle ? titleId : undefined}
                 aria-modal={inBody ? 'true' : undefined}
@@ -219,8 +219,10 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                 onMouseMove={foundation.handleMouseMove}
                 onMouseUp={(e) => foundation.handleMouseUp(e.nativeEvent)}
             >
-                <Header ref={attachControl} className={clsx(hideViewerCls)} title={title} closable={closable} titleId={titleId} renderCloseIcon={renderCloseIcon} renderHeader={renderHeader} onClose={foundation.handlePreviewClose} />
+                <Header ref={attachControl} className={clsx(hideViewerCls)} classNames={classNames} styles={styles} title={title} closable={closable} titleId={titleId} renderCloseIcon={renderCloseIcon} renderHeader={renderHeader} onClose={foundation.handlePreviewClose} />
                 <PreviewImage
+                    classNames={classNames}
+                    styles={styles}
                     alt={previewContext?.alts?.[currentIndex] ?? alt}
                     crossOrigin={crossOrigin}
                     disableDownload={disableDownload}
@@ -237,18 +239,20 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                     onZoom={foundation.handleZoomImage}
                 />
                 {showPrev && (
-                    <button ref={attachControl} type="button" className={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-prev`, hideViewerCls)} aria-label={prevTip ?? locale.prevTip} onClick={handlePrev}>
+                    <button ref={attachControl} type="button" className={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-prev`, hideViewerCls, classNames?.prev)} style={styles?.prev} aria-label={prevTip ?? locale.prevTip} onClick={handlePrev}>
                         {isValidElement(leftIcon) ? leftIcon : <IconArrowLeft size="large" />}
                     </button>
                 )}
                 {showNext && (
-                    <button ref={attachControl} type="button" className={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-next`, hideViewerCls)} aria-label={nextTip ?? locale.nextTip} onClick={handleNext}>
+                    <button ref={attachControl} type="button" className={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-next`, hideViewerCls, classNames?.next)} style={styles?.next} aria-label={nextTip ?? locale.nextTip} onClick={handleNext}>
                         {isValidElement(rightIcon) ? rightIcon : <IconArrowRight size="large" />}
                     </button>
                 )}
                 <Footer
                     ref={attachControl}
                     className={hideViewerCls}
+                    classNames={classNames}
+                    styles={styles}
                     max={toPercent(maxZoom)}
                     min={toPercent(minZoom)}
                     step={toPercent(zoomStep)}

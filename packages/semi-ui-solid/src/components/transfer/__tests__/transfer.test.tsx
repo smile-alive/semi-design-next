@@ -1177,4 +1177,34 @@ describe('Transfer 树形与搜索', () => {
         expect(wrapped.container.querySelector(`.${prefixCls}`)).not.toHaveAttribute('tabindex');
         expect(getSearchInput()).toHaveAttribute('tabindex', '0');
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['source', 'selected', 'filter', 'header', 'title', 'action', 'list', 'groupTitle', 'item', 'itemDragHandle', 'itemRemove', 'empty'] as const;
+        const selectors = {
+            source: 'left',
+            selected: 'right',
+            filter: 'filter',
+            header: 'header',
+            title: 'header-total',
+            action: 'header-all',
+            list: 'left-list, .' + prefixCls + '-right-list',
+            groupTitle: 'group-title',
+            item: 'item',
+            itemDragHandle: 'right-item-drag-handler',
+            itemRemove: 'item-close-icon',
+            empty: 'empty',
+        };
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]));
+        const { container } = render(() => <Transfer type="groupList" dataSource={dataWithGroup} value={[1, 2]} draggable disabled classNames={classNames} styles={styles} />);
+        const { container: empty } = render(() => <Transfer dataSource={[]} classNames={classNames} styles={styles} />);
+        for (const part of parts) {
+            const els = Array.from((part === 'empty' ? empty : container).querySelectorAll(`.${prefixCls}-${selectors[part]}`));
+            expect(els.length).toBeGreaterThan(0);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
 });

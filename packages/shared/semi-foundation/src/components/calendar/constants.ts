@@ -10,6 +10,9 @@ export const numbers = {
     MONTH_EVENT_HEIGHT: 24,
 } as const;
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type CalendarPart = 'header' | 'headerCell' | 'allDay' | 'timeColumn' | 'timeLabel' | 'day' | 'event' | 'currentTimeLine' | 'currentTimeDot' | 'more' | 'dropdown';
+
 export const strings = {
     MODE: ['day', 'week', 'month', 'range'],
 } as const;

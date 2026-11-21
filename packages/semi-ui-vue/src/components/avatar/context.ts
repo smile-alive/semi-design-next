@@ -1,11 +1,13 @@
-import type { ComputedRef } from 'vue';
+import type { ComputedRef, CSSProperties } from 'vue';
 import { createContext } from '../../base/index';
 import type { AvatarShape } from './interface';
 
 export interface AvatarGroupMoreItem {
     size?: string;
     shape?: AvatarShape;
-    itemClass?: string;
+    // One level deep: the SFC props compiler cannot infer the recursive ClassValue and StyleValue
+    itemClass?: string | Record<string, unknown> | unknown[];
+    itemStyle?: string | CSSProperties;
     /** Popup layer of the group; avatars in a popup opened from inside the `more` slot are not list items. */
     layer?: symbol;
 }

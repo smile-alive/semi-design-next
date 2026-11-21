@@ -509,7 +509,8 @@ function Select(rawProps: SelectBodyProps) {
                 [`${prefixcls}-input-single`]: !multiple,
                 [`${prefixcls}-input-multiple`]: multiple,
             },
-            inputProps?.className
+            inputProps?.className,
+            classNames?.input
         );
 
         const selectInputProps: Record<string, any> = {
@@ -526,12 +527,10 @@ function Select(rawProps: SelectBodyProps) {
             addonAfter: null,
             ...inputProps,
             className: inputcls,
+            style: { ...(multiple && { width: inputValue ? `${inputValue.length * 16}px` : '2px' }), ...styles?.input },
             ref: triggerInputRef,
         };
 
-        if (multiple) {
-            selectInputProps.style = { width: inputValue ? `${inputValue.length * 16}px` : '2px' };
-        }
         return (
             <Input
                 {...comboboxProps}
@@ -576,7 +575,7 @@ function Select(rawProps: SelectBodyProps) {
         };
 
         return (
-            <div className={`${prefixcls}-dropdown-search-wrapper`}>
+            <div className={clsx(`${prefixcls}-dropdown-search-wrapper`, classNames?.search)} style={styles?.search}>
                 {/* a search field over the trigger's list, not a second combobox (the React Aria Autocomplete pattern) */}
                 <Input aria-activedescendant={activeDescendant} aria-autocomplete="list" aria-controls={selectOptionListID} {...name} prefix={<IconSearch />} {...selectInputProps} />
             </div>
@@ -586,7 +585,7 @@ function Select(rawProps: SelectBodyProps) {
     const renderCreateOption = (option: OptionProps, isFocused: boolean, optionIndex: number, optionStyle: React.CSSProperties) => {
         if (typeof renderCreateItem === 'undefined') {
             return (
-                <Option key={option.key || (option.label as string) + option.value} showTick {...optionHandlers[optionIndex]} {...option} style={optionStyle} focused={isFocused} semiOptionId={getOptionId(selectID, optionIndex)}>
+                <Option key={option.key || (option.label as string) + option.value} showTick {...optionHandlers[optionIndex]} {...option} style={optionStyle} focused={isFocused} parentClassNames={classNames} parentStyles={styles} semiOptionId={getOptionId(selectID, optionIndex)}>
                     <span className={`${prefixcls}-create-tips`}>{locale.createText}</span>
                     {option.value}
                 </Option>
@@ -618,6 +617,8 @@ function Select(rawProps: SelectBodyProps) {
                 style={optionStyle}
                 focused={isFocused}
                 inputValue={inputValue}
+                parentClassNames={classNames}
+                parentStyles={styles}
                 selected={record.selected}
                 semiOptionId={getOptionId(selectID, optionIndex)}
                 renderOptionItem={renderOptionItem}
@@ -639,7 +640,7 @@ function Select(rawProps: SelectBodyProps) {
             const titleId = groupProps.id ?? `${selectID}-group-${first}`;
             return (
                 <div key={groupKey} className={`${prefixcls}-group-wrapper`} aria-labelledby={titleId} role="group">
-                    <OptionGroup {...groupProps} id={titleId} />
+                    <OptionGroup {...groupProps} id={titleId} className={clsx(classNames?.groupLabel, groupProps.className)} style={{ ...styles?.groupLabel, ...groupProps.style }} />
                     {nodes}
                 </div>
             );
@@ -656,16 +657,20 @@ function Select(rawProps: SelectBodyProps) {
 
         const showInputInTrigger = searchPosition === strings.SEARCH_POSITION_TRIGGER;
 
-        const spanCls = clsx({
-            [`${prefixcls}-selection-text`]: true,
-            [`${prefixcls}-selection-placeholder`]: !renderText && renderText !== 0,
-            [`${prefixcls}-selection-text-hide`]: inputValue && showInput && showInputInTrigger,
-            [`${prefixcls}-selection-text-inactive`]: !inputValue && showInput && showInputInTrigger,
-        });
+        const isPlaceholder = !renderText && renderText !== 0;
+        const spanCls = clsx(
+            {
+                [`${prefixcls}-selection-text`]: true,
+                [`${prefixcls}-selection-placeholder`]: isPlaceholder,
+                [`${prefixcls}-selection-text-hide`]: inputValue && showInput && showInputInTrigger,
+                [`${prefixcls}-selection-text-inactive`]: !inputValue && showInput && showInputInTrigger,
+            },
+            isPlaceholder && classNames?.placeholder
+        );
 
         return (
             <div className={`${prefixcls}-content-wrapper`}>
-                <span id={selectionTextId} className={spanCls} x-semi-prop="placeholder">
+                <span id={selectionTextId} className={spanCls} style={isPlaceholder ? styles?.placeholder : undefined} x-semi-prop="placeholder">
                     {renderText || renderText === 0 ? renderText : placeholder}
                 </span>
                 {filterable && showInput && showInputInTrigger && renderTriggerInput()}
@@ -704,9 +709,9 @@ function Select(rawProps: SelectBodyProps) {
                 content
             );
         if (isRenderInTag) {
-            const tagProps = inTagGroup ? { tabIndex: -1 } : { style: { maxWidth: '100%' } };
+            const tagProps = inTagGroup ? { tabIndex: -1, style: styles?.tag } : { style: { maxWidth: '100%', ...styles?.tag } };
             return (
-                <Tag {...tagProps} key={tagValue} closable={!tagDisabled} color="white" size={tagSize} onClose={onClose}>
+                <Tag {...tagProps} key={tagValue} className={classNames?.tag} closable={!tagDisabled} color="white" size={tagSize} onClose={onClose}>
                     {realContent}
                 </Tag>
             );
@@ -784,12 +789,20 @@ function Select(rawProps: SelectBodyProps) {
             [`${prefixcls}-content-wrapper-empty`]: !selectedItems.length,
         });
 
-        const spanCls = clsx({
-            [`${prefixcls}-selection-text`]: true,
-            [`${prefixcls}-selection-placeholder`]: !selectedItems.length,
-            [`${prefixcls}-selection-text-hide`]: selectedItems && selectedItems.length,
-        });
-        const placeholderText = placeholder && !inputValue ? <span className={spanCls}>{placeholder}</span> : null;
+        const spanCls = clsx(
+            {
+                [`${prefixcls}-selection-text`]: true,
+                [`${prefixcls}-selection-placeholder`]: !selectedItems.length,
+                [`${prefixcls}-selection-text-hide`]: selectedItems && selectedItems.length,
+            },
+            !selectedItems.length && classNames?.placeholder
+        );
+        const placeholderText =
+            placeholder && !inputValue ? (
+                <span className={spanCls} style={selectedItems.length ? undefined : styles?.placeholder}>
+                    {placeholder}
+                </span>
+            ) : null;
         const fold = SelectFoundation.getTagFold({ maxTagCount, expandRestTagsOnClick, showRestTagsPopover }, state, selectedItems.length);
 
         let tagContent: ReactNode;
@@ -829,7 +842,7 @@ function Select(rawProps: SelectBodyProps) {
                 </div>
             );
         } else if (isEmpty) {
-            body = <Option empty emptyContent={emptyContent} />;
+            body = <Option className={classNames?.empty} style={styles?.empty} empty emptyContent={emptyContent} />;
         }
         const renderSlot = (slot: React.ReactNode, name: string) =>
             slot ? (
@@ -861,11 +874,14 @@ function Select(rawProps: SelectBodyProps) {
                 {searchPosition === strings.SEARCH_POSITION_DROPDOWN && filter && renderDropdownInput()}
                 <div
                     id={selectOptionListID}
-                    className={clsx({
-                        [`${prefixcls}-option-list`]: true,
-                        [`${prefixcls}-option-list-chosen`]: selections.size,
-                    })}
-                    style={{ maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight }}
+                    className={clsx(
+                        {
+                            [`${prefixcls}-option-list`]: true,
+                            [`${prefixcls}-option-list-chosen`]: selections.size,
+                        },
+                        classNames?.list
+                    )}
+                    style={{ maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight, ...styles?.list }}
                     // a name source only: accname would read the combobox's value (typed or selected text)
                     {...name}
                     aria-multiselectable={multiple}
@@ -915,16 +931,18 @@ function Select(rawProps: SelectBodyProps) {
     } else {
         inner = (
             <>
-                {hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId)}
-                <div className={`${prefixcls}-selection`}>{multiple ? renderMultipleSelection() : renderSingleSelection()}</div>
-                {hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode)}
+                {hasPrefix && renderTriggerPrefix(prefixcls, prefixNode, insetLabelNode, prefixId, classNames?.prefix, styles?.prefix)}
+                <div className={clsx(`${prefixcls}-selection`, classNames?.content)} style={styles?.content}>
+                    {multiple ? renderMultipleSelection() : renderSingleSelection()}
+                </div>
+                {hasContent(suffix) && renderTriggerSuffix(prefixcls, suffixNode, classNames?.suffix, styles?.suffix)}
                 {clearable && (
-                    <button ref={setClearButton} type="button" className={`${prefixcls}-clear`} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys}>
+                    <button ref={setClearButton} type="button" className={clsx(`${prefixcls}-clear`, classNames?.clear)} style={styles?.clear} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys}>
                         {clearIcon || <IconClear />}
                     </button>
                 )}
                 {showArrow ? (
-                    <div className={`${prefixcls}-arrow`} x-semi-prop="arrowIcon">
+                    <div className={clsx(`${prefixcls}-arrow`, classNames?.arrow)} style={styles?.arrow} x-semi-prop="arrowIcon">
                         {arrowIcon}
                     </div>
                 ) : (

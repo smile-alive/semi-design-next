@@ -5,7 +5,7 @@ import { cssClasses, type SliderPart } from '@fibrae/semi-foundation/components/
 import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
 import '@fibrae/semi-foundation/components/slider/slider.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { autofocus, callHandler, omitFormInjected, forwardFocus, mergeRefs } from '../../utils/index';
+import { autofocus, callHandler, omitFormInjected, forwardFocus, mergeRefs, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { useLocale } from '../locale';
 import Tooltip from '../tooltip';
@@ -176,7 +176,16 @@ export default function Slider(rawProps: SliderProps) {
 
         return (
             // closeOnEsc off: the slider drives this tip, which Escape cannot hide, so the key goes on to the layer below
-            <Tooltip class={`${cssClasses.HANDLE}-tooltip`} closeOnEsc={false} content={tips().tipChildren[pos]} position="top" showArrow={local.showArrow} trigger="custom" visible={state().isInRenderTree && (tips().tipVisible[pos] || state().focusVisibleHandle === pos)}>
+            <Tooltip
+                class={clsx(`${cssClasses.HANDLE}-tooltip`, local.classNames?.dropdown)}
+                closeOnEsc={false}
+                content={tips().tipChildren[pos]}
+                position="top"
+                showArrow={local.showArrow}
+                style={local.styles?.dropdown}
+                trigger="custom"
+                visible={state().isInRenderTree && (tips().tipVisible[pos] || state().focusVisibleHandle === pos)}
+            >
                 {(getTriggerProps) => (
                     <span
                         {...getTriggerProps({
@@ -185,8 +194,8 @@ export default function Slider(rawProps: SliderProps) {
                             // the tip repeats the value the input already announces
                             'aria-describedby': null,
                         })}
-                        class={clsx(cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: state().chooseMovePos === pos && state().isDrag })}
-                        style={{ [layout().startProp]: handle().start, 'z-index': handle().zIndex }}
+                        class={clsx(cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: state().chooseMovePos === pos && state().isDrag }, local.classNames?.handle)}
+                        style={mergeStyles({ [layout().startProp]: handle().start, 'z-index': handle().zIndex }, local.styles?.handle)}
                         onFocusIn={props.range ? undefined : foundation.syncIsInRenderTree}
                         // keeps focus on the input rather than moving it to this span
                         onMouseDown={(event) => event.preventDefault()}
@@ -238,7 +247,9 @@ export default function Slider(rawProps: SliderProps) {
         );
     };
 
-    const markDot = (mark: string, trigger?: object) => <span {...trigger} class={clsx(`${prefixCls}-dot`, { [`${prefixCls}-dot-active`]: markActive(mark) === 'active' })} style={{ [layout().startProp]: `calc(${markPercent(mark)}% - 2px)` }} onClick={foundation.handleWrapClick} />;
+    const markDot = (mark: string, trigger?: object) => (
+        <span {...trigger} class={clsx(`${prefixCls}-dot`, { [`${prefixCls}-dot-active`]: markActive(mark) === 'active' }, local.classNames?.dot)} style={mergeStyles({ [layout().startProp]: `calc(${markPercent(mark)}% - 2px)` }, local.styles?.dot)} onClick={foundation.handleWrapClick} />
+    );
 
     const renderSlider = () => (
         <div
@@ -278,7 +289,7 @@ export default function Slider(rawProps: SliderProps) {
             }}
         >
             <div class={clsx(`${prefixCls}-rail`, local.classNames?.rail)} style={local.styles?.rail} onClick={foundation.handleWrapClick} />
-            <div class={cssClasses.TRACK} style={trackStyle()} onClick={foundation.handleWrapClick} />
+            <div class={clsx(cssClasses.TRACK, local.classNames?.track)} style={mergeStyles(trackStyle(), local.styles?.track)} onClick={foundation.handleWrapClick} />
             <Show when={markKeys().length > 0}>
                 <div class={cssClasses.DOTS}>
                     <For each={markKeys()}>
@@ -302,7 +313,7 @@ export default function Slider(rawProps: SliderProps) {
                     <For each={markKeys()}>
                         {(mark) => (
                             <Show when={markActive(mark)}>
-                                <span class={`${prefixCls}-mark${layout().reverse}`} style={{ [layout().startProp]: `${markPercent(mark)}%` }} onClick={() => foundation.handleMarkClick(Number(mark))}>
+                                <span class={clsx(`${prefixCls}-mark${layout().reverse}`, local.classNames?.mark)} style={mergeStyles({ [layout().startProp]: `${markPercent(mark)}%` }, local.styles?.mark)} onClick={() => foundation.handleMarkClick(Number(mark))}>
                                     {markLabel(mark)}
                                 </span>
                             </Show>

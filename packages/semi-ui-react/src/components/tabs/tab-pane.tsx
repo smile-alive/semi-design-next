@@ -8,7 +8,7 @@ import { getPanelId, getTabId } from './ids';
 import type { TabPaneProps } from './interface';
 
 function TabPane({ ref, className, style, children, itemKey, tabIndex, disabled, icon, tab, closable, ...rest }: TabPaneProps) {
-    const { activeKey, lazyRender, panes, tabPaneMotion: motion, tabPosition, prevActiveKey, forceDisableMotion, tabsId } = useTabsContext();
+    const { classNames, styles, activeKey, lazyRender, panes, tabPaneMotion: motion, tabPosition, prevActiveKey, forceDisableMotion, tabsId } = useTabsContext();
 
     const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -37,12 +37,16 @@ function TabPane({ ref, className, style, children, itemKey, tabIndex, disabled,
             {...rest}
             ref={ref}
             id={getPanelId(tabsId, itemKey)}
-            className={clsx(className, {
-                [cssClasses.TABS_PANE_INACTIVE]: !active,
-                [cssClasses.TABS_PANE_ACTIVE]: active,
-                [cssClasses.TABS_PANE]: true,
-            })}
-            style={style}
+            className={clsx(
+                className,
+                {
+                    [cssClasses.TABS_PANE_INACTIVE]: !active,
+                    [cssClasses.TABS_PANE_ACTIVE]: active,
+                    [cssClasses.TABS_PANE]: true,
+                },
+                classNames?.pane
+            )}
+            style={{ ...style, ...styles?.pane }}
             aria-hidden={active ? 'false' : 'true'}
             aria-labelledby={getTabId(tabsId, itemKey)}
             role="tabpanel"

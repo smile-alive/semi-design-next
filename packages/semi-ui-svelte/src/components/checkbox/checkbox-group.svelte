@@ -14,7 +14,23 @@
     const defaults = useDefaultProps('CheckboxGroup');
 
     // No fallback on `value`: a bound `undefined` (form reset) would throw with one
-    let { value = $bindable(), disabled = defaults('disabled', false), name = defaults('name'), options = defaults('options'), direction = defaults('direction', 'vertical'), type = defaults('type', 'default'), onChange, onBlur, onfocusout, label, extra, children, ...rest }: CheckboxGroupProps = $props();
+    let {
+        value = $bindable(),
+        disabled = defaults('disabled', false),
+        name = defaults('name'),
+        options = defaults('options'),
+        direction = defaults('direction', 'vertical'),
+        type = defaults('type', 'default'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
+        onChange,
+        onBlur,
+        onfocusout,
+        label,
+        extra,
+        children,
+        ...rest
+    }: CheckboxGroupProps = $props();
 
     const uid = $props.id();
 
@@ -61,6 +77,12 @@
     setCheckboxGroupContext({
         get view() {
             return view;
+        },
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
         },
         onChange: foundation.handleChange,
     });

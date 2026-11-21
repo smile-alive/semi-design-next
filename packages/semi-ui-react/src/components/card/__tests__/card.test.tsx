@@ -173,6 +173,17 @@ describe('Card', () => {
         }
     });
 
+    it('Meta 的 classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['avatar', 'section', 'title', 'description'] as const;
+        const selectors = { avatar: 'avatar', section: 'wrapper', title: 'wrapper-title', description: 'wrapper-description' };
+        const { container } = render(<Meta classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} title="t" avatar="a" description="d" />);
+        for (const part of parts) {
+            const el = container.querySelector(`.${prefixCls}-meta-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
     it('header 优先于 title 与 headerExtraContent', () => {
         const { container } = render(<Card title="t" header={<b>h</b>} headerExtraContent="x" />);
         const header = container.querySelector(`.${prefixCls}-header`);

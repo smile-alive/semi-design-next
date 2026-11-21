@@ -6,6 +6,10 @@
                 "zh-CN": "表单的初始值，仅在 Form 创建时复制一次。",
                 "en-US": "Initial values of the form, copied once when the Form is created."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `label`、`labelText`、`labelExtra`、`labelTooltip`、`content`、`help`、`extra`，作用到表单内全部字段的标签、内容区、帮助文字与附加说明，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `label`, `labelText`, `labelExtra`, `labelTooltip`, `content`, `help` and `extra`; they apply to the labels, content areas, help texts and extra texts of every field in the form and are merged with the built-in classes."
+            },
             "layout": {
                 "zh-CN": "字段的排列方向，可选 vertical 或 horizontal。",
                 "en-US": "Direction the fields are laid out in, vertical or horizontal."
@@ -53,6 +57,10 @@
             "stopValidateWithError": {
                 "zh-CN": "使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。",
                 "en-US": "Whether validation with rules stops at the first failing rule. The same prop on a field takes precedence."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式（CSS 字符串），键同 `classNames`。",
+                "en-US": "Inline styles (CSS strings) of the inner parts, keyed like `classNames`."
             },
             "trigger": {
                 "zh-CN": "统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。",
@@ -174,6 +182,10 @@
                 "zh-CN": "表单的初始值，仅在 Form 创建时复制一次。",
                 "en-US": "Initial values of the form, copied once when the Form is created."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `label`、`labelText`、`labelExtra`、`labelTooltip`、`content`、`help`、`extra`，作用到表单内全部字段的标签、内容区、帮助文字与附加说明，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `label`, `labelText`, `labelExtra`, `labelTooltip`, `content`, `help` and `extra`; they apply to the labels, content areas, help texts and extra texts of every field in the form and are merged with the built-in classes."
+            },
             "layout": {
                 "zh-CN": "字段的排列方向，可选 vertical 或 horizontal。",
                 "en-US": "Direction the fields are laid out in, vertical or horizontal."
@@ -221,6 +233,10 @@
             "stopValidateWithError": {
                 "zh-CN": "使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。",
                 "en-US": "Whether validation with rules stops at the first failing rule. The same prop on a field takes precedence."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式（CSS 字符串），键同 `classNames`。",
+                "en-US": "Inline styles (CSS strings) of the inner parts, keyed like `classNames`."
             },
             "trigger": {
                 "zh-CN": "统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。",
@@ -322,6 +338,14 @@
                 "zh-CN": "Label 文本，`children` snippet 优先。",
                 "en-US": "Label text; the `children` snippet takes precedence."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `text`、`extra`、`tooltip`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `text`, `extra` and `tooltip`; merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式（CSS 字符串），键同 `classNames`。",
+                "en-US": "Inline styles (CSS strings) of the inner parts, keyed like `classNames`."
+            },
             "align": {
                 "zh-CN": "Label 文本的对齐方式。",
                 "en-US": "Alignment of the Label text."
@@ -403,6 +427,14 @@
             "extraText": {
                 "zh-CN": "显示在标题下方的说明 snippet，同时作为分组的无障碍描述（`aria-describedby`）。",
                 "en-US": "A description snippet below the title, also the accessible description of the group (`aria-describedby`)."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `title`、`extra`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `title` and `extra`; merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式（CSS 字符串），键同 `classNames`。",
+                "en-US": "Inline styles (CSS strings) of the inner parts, keyed like `classNames`."
             },
             "text": {
                 "zh-CN": "分组标题，没有内容时不渲染标题元素。",

@@ -22,12 +22,12 @@ export default function Header(props: HeaderProps) {
     });
 
     return (
-        <section ref={(node) => props.ref?.(node)} class={clsx(prefixCls, props.class)}>
-            <section id={props.titleId} class={`${prefixCls}-title`}>
+        <section ref={(node) => props.ref?.(node)} class={clsx(prefixCls, props.class, props.classNames?.header)} style={props.styles?.header}>
+            <section id={props.titleId} class={clsx(`${prefixCls}-title`, props.classNames?.title)} style={props.styles?.title}>
                 {title()}
             </section>
             <Show when={props.closable}>
-                <button type="button" class={`${prefixCls}-close`} aria-label={locale().locale.close} onClick={(e) => props.onClose?.(e)}>
+                <button type="button" class={clsx(`${prefixCls}-close`, props.classNames?.close)} style={props.styles?.close} aria-label={locale().locale.close} onClick={(e) => props.onClose?.(e)}>
                     {hasContent(closeIcon()) ? closeIcon() : <IconClose />}
                 </button>
             </Show>

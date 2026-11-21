@@ -3,8 +3,11 @@ import { pick } from 'es-toolkit';
 import { applyItem, getOptions, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
 import useLocale from '../locale/use-locale';
 import ScrollList, { ScrollItem, type ScrollItemHandle, type ScrollItemProps } from '../scroll-list';
+import type { TimePickerProps } from './time-picker';
 
 export interface ComboboxProps {
+    classNames?: TimePickerProps['classNames'];
+    styles?: TimePickerProps['styles'];
     format?: string;
     prefixCls?: string;
     disabledHours?: () => number[];
@@ -65,7 +68,21 @@ export default function Combobox(props: ComboboxProps) {
     const column = (type: ColumnType, data: () => { name: string; list: ScrollItemProps['list']; selectedIndex: number }, transform?: (text: string) => string) => {
         // runs in the Show that holds the column, so reselect never reaches a removed column
         onCleanup(() => delete columns[type]);
-        return <ScrollItem ref={(handle) => (columns[type] = handle)} class={listCls(type)} aria-label={data().name} list={data().list} mode="normal" selectedIndex={data().selectedIndex} transform={transform} onSelect={select(type)} {...itemProps()} />;
+        return (
+            <ScrollItem
+                ref={(handle) => (columns[type] = handle)}
+                class={listCls(type)}
+                aria-label={data().name}
+                list={data().list}
+                mode="normal"
+                selectedIndex={data().selectedIndex}
+                transform={transform}
+                onSelect={select(type)}
+                {...itemProps()}
+                classNames={{ option: props.classNames?.item }}
+                styles={{ option: props.styles?.item }}
+            />
+        );
     };
 
     // delivered once while created, like an element ref
@@ -80,7 +97,14 @@ export default function Combobox(props: ComboboxProps) {
     }
 
     return (
-        <ScrollList footer={props.panelFooter} header={props.panelHeader} x-semi-footer-alias="panelFooter" x-semi-header-alias="panelHeader">
+        <ScrollList
+            classNames={{ header: props.classNames?.header, body: props.classNames?.content, footer: props.classNames?.footer }}
+            styles={{ header: props.styles?.header, body: props.styles?.content, footer: props.styles?.footer }}
+            footer={props.panelFooter}
+            header={props.panelHeader}
+            x-semi-footer-alias="panelFooter"
+            x-semi-header-alias="panelHeader"
+        >
             <Show when={props.use12Hours}>{column('ampm', () => ({ name: locale().locale.ampmList, list: ampmOptions(), selectedIndex: options().ampm.selectedIndex }))}</Show>
             <Show when={options().showHour}>{column('hour', () => ({ name: locale().locale.hourList, ...options().hour }), withUnit('hour'))}</Show>
             <Show when={options().showMinute}>{column('minute', () => ({ name: locale().locale.minuteList, ...options().minute }), withUnit('minute'))}</Show>

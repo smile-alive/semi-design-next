@@ -433,6 +433,20 @@ describe('OverflowList', () => {
         const wrapper = container.querySelector(`.${prefixCls}-scroll-wrapper`);
         expect(wrapper).toHaveClass('my-wrapper');
         expect(wrapper).toHaveStyle({ order: '3' });
+
+        const resize = stubResizeObserver();
+        const collapse = render(() => <OverflowList classNames={{ item: 'my-item', overflow: 'my-overflow' }} styles={{ item: { order: 1 }, overflow: { order: 2 } }} items={items} overflowRenderer={plusRenderer} visibleItemRenderer={(item) => <span>{item.key}</span>} />);
+        measure(resize, collapse.container, 300);
+        resize(getList(collapse.container), 120);
+        const collapseItems = getItems(collapse.container);
+        expect(collapseItems).not.toHaveLength(0);
+        for (const item of collapseItems) {
+            expect(item).toHaveClass('my-item');
+            expect(item).toHaveStyle({ order: '1' });
+        }
+        const overflow = getElement(`.${prefixCls}-overflow`, collapse.container);
+        expect(overflow).toHaveClass('my-overflow');
+        expect(overflow).toHaveStyle({ order: '2' });
     });
 
     it('scroll: wrapperProps 落在 wrapper 上', () => {

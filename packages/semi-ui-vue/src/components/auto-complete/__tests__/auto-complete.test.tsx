@@ -121,10 +121,27 @@ describe('AutoComplete', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        await renderAc({ classNames: { dropdown: 'ddc' }, styles: { dropdown: { color: 'red' } }, defaultOpen: true });
-        const list = document.querySelector(`.${optionCls}-list.ddc`);
-        expect(list).not.toBeNull();
-        expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const parts = ['input', 'prefix', 'suffix', 'clear', 'dropdown', 'item'] as const;
+        await renderAc(
+            {
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+                data: ['semi', 'ies'],
+                defaultOpen: true,
+                defaultValue: 'a',
+                showClear: true,
+            },
+            { prefix: () => 'pre', suffix: () => 'suf' }
+        );
+        // the clear button only shows while the input wrapper is hovered or focused
+        await fireEvent.mouseOver(getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`));
+        await settle();
+        const selectors = { input: 'input', prefix: `.${BASE_CLASS_PREFIX}-input-prefix`, suffix: `.${BASE_CLASS_PREFIX}-input-suffix`, clear: `.${BASE_CLASS_PREFIX}-input-clearbtn`, dropdown: `.${optionCls}-list`, item: `.${optionCls}` };
+        for (const part of parts) {
+            const el = document.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('【position】不同位置', async () => {

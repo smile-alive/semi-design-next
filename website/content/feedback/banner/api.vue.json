@@ -6,7 +6,15 @@
                 "zh-CN": "是否展示边框，仅在非全屏模式下有效。",
                 "en-US": "Whether to show a border. Only takes effect in non-full mode."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `icon`、`title`、`description`、`close`、`extra`，与组件自带的类名合并；`extra` 是默认插槽所在的附加区域。",
+                "en-US": "Class names of the inner parts, keyed by `icon`, `title`, `description`, `close` and `extra`; merged with the built-in classes. `extra` is the area that holds the default slot."
+            },
             "fullMode": { "zh-CN": "是否为全屏模式。", "en-US": "Whether the banner is in full mode." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "title": {
                 "zh-CN": "纯文本标题；同时传入 title 插槽时以插槽为准。",
                 "en-US": "Plain-text title. The title slot wins when both are given."

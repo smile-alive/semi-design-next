@@ -1,6 +1,6 @@
 import React, { type ReactNode, Fragment } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { type AnnotationPart, cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { IconBookOpenStroked } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '@fibrae/semi-ui-react/base';
 import Collapse from '@fibrae/semi-ui-react/collapse/index';
@@ -18,6 +18,8 @@ export interface AnnotationInfo {
 export interface ContentProps extends ElementProps<'div', 'onChange' | 'onClick'> {
     style?: React.CSSProperties;
     className?: string;
+    classNames?: Partial<Record<AnnotationPart, string>>;
+    styles?: Partial<Record<AnnotationPart, React.CSSProperties>>;
     activeKey?: string | string[];
     info?: AnnotationInfo[];
     renderItem?: (annotation: AnnotationItem) => ReactNode;
@@ -25,7 +27,7 @@ export interface ContentProps extends ElementProps<'div', 'onChange' | 'onClick'
     onClick?: (e: React.MouseEvent, item: AnnotationItem) => void;
 }
 
-function Content({ info = [], activeKey, onChange, onClick, style, className, renderItem, ...rest }: ContentProps) {
+function Content({ info = [], activeKey, onChange, onClick, style, className, classNames, styles, renderItem, ...rest }: ContentProps) {
     return (
         <Collapse {...rest} className={clsx(collapseCls, className)} style={style} activeKey={activeKey} clickHeaderToExpand={false} onChange={onChange}>
             {info.map((item) => (
@@ -33,22 +35,22 @@ function Content({ info = [], activeKey, onChange, onClick, style, className, re
                     key={item.key}
                     header={
                         // a span: Collapse renders the header inside its toggle button
-                        <span className={`${collapseCls}-header-content`}>
+                        <span className={clsx(`${collapseCls}-header-content`, classNames?.groupHeader)} style={styles?.groupHeader}>
                             <IconBookOpenStroked />
                             {item.header}
                         </span>
                     }
                     itemKey={item.key}
                 >
-                    <div className={`${annotationCls}-content`}>
+                    <div className={clsx(`${annotationCls}-content`, classNames?.groupContent)} style={styles?.groupContent}>
                         {item.annotations.map((cite, index) => {
                             if (renderItem) {
                                 return <Fragment key={index}>{renderItem(cite)}</Fragment>;
                             }
                             if (cite.type === 'video') {
-                                return <VideoItem key={`${index}`} onClick={onClick} {...cite} />;
+                                return <VideoItem key={`${index}`} classNames={classNames} styles={styles} onClick={onClick} {...cite} />;
                             }
-                            return <Item key={`${index}`} onClick={onClick} {...cite} />;
+                            return <Item key={`${index}`} classNames={classNames} styles={styles} onClick={onClick} {...cite} />;
                         })}
                     </div>
                 </Collapse.Panel>

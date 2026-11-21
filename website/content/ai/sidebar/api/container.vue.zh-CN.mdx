@@ -2,17 +2,19 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性        | 说明                                                                    | 类型                                                                                                                                  | 默认值      |
-| ----------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| closeOnEsc  | 按下 Esc 键时是否触发 cancel。                                          | `boolean`                                                                                                                             | `false`     |
-| defaultSize | 初始宽高，仅在 resizable 为 true 时生效。                               | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `undefined` |
-| maxWidth    | 可调整的最大宽度，仅在 resizable 为 true 时生效。                       | `string \| number`                                                                                                                    | `undefined` |
-| minWidth    | 可调整的最小宽度，仅在 resizable 为 true 时生效。                       | `string \| number`                                                                                                                    | `150`       |
-| motion      | 显示与隐藏时是否使用展开动画。                                          | `boolean`                                                                                                                             | `true`      |
-| resizable   | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean`                                                                                                                             | `true`      |
-| showClose   | 是否显示头部的关闭按钮。                                                | `boolean`                                                                                                                             | `true`      |
-| title       | 纯文本标题；传入 title 插槽时以插槽为准。                               | `string`                                                                                                                              | `undefined` |
-| visible     | 是否显示容器，配合 v-model:visible 使用。                               | `boolean`                                                                                                                             | `false`     |
+| 属性        | 说明                                                                                           | 类型                                                                                                                                  | 默认值      |
+| ----------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| classNames  | 内部各部位的类名，键为 header、title、close、content，与组件自带的类名合并，值的写法同 class。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarContainerPart, ClassValue>>"}>Type</ApiType>                                        | `undefined` |
+| closeOnEsc  | 按下 Esc 键时是否触发 cancel。                                                                 | `boolean`                                                                                                                             | `false`     |
+| defaultSize | 初始宽高，仅在 resizable 为 true 时生效。                                                      | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `undefined` |
+| maxWidth    | 可调整的最大宽度，仅在 resizable 为 true 时生效。                                              | `string \| number`                                                                                                                    | `undefined` |
+| minWidth    | 可调整的最小宽度，仅在 resizable 为 true 时生效。                                              | `string \| number`                                                                                                                    | `150`       |
+| motion      | 显示与隐藏时是否使用展开动画。                                                                 | `boolean`                                                                                                                             | `true`      |
+| resizable   | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。                        | `boolean`                                                                                                                             | `true`      |
+| showClose   | 是否显示头部的关闭按钮。                                                                       | `boolean`                                                                                                                             | `true`      |
+| styles      | 内部各部位的内联样式，键同 classNames。                                                        | <ApiType detail={"Partial\u003cRecord\u003cSidebarContainerPart, StyleValue>>"}>Type</ApiType>                                        | `undefined` |
+| title       | 纯文本标题；传入 title 插槽时以插槽为准。                                                      | `string`                                                                                                                              | `undefined` |
+| visible     | 是否显示容器，配合 v-model:visible 使用。                                                      | `boolean`                                                                                                                             | `false`     |
 
 **Events**
 

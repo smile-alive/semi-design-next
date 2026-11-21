@@ -4,7 +4,7 @@
     import { findFocusAfter } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/banner/banner.scss';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
-    import { type ElementProps, type EmitHandlers, semiDefault, useFoundation } from '../../base/index';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import { useFocusHandover } from '../../composables/index';
     import { hasSlotContent } from '../../utils/index';
     import IconButton from '../icon-button';
@@ -20,7 +20,9 @@
 
     const props = withDefaults(defineProps<BannerProps & /* @vue-ignore */ ElementProps<'div', keyof BannerProps | EmitHandlers<BannerEmits>>>(), {
         bordered: () => semiDefault('Banner', 'bordered', false),
+        classNames: semiGlobalDefault('Banner', 'classNames'),
         fullMode: () => semiDefault('Banner', 'fullMode', true),
+        styles: semiGlobalDefault('Banner', 'styles'),
         title: undefined,
         type: () => semiDefault('Banner', 'type', 'info'),
     });
@@ -72,21 +74,21 @@
     <div v-if="state.visible" v-bind="$attrs" :class="[prefix, `${prefix}-${props.type}`, props.fullMode ? `${prefix}-full` : `${prefix}-in-container`, { [`${prefix}-bordered`]: !props.fullMode && props.bordered }]">
         <div :ref="handoverFocus" :class="`${prefix}-content-wrapper`">
             <div :class="`${prefix}-content`">
-                <div v-if="hasIcon()" :class="`${prefix}-icon`" x-semi-prop="icon">
+                <div v-if="hasIcon()" :class="[`${prefix}-icon`, props.classNames?.icon]" :style="props.styles?.icon" x-semi-prop="icon">
                     <slot name="icon">
                         <component :is="iconMap[props.type]" :aria-label="i18n.locale[props.type]" size="large" />
                     </slot>
                 </div>
                 <div :class="`${prefix}-content-body`">
-                    <TypographyTitle v-if="hasTitle()" :class="`${prefix}-title`" component="div" :heading="5" x-semi-prop="title">
+                    <TypographyTitle v-if="hasTitle()" :class="[`${prefix}-title`, props.classNames?.title]" component="div" :heading="5" :style="props.styles?.title" x-semi-prop="title">
                         <slot name="title">{{ props.title }}</slot>
                     </TypographyTitle>
-                    <TypographyParagraph v-if="hasSlotContent($slots.description)" :class="`${prefix}-description`" component="div" x-semi-prop="description">
+                    <TypographyParagraph v-if="hasSlotContent($slots.description)" :class="[`${prefix}-description`, props.classNames?.description]" component="div" :style="props.styles?.description" x-semi-prop="description">
                         <slot name="description" />
                     </TypographyParagraph>
                 </div>
             </div>
-            <IconButton v-if="hasCloseButton()" :aria-label="i18n.locale.close" :class="`${prefix}-close`" size="small" theme="borderless" type="tertiary" @click.stop="remove($event)">
+            <IconButton v-if="hasCloseButton()" :aria-label="i18n.locale.close" :class="[`${prefix}-close`, props.classNames?.close]" size="small" :style="props.styles?.close" theme="borderless" type="tertiary" @click.stop="remove($event)">
                 <template #icon>
                     <slot name="closeIcon">
                         <IconClose x-semi-prop="closeIcon" />
@@ -94,7 +96,7 @@
                 </template>
             </IconButton>
         </div>
-        <div v-if="hasSlotContent($slots.default)" :class="`${prefix}-extra`" x-semi-prop="children">
+        <div v-if="hasSlotContent($slots.default)" :class="[`${prefix}-extra`, props.classNames?.extra]" :style="props.styles?.extra" x-semi-prop="children">
             <slot />
         </div>
     </div>

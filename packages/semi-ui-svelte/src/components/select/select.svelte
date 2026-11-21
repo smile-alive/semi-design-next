@@ -305,7 +305,7 @@
         return `${group?.key ?? ''}:${rowKey(rows[0].option)}`;
     };
 
-    const joinStyles = (...parts: (string | undefined)[]) => {
+    const joinStyles = (...parts: (string | null | undefined)[]) => {
         return parts.filter(Boolean).join('; ') || undefined;
     };
 
@@ -381,6 +381,10 @@
         return {
             id: optionId(index),
             class: option.class,
+            classNames: option.classNames,
+            styles: option.styles,
+            parentClassNames: classNames,
+            parentStyles: styles,
             dataAttrs: getDataAttr(option),
             disabled: option.disabled,
             focused: index === states().focusIndex,
@@ -485,8 +489,8 @@
         {size}
         value={states().inputValue}
         {...inputProps}
-        class={[`${cls}-input`, multiple ? `${cls}-input-multiple` : `${cls}-input-single`, inputProps?.class]}
-        style={multiple ? `width: ${states().inputValue ? `${states().inputValue.length * 16}px` : '2px'}` : inputProps?.style}
+        class={[`${cls}-input`, multiple ? `${cls}-input-multiple` : `${cls}-input-single`, inputProps?.class, classNames?.input]}
+        style={joinStyles(multiple ? `width: ${states().inputValue ? `${states().inputValue.length * 16}px` : '2px'}` : inputProps?.style, styles?.input)}
     />
 {/snippet}
 
@@ -504,7 +508,7 @@
     {#if tag}
         {@render tag(selectedItemProps(item, index))}
     {:else}
-        <Tag closable={!selectedItemProps(item, index).disabled} color="white" onClose={(event) => removeTag(item, event)} size={tagSize} style={inGroup ? undefined : 'max-width: 100%'} tabindex={inGroup ? -1 : undefined}>
+        <Tag class={classNames?.tag} closable={!selectedItemProps(item, index).disabled} color="white" onClose={(event) => removeTag(item, event)} size={tagSize} style={joinStyles(inGroup ? undefined : 'max-width: 100%', styles?.tag)} tabindex={inGroup ? -1 : undefined}>
             {@render tagContent(item, index, ellipsis)}
         </Tag>
     {/if}
@@ -569,8 +573,10 @@
                     [`${cls}-prefix-text`]: prefixKind === 'text',
                     [`${cls}-prefix-icon`]: prefixKind === 'icon',
                 },
+                classNames?.prefix,
             ]}
             id={prefixId}
+            style={styles?.prefix}
             x-semi-prop="prefix,insetLabel"
         >
             {#if prefix}
@@ -580,7 +586,7 @@
             {/if}
         </div>
     {/if}
-    <div class={`${cls}-selection`}>
+    <div class={[`${cls}-selection`, classNames?.content]} style={styles?.content}>
         {#if multiple}
             <div
                 class={[
@@ -594,7 +600,7 @@
                 {#if selectedItems.length}
                     {@render multipleContent()}
                 {:else if placeholder && !states().inputValue}
-                    <span class={[`${cls}-selection-text`, `${cls}-selection-placeholder`]}>{placeholder}</span>
+                    <span class={[`${cls}-selection-text`, `${cls}-selection-placeholder`, classNames?.placeholder]} style={styles?.placeholder}>{placeholder}</span>
                 {/if}
                 {#if filterable && searchInTrigger}
                     {@render triggerSearch()}
@@ -610,8 +616,10 @@
                             [`${cls}-selection-text-hide`]: states().inputValue && states().showInput && searchInTrigger,
                             [`${cls}-selection-text-inactive`]: !states().inputValue && states().showInput && searchInTrigger,
                         },
+                        !hasSingleContent && classNames?.placeholder,
                     ]}
                     id={selectionTextId}
+                    style={hasSingleContent ? undefined : styles?.placeholder}
                     x-semi-prop="placeholder"
                 >
                     {#if singleItem && hasSingleContent}
@@ -639,7 +647,9 @@
                     [`${cls}-suffix-text`]: suffixKind === 'text',
                     [`${cls}-suffix-icon`]: suffixKind === 'icon',
                 },
+                classNames?.suffix,
             ]}
+            style={styles?.suffix}
             x-semi-prop="suffix"
         >
             {@render suffix()}
@@ -686,7 +696,7 @@
         {:else}
             {@render triggerContent()}
             {#if clearable}
-                <button aria-label={locale().locale.clear} bind:this={clearButton} class={`${cls}-clear`} type="button" onclick={foundation.handleClearClick} onkeydown={stopOwnKeys}>
+                <button aria-label={locale().locale.clear} bind:this={clearButton} class={[`${cls}-clear`, classNames?.clear]} style={styles?.clear} type="button" onclick={foundation.handleClearClick} onkeydown={stopOwnKeys}>
                     {#if clearIcon}
                         {@render clearIcon()}
                     {:else}
@@ -695,7 +705,7 @@
                 </button>
             {/if}
             {#if showArrow}
-                <div class={`${cls}-arrow`} x-semi-prop="arrowIcon">
+                <div class={[`${cls}-arrow`, classNames?.arrow]} style={styles?.arrow} x-semi-prop="arrowIcon">
                     {#if arrowIcon}
                         {@render arrowIcon()}
                     {:else}
@@ -722,7 +732,7 @@
         </Option>
     {:else if optionLabel}
         <Option {...optionRowProps(option, index, rowStyle)}>
-            <div class={`${cssClasses.PREFIX_OPTION}-text`} x-semi-prop="optionLabel">
+            <div class={[`${cssClasses.PREFIX_OPTION}-text`, classNames?.itemContent, option.data.classNames?.content]} style={joinStyles(styles?.itemContent, option.data.styles?.content)} x-semi-prop="optionLabel">
                 {@render optionLabel({ option: option.data })}
             </div>
         </Option>
@@ -745,7 +755,7 @@
             </div>
         {/if}
         {#if !searchInTrigger && filterable}
-            <div class={`${cls}-dropdown-search-wrapper`}>
+            <div class={[`${cls}-dropdown-search-wrapper`, classNames?.search]} style={styles?.search}>
                 <Input
                     aria-activedescendant={activeDescendant}
                     aria-autocomplete="list"
@@ -767,7 +777,7 @@
                 />
             </div>
         {/if}
-        <div id={listboxId} {...nameAttrs} aria-multiselectable={multiple} class={[`${cls}-option-list`, { [`${cls}-option-list-chosen`]: states().selections.size }]} role="listbox" style:max-height={toCssLength(maxHeight)} onscrollcapture={foundation.handleListScroll}>
+        <div id={listboxId} {...nameAttrs} aria-multiselectable={multiple} class={[`${cls}-option-list`, { [`${cls}-option-list-chosen`]: states().selections.size }, classNames?.list]} role="listbox" style={joinStyles(`max-height: ${toCssLength(maxHeight)}`, styles?.list)} onscrollcapture={foundation.handleListScroll}>
             {#if innerTopSlot}
                 <div class={`${cls}-option-list-inner-top-slot`} onmouseenter={foundation.handleSlotMouseEnter}>
                     {@render innerTopSlot()}
@@ -779,7 +789,7 @@
                 </div>
             {:else if visibleOptions.length === 0}
                 {#if !emptyHidden}
-                    <Option empty>
+                    <Option class={classNames?.empty} empty style={styles?.empty}>
                         {#if emptyContent}
                             {@render emptyContent()}
                         {:else}
@@ -798,7 +808,7 @@
                     {#if hasTitle(run.group)}
                         {@const titleId = `${selectId}-group-${run.first}`}
                         <div aria-labelledby={titleId} class={`${cls}-group-wrapper`} role="group">
-                            <div class={cssClasses.PREFIX_GROUP} id={titleId} x-semi-prop="groupLabel">
+                            <div class={[cssClasses.PREFIX_GROUP, classNames?.groupLabel]} id={titleId} style={styles?.groupLabel} x-semi-prop="groupLabel">
                                 {#if groupLabel}
                                     {@render groupLabel({ group: run.group })}
                                 {:else}

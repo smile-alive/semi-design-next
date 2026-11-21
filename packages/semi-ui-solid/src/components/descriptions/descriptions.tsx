@@ -26,7 +26,7 @@ type Column = { hidden?: boolean; span?: number } & ({ item: DescriptionsItemPro
 
 function Descriptions(rawProps: DescriptionsProps) {
     const props = useDefaultProps('Descriptions', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'column', 'data', 'layout', 'renderKey', 'renderValue', 'row', 'size']);
+    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'classNames', 'column', 'data', 'layout', 'renderKey', 'renderValue', 'row', 'size', 'styles']);
 
     const resolved = children(() => local.children);
 
@@ -38,7 +38,7 @@ function Descriptions(rawProps: DescriptionsProps) {
         })
     );
 
-    const view = createMemo(() => ({ align: local.align, layout: local.layout }));
+    const view = createMemo(() => ({ align: local.align, layout: local.layout, classNames: local.classNames, styles: local.styles }));
 
     const rows = createMemo(() => {
         if (local.layout !== 'horizontal') {

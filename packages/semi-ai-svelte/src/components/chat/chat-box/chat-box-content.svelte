@@ -8,7 +8,7 @@
 
     const { view, snippets } = getChatContext();
 
-    const wrapClass = $derived(ChatFoundation.getContentClass(message.role, message.status, view.mode));
+    const wrapClass = $derived([ChatFoundation.getContentClass(message.role, message.status, view.mode), view.classNames?.itemContent].filter(Boolean).join(' '));
 </script>
 
 {#snippet defaultContent()}
@@ -18,5 +18,5 @@
 {#if snippets.content}
     {@render snippets.content({ class: wrapClass, defaultContent, message, role })}
 {:else}
-    <div class={wrapClass}>{@render defaultContent()}</div>
+    <div class={wrapClass} style={view.styles?.itemContent}>{@render defaultContent()}</div>
 {/if}

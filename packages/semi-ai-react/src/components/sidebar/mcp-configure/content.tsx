@@ -1,7 +1,7 @@
 import type React from 'react';
 import { type CSSProperties, type ReactNode, Fragment } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { type MCPConfigurePart, cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import MCPConfigureContentFoundation, { type MCPOption, type MCPConfigureContentProps, type MCPConfigureContentState, type MCPConfigureContentAdapter } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
 import { getShowOptions } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
 import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
@@ -32,6 +32,8 @@ export interface MCPConfigureContentReactProps extends MCPConfigureContentProps<
     customOptions?: MCPReactOption[];
     filter?: (inputValue: string, option: MCPReactOption) => boolean;
     style?: CSSProperties;
+    classNames?: Partial<Record<MCPConfigurePart, string>>;
+    styles?: Partial<Record<MCPConfigurePart, CSSProperties>>;
     onStatusChange?: (options: MCPReactOption[], custom: boolean) => void;
     onAddClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     onConfigureClick?: (e: React.MouseEvent<HTMLButtonElement>, option: MCPReactOption) => void;
@@ -40,7 +42,7 @@ export interface MCPConfigureContentReactProps extends MCPConfigureContentProps<
 }
 
 export default function MCPConfigureContent(props: MCPConfigureContentReactProps) {
-    const { options = [], customOptions = [], className, style, placeholder, renderItem } = props;
+    const { options = [], customOptions = [], className, classNames, style, styles, placeholder, renderItem } = props;
 
     const { locale } = useLocale('Sidebar');
 
@@ -63,7 +65,20 @@ export default function MCPConfigureContent(props: MCPConfigureContentReactProps
     const activatedCount = options.filter((option) => option.active).length + customOptions.filter((option) => option.active).length;
 
     // the adornments and showClear are set so global Input defaults cannot add them around the search icon
-    const searchInput = <Input className={isCustom ? undefined : `${prefixCls}-search`} placeholder={placeholder ?? locale.searchPlaceholder} value={inputValue} addonAfter={null} addonBefore={null} showClear={false} prefix={<IconSearch />} suffix={null} onChange={foundation.handleSearch} />;
+    const searchInput = (
+        <Input
+            className={isCustom ? undefined : clsx(`${prefixCls}-search`, classNames?.search)}
+            style={isCustom ? undefined : styles?.search}
+            placeholder={placeholder ?? locale.searchPlaceholder}
+            value={inputValue}
+            addonAfter={null}
+            addonBefore={null}
+            showClear={false}
+            prefix={<IconSearch />}
+            suffix={null}
+            onChange={foundation.handleSearch}
+        />
+    );
 
     let search: ReactNode = searchInput;
 
@@ -78,13 +93,19 @@ export default function MCPConfigureContent(props: MCPConfigureContentReactProps
         const theme = option.active ? 'light' : 'solid';
         const icon = option.active ? <IconMinus /> : <IconPlus />;
         if (!option.disabled) {
-            return <Button type="primary" className={`${prefixCls}-item-button`} aria-label={label} theme={theme} icon={icon} onClick={() => foundation.handleStatusChange(option, !option.active)} />;
+            return <Button type="primary" className={clsx(`${prefixCls}-item-button`, classNames?.itemAction)} style={styles?.itemAction} aria-label={label} theme={theme} icon={icon} onClick={() => foundation.handleStatusChange(option, !option.active)} />;
         }
         // Keeps a focusable trigger so the tooltip reason reaches the keyboard; Button's native disabled leaves the Tab
         // order. Styled as a disabled primary icon-only Button; no click handler since the status cannot change.
         return (
             <Tooltip content={locale.defaultMcpInfo}>
-                <button type="button" className={clsx(buttonCls, `${buttonCls}-${theme}`, `${buttonCls}-disabled`, `${buttonCls}-primary-disabled`, `${buttonCls}-with-icon`, `${buttonCls}-with-icon-only`, `${prefixCls}-item-button`)} aria-disabled="true" aria-label={label}>
+                <button
+                    type="button"
+                    className={clsx(buttonCls, `${buttonCls}-${theme}`, `${buttonCls}-disabled`, `${buttonCls}-primary-disabled`, `${buttonCls}-with-icon`, `${buttonCls}-with-icon-only`, `${prefixCls}-item-button`, classNames?.itemAction)}
+                    style={styles?.itemAction}
+                    aria-disabled="true"
+                    aria-label={label}
+                >
                     <span className={`${buttonCls}-content`}>{icon}</span>
                 </button>
             </Tooltip>
@@ -98,7 +119,7 @@ export default function MCPConfigureContent(props: MCPConfigureContentReactProps
                     {addButton}
                 </Empty>
             ) : (
-                <div className={`${prefixCls}-search ${prefixCls}-search-container`}>
+                <div className={clsx(`${prefixCls}-search ${prefixCls}-search-container`, classNames?.search)} style={styles?.search}>
                     {searchInput}
                     {addButton}
                 </div>
@@ -107,30 +128,40 @@ export default function MCPConfigureContent(props: MCPConfigureContentReactProps
 
     return (
         <div className={clsx(prefixCls, className)} style={style}>
-            <div className={`${prefixCls}-header`}>
+            <div className={clsx(`${prefixCls}-header`, classNames?.toolbar)} style={styles?.toolbar}>
                 <RadioGroup type="button" aria-label={locale.mcpConfigure} value={mode} onChange={(e) => foundation.handleModeChange(e.target.value)}>
                     <Radio value={strings.MCP_MODE.INNER}>{locale.mcpServers}</Radio>
                     <Radio value={strings.MCP_MODE.CUSTOM}>{locale.newMcpAdd}</Radio>
                 </RadioGroup>
-                <span className={`${prefixCls}-header-count`}>
+                <span className={clsx(`${prefixCls}-header-count`, classNames?.count)} style={styles?.count}>
                     {locale.activeMCPNumber} {activatedCount}/{options.length + customOptions.length}
                 </span>
             </div>
             {search}
-            <div className={`${prefixCls}-item-container`}>
+            <div className={clsx(`${prefixCls}-item-container`, classNames?.list)} style={styles?.list}>
                 {showOptions.map((option) => {
                     if (renderItem) {
                         return <Fragment key={option.value}>{renderItem({ custom: isCustom, option })}</Fragment>;
                     }
                     return (
-                        <div key={option.value} className={`${prefixCls}-item`}>
-                            {typeof option.icon === 'string' ? <img className={`${prefixCls}-item-sign`} alt="" src={option.icon} /> : <div className={`${prefixCls}-item-sign`}>{option.icon}</div>}
+                        <div key={option.value} className={clsx(`${prefixCls}-item`, classNames?.item)} style={styles?.item}>
+                            {typeof option.icon === 'string' ? (
+                                <img className={clsx(`${prefixCls}-item-sign`, classNames?.itemIcon)} style={styles?.itemIcon} alt="" src={option.icon} />
+                            ) : (
+                                <div className={clsx(`${prefixCls}-item-sign`, classNames?.itemIcon)} style={styles?.itemIcon}>
+                                    {option.icon}
+                                </div>
+                            )}
                             <div className={`${prefixCls}-item-content`}>
-                                <div className={`${prefixCls}-item-content-label`}>{option.label}</div>
-                                <div className={`${prefixCls}-item-content-desc`}>{option.desc}</div>
+                                <div className={clsx(`${prefixCls}-item-content-label`, classNames?.itemTitle)} style={styles?.itemTitle}>
+                                    {option.label}
+                                </div>
+                                <div className={clsx(`${prefixCls}-item-content-desc`, classNames?.itemDescription)} style={styles?.itemDescription}>
+                                    {option.desc}
+                                </div>
                             </div>
-                            {option.configure && <Button className={`${prefixCls}-item-button ${prefixCls}-item-button-configure`} aria-label={locale.configure} icon={<IconSetting />} onClick={(e) => foundation.onConfigureButtonClick(e, option)} />}
-                            {isCustom && <Button className={`${prefixCls}-item-button ${prefixCls}-item-button-configure`} aria-label={locale.edit} icon={<IconEdit />} onClick={(e) => foundation.onEditButtonClick(e, option)} />}
+                            {option.configure && <Button className={clsx(`${prefixCls}-item-button ${prefixCls}-item-button-configure`, classNames?.itemAction)} style={styles?.itemAction} aria-label={locale.configure} icon={<IconSetting />} onClick={(e) => foundation.onConfigureButtonClick(e, option)} />}
+                            {isCustom && <Button className={clsx(`${prefixCls}-item-button ${prefixCls}-item-button-configure`, classNames?.itemAction)} style={styles?.itemAction} aria-label={locale.edit} icon={<IconEdit />} onClick={(e) => foundation.onEditButtonClick(e, option)} />}
                             {renderStatusButton(option)}
                         </div>
                     );

@@ -20,6 +20,7 @@
     const {
         links = [],
         autoCollapse = defaults('autoCollapse', false),
+        classNames = defaults('classNames'),
         defaultAnchor = defaults('defaultAnchor', ''),
         getContainer = defaults('getContainer'),
         maxHeight = defaults('maxHeight', strings.MAX_HEIGHT),
@@ -31,6 +32,7 @@
         scrollIntoViewOptions = defaults('scrollIntoViewOptions'),
         showTooltip = defaults('showTooltip', false),
         size = defaults('size', 'default'),
+        styles = defaults('styles'),
         targetOffset = defaults('targetOffset', 0),
         onChange,
         onClick,
@@ -100,6 +102,12 @@
         get title() {
             return title;
         },
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
         onClick: foundation.handleClick,
     });
 
@@ -134,10 +142,10 @@
 
 <div {...rest} aria-label={rest['aria-label'] || locale().locale.label} bind:this={root} class={[prefixCls, rest.class, `${prefixCls}-size-${size}`]} role="navigation" {style}>
     <div class={`${prefixCls}-rail-wrapper`}>
-        <div aria-hidden="true" class={[`${prefixCls}-slide`, `${prefixCls}-slide-${railTheme}`]}>
-            <span class={[`${prefixCls}-slide-bar`, `${prefixCls}-slide-bar-${size}`, `${prefixCls}-slide-bar-${railTheme}`, { [`${prefixCls}-slide-bar-active`]: states().activeLink }]} style={`top: ${states().slideBarTop}`}></span>
+        <div aria-hidden="true" class={[`${prefixCls}-slide`, `${prefixCls}-slide-${railTheme}`, classNames?.rail]} style={styles?.rail}>
+            <span class={[`${prefixCls}-slide-bar`, `${prefixCls}-slide-bar-${size}`, `${prefixCls}-slide-bar-${railTheme}`, { [`${prefixCls}-slide-bar-active`]: states().activeLink }, classNames?.indicator]} style={[`top: ${states().slideBarTop}`, styles?.indicator].filter(Boolean).join('; ')}></span>
         </div>
-        <div bind:this={linkWrapper} class={`${prefixCls}-link-wrapper`} role="list">
+        <div bind:this={linkWrapper} class={[`${prefixCls}-link-wrapper`, classNames?.list]} role="list" style={styles?.list}>
             {#each links as item, index (index)}
                 <LinkItem {item} level={1} />
             {/each}

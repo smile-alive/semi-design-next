@@ -4,6 +4,9 @@ export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-backtop`,
 };
 
+/** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
+export type BackTopPart = 'body';
+
 export const numbers = {
     DEFAULT_VISIBILITY_HEIGHT: 400, // scroll distance past which the button shows, unit: px
     DEFAULT_DURATION: 450, // of the scroll back to the top, unit: ms

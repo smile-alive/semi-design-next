@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { computed, useTemplateRef, type StyleValue, type VNode } from 'vue';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+    import { computed, useTemplateRef, type ClassValue, type StyleValue, type VNode } from 'vue';
+    import { cssClasses, numbers, strings, type CascaderPart } from '@fibrae/semi-foundation/components/cascader/constants';
     import CascaderFoundation, { type BasicData } from '@fibrae/semi-foundation/components/cascader/foundation';
     import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
     import { IconChevronRight, IconTick } from '@fibrae/semi-icons-vue';
@@ -41,6 +41,8 @@
         /** the option the arrow keys are on, pointed at by the combobox's aria-activedescendant */
         keyboardKey: string | null;
         optionId: (key: string) => string;
+        classNames?: Partial<Record<CascaderPart, ClassValue>>;
+        styles?: Partial<Record<CascaderPart, StyleValue>>;
     }>();
 
     const emit = defineEmits<{
@@ -99,6 +101,7 @@
             [`${prefix}-disabled`]: item.data.disabled,
             [`${prefix}-focused`]: item.key === props.keyboardKey,
         },
+        props.classNames?.item,
     ];
 
     const resultClass = (item: SearchData) => [
@@ -109,6 +112,7 @@
             [`${prefix}-select`]: props.selectedKeys.has(item.key) && !props.multiple,
             [`${prefix}-focused`]: item.key === props.keyboardKey,
         },
+        props.classNames?.item,
     ];
 
     const optionAttrs = (item: SearchData, rowStyle?: StyleValue) => ({
@@ -118,6 +122,9 @@
         'aria-selected': props.multiple ? props.checkedKeys.has(item.key) : props.selectedKeys.has(item.key),
         ...(rowStyle ? { style: rowStyle } : {}),
     });
+
+    // the caller's style before the row's: the virtual row's position must win
+    const rowAttrs = (item: SearchData, rowStyle?: StyleValue) => ({ ...optionAttrs(item, rowStyle), style: [props.styles?.item, rowStyle] });
 
     const filterNodes = (item: SearchData): KeyedNode[] | null => {
         if (!slots.filterItem) {
@@ -159,7 +166,7 @@
 <template>
     <!-- the id stays for the combobox's aria-controls; with nothing to choose there is no tree or listbox -->
     <div v-if="isEmpty" :id="props.id" :class="[`${prefix}-lists`, `${prefix}-lists-empty`]">
-        <div v-if="!emptyHidden()" :class="[prefix, `${prefix}-empty`]">
+        <div v-if="!emptyHidden()" :class="[prefix, `${prefix}-empty`, props.classNames?.empty]" :style="props.styles?.empty">
             <span :class="`${prefix}-label`" x-semi-prop="emptyContent">
                 <slot name="emptyContent">{{ locale.locale.emptyText }}</slot>
             </span>
@@ -171,7 +178,7 @@
                 v-if="props.virtualize"
                 ref="virtualList"
                 :height="props.virtualize.height ?? numbers.LIST_HEIGHT"
-                :innerAttrs="{ class: `${prefix}-list`, role: 'none' }"
+                :innerAttrs="{ class: [`${prefix}-list`, props.classNames?.list], style: props.styles?.list, role: 'none' }"
                 innerTag="ul"
                 :itemCount="results.length"
                 :itemSize="props.virtualize.itemSize"
@@ -183,13 +190,13 @@
                     <template v-for="{ item, nodes } in [resultRow(results[index])]" :key="item.key">
                         <component :is="nodes[0][0]" v-if="isOneElement(nodes)" v-bind="optionAttrs(item, rowStyle)" />
                         <!-- the combobox handles the keys: it points at this option with aria-activedescendant -->
-                        <li v-else v-bind="optionAttrs(item, rowStyle)" :class="resultClass(item)" @click="handleClick($event, item)">
+                        <li v-else v-bind="rowAttrs(item, rowStyle)" :class="resultClass(item)" @click="handleClick($event, item)">
                             <template v-if="nodes">
                                 <component :is="node" v-for="[node, key] in nodes" :key="key" />
                             </template>
-                            <span v-else :class="`${prefix}-label`">
+                            <span v-else :class="[`${prefix}-label`, props.classNames?.itemContent]" :style="props.styles?.itemContent">
                                 <Checkbox v-if="props.multiple" aria-hidden="true" :class="`${prefix}-label-checkbox`" :disabled="item.disabled" :indeterminate="props.halfCheckedKeys.has(item.key)" :modelValue="props.checkedKeys.has(item.key)" :tabindex="-1" @change="handleCheck($event, item)" />
-                                <span v-else aria-hidden="true" :class="[`${prefix}-icon`, `${prefix}-icon-empty`]" />
+                                <span v-else aria-hidden="true" :class="[`${prefix}-icon`, `${prefix}-icon-empty`, props.classNames?.itemIcon]" :style="props.styles?.itemIcon" />
                                 <template v-for="(part, i) in highlightParts(item.searchText, props.keyword, props.separator)" :key="i">
                                     <span v-if="part.match" :class="`${prefix}-label-highlight`">{{ part.text }}</span>
                                     <template v-else>{{ part.text }}</template>
@@ -199,17 +206,17 @@
                     </template>
                 </template>
             </VirtualList>
-            <ul v-else :class="`${prefix}-list`" role="none">
+            <ul v-else :class="[`${prefix}-list`, props.classNames?.list]" role="none" :style="props.styles?.list">
                 <template v-for="{ item, nodes } in results.map(resultRow)" :key="item.key">
                     <component :is="nodes[0][0]" v-if="isOneElement(nodes)" v-bind="optionAttrs(item)" />
                     <!-- the combobox handles the keys: it points at this option with aria-activedescendant -->
-                    <li v-else v-bind="optionAttrs(item)" :class="resultClass(item)" @click="handleClick($event, item)">
+                    <li v-else v-bind="rowAttrs(item)" :class="resultClass(item)" @click="handleClick($event, item)">
                         <template v-if="nodes">
                             <component :is="node" v-for="[node, key] in nodes" :key="key" />
                         </template>
-                        <span v-else :class="`${prefix}-label`">
+                        <span v-else :class="[`${prefix}-label`, props.classNames?.itemContent]" :style="props.styles?.itemContent">
                             <Checkbox v-if="props.multiple" aria-hidden="true" :class="`${prefix}-label-checkbox`" :disabled="item.disabled" :indeterminate="props.halfCheckedKeys.has(item.key)" :modelValue="props.checkedKeys.has(item.key)" :tabindex="-1" @change="handleCheck($event, item)" />
-                            <span v-else aria-hidden="true" :class="[`${prefix}-icon`, `${prefix}-icon-empty`]" />
+                            <span v-else aria-hidden="true" :class="[`${prefix}-icon`, `${prefix}-icon-empty`, props.classNames?.itemIcon]" :style="props.styles?.itemIcon" />
                             <template v-for="(part, i) in highlightParts(item.searchText, props.keyword, props.separator)" :key="i">
                                 <span v-if="part.match" :class="`${prefix}-label-highlight`">{{ part.text }}</span>
                                 <template v-else>{{ part.text }}</template>
@@ -224,7 +231,7 @@
             carry the hierarchy. Owning the next list as a group (aria-owns) would make it part of the branch's name.
         -->
         <template v-else>
-            <ul v-for="column in columns" :key="column.items[0].key" :class="`${prefix}-list`" role="none" @scroll="emit('listScroll', $event, column.level)">
+            <ul v-for="column in columns" :key="column.items[0].key" :class="[`${prefix}-list`, props.classNames?.list]" role="none" :style="props.styles?.list" @scroll="emit('listScroll', $event, column.level)">
                 <!-- the combobox handles the keys: it points at this option with aria-activedescendant -->
                 <li
                     v-for="{ item, index, state } in column.items.map(treeRow)"
@@ -240,13 +247,14 @@
                     :aria-setsize="column.items.length"
                     :class="treeItemClass(item, state)"
                     role="treeitem"
+                    :style="props.styles?.item"
                     @click="handleClick($event, item)"
                     @mouseenter="handleHover($event, item)"
                 >
-                    <span :class="`${prefix}-label`">
+                    <span :class="[`${prefix}-label`, props.classNames?.itemContent]" :style="props.styles?.itemContent">
                         <Checkbox v-if="props.multiple" aria-hidden="true" :class="`${prefix}-label-checkbox`" :disabled="item.data.disabled" :indeterminate="props.halfCheckedKeys.has(item.key)" :modelValue="props.checkedKeys.has(item.key)" :tabindex="-1" @change="handleCheck($event, item)" />
-                        <IconTick v-else-if="state.selected" :class="[`${prefix}-icon`, `${prefix}-icon-active`]" />
-                        <span v-else aria-hidden="true" :class="[`${prefix}-icon`, `${prefix}-icon-empty`]" />
+                        <IconTick v-else-if="state.selected" :class="[`${prefix}-icon`, `${prefix}-icon-active`, props.classNames?.itemIcon]" :style="props.styles?.itemIcon" />
+                        <span v-else aria-hidden="true" :class="[`${prefix}-icon`, `${prefix}-icon-empty`, props.classNames?.itemIcon]" :style="props.styles?.itemIcon" />
                         <span>
                             <slot :item="item.data" name="label">{{ item.data.label }}</slot>
                         </span>
@@ -255,7 +263,7 @@
                         <!-- the option carries the state as aria-busy; the spinner's own name would join the option's name -->
                         <span v-if="state.loading" aria-hidden="true"><Spin :class="`${prefix}-spin-icon ${prefix}-icon-left`" /></span>
                         <slot v-else name="expandIcon">
-                            <IconChevronRight :class="[`${prefix}-icon`, `${prefix}-icon-expand`, `${prefix}-icon-left`]" />
+                            <IconChevronRight :class="[`${prefix}-icon`, `${prefix}-icon-expand`, `${prefix}-icon-left`, props.classNames?.itemIcon]" :style="props.styles?.itemIcon" />
                         </slot>
                     </template>
                 </li>

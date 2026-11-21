@@ -2,7 +2,7 @@ import { children, createUniqueId, Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { isAlertType } from '@fibrae/semi-foundation/base';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+import { cssClasses, numbers, type NotificationPart } from '@fibrae/semi-foundation/components/notification/constants';
 import NotificationFoundation, { type NoticeAdapter, type NoticeProps as FoundationNoticeProps, type NoticeState } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-solid';
@@ -29,10 +29,12 @@ export type NotificationNode = JSX.Element | (() => JSX.Element);
 export interface NoticeProps extends Omit<FoundationNoticeProps, 'className' | 'content' | 'icon' | 'onClick' | 'style' | 'title'>, ElementProps<'div', 'children' | 'content' | 'onClose' | 'ref' | 'style' | 'title'> {
     [attribute: `data-${string}`]: string | number | boolean | undefined;
     title?: NotificationNode;
+    classNames?: Partial<Record<NotificationPart, string>>;
     content?: NotificationNode;
     /** Replaces the icon of `type`; a Semi icon without a size of its own is sized large */
     icon?: NotificationNode;
     style?: JSX.CSSProperties | string;
+    styles?: Partial<Record<NotificationPart, JSX.CSSProperties | string>>;
     /** Offsets of the list the notification lands in; the foundation's NoticeProps does not declare them */
     top?: ConfigProps['top'];
     bottom?: ConfigProps['bottom'];
@@ -69,7 +71,7 @@ export default function Notice(rawProps: NoticeProps) {
     const props = useDefaultProps('Notification', rawProps, defaultProps);
 
     // options from Notification.config() and the list's own options ride along and must stay off the DOM
-    const [local, rest] = splitProps(props, ['bottom', 'class', 'close', 'content', 'dir', 'direction', 'duration', 'getPopupContainer', 'icon', 'id', 'left', 'onClose', 'onCloseClick', 'position', 'right', 'showClose', 'stack', 'style', 'theme', 'title', 'top', 'type', 'zIndex']);
+    const [local, rest] = splitProps(props, ['bottom', 'class', 'classNames', 'close', 'content', 'dir', 'direction', 'duration', 'getPopupContainer', 'icon', 'id', 'left', 'onClose', 'onCloseClick', 'position', 'right', 'showClose', 'stack', 'style', 'styles', 'theme', 'title', 'top', 'type', 'zIndex']);
 
     const config = useConfig();
     const locale = useLocale('Notification');
@@ -114,7 +116,7 @@ export default function Notice(rawProps: NoticeProps) {
         >
             <div>
                 <Show when={hasContent(icon()) || typeIcon()}>
-                    <div class={clsx(`${prefixCls}-icon`, `${prefixCls}-${local.type}`)} x-semi-prop="icon">
+                    <div class={clsx(`${prefixCls}-icon`, `${prefixCls}-${local.type}`, local.classNames?.icon)} style={local.styles?.icon} x-semi-prop="icon">
                         <Show when={hasContent(icon())} fallback={<Dynamic component={typeIcon()} size="large" />}>
                             {icon()}
                         </Show>
@@ -124,18 +126,18 @@ export default function Notice(rawProps: NoticeProps) {
             <div class={`${prefixCls}-inner`}>
                 <div class={`${prefixCls}-content-wrapper`}>
                     <Show when={hasContent(title())}>
-                        <div id={titleId} class={`${prefixCls}-title`} x-semi-prop="title">
+                        <div id={titleId} class={clsx(`${prefixCls}-title`, local.classNames?.title)} style={local.styles?.title} x-semi-prop="title">
                             {title()}
                         </div>
                     </Show>
                     <Show when={hasContent(content())}>
-                        <div class={`${prefixCls}-content`} x-semi-prop="content">
+                        <div class={clsx(`${prefixCls}-content`, local.classNames?.content)} style={local.styles?.content} x-semi-prop="content">
                             {content()}
                         </div>
                     </Show>
                 </div>
                 <Show when={local.showClose}>
-                    <IconButton type="tertiary" class={`${prefixCls}-icon-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={foundation.clickClose} />
+                    <IconButton type="tertiary" class={clsx(`${prefixCls}-icon-close`, local.classNames?.close)} style={local.styles?.close} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={foundation.clickClose} />
                 </Show>
             </div>
         </div>

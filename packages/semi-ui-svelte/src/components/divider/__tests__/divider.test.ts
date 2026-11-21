@@ -30,6 +30,13 @@ describe('Svelte Divider', () => {
         expect(view.container.firstElementChild).toHaveTextContent(/^title$/);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { view } = setup({ classNames: { content: 'my-content' }, styles: { content: 'order: 1' } }, 'text');
+        const content = getElement('.semi-divider_inner-text', view.container);
+        expect(content).toHaveClass('my-content');
+        expect(content).toHaveStyle({ order: '1' });
+    });
+
     it('align 对齐', () => {
         const [center, left, right] = [undefined, 'left', 'right'].map((align) => {
             const { divider } = setup({ align: align as DividerProps['align'] }, 'text');

@@ -1,7 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性        | 说明                         | 类型          | 默认值 |
-| ----------- | ---------------------------- | ------------- | ------ |
-| avatar      | 头像，位于标题与描述的左侧。 | `JSX.Element` | -      |
-| description | 描述内容，位于标题之下。     | `JSX.Element` | -      |
-| title       | 标题内容。                   | `JSX.Element` | -      |
+| 属性        | 说明                                                                                                                   | 类型                                                                                                        | 默认值 |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------ |
+| avatar      | 头像，位于标题与描述的左侧。                                                                                           | `JSX.Element`                                                                                               | -      |
+| classNames  | 内部各部位的类名，键为 avatar、section、title、description，与组件自带的类名合并；section 是标题与描述所在的文字区域。 | <ApiType detail={"Partial\u003cRecord\u003cCardMetaPart, string>>"}>Type</ApiType>                          | -      |
+| description | 描述内容，位于标题之下。                                                                                               | `JSX.Element`                                                                                               | -      |
+| styles      | 内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。                 | <ApiType detail={"Partial\u003cRecord\u003cCardMetaPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |
+| title       | 标题内容。                                                                                                             | `JSX.Element`                                                                                               | -      |

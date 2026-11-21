@@ -28,7 +28,7 @@ class ContainerRuntime {
 }
 
 export default function Container(props: ContainerReactProps) {
-    const { ref, containerRef, title, renderHeader, children, style, className, visible, motion = true, resizable = true, minWidth = 150, maxWidth, defaultSize, showClose = true, onCancel, afterVisibleChange, closeOnEsc, ...rest } = props;
+    const { ref, containerRef, classNames, styles, title, renderHeader, children, style, className, visible, motion = true, resizable = true, minWidth = 150, maxWidth, defaultSize, showClose = true, onCancel, afterVisibleChange, closeOnEsc, ...rest } = props;
 
     const { locale } = useLocale('Sidebar');
 
@@ -56,9 +56,11 @@ export default function Container(props: ContainerReactProps) {
     const setRoot = useMergedRef(ref, containerRef, runtime.attachRoot);
 
     const header = renderHeader?.() || (
-        <div className={`${prefixCls}-container-header`}>
-            <div className={`${prefixCls}-container-header-title`}>{title}</div>
-            {showClose && <Button type="tertiary" className={`${prefixCls}-container-header-closeBtn`} aria-label={locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={onCancel} />}
+        <div className={clsx(`${prefixCls}-container-header`, classNames?.header)} style={styles?.header}>
+            <div className={clsx(`${prefixCls}-container-header-title`, classNames?.title)} style={styles?.title}>
+                {title}
+            </div>
+            {showClose && <Button type="tertiary" className={clsx(`${prefixCls}-container-header-closeBtn`, classNames?.close)} style={styles?.close} aria-label={locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={onCancel} />}
         </div>
     );
 
@@ -92,7 +94,9 @@ export default function Container(props: ContainerReactProps) {
                 const content = (
                     <div role={namedRole(rest)} {...rest} ref={setRoot} className={clsx(`${prefixCls}-container`, className, animationClassName)} style={{ ...style, ...animationStyle }} {...animationEventsNeedBind}>
                         {header}
-                        <div className={`${prefixCls}-container-content`}>{children}</div>
+                        <div className={clsx(`${prefixCls}-container-content`, classNames?.content)} style={styles?.content}>
+                            {children}
+                        </div>
                     </div>
                 );
                 return resizable ? (

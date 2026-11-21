@@ -17,7 +17,7 @@ const defaultProps = {
 
 export default function FloatButton(rawProps: FloatButtonProps) {
     const props = useDefaultProps('FloatButton', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['class', 'colorful', 'size', 'icon', 'badge', 'shape', 'disabled']);
+    const [local, rest] = splitProps(props, ['class', 'classNames', 'styles', 'colorful', 'size', 'icon', 'badge', 'shape', 'disabled']);
 
     const icon = children(() => local.icon);
 
@@ -25,12 +25,17 @@ export default function FloatButton(rawProps: FloatButtonProps) {
     // button or link takes phrasing content only.
     const body = () => (
         <span
-            class={clsx(`${prefixCls}-body`, {
-                [`${prefixCls}-${local.shape}`]: local.shape,
-                [`${prefixCls}-colorful`]: local.colorful,
-                [`${prefixCls}-disabled`]: local.disabled,
-                [`${prefixCls}-${local.size}`]: local.size,
-            })}
+            class={clsx(
+                `${prefixCls}-body`,
+                {
+                    [`${prefixCls}-${local.shape}`]: local.shape,
+                    [`${prefixCls}-colorful`]: local.colorful,
+                    [`${prefixCls}-disabled`]: local.disabled,
+                    [`${prefixCls}-${local.size}`]: local.size,
+                },
+                local.classNames?.body
+            )}
+            style={local.styles?.body}
         >
             {icon()}
         </span>

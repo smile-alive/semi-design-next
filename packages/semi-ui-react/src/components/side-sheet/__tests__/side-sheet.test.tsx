@@ -48,8 +48,8 @@ describe('SideSheet', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        const parts = ['mask', 'content', 'header', 'body', 'footer'] as const;
-        const selectors = { mask: 'mask', content: 'inner', header: 'header', body: 'body', footer: 'footer' };
+        const parts = ['mask', 'content', 'header', 'title', 'close', 'body', 'footer'] as const;
+        const selectors = { mask: 'mask', content: 'inner', header: 'header', title: 'title', close: 'close', body: 'body', footer: 'footer' };
         renderSideSheet({
             visible: true,
             title: 'T',

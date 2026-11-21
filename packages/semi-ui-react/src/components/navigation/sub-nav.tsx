@@ -84,21 +84,27 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
     let withTransition = false;
     let toggleIconType: React.ReactNode = '';
 
-    const { mode, isInSubNav, isCollapsed, subNavMotion, limitIndent, toggleIconPosition, subNavCloseDelay, subNavOpenDelay } = context;
+    const { mode, isInSubNav, isCollapsed, subNavMotion, limitIndent, toggleIconPosition, subNavCloseDelay, subNavOpenDelay, classNames: navClassNames, styles: navStyles } = context;
     const isOpen = Boolean(context.openKeys?.includes(itemKey));
     const isSelected = itemKey != null && (context.selectedKeys ?? []).includes(itemKey);
     const isHorizontal = mode === strings.MODE_HORIZONTAL;
 
-    const renderIcon = (iconNode: React.ReactNode, pos: string, withTransition: boolean, isToggleIcon: boolean, key: number | string) => {
+    // the blank indent slots are not the icon, so they take no icon part
+    const renderIcon = (iconNode: React.ReactNode, pos: string, withTransition: boolean, isToggleIcon: boolean, key: number | string, isPlaceholder = false) => {
         const iconSize = pos === strings.ICON_POS_RIGHT ? 'default' : 'large';
 
-        const iconCls = clsx(`${cssClasses.PREFIX}-item-icon`, {
-            [`${cssClasses.PREFIX}-item-icon-toggle-${toggleIconPosition}`]: isToggleIcon,
-            [`${cssClasses.PREFIX}-item-icon-info`]: !isToggleIcon,
-        });
+        const iconCls = clsx(
+            `${cssClasses.PREFIX}-item-icon`,
+            {
+                [`${cssClasses.PREFIX}-item-icon-toggle-${toggleIconPosition}`]: isToggleIcon,
+                [`${cssClasses.PREFIX}-item-icon-info`]: !isToggleIcon,
+            },
+            !isPlaceholder && (isToggleIcon ? [navClassNames?.itemToggleIcon, classNames?.toggleIcon] : [navClassNames?.itemIcon, classNames?.icon])
+        );
+        const iconStyle = isPlaceholder ? undefined : isToggleIcon ? { ...navStyles?.itemToggleIcon, ...styles?.toggleIcon } : { ...navStyles?.itemIcon, ...styles?.icon };
 
         return (
-            <i key={key} className={iconCls}>
+            <i key={key} className={iconCls} style={iconStyle}>
                 {withTransition && isValidElement(iconNode) ? (
                     <CSSAnimation startClassName={`${cssClasses.PREFIX}-icon-rotate-${isOpen ? '180' : '0'}`} animationState={isOpen ? 'enter' : 'leave'}>
                         {({ animationClassName }) => fitNavIcon(iconNode, iconSize, animationClassName)}
@@ -126,13 +132,20 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
 
     let titleDiv: React.ReactNode;
 
-    const placeholderIcons = Array.from({ length: countPlaceholderIcons({ mode, limitIndent, isCollapsed, hasIcon: Boolean(icon), indent, level }) }, (_, index) => renderIcon(null, strings.ICON_POS_RIGHT, false, false, index));
+    const placeholderIcons = Array.from({ length: countPlaceholderIcons({ mode, limitIndent, isCollapsed, hasIcon: Boolean(icon), indent, level }) }, (_, index) => renderIcon(null, strings.ICON_POS_RIGHT, false, false, index, true));
     const isPopup = Boolean(isCollapsed) || isHorizontal;
 
-    const titleCls = clsx(`${cssClasses.PREFIX}-sub-title`, {
-        [`${cssClasses.PREFIX}-sub-title-selected`]: isSelected,
-        [`${cssClasses.PREFIX}-sub-title-disabled`]: disabled,
-    });
+    const titleCls = clsx(
+        `${cssClasses.PREFIX}-sub-title`,
+        {
+            [`${cssClasses.PREFIX}-sub-title-selected`]: isSelected,
+            [`${cssClasses.PREFIX}-sub-title-disabled`]: disabled,
+        },
+        navClassNames?.subNavTitle,
+        classNames?.title
+    );
+
+    const titleStyle = { ...navStyles?.subNavTitle, ...styles?.title };
 
     // a span: a button takes phrasing content only
     const titleInner = (
@@ -140,7 +153,9 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
             {placeholderIcons}
             {toggleIconPosition === strings.TOGGLE_ICON_LEFT && renderIcon(toggleIconType, strings.ICON_POS_RIGHT, withTransition, true, 'key-toggle-position-left')}
             {Boolean(icon || indent || (isInSubNav && !isHorizontal)) && renderIcon(icon, strings.ICON_POS_LEFT, false, false, 'key-inSubNav-position-left')}
-            <span className={`${cssClasses.PREFIX}-item-text`}>{text}</span>
+            <span className={clsx(`${cssClasses.PREFIX}-item-text`, navClassNames?.itemText, classNames?.text)} style={{ ...navStyles?.itemText, ...styles?.text }}>
+                {text}
+            </span>
             {toggleIconPosition === strings.TOGGLE_ICON_RIGHT && renderIcon(toggleIconType, strings.ICON_POS_RIGHT, withTransition, true, 'key-toggle-position-right')}
         </span>
     );
@@ -150,7 +165,7 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
     if (isPopup && isInSubNav) {
         // Dropdown adds aria-haspopup and aria-expanded to the menuitem and moves focus with the arrow keys
         titleDiv = (
-            <div {...ariaProps} ref={handoverFocus} className={titleCls} aria-disabled={disabled} role="menuitem" tabIndex={-1} onClick={handleTitleClick}>
+            <div {...ariaProps} ref={handoverFocus} className={titleCls} style={titleStyle} aria-disabled={disabled} role="menuitem" tabIndex={-1} onClick={handleTitleClick}>
                 {titleInner}
             </div>
         );
@@ -158,7 +173,7 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
         // APG disclosure navigation; a popup title gets aria-haspopup and aria-expanded from Dropdown
         titleDiv = (
             // the list is unmounted while closed, so an id reference to it only exists when it is open
-            <button {...ariaProps} ref={handoverFocus} type="button" className={titleCls} aria-controls={!isPopup && isOpen ? subListId : undefined} aria-disabled={disabled || undefined} aria-expanded={isPopup ? undefined : isOpen} onClick={handleTitleClick}>
+            <button {...ariaProps} ref={handoverFocus} type="button" className={titleCls} style={titleStyle} aria-controls={!isPopup && isOpen ? subListId : undefined} aria-disabled={disabled || undefined} aria-expanded={isPopup ? undefined : isOpen} onClick={handleTitleClick}>
                 {titleInner}
             </button>
         );
@@ -169,10 +184,16 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
     const subUl = (
         <ul
             id={subListId}
-            className={clsx(`${cssClasses.PREFIX}-sub`, {
-                [`${cssClasses.PREFIX}-sub-open`]: isOpen,
-                [`${cssClasses.PREFIX}-sub-popover`]: isPopup,
-            })}
+            className={clsx(
+                `${cssClasses.PREFIX}-sub`,
+                {
+                    [`${cssClasses.PREFIX}-sub-open`]: isOpen,
+                    [`${cssClasses.PREFIX}-sub-popover`]: isPopup,
+                },
+                navClassNames?.subNavList,
+                classNames?.list
+            )}
+            style={{ ...navStyles?.subNavList, ...styles?.list }}
         >
             {children}
         </ul>
@@ -200,11 +221,11 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
     } else if (isPopup && !disabled) {
         // defaults first so the user's dropdownProps win; only what Nav controls is written after them
         const dropdownProps: DropdownProps = { trigger: 'hover', ...(userDropdownProps ?? subDropdownProps) };
-        if (styles?.dropdown) {
-            dropdownProps.style = styles.dropdown;
+        if (navStyles?.subNavDropdown || styles?.dropdown) {
+            dropdownProps.style = { ...dropdownProps.style, ...navStyles?.subNavDropdown, ...styles?.dropdown };
         }
-        if (classNames?.dropdown) {
-            dropdownProps.classNames = { ...dropdownProps.classNames, content: clsx(dropdownProps.classNames?.content, classNames.dropdown) };
+        if (navClassNames?.subNavDropdown || classNames?.dropdown) {
+            dropdownProps.classNames = { ...dropdownProps.classNames, content: clsx(dropdownProps.classNames?.content, navClassNames?.subNavDropdown, classNames?.dropdown) };
         }
         titleDiv = (
             <Dropdown
@@ -229,8 +250,8 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
         <NavItemShell
             {...rest}
             ref={setItemRef}
-            className={clsx(`${cssClasses.PREFIX}-sub-wrap`, className)}
-            style={style}
+            className={clsx(`${cssClasses.PREFIX}-sub-wrap`, navClassNames?.subNav, className)}
+            style={{ ...navStyles?.subNav, ...style }}
             disabled={disabled}
             isCollapsed={isCollapsed}
             isSubNav

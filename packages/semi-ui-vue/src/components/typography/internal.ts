@@ -1,9 +1,12 @@
-import type { Component, StyleValue } from 'vue';
+import type { ClassValue, Component, StyleValue } from 'vue';
+import type { TypographyTextPart } from '@fibrae/semi-foundation/components/typography/constants';
 import type { ExpandButton } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import type { KeyedNode } from '../../utils/index';
 import type { Ellipsis, TypographyBaseSize, TypographyCommonProps } from './interface';
 
 export interface TypographyBaseProps extends TypographyCommonProps {
+    classNames?: Partial<Record<TypographyTextPart, ClassValue>>;
+    styles?: Partial<Record<TypographyTextPart, StyleValue>>;
     code?: boolean;
     ellipsis?: Ellipsis | boolean;
     size?: TypographyBaseSize;
@@ -39,6 +42,8 @@ export interface ContentProps {
     /** The span around the text inside a link, or undefined without a link */
     linkClass?: unknown;
     iconSize: 'small' | 'default';
+    classNames?: TypographyBaseProps['classNames'];
+    styles?: TypographyBaseProps['styles'];
     /** The expand or collapse button; none when undefined */
     action?: ExpandButton;
     copy: false | ResolvedCopyConfig;

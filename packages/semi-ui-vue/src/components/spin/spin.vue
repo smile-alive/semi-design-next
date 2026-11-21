@@ -67,11 +67,11 @@
         :tabindex="isBlocked() ? -1 : undefined"
     >
         <output v-if="loading" :aria-label="locale.locale.loading" :class="`${prefixCls}-wrapper`">
-            <div v-if="$slots.indicator" :class="`${prefixCls}-animate`" x-semi-prop="indicator">
+            <div v-if="$slots.indicator" :class="[`${prefixCls}-animate`, props.classNames?.indicator]" :style="props.styles?.indicator" x-semi-prop="indicator">
                 <slot name="indicator" />
             </div>
-            <SpinIcon v-else />
-            <div v-if="$slots.tip" x-semi-prop="tip">
+            <SpinIcon v-else :class="props.classNames?.indicator" :style="props.styles?.indicator" />
+            <div v-if="$slots.tip" :class="props.classNames?.tip" :style="props.styles?.tip" x-semi-prop="tip">
                 <slot name="tip" />
             </div>
         </output>

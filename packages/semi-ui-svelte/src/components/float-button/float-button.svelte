@@ -11,12 +11,14 @@
 
     let {
         badge = defaults('badge'),
+        classNames = defaults('classNames'),
         colorful = defaults('colorful', false),
         disabled = defaults('disabled', false),
         href = defaults('href'),
         rel = defaults('rel'),
         shape = defaults('shape', 'round'),
         size = defaults('size', 'default'),
+        styles = defaults('styles'),
         target = defaults('target'),
         badgeCount,
         icon,
@@ -27,7 +29,7 @@
 </script>
 
 {#snippet body()}
-    <FloatButtonBody {colorful} {disabled} {shape} {size}>
+    <FloatButtonBody class={classNames?.body} {colorful} {disabled} {shape} {size} style={styles?.body}>
         {@render icon?.()}
     </FloatButtonBody>
 {/snippet}

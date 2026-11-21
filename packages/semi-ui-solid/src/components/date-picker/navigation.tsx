@@ -1,4 +1,5 @@
 import type { JSX } from 'solid-js';
+import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
@@ -9,6 +10,8 @@ import IconButton from '../icon-button';
 const prefixCls = cssClasses.NAVIGATION;
 
 interface NavigationProps {
+    class?: string;
+    style?: JSX.CSSProperties | string;
     monthText?: string;
     /** On the month button, whose text names the month grid */
     titleId?: string;
@@ -32,7 +35,7 @@ export default function Navigation(props: NavigationProps) {
     const hiddenOn = (panelType: PanelType): JSX.CSSProperties | undefined => (props.shouldBimonthSwitch && props.panelType === panelType ? { visibility: 'hidden' } : undefined);
 
     return (
-        <div class={prefixCls}>
+        <div class={clsx(prefixCls, props.class)} style={props.style}>
             <IconButton style={hiddenOn(strings.PANEL_TYPE_RIGHT)} aria-label={props.locale.prevYear} noHorizontalPadding size={buttonSize()} theme="borderless" icon={<IconDoubleChevronLeft size={iconSize()} />} onClick={() => props.onPrevYear?.()} />
             <IconButton style={hiddenOn(strings.PANEL_TYPE_RIGHT)} aria-label={props.locale.prevMonth} noHorizontalPadding size={buttonSize()} theme="borderless" icon={<IconChevronLeft size={iconSize()} />} onClick={() => props.onPrevMonth?.()} />
             <div class={`${prefixCls}-month`}>

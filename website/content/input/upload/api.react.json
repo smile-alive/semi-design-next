@@ -41,8 +41,8 @@
             },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `item`（每个文件卡片），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `item` (each file card); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `trigger`、`prompt`、`validateMessage`、`dragIcon`、`dragMainText`、`dragSubText`、`list`、`listTitle`、`clear`、`item`、`itemThumbnail`、`itemName`、`itemProgress`、`itemValidateMessage`、`itemRetry`、`itemReplace`、`itemClose`，与组件自带的类名合并。`item` 开头的键作用到全部文件项；`validateMessage` 是整个 Upload 的校验信息，不是单个文件的。",
+                "en-US": "Class names of the inner parts, keyed by `trigger`, `prompt`, `validateMessage`, `dragIcon`, `dragMainText`, `dragSubText`, `list`, `listTitle`, `clear`, `item`, `itemThumbnail`, `itemName`, `itemProgress`, `itemValidateMessage`, `itemRetry`, `itemReplace` and `itemClose`; merged with the built-in classes. Keys starting with `item` apply to every file card; `validateMessage` is the message of the whole Upload, not of a single file."
             },
             "crop": {
                 "zh-CN": "启用图片裁切。传 `true` 使用默认配置，传对象自定义裁切参数；点击选择、拖拽、粘贴、替换都会裁切。",
@@ -297,12 +297,20 @@
                 "en-US": "Validate message as a ReactNode. Wins over the validateMessage of the file."
             },
             "style": {
-                "zh-CN": "文件卡片的内联样式。",
-                "en-US": "Inline style of the card."
+                "zh-CN": "文件卡片根元素的内联样式，与 Upload 的 `styles.item` 合并，以这里的为准。",
+                "en-US": "Inline style of the card's root element, merged with `styles.item` of the Upload; this wins."
             },
             "className": {
-                "zh-CN": "文件卡片的类名，来自 `classNames.item`。",
-                "en-US": "Class name of the card, from `classNames.item`."
+                "zh-CN": "文件卡片根元素的类名，排在 Upload 的 `classNames.item` 之后。",
+                "en-US": "Class name of the card's root element, placed after `classNames.item` of the Upload."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `thumbnail`、`name`、`progress`、`validateMessage`、`retry`、`replace`、`close`，与组件自带的类名合并，排在 Upload 对应的 `item*` 键之后。",
+                "en-US": "Class names of the inner parts, keyed by `thumbnail`, `name`, `progress`, `validateMessage`, `retry`, `replace` and `close`; merged with the built-in classes, placed after the matching `item*` key of the Upload."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，与 Upload 对应的 `item*` 键合并，以这里的为准。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`; merged with the matching `item*` key of the Upload, and these win."
             },
             "previewFile": {
                 "zh-CN": "自定义预览逻辑，返回的内容替换原缩略图，只在 `list` 模式下有效。",

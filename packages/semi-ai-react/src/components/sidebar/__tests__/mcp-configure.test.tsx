@@ -279,4 +279,35 @@ describe('MCPConfigure', () => {
         );
         expect(labels(container)).toEqual(['GitHub', 'Figma', 'Preset']);
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'close', 'content', 'toolbar', 'count', 'search', 'list', 'item', 'itemIcon', 'itemTitle', 'itemDescription', 'itemAction'] as const;
+        const selectors = {
+            header: '.semi-sidebar-container-header',
+            title: '.semi-sidebar-container-header-title',
+            close: '.semi-sidebar-container-header-closeBtn',
+            content: '.semi-sidebar-container-content',
+            toolbar: '.semi-sidebar-mcp-configure-content-header',
+            count: '.semi-sidebar-mcp-configure-content-header-count',
+            search: '.semi-sidebar-mcp-configure-content-search',
+            list: '.semi-sidebar-mcp-configure-content-item-container',
+            item: '.semi-sidebar-mcp-configure-content-item',
+            itemIcon: '.semi-sidebar-mcp-configure-content-item-sign',
+            itemTitle: '.semi-sidebar-mcp-configure-content-item-content-label',
+            itemDescription: '.semi-sidebar-mcp-configure-content-item-content-desc',
+            itemAction: '.semi-sidebar-mcp-configure-content-item-button',
+        };
+        const { container } = render(<MCPConfigure classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} options={options} visible />);
+        for (const part of parts) {
+            const el = container.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('自定义模式下 search 落在含新增按钮的容器上', () => {
+        const { container } = render(<MCPConfigure classNames={{ search: 'my-search' }} customOptions={customOptions} options={options} visible />);
+        switchToCustom();
+        expect(container.querySelector('.semi-sidebar-mcp-configure-content-search-container')).toHaveClass('my-search');
+    });
 });

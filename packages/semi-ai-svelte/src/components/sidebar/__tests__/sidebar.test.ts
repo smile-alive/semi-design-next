@@ -568,3 +568,61 @@ describe('Svelte Sidebar 全局默认值与透传', () => {
         ).toEqual([]);
     });
 });
+
+describe('Svelte Sidebar classNames 与 styles', () => {
+    const partProps = (parts: readonly string[]) => ({
+        classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+        styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+    });
+    const expectParts = (parts: readonly string[], selectors: Record<string, string>) => {
+        for (const part of parts) {
+            const el = $(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    };
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'close', 'content', 'options', 'option', 'mainContent'] as const;
+        render(Sidebar, { props: { options, visible: true, motion: false, mainContent: createRawSnippet(() => ({ render: () => '<p>main</p>' })), ...partProps(parts) } });
+        expectParts(parts, {
+            header: '.semi-sidebar-container-header',
+            title: '.semi-sidebar-container-header-title',
+            close: '.semi-sidebar-container-header-closeBtn',
+            content: '.semi-sidebar-container-content',
+            options: '.semi-sidebar-options',
+            option: '.semi-sidebar-options-button',
+            mainContent: '.semi-sidebar-main-content',
+        });
+    });
+
+    it('详情视图的 header、title、close、copy 落在详情头部', () => {
+        const parts = ['header', 'title', 'close', 'copy', 'content'] as const;
+        render(Sidebar, { props: { detailContent: codeDetail, mode: 'code', visible: true, motion: false, ...partProps(parts) } });
+        expectParts(parts, {
+            header: '.semi-sidebar-detail-header',
+            title: '.semi-sidebar-detail-header-title',
+            close: '.semi-sidebar-detail-header-back',
+            copy: '.semi-sidebar-detail-header-copy',
+            content: '.semi-sidebar-container-content',
+        });
+    });
+
+    it('CodeContent 的 item 部位作用到每个面板', () => {
+        const parts = ['itemHeader', 'itemExpand'] as const;
+        const selectors = { itemHeader: '.semi-sidebar-collapse-header-content', itemExpand: '.semi-sidebar-collapse-header-expand-btn' };
+        const codes = [
+            { key: 'a', name: 'a.js', content: 'let a;' },
+            { key: 'b', name: 'b.js', content: 'let b;' },
+        ];
+        render(Sidebar.CodeContent, { props: { codes, onExpand: () => {}, ...partProps(parts) } });
+        for (const part of parts) {
+            const els = document.querySelectorAll(selectors[part]);
+            expect(els).toHaveLength(2);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
+});

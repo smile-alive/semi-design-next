@@ -11,6 +11,8 @@ const prefixCls = cssClasses.PREFIX;
 const { Text } = Typography;
 
 export interface QuickControlProps {
+    className?: string;
+    style?: React.CSSProperties;
     presets?: PresetsType;
     presetPosition?: (typeof strings.PRESET_POSITION_SET)[number];
     onPresetClick?: (preset: PresetType, e: React.MouseEvent) => void;
@@ -21,7 +23,7 @@ export interface QuickControlProps {
 
 const noPresets: PresetsType = [];
 
-export default function QuickControl({ presets = noPresets, onPresetClick = noop, type, presetPosition = 'bottom', insetInput, locale }: QuickControlProps) {
+export default function QuickControl({ className, style, presets = noPresets, onPresetClick = noop, type, presetPosition = 'bottom', insetInput, locale }: QuickControlProps) {
     const isTypeRange = type === 'dateRange' || type === 'dateTimeRange';
     const isPanelTopAndBottom = presetPosition === 'top' || presetPosition === 'bottom';
     const isTopAndBottomRange = isPanelTopAndBottom && isTypeRange;
@@ -29,10 +31,14 @@ export default function QuickControl({ presets = noPresets, onPresetClick = noop
     const isPlain = !isTopAndBottomRange && !isTopAndBottomMonth;
     const base = `${prefixCls}-quick-control-${presetPosition}`;
 
-    const wrapperCls = clsx(`${prefixCls}-quick-control`, {
-        [`${prefixCls}-quick-control-${type}`]: type,
-        [base]: true,
-    });
+    const wrapperCls = clsx(
+        `${prefixCls}-quick-control`,
+        {
+            [`${prefixCls}-quick-control-${type}`]: type,
+            [base]: true,
+        },
+        className
+    );
 
     const partCls = (suffix: string) =>
         clsx({
@@ -42,7 +48,7 @@ export default function QuickControl({ presets = noPresets, onPresetClick = noop
         });
 
     return (
-        <div className={wrapperCls} x-insetinput={insetInput ? 'true' : 'false'}>
+        <div className={wrapperCls} style={style} x-insetinput={insetInput ? 'true' : 'false'}>
             {!isPanelTopAndBottom && <div className={`${prefixCls}-quick-control-header`}>{locale.presets}</div>}
             <div className={`${base}-content-wrapper`}>
                 <div className={partCls('')}>

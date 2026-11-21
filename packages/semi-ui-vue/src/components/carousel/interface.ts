@@ -1,4 +1,5 @@
-import type { ButtonHTMLAttributes, VNode } from 'vue';
+import type { ButtonHTMLAttributes, ClassValue, StyleValue, VNode } from 'vue';
+import type { CarouselPart } from '@fibrae/semi-foundation/components/carousel/constants';
 import type { CarouselAutoPlay } from '@fibrae/semi-foundation/components/carousel/foundation';
 
 export interface ArrowButton {
@@ -17,6 +18,7 @@ export interface CarouselProps {
     arrowProps?: ArrowProps;
     arrowType?: 'always' | 'hover';
     autoPlay?: CarouselAutoPlay;
+    classNames?: Partial<Record<CarouselPart, ClassValue>>;
     defaultActiveIndex?: number;
     indicatorPosition?: 'left' | 'center' | 'right';
     indicatorSize?: 'small' | 'medium';
@@ -25,6 +27,7 @@ export interface CarouselProps {
     showIndicator?: boolean;
     slideDirection?: 'left' | 'right';
     speed?: number;
+    styles?: Partial<Record<CarouselPart, StyleValue>>;
     theme?: 'dark' | 'primary' | 'light';
     trigger?: 'click' | 'hover';
 }

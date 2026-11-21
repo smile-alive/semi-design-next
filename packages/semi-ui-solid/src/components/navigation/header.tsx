@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
 import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { createToken } from '../../base/index';
-import { hasContent } from '../../utils/index';
+import { hasContent, mergeStyles } from '../../utils/index';
 import { useNavContext } from './context';
 import type { NavHeaderProps } from './interface';
 
@@ -16,7 +16,7 @@ export default function NavHeader(props: NavHeaderProps) {
 }
 
 export function HeaderView(props: NavHeaderProps) {
-    const [local, rest] = splitProps(props, ['children', 'class', 'link', 'linkOptions', 'logo', 'style', 'text']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'link', 'linkOptions', 'logo', 'style', 'styles', 'text']);
 
     const context = useNavContext('Nav.Header');
 
@@ -28,10 +28,14 @@ export function HeaderView(props: NavHeaderProps) {
     const inner = () => (
         <>
             <Show when={hasContent(logo())}>
-                <i class={`${prefix}-header-logo`}>{logo()}</i>
+                <i class={clsx(`${prefix}-header-logo`, local.classNames?.logo)} style={local.styles?.logo}>
+                    {logo()}
+                </i>
             </Show>
             <Show when={local.text != null && !isCollapsed()}>
-                <span class={`${prefix}-header-text`}>{local.text}</span>
+                <span class={clsx(`${prefix}-header-text`, local.classNames?.text)} style={local.styles?.text}>
+                    {local.text}
+                </span>
             </Show>
             {body()}
         </>
@@ -43,7 +47,7 @@ export function HeaderView(props: NavHeaderProps) {
     return (
         <div {...rest} class={clsx(local.class, `${prefix}-header`, { [`${prefix}-header-collapsed`]: isCollapsed() })} style={local.style}>
             <Show when={typeof local.link === 'string'} fallback={inner()}>
-                <a aria-label={linkLabel()} href={local.link} {...local.linkOptions} class={clsx(`${prefix}-header-link`, local.linkOptions?.class)}>
+                <a aria-label={linkLabel()} href={local.link} {...local.linkOptions} class={clsx(`${prefix}-header-link`, local.classNames?.link, local.linkOptions?.class)} style={mergeStyles(local.styles?.link, local.linkOptions?.style)}>
                     {inner()}
                 </a>
             </Show>

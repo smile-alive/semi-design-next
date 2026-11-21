@@ -6,9 +6,11 @@ export interface AnchorView {
     activeLink: string;
     autoCollapse: boolean;
     childMap: Record<string, Set<string>>;
+    classNames: AnchorProps['classNames'];
     position: AnchorProps['position'];
     showTooltip: NonNullable<AnchorProps['showTooltip']>;
     size: NonNullable<AnchorProps['size']>;
+    styles: AnchorProps['styles'];
 }
 
 export interface AnchorContextValue {

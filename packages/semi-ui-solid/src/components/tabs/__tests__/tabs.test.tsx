@@ -128,14 +128,40 @@ describe('Tabs', () => {
 
     it('classNames 与 styles 按部位落到对应元素', () => {
         stubIntersectionObserver();
-        const parts = ['tabBar', 'content', 'visibleTabs'] as const;
-        const selectors = { tabBar: `${prefix}-bar`, content: `${prefix}-content`, visibleTabs: `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper` };
-        const { container } = renderTabs({ collapsible: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) }, threePanes);
+        const parts = ['tabBar', 'content', 'visibleTabs', 'item', 'itemIcon', 'itemClose', 'pane', 'extra', 'arrow'] as const;
+        const selectors = {
+            tabBar: `${prefix}-bar`,
+            content: `${prefix}-content`,
+            visibleTabs: `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`,
+            item: `${prefix}-tab`,
+            itemIcon: `${prefix}-bar-icon`,
+            itemClose: `${prefix}-tab-icon-close`,
+            pane: `${prefix}-pane`,
+            extra: `${prefix}-bar-extra`,
+            arrow: `${prefix}-bar-arrow`,
+        };
+        const panes = threePanes.map((pane) => ({ ...pane, icon: <i />, closable: true }));
+        const { container } = renderTabs({ collapsible: true, tabBarExtraContent: <span>extra</span>, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) }, panes);
         for (const part of parts) {
             const el = getElement(`.${selectors[part]}`, container);
             expect(el).toHaveClass(`my-${part}`);
             expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
         }
+        expect(container.querySelectorAll(`.${prefix}-bar-arrow.my-arrow`)).toHaveLength(2);
+        expect(container.querySelectorAll(`.${prefix}-tab.my-item`)).toHaveLength(3);
+        expect(container.querySelectorAll(`.${prefix}-pane.my-pane`)).toHaveLength(3);
+    });
+
+    it('classNames.more 与 classNames.dropdown 落到更多按钮和下拉浮层', async () => {
+        renderTabs({ more: { count: 1, dropdownProps: { trigger: 'click' } }, classNames: { more: 'my-more', dropdown: 'my-dropdown' }, styles: { more: { order: 1 }, dropdown: { order: 2 } } });
+        expect(screen.getByRole('button', { name: '更多' })).toHaveClass('my-more');
+        expect(screen.getByRole('button', { name: '更多' })).toHaveStyle({ order: '1' });
+        await userEvent.click(screen.getByText('更多'));
+        await screen.findAllByRole('menuitemcheckbox');
+        const dropdown = getElement(`.${prefix}-bar-more-dropdown-line`, document.body);
+        expect(dropdown).toHaveClass('my-dropdown');
+        // Dropdown puts `style` on the menu container inside the popup wrapper that takes the class
+        expect(getElement(`.${BASE_CLASS_PREFIX}-dropdown`, dropdown)).toHaveStyle({ order: '2' });
     });
 
     it.each([
@@ -618,7 +644,7 @@ describe('Tabs 行为', () => {
         ));
         const { container } = renderTabs({ renderTabBar, onChange, classNames: { tabBar: 'bar' }, styles: { tabBar: { color: 'red' } } });
         const barProps = renderTabBar.mock.calls[0][0];
-        expect(barProps).toMatchObject({ activeKey: 'a', class: 'bar', style: { color: 'red' }, size: 'large', type: 'line', tabPosition: 'top' });
+        expect(barProps).toMatchObject({ activeKey: 'a', classNames: { tabBar: 'bar' }, styles: { tabBar: { color: 'red' } }, size: 'large', type: 'line', tabPosition: 'top' });
         expect(barProps.list?.map((pane) => pane.itemKey)).toEqual(['a', 'b', 'c']);
         const bar = container.querySelector(`.wrap .${prefix}-bar`);
         expect(bar).toHaveClass('bar');
@@ -1312,6 +1338,18 @@ describe('Tabs more 与 collapsible', () => {
         const trigger = screen.getByRole('button', { name: 'Show more' });
         expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
         expect(trigger.parentElement?.closest('[tabindex]')).toBeNull();
+    });
+
+    it('classNames.dropdown 落到箭头下拉浮层', async () => {
+        mockScroll();
+        const io = stubIntersectionObserver();
+        const { container } = renderTabs({ collapsible: true, classNames: { dropdown: 'my-dropdown' }, styles: { dropdown: { order: 2 } } }, keyPanes(['k0', 'k1', 'k2']));
+        io.intersect({ 'k0-bar': true, 'k1-bar': false, 'k2-bar': false });
+        await userEvent.click(getElement('button', arrow(container, 'end')));
+        await screen.findAllByRole('menuitemcheckbox');
+        const dropdown = getElement(`.${prefix}-bar-dropdown`, document.body);
+        expect(dropdown).toHaveClass('my-dropdown');
+        expect(getElement(`.${BASE_CLASS_PREFIX}-dropdown`, dropdown)).toHaveStyle({ order: '2' });
     });
 
     it('collapsible：隐藏的标签进入箭头下拉菜单，选中后滚动到可见区域', async () => {

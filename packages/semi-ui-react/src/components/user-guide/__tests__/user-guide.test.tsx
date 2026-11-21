@@ -747,3 +747,30 @@ describe('UserGuide 无障碍与滚动锁', () => {
         expect(screen.getByText('2/3')).toBeInTheDocument();
     });
 });
+
+describe('UserGuide classNames 与 styles', () => {
+    const parts = ['cover', 'body', 'title', 'description', 'progress', 'indicators', 'footer'] as const;
+    const selectors = {
+        popup: { cover: 'popup-content-cover', body: 'popup-content-body', title: 'popup-content-title', description: 'popup-content-description', progress: 'popup-content-indicator', footer: 'popup-content-footer' },
+        modal: { cover: 'modal-cover', body: 'modal-body', title: 'modal-body-title', description: 'modal-body-description', progress: 'modal-progress', indicators: 'modal-indicator', footer: 'modal-footer' },
+    };
+    const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+    const styles = Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]));
+
+    for (const mode of ['popup', 'modal'] as const) {
+        it(`classNames 与 styles 按部位落到对应元素（${mode}）`, async () => {
+            const steps = makeSteps();
+            render(<UserGuide classNames={classNames} styles={styles} mode={mode} steps={steps} visible />);
+            await screen.findByText('Title A');
+            for (const part of parts) {
+                const selector = selectors[mode][part];
+                if (!selector) {
+                    continue;
+                }
+                const el = $(`.${prefix}-${selector}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        });
+    }
+});

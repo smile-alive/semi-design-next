@@ -48,6 +48,8 @@ export default function Form<Values extends Record<string, any> = any, Output = 
         layout,
         style,
         className,
+        classNames,
+        styles,
         labelPosition,
         labelWidth,
         labelAlign,

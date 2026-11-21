@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
+import { type ProgressPart, cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
 import { type StrokeArr, generateColor } from '@fibrae/semi-foundation/components/progress/generates';
 import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/components/progress/utils';
 import type { Size } from '@fibrae/semi-foundation/utils';
@@ -13,6 +13,7 @@ const prefixCls = cssClasses.PREFIX;
 
 export interface ProgressProps extends ElementProps<'div', 'children'> {
     className?: string;
+    classNames?: Partial<Record<ProgressPart, string>>;
     direction?: 'horizontal' | 'vertical';
     format?: (percent: number) => React.ReactNode;
     indeterminate?: boolean;
@@ -26,6 +27,7 @@ export interface ProgressProps extends ElementProps<'div', 'children'> {
     strokeLinecap?: 'round' | 'square';
     strokeWidth?: number;
     style?: React.CSSProperties;
+    styles?: Partial<Record<ProgressPart, React.CSSProperties>>;
     type?: 'line' | 'circle';
     width?: number;
     /** Attached to the root element (the `role="progressbar"` div) */
@@ -53,7 +55,7 @@ function selectStroke(stroke: string | StrokeArr | undefined, percent: number, s
 }
 
 export default function Progress(rawProps: ProgressProps) {
-    const { ref, className, direction, format, indeterminate, motion, orbitStroke, percent, showInfo, size, stroke, strokeGradient, strokeLinecap, strokeWidth, type, width, ...rest } = useDefaultProps('Progress', rawProps, defaultProps);
+    const { ref, className, classNames, direction, format, indeterminate, motion, orbitStroke, percent, showInfo, size, stroke, strokeGradient, strokeLinecap, strokeWidth, styles, type, width, ...rest } = useDefaultProps('Progress', rawProps, defaultProps);
 
     const [percentNumber, setPercentNumber] = useState(percent);
     const [animation] = useState(() => createPercentAnimation(setPercentNumber));
@@ -90,16 +92,20 @@ export default function Progress(rawProps: ProgressProps) {
                 aria-valuenow={indeterminate ? undefined : perc}
                 role="progressbar"
             >
-                <div className={`${prefixCls}-track`} style={orbitStroke ? { backgroundColor: orbitStroke } : {}} aria-hidden>
+                <div className={clsx(`${prefixCls}-track`, classNames?.rail)} style={{ ...(orbitStroke ? { backgroundColor: orbitStroke } : {}), ...styles?.rail }} aria-hidden>
                     <div
-                        className={clsx(`${prefixCls}-track-inner`, {
+                        className={clsx(`${prefixCls}-track-inner`, classNames?.track, {
                             [`${prefixCls}-track-inner-indeterminate`]: indeterminate,
                         })}
-                        style={innerStyle}
+                        style={{ ...innerStyle, ...styles?.track }}
                         aria-hidden
                     />
                 </div>
-                {showInfo && !indeterminate && <div className={`${prefixCls}-line-text`}>{text}</div>}
+                {showInfo && !indeterminate && (
+                    <div className={clsx(`${prefixCls}-line-text`, classNames?.text)} style={styles?.text}>
+                        {text}
+                    </div>
+                )}
             </div>
         );
     }
@@ -110,12 +116,24 @@ export default function Progress(rawProps: ProgressProps) {
     return (
         <div {...rest} ref={ref} className={clsx(`${prefixCls}-circle`, className)} aria-valuemax={100} aria-valuemin={0} aria-valuenow={indeterminate ? undefined : perc} role="progressbar">
             <svg key={size} className={`${prefixCls}-circle-ring`} aria-hidden height={diameter} width={diameter}>
-                <circle className={`${prefixCls}-circle-ring-track`} style={{ stroke: orbitStroke }} aria-hidden cx={center} cy={center} fill="transparent" r={radius} strokeDasharray={`${circumference} ${circumference}`} strokeDashoffset={0} strokeLinecap={strokeLinecap} strokeWidth={strokeWidth} />
                 <circle
-                    className={clsx(`${prefixCls}-circle-ring-inner`, {
+                    className={clsx(`${prefixCls}-circle-ring-track`, classNames?.rail)}
+                    style={{ stroke: orbitStroke, ...styles?.rail }}
+                    aria-hidden
+                    cx={center}
+                    cy={center}
+                    fill="transparent"
+                    r={radius}
+                    strokeDasharray={`${circumference} ${circumference}`}
+                    strokeDashoffset={0}
+                    strokeLinecap={strokeLinecap}
+                    strokeWidth={strokeWidth}
+                />
+                <circle
+                    className={clsx(`${prefixCls}-circle-ring-inner`, classNames?.track, {
                         [`${prefixCls}-circle-ring-inner-indeterminate`]: indeterminate,
                     })}
-                    style={{ stroke: strokeColor }}
+                    style={{ stroke: strokeColor, ...styles?.track }}
                     aria-hidden
                     cx={center}
                     cy={center}
@@ -127,7 +145,11 @@ export default function Progress(rawProps: ProgressProps) {
                     strokeWidth={strokeWidth}
                 />
             </svg>
-            {showInfo && size !== 'small' && !indeterminate && <span className={`${prefixCls}-circle-text`}>{text}</span>}
+            {showInfo && size !== 'small' && !indeterminate && (
+                <span className={clsx(`${prefixCls}-circle-text`, classNames?.text)} style={styles?.text}>
+                    {text}
+                </span>
+            )}
         </div>
     );
 }

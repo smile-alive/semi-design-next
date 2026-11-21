@@ -7,14 +7,14 @@
 
     let { message, role, continueSend = false }: { message: Message; role?: Metadata; continueSend?: boolean } = $props();
 
-    const { snippets } = getAIChatDialogueContext();
+    const { view, snippets } = getAIChatDialogueContext();
 
     const prefix = cssClasses.PREFIX;
 </script>
 
 {#snippet defaultAvatar()}
     <!-- alt names the sender only in a continued run, where the title beside it is not shown -->
-    <Avatar alt={continueSend ? (role?.name ?? '') : ''} class={[`${prefix}-avatar`, { [`${prefix}-avatar-hidden`]: continueSend }]} color={role?.color} size="extra-small" src={role?.avatar} />
+    <Avatar alt={continueSend ? (role?.name ?? '') : ''} class={[`${prefix}-avatar`, { [`${prefix}-avatar-hidden`]: continueSend }, view.classNames?.itemAvatar]} color={role?.color} size="extra-small" src={role?.avatar} style={view.styles?.itemAvatar} />
 {/snippet}
 
 {#if snippets.avatar}

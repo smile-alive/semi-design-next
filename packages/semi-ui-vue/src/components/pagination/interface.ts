@@ -1,7 +1,10 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { PaginationPart } from '@fibrae/semi-foundation/components/pagination/constants';
 import type { Position } from '../tooltip/interface';
 
 export interface PaginationProps {
+    classNames?: Partial<Record<PaginationPart, ClassValue>>;
+    styles?: Partial<Record<PaginationPart, StyleValue>>;
     total?: number;
     showTotal?: boolean;
     /**

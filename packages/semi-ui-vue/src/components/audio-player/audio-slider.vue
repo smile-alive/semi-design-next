@@ -113,8 +113,9 @@
                         [`${prefix}-slider-vertical`]: props.vertical,
                         [`${prefix}-slider-horizontal`]: !props.vertical,
                     },
+                    props.classNames?.sliderTrack,
                 ]"
-                :style="props.vertical ? { height: toCssLength(props.height) } : undefined"
+                :style="[props.vertical ? { height: toCssLength(props.height) } : undefined, props.styles?.sliderTrack]"
             >
                 <div
                     :class="[
@@ -123,21 +124,28 @@
                             [`${prefix}-slider-progress-vertical`]: props.vertical,
                             [`${prefix}-slider-progress-horizontal`]: !props.vertical,
                         },
+                        props.classNames?.sliderProgress,
                     ]"
-                    :style="{
-                        height: props.vertical ? `${percent}%` : '100%',
-                        width: props.vertical ? '100%' : `${percent}%`,
-                    }"
+                    :style="[
+                        {
+                            height: props.vertical ? `${percent}%` : '100%',
+                            width: props.vertical ? '100%' : `${percent}%`,
+                        },
+                        props.styles?.sliderProgress,
+                    ]"
                 />
                 <div
-                    :class="`${prefix}-slider-dot`"
-                    :style="{
-                        left: props.vertical ? '50%' : `calc(${percent}% - ${dotSize / 2}px)`,
-                        bottom: props.vertical ? `calc(${percent}% - ${dotSize / 2}px)` : undefined,
-                        top: props.vertical ? undefined : '50%',
-                        transform: props.vertical ? 'translateX(-50%)' : 'translateY(-50%)',
-                        pointerEvents: 'none',
-                    }"
+                    :class="[`${prefix}-slider-dot`, props.classNames?.sliderThumb]"
+                    :style="[
+                        {
+                            left: props.vertical ? '50%' : `calc(${percent}% - ${dotSize / 2}px)`,
+                            bottom: props.vertical ? `calc(${percent}% - ${dotSize / 2}px)` : undefined,
+                            top: props.vertical ? undefined : '50%',
+                            transform: props.vertical ? 'translateX(-50%)' : 'translateY(-50%)',
+                            pointerEvents: 'none',
+                        },
+                        props.styles?.sliderThumb,
+                    ]"
                 />
             </div>
         </div>

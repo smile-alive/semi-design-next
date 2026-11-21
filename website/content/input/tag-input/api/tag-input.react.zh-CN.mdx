@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | 输入框的可访问名称，落在输入框上，根节点不带。 | `string` | - |
 | autoFocus | 挂载时是否自动聚焦输入框并激活组件，禁用时不生效。 | `boolean` | `false` |
 | className | 根元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `prefix`、`suffix`、`content`、`tag`、`input`、`clear`，与组件自带的类名合并。`input` 落在内嵌输入框的根元素上，不是原生 input；`tag` 只作用于默认标签，`renderTagItem` 渲染的节点自行控制样式。 | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 替换清除按钮中的图标，未设置时使用默认图标。 | `React.ReactNode` | - |
 | defaultValue | 非受控时的初始标签。 | `string[]` | - |
 | disabled | 是否禁用；禁用时输入框为原生 `disabled`，标签为静态文本。 | `boolean` | - |
@@ -42,6 +43,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | 尺寸，可选 `small`、`default`、`large`。 | `Size` | `"default"` |
 | split | 自定义分隔符处理函数，参数为原始字符串与 `separator`，返回拆分后的字符串数组。 | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
 | style | 根元素的样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | suffix | 输入框后缀，文字或图标会自动带上左右间隔；自定义节点的左右间隔为 0，可在节点中自行设置。 | `React.ReactNode` | - |
 | validateStatus | 校验状态，仅影响样式；为 `error` 时输入框带 `aria-invalid`。 | `TagInputValidateStatus` | `"default"` |
 | value | 当前标签，配合 `onChange` 实现受控；`undefined` 时按非受控处理，`null` 表示受控且没有标签。 | `string[] \| null` | - |

@@ -27,6 +27,8 @@
 
     const props = withDefaults(defineProps<RatingProps & /* @vue-ignore */ ElementProps<'ul', keyof RatingProps | EmitHandlers<RatingEmits>>>(), {
         modelValue: undefined,
+        classNames: semiGlobalDefault('Rating', 'classNames'),
+        styles: semiGlobalDefault('Rating', 'styles'),
         defaultValue: () => semiDefault('Rating', 'defaultValue', 0),
         count: () => semiDefault('Rating', 'count', 5),
         allowHalf: () => semiDefault('Rating', 'allowHalf', false),
@@ -152,7 +154,7 @@
             per star because a single-element v-for to cache it would be rejected by vue/valid-v-for. Escape cannot hide
             the tip the rating drives, so closeOnEsc is off and the key goes on to the layer below.
         -->
-        <component :is="props.tooltips ? Tooltip : SlotFragment" v-for="index in starIndexes" :key="index" :closeOnEsc="false" trigger="custom" :visible="tipVisible(index)">
+        <component :is="props.tooltips ? Tooltip : SlotFragment" v-for="index in starIndexes" :key="index" v-bind="props.tooltips ? { class: props.classNames?.dropdown, style: props.styles?.dropdown } : {}" :closeOnEsc="false" trigger="custom" :visible="tipVisible(index)">
             <template #content>{{ props.tooltips?.[index] ?? '' }}</template>
             <RatingItem
                 :ref="(el) => setStar(index, el)"
@@ -162,6 +164,8 @@
                 :displayValue="state.hoverValue === undefined ? value : state.hoverValue"
                 :firstTabStop="index === 0 && !onRadio"
                 :index="index"
+                :itemClass="props.classNames?.item"
+                :itemStyle="props.styles?.item"
                 :prefixCls="`${cssClasses.PREFIX}-star`"
                 :preventScroll="props.preventScroll"
                 :size="index === props.count ? 0 : props.size"

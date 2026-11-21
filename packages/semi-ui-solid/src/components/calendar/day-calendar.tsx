@@ -66,7 +66,7 @@ export default function DayCalendar(props: DayCalendarProps) {
                         <div role="cell">{header()}</div>
                     </div>
                 </Show>
-                <div class={allDayCls} role="row">
+                <div class={clsx(allDayCls, local.classNames?.allDay)} style={local.styles?.allDay} role="row">
                     <div class={`${cssClasses.PREFIX}-tag ${allDayCls}-tag ${prefixCls}-sticky-left`} role="rowheader">
                         <span>{locale().locale.allDay}</span>
                     </div>
@@ -78,7 +78,7 @@ export default function DayCalendar(props: DayCalendarProps) {
                                 fallback={
                                     <ByKey each={parsedEvents().allDay} by={(event, index) => event.key || `allDay-${index}`}>
                                         {(event) => (
-                                            <li class={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`}>
+                                            <li class={clsx(`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`, local.classNames?.event)} style={local.styles?.event}>
                                                 <EventContent of={event().children} />
                                             </li>
                                         )}
@@ -94,8 +94,20 @@ export default function DayCalendar(props: DayCalendarProps) {
             </div>
             <div class={`${prefixCls}-scroll-wrapper`} role="rowgroup">
                 <div ref={scrollRef} class={`${prefixCls}-scroll`} role="row">
-                    <TimeCol class={`${prefixCls}-sticky-left`} renderTimeDisplay={renderTimeDisplay()} />
-                    <DayCol displayValue={dayStart()} events={parsedEvents().day} isWeekend={isWeekend()} minEventHeight={local.minEventHeight} scrollHeight={scrollHeight()} showCurrTime={local.showCurrTime} today={today()} dateGridRender={dateGridRender()} handleClick={handleClick} />
+                    <TimeCol class={`${prefixCls}-sticky-left`} classNames={local.classNames} styles={local.styles} renderTimeDisplay={renderTimeDisplay()} />
+                    <DayCol
+                        classNames={local.classNames}
+                        styles={local.styles}
+                        displayValue={dayStart()}
+                        events={parsedEvents().day}
+                        isWeekend={isWeekend()}
+                        minEventHeight={local.minEventHeight}
+                        scrollHeight={scrollHeight()}
+                        showCurrTime={local.showCurrTime}
+                        today={today()}
+                        dateGridRender={dateGridRender()}
+                        handleClick={handleClick}
+                    />
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| classNames | Class names of the inner parts, keyed by `wrapper` (the scroll wrapper in scroll mode); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cOverflowListPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `wrapper` (the scroll wrapper in scroll mode), `item` (the div around each visible item in collapse mode) and `overflow` (the div holding the overflow content in collapse mode); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cOverflowListPart, ClassValue>>"}>Type</ApiType> | - |
 | collapseFrom | Collapse direction in collapse mode: start or end. | `'end' \| 'start'` | `"end"` |
 | item | Snippet for the content of one visible item, with the parameter `{ item, index }`: the item and its position in items. Scroll mode needs the snippet to render an element, otherwise the item is skipped. | <ApiType detail={"Snippet\u003c[OverflowListItemSnippetProps\u003cT>]>"}>Type</ApiType> | - |
 | itemKey | Property name of each item's key, or a function returning it. Defaults to the key property, then the item's position in items. | <ApiType detail={"OverflowListKey \u007c ((item: T) => OverflowListKey)"}>Type</ApiType> | - |

@@ -321,7 +321,7 @@ describe('Tooltip', () => {
 
         it('classNames 与 styles 按部位落到对应元素', () => {
             render(() => (
-                <Tooltip content="hint" classNames={{ wrapper: 'my-wrapper' }} styles={{ wrapper: { order: 3 } }}>
+                <Tooltip content="hint" classNames={{ wrapper: 'my-wrapper', arrow: 'my-arrow' }} styles={{ wrapper: { order: 3 }, arrow: { order: 4 } }} motion={false} trigger="custom" visible>
                     <i>inline</i>
                 </Tooltip>
             ));
@@ -329,6 +329,9 @@ describe('Tooltip', () => {
             expect(span).toHaveClass(`${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`, 'my-wrapper');
             expect(span.style.order).toBe('3');
             expect(span.style.display).toBe('inline-block');
+            const arrow = document.querySelector<SVGElement>(`.${BASE_CLASS_PREFIX}-tooltip-icon-arrow`)!;
+            expect(arrow).toHaveClass('my-arrow');
+            expect(arrow.style.order).toBe('4');
         });
 
         it('span 内有可聚焦元素时 span 为 -1 并告警一次，Tab 只停一次', async () => {

@@ -145,6 +145,18 @@ describe('Slider', () => {
         expect(onChange).toHaveBeenLastCalledWith([20, 100]);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['rail', 'track', 'handle', 'dot', 'mark', 'dropdown'] as const;
+        const selectors = { rail: 'rail', track: 'track', handle: 'handle', dot: 'dot', mark: 'mark', dropdown: 'handle-tooltip' };
+        const { container } = render(<Slider classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} style={SIZED} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} defaultValue={30} marks={{ 20: 'a' }} tooltipVisible />);
+        await findTooltip();
+        for (const part of parts) {
+            const el = (part === 'dropdown' ? document : container).querySelector(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
     it('tooltipVisible 为 true 时，tooltip 始终显示，或始终不显示', async () => {
         const { unmount } = render(<Slider style={SIZED} defaultValue={30} tooltipVisible />);
         expect(await findTooltip()).toHaveTextContent('30');

@@ -2,6 +2,11 @@
     "collapse": {
         "source": "packages/semi-ui-svelte/src/components/collapse/collapse.svelte",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`itemHeader`、`itemTitle`、`itemIcon`、`itemExtra`、`itemBody`，作用到全部面板，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `item`, `itemHeader`, `itemTitle`, `itemIcon`, `itemExtra` and `itemBody`; applied to every panel and merged with the built-in classes."
+            },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "accordion": {
                 "zh-CN": "手风琴模式。",
                 "en-US": "Accordion mode."
@@ -54,6 +59,14 @@
             "children": {
                 "zh-CN": "面板内容的 snippet；传入 children 才算有内容。",
                 "en-US": "Snippet for the panel content; a panel counts as having content only when children is given."
+            },
+            "classNames": {
+                "zh-CN": "当前面板内部各部位的类名，键为 `header`、`title`、`icon`、`extra`、`body`，与组件自带的类名及 Collapse 的 `item*` 类名合并，面板自己的在后。",
+                "en-US": "Class names of this panel's inner parts, keyed by `header`, `title`, `icon`, `extra` and `body`; merged with the built-in classes and Collapse's `item*` classes, the panel's own last."
+            },
+            "styles": {
+                "zh-CN": "当前面板内部各部位的内联样式，键同 `classNames`，与 Collapse 的 `item*` 样式合并，面板自己的后写。",
+                "en-US": "Inline styles of this panel's inner parts, keyed like `classNames`; merged with Collapse's `item*` styles, the panel's own written last."
             },
             "disabled": {
                 "zh-CN": "面板是否被禁用。",

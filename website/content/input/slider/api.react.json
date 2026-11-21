@@ -19,8 +19,8 @@
                 "en-US": "Class name of the `.semi-slider-wrapper` element."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `rail`（轨道），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `rail`; merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `rail`、`track`、`handle`、`dot`、`mark`、`dropdown`，与组件自带的类名合并；`dropdown` 是悬停、拖动或聚焦手柄时显示当前值的提示弹出层。",
+                "en-US": "Class names of the inner parts, keyed by `rail`, `track`, `handle`, `dot`, `mark` and `dropdown`; merged with the built-in classes. `dropdown` is the tip popup that shows the current value on hover, drag or focus."
             },
             "defaultValue": {
                 "zh-CN": "非受控时的初始取值，未设置时为 `min`。",

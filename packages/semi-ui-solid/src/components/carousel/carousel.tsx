@@ -48,6 +48,7 @@ export default function Carousel(rawProps: CarouselProps) {
         'arrowType',
         'children',
         'class',
+        'classNames',
         'defaultActiveIndex',
         'indicatorPosition',
         'indicatorSize',
@@ -60,6 +61,7 @@ export default function Carousel(rawProps: CarouselProps) {
         'showIndicator',
         'slideDirection',
         'speed',
+        'styles',
         'trigger',
         'onFocusIn',
         'onFocusOut',
@@ -152,9 +154,15 @@ export default function Carousel(rawProps: CarouselProps) {
             onMouseLeave={handleMouseLeave}
         >
             <div
-                class={clsx(`${content}-${local.animation}`, content, {
-                    [`${content}-reverse`]: local.slideDirection === 'left' ? state().isReverse : !state().isReverse,
-                })}
+                class={clsx(
+                    `${content}-${local.animation}`,
+                    content,
+                    {
+                        [`${content}-reverse`]: local.slideDirection === 'left' ? state().isReverse : !state().isReverse,
+                    },
+                    local.classNames?.content
+                )}
+                style={local.styles?.content}
                 // announce a slide the user switched to, never one that rotation brought
                 aria-live={state().rotating ? 'off' : 'polite'}
                 x-semi-prop="children"
@@ -197,6 +205,8 @@ export default function Carousel(rawProps: CarouselProps) {
                 <div class={cssClasses.CAROUSEL_INDICATOR}>
                     <CarouselIndicator
                         ref={(node) => (tablist = node)}
+                        classNames={local.classNames}
+                        styles={local.styles}
                         type={local.indicatorType}
                         activeIndex={activeIndex()}
                         getSlideId={getSlideId}
@@ -213,7 +223,7 @@ export default function Carousel(rawProps: CarouselProps) {
                 </div>
             </Show>
             <Show when={local.showArrow && total() > 1}>
-                <CarouselArrow type={local.arrowType} arrowProps={local.arrowProps} leftArrow={local.leftArrow} rightArrow={local.rightArrow} next={foundation.next} prev={foundation.prev} theme={local.theme} />
+                <CarouselArrow type={local.arrowType} arrowProps={local.arrowProps} classNames={local.classNames} styles={local.styles} leftArrow={local.leftArrow} rightArrow={local.rightArrow} next={foundation.next} prev={foundation.prev} theme={local.theme} />
             </Show>
         </div>
     );

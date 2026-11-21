@@ -545,6 +545,22 @@ describe('Svelte ColorPicker 拖拽与键盘', () => {
 });
 
 describe('Svelte ColorPicker 弹层', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['area', 'hue', 'alpha', 'handle', 'preview', 'input', 'format', 'trigger', 'dropdown'] as const;
+        const selectors = { area: 'colorChooseArea', hue: 'colorSlider', alpha: 'alphaSlider', handle: 'handle, .semi-colorPicker-alphaHandle', preview: 'colorDemoBlock', input: 'colorPickerInput', format: 'formatSelect', trigger: 'popover-defaultChildren', dropdown: 'popover' };
+        setup({ usePopover: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) });
+        await userEvent.click(screen.getByRole('button', { name: text.color }));
+        await screen.findByRole('dialog');
+        for (const part of parts) {
+            const els = document.querySelectorAll(`.${prefixCls}-${selectors[part]}`);
+            expect(els).toHaveLength(part === 'handle' ? 3 : 1);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
+
     it('默认触发器是有名称的按钮，弹层为有名称的 dialog，内含 picker', async () => {
         setup({ usePopover: true });
         expect(getPicker()).toBeNull();

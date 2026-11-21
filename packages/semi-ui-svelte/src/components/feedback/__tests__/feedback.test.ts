@@ -792,13 +792,15 @@ describe('Svelte Feedback 透传', () => {
         expect($(`.${modalCls}`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('classNames 与 styles 按部位转发给当前模式的 SideSheet 或 Modal', async () => {
-        const parts = ['mask', 'header', 'body'] as const;
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['mask', 'content', 'header', 'title', 'close', 'body', 'footer', 'emoji'] as const;
         const classNames = Object.fromEntries(parts.map((part) => [part, `my-${part}`]));
         const styles = Object.fromEntries(parts.map((part) => [part, `order: ${parts.indexOf(part) + 1}`]));
         const check = (component: string) => {
+            const contentCls = component === 'modal' ? 'modal-content' : 'sidesheet-inner';
             for (const part of parts) {
-                const el = $(`.${BASE_CLASS_PREFIX}-${component}-${part}`);
+                const selector = part === 'emoji' ? `.${prefix}-emoji-item` : part === 'content' ? `.${BASE_CLASS_PREFIX}-${contentCls}` : `.${BASE_CLASS_PREFIX}-${component}-${part}`;
+                const el = $(selector);
                 expect(el).toHaveClass(`my-${part}`);
                 expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
             }

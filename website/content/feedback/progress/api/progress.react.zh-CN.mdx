@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | className | 根元素的类名。 | `string` | `""` |
+| classNames | 内部各部位的类名，键为 `rail`（底轨，表示总长度）、`track`（已完成的部分）、`text`（百分比文字），与组件自带的类名合并。这里的 `rail`、`track` 与自带类名 `semi-progress-track`（底轨）的叫法相反。 | <ApiType detail={"Partial\u003cRecord\u003cProgressPart, string>>"}>Type</ApiType> | - |
 | direction | 条状进度条的方向，可选 `horizontal` 或 `vertical`。 | `'horizontal' \| 'vertical'` | `"horizontal"` |
 | format | 格式化函数，入参为当前显示的百分比（截断到 0 到 100，动画过程中为中间值），返回值渲染在环形进度条中心或条状进度条右侧。每次渲染都会调用，即使 `showInfo` 为 `false`。 | <ApiType detail={"(percent: number) => React.ReactNode"}>Type</ApiType> | <ApiType detail={"(percent: number) => `${percent}%`"}>Type</ApiType> |
 | indeterminate | 是否为不确定状态。开启后 `percent` 不再控制进度长度，不显示文字，且不设置 `aria-valuenow`。 | `boolean` | `false` |
@@ -19,5 +20,6 @@ import ApiType from '#/components/ApiType.astro';
 | strokeLinecap | 环形进度条端点形状，可选 `round` 或 `square`；条状进度条不生效。 | `'round' \| 'square'` | `"round"` |
 | strokeWidth | 环形进度条的线宽。 | `number` | `4` |
 | style | 根元素的样式。 | `React.CSSProperties` | `{}` |
+| styles | 内部各部位的内联样式，键同 `classNames`。环形进度条的 `rail`、`track` 是 SVG 圆，需用 `stroke` 等 SVG 属性。 | <ApiType detail={"Partial\u003cRecord\u003cProgressPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | type | 类型，可选 `line` 或 `circle`。 | `'circle' \| 'line'` | `"line"` |
 | width | 环形进度条的直径，仅 `type` 为 `circle` 时生效；未设置时，`size` 为 `small` 取 24，否则取 72。 | `number` | - |

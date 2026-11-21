@@ -7,6 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | activeKey | 主视图中当前选中的选项 key。 | `string` | - |
 | afterVisibleChange | 可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。 | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
 | children | 不生效，内容由主视图或详情视图渲染。 | `JSX.Element` | - |
+| classNames | 内部各部位的类名，键为 header、title、close、copy、content、options、option、mainContent，与组件自带的类名合并。详情视图下 header、title、close 落在详情头部，close 是返回主视图的按钮，copy 是复制内容的按钮。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, string>>"}>Type</ApiType> | - |
 | closeOnEsc | 按下 Esc 键时是否触发 onCancel。 | `boolean` | - |
 | containerRef | 不生效，需要容器元素时使用 `ref`。 | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | defaultSize | 初始尺寸（宽度与高度），仅在 resizable 为 true 时生效。 | `{ width?: number \| string; height?: number \| string }` | - |
@@ -32,5 +33,6 @@ import ApiType from '#/components/ApiType.astro';
 | resizable | 宽度是否可拖拽调整，默认 true；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean` | - |
 | showClose | 是否显示头部的关闭按钮，默认 true。 | `boolean` | - |
 | style | 容器元素的内联样式，可传样式对象或样式字符串。 | `JSX.CSSProperties \| string` | - |
+| styles | 内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。 | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, PartStyle>>"}>Type</ApiType> | - |
 | title | 主视图的标题；详情视图使用内置的详情头部。 | `JSX.Element` | - |
 | visible | 是否显示。 | `boolean` | - |

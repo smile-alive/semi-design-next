@@ -206,26 +206,36 @@
             @mouseleave="foundation.handleWrapperLeave"
         >
             <div :class="[`${prefix}-rail`, props.classNames?.rail]" :style="props.styles?.rail" @click="foundation.handleWrapClick" />
-            <div :class="cssClasses.TRACK" :style="trackStyle" @click="foundation.handleWrapClick" />
+            <div :class="[cssClasses.TRACK, props.classNames?.track]" :style="[trackStyle, props.styles?.track]" @click="foundation.handleWrapClick" />
             <div v-if="marks.length" :class="cssClasses.DOTS">
                 <component :is="props.tooltipOnMark ? Tooltip : SlotFragment" v-for="mark in shownMarks" :key="mark.key">
                     <template #content>
                         <slot :label="mark.label" name="mark" :value="mark.value">{{ mark.label }}</slot>
                     </template>
                     <!-- Tooltip would otherwise inject tabindex 0; the mark tip is for the pointer only -->
-                    <span :class="[`${prefix}-dot`, { [`${prefix}-dot-active`]: mark.active === 'active' }]" :style="{ [layout.startProp]: `calc(${mark.percent}% - 2px)` }" :tabindex="-1" @click="foundation.handleWrapClick" />
+                    <span :class="[`${prefix}-dot`, { [`${prefix}-dot-active`]: mark.active === 'active' }, props.classNames?.dot]" :style="[{ [layout.startProp]: `calc(${mark.percent}% - 2px)` }, props.styles?.dot]" :tabindex="-1" @click="foundation.handleWrapClick" />
                 </component>
             </div>
             <div>
                 <!-- closeOnEsc off: the slider drives this tip, which Escape cannot hide, so the key goes on to the layer below -->
-                <Tooltip v-for="pos in handles" :key="pos" :class="`${cssClasses.HANDLE}-tooltip`" :closeOnEsc="false" position="top" :showArrow="props.showArrow" trigger="custom" :visible="state.isInRenderTree && (tips.tipVisible[pos] || state.focusVisibleHandle === pos)">
+                <Tooltip
+                    v-for="pos in handles"
+                    :key="pos"
+                    :class="[`${cssClasses.HANDLE}-tooltip`, props.classNames?.dropdown]"
+                    :closeOnEsc="false"
+                    position="top"
+                    :showArrow="props.showArrow"
+                    :style="props.styles?.dropdown"
+                    trigger="custom"
+                    :visible="state.isInRenderTree && (tips.tipVisible[pos] || state.focusVisibleHandle === pos)"
+                >
                     <template #content>
                         <slot :handle="pos" name="tip" :value="tips.tipChildren[pos]">{{ tips.tipChildren[pos] }}</slot>
                     </template>
                     <span
                         v-bind="NOT_A_TRIGGER_TARGET"
-                        :class="[cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: state.chooseMovePos === pos && state.isDrag }]"
-                        :style="{ [layout.startProp]: layout.handles[pos].start, zIndex: layout.handles[pos].zIndex }"
+                        :class="[cssClasses.HANDLE, { [`${cssClasses.HANDLE}-clicked`]: state.chooseMovePos === pos && state.isDrag }, props.classNames?.handle]"
+                        :style="[{ [layout.startProp]: layout.handles[pos].start, zIndex: layout.handles[pos].zIndex }, props.styles?.handle]"
                         @mousedown.prevent
                         @mouseenter="foundation.onHandleEnter(pos)"
                         @mouseleave="foundation.onHandleLeave"
@@ -261,7 +271,7 @@
                 </Tooltip>
             </div>
             <div v-if="props.showMarkLabel && marks.length" :class="cssClasses.MARKS + layout.reverse">
-                <span v-for="mark in shownMarks" :key="mark.key" :class="`${prefix}-mark${layout.reverse}`" :style="{ [layout.startProp]: `${mark.percent}%` }" @click="foundation.handleMarkClick(mark.value)">
+                <span v-for="mark in shownMarks" :key="mark.key" :class="[`${prefix}-mark${layout.reverse}`, props.classNames?.mark]" :style="[{ [layout.startProp]: `${mark.percent}%` }, props.styles?.mark]" @click="foundation.handleMarkClick(mark.value)">
                     <slot :label="mark.label" name="mark" :value="mark.value">{{ mark.label }}</slot>
                 </span>
             </div>

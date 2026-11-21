@@ -2,9 +2,9 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
     import { IconPlay } from '@fibrae/semi-icons-svelte';
-    import type { AnnotationItem } from './interface.js';
+    import type { AnnotationContentProps, AnnotationItem } from './interface.js';
 
-    let { item, onClick }: { item: AnnotationItem; onClick?: (event: MouseEvent) => void } = $props();
+    let { item, classNames, styles, onClick }: { item: AnnotationItem; classNames?: AnnotationContentProps['classNames']; styles?: AnnotationContentProps['styles']; onClick?: (event: MouseEvent) => void } = $props();
 
     const prefix = cssClasses.ANNOTATION_ITEM;
 </script>
@@ -13,7 +13,7 @@
 <!-- shortcut: an item without url is an anchor without href, activatable by pointer only; use a button when such
      items need keyboard access -->
 {#snippet footer()}
-    <div class={`${prefix}-footer`}>
+    <div class={[`${prefix}-footer`, classNames?.itemFooter]} style={styles?.itemFooter}>
         {#if item.logo}
             <img alt="" class={`${prefix}-footer-logo`} src={item.logo} />
         {/if}
@@ -27,7 +27,7 @@
 {/snippet}
 
 {#if item.type === 'video'}
-    <a class={[prefix, `${prefix}-video`]} href={item.url} rel="noopener noreferrer" target="_blank" onclick={onClick}>
+    <a class={[prefix, `${prefix}-video`, classNames?.item]} href={item.url} rel="noopener noreferrer" style={styles?.item} target="_blank" onclick={onClick}>
         <div class={`${prefix}-video-img-wrapper`}>
             {#if item.img}
                 <img alt="" class={`${prefix}-video-img`} src={item.img} />
@@ -38,14 +38,14 @@
             {/if}
         </div>
         <div class={`${prefix}-video-content`}>
-            <div class={`${prefix}-title`}>{item.title}</div>
+            <div class={[`${prefix}-title`, classNames?.itemTitle]} style={styles?.itemTitle}>{item.title}</div>
             {@render footer()}
         </div>
     </a>
 {:else}
-    <a class={[prefix, `${prefix}-text`]} href={item.url} rel="noopener noreferrer" target="_blank" onclick={onClick}>
-        <div class={`${prefix}-title`}>{item.title}</div>
-        <div class={`${prefix}-text-detail`}>{item.detail}</div>
+    <a class={[prefix, `${prefix}-text`, classNames?.item]} href={item.url} rel="noopener noreferrer" style={styles?.item} target="_blank" onclick={onClick}>
+        <div class={[`${prefix}-title`, classNames?.itemTitle]} style={styles?.itemTitle}>{item.title}</div>
+        <div class={[`${prefix}-text-detail`, classNames?.itemDetail]} style={styles?.itemDetail}>{item.detail}</div>
         {@render footer()}
     </a>
 {/if}

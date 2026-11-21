@@ -11,6 +11,10 @@
                 "zh-CN": "底部标记的形状、背景色、文字颜色、类名和样式；内容使用 bottomSlotText 插槽。",
                 "en-US": "Shape, background color, text color, class and style of the bottom badge; use the bottomSlotText slot for its content."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 image、label、mask、border，值的写法同 class，与组件自带的类名合并。image 是图片，label 是文字头像的文字，mask 是悬停遮罩，border 是额外边框（开启边框动效时动画圈同样应用）。",
+                "en-US": "Class names of the inner parts, keyed by image, label, mask and border; values take any class binding and merge with the built-in classes. image is the picture, label the text of a text avatar, mask the hover overlay and border the additional border (the animated ring too when the border motion is on)."
+            },
             "color": { "zh-CN": "头像的预设背景颜色。", "en-US": "Preset background color of the avatar." },
             "contentMotion": {
                 "zh-CN": "启用头像内容区域的动画。",
@@ -31,6 +35,10 @@
             },
             "src": { "zh-CN": "图片头像的资源地址。", "en-US": "Image source URL." },
             "srcSet": { "zh-CN": "图片头像的响应式资源集合。", "en-US": "Responsive image sources." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "topSlot": {
                 "zh-CN": "顶部标记的渐变色、文字颜色、类名和样式；内容使用 topSlotText 插槽。",
                 "en-US": "Gradient, text color, class and style of the top badge; use the topSlotText slot for its content."
@@ -66,6 +74,10 @@
     "avatar-group": {
         "source": "packages/semi-ui-vue/src/components/avatar/avatar-group.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 more，对应超出 maxCount 后显示「+N」的头像（用 more 插槽自定义时同样合并到其中的 Avatar 上），值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by more: the \"+N\" avatar shown past maxCount (also merged into the Avatar in the more slot); values take any class binding and merge with the built-in classes."
+            },
             "maxCount": {
                 "zh-CN": "显示的最大头像数，超出后显示 +N。",
                 "en-US": "Maximum number of visible avatars; overflow is shown as +N."
@@ -75,7 +87,11 @@
                 "en-US": "Avatar overlap direction: start or end."
             },
             "shape": { "zh-CN": "组内头像的形状。", "en-US": "Shape of the avatars in the group." },
-            "size": { "zh-CN": "组内头像的尺寸。", "en-US": "Size of the avatars in the group." }
+            "size": { "zh-CN": "组内头像的尺寸。", "en-US": "Size of the avatars in the group." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            }
         },
         "events": {},
         "slots": {

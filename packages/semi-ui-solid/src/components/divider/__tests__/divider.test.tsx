@@ -21,6 +21,17 @@ describe('Divider', () => {
         expect(container.firstChild).toHaveTextContent(/^divider title$/);
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const { container } = render(() => (
+            <Divider classNames={{ content: 'my-content' }} styles={{ content: { order: 1 } }}>
+                divider title
+            </Divider>
+        ));
+        const content = container.querySelector('.semi-divider_inner-text');
+        expect(content).toHaveClass('my-content');
+        expect(content).toHaveStyle({ order: '1' });
+    });
+
     it('align 对齐', () => {
         const { container } = render(() => (
             <div>

@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by expand (expand or collapse button) and copy (copy button; the wrapping span still takes copyable.class); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTypographyParagraphPart, ClassValue>>"}>Type</ApiType> | `undefined` |
 | component | Element to render: a tag name or a Vue component. Defaults to p. | `string \| Component` | `undefined` |
 | copyable | Whether the text can be copied; pass an object for the Copyable Config. | `boolean \| TypographyCopyableConfig` | `false` |
 | delete | Adds a strikethrough. | `boolean` | `false` |
@@ -14,6 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Text size; inherit takes the size of the enclosing Text or Paragraph. | `"inherit" \| "normal" \| "small"` | `"normal"` |
 | spacing | Line spacing; extended is looser. | `"extended" \| "normal"` | `"normal"` |
 | strong | Whether the text is bold. | `boolean` | `false` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTypographyParagraphPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 | type | Text type. | <ApiType detail={"\"danger\" \u007c \"primary\" \u007c \"quaternary\" \u007c \"secondary\" \u007c \"success\" \u007c \"tertiary\" \u007c \"warning\""}>Type</ApiType> | `"primary"` |
 | underline | Adds an underline. | `boolean` | `false` |
 

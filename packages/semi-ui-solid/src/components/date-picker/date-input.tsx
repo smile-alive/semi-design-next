@@ -1,6 +1,6 @@
 import { type JSX, Show, children, mergeProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { cssClasses, strings, type DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputChangeProps, type InsetInputProps, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
@@ -17,7 +17,7 @@ type RangeFocusEvent = FocusEvent | MouseEvent;
 
 type ComboboxKeys = 'role' | 'aria-label' | 'aria-labelledby' | 'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'aria-describedby' | 'aria-errormessage' | 'aria-invalid' | 'aria-required' | 'insetLabelId' | 'clearIcon' | 'size' | 'tabIndex';
 
-export interface DateInputProps extends Omit<DateInputFoundationProps, 'insetLabel' | 'prefix' | 'rangeSeparatorNode' | 'inputStyle' | keyof DateInputFoundationEvents>, DateInputFoundationEvents, Pick<InputProps, ComboboxKeys> {
+export interface DateInputProps extends Omit<DateInputFoundationProps, 'insetLabel' | 'prefix' | 'rangeSeparatorNode' | keyof DateInputFoundationEvents>, DateInputFoundationEvents, Pick<InputProps, ComboboxKeys> {
     locale: Locale['DatePicker'];
     placeholder?: string | string[];
     inputValue?: string | null;
@@ -28,7 +28,8 @@ export interface DateInputProps extends Omit<DateInputFoundationProps, 'insetLab
     rangeInputFocus?: RangeInput | false;
     insetLabel?: JSX.Element;
     prefix?: JSX.Element;
-    inputStyle?: JSX.CSSProperties | string;
+    classNames?: Partial<Record<DatePickerPart, string>>;
+    styles?: Partial<Record<DatePickerPart, JSX.CSSProperties | string>>;
     value?: Date[];
     inputRef?: (element: HTMLInputElement) => void;
     rangeInputStartRef?: (element: HTMLInputElement) => void;
@@ -168,8 +169,8 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         inputRef={setRangeStartInput}
-                        class={props.inputClassName}
-                        style={props.inputStyle}
+                        class={props.classNames?.input}
+                        style={props.styles?.input}
                         autofocus={props.autofocus}
                         disabled={props.disabled}
                         placeholder={placeholders()[0]}
@@ -191,9 +192,14 @@ export default function DateInput(rawProps: DateInputProps) {
                     />
                 </div>
                 <span
-                    class={clsx(`${cssClasses.PREFIX}-range-input-separator`, {
-                        [`${cssClasses.PREFIX}-range-input-separator-active`]: (parts().rangeStart || parts().rangeEnd) && !props.disabled,
-                    })}
+                    class={clsx(
+                        `${cssClasses.PREFIX}-range-input-separator`,
+                        {
+                            [`${cssClasses.PREFIX}-range-input-separator-active`]: (parts().rangeStart || parts().rangeEnd) && !props.disabled,
+                        },
+                        props.classNames?.separator
+                    )}
+                    style={props.styles?.separator}
                     onClick={focusFromWrapper('rangeStart')}
                 >
                     {separatorNode() ?? props.rangeSeparator}
@@ -208,8 +214,8 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         inputRef={props.rangeInputEndRef}
-                        class={props.inputClassName}
-                        style={props.inputStyle}
+                        class={props.classNames?.input}
+                        style={props.styles?.input}
                         disabled={props.disabled}
                         placeholder={placeholders()[1]}
                         readOnly={props.inputReadOnly}
@@ -229,13 +235,13 @@ export default function DateInput(rawProps: DateInputProps) {
                     />
                 </div>
                 <Show when={allowClear()}>
-                    <button ref={clearHandover} type="button" class={`${cssClasses.PREFIX}-range-input-clearbtn`} aria-label={props.locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
+                    <button ref={clearHandover} type="button" class={clsx(`${cssClasses.PREFIX}-range-input-clearbtn`, props.classNames?.clear)} style={props.styles?.clear} aria-label={props.locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
                         <Show when={hasContent(clearIcon())} fallback={<IconClear />}>
                             {clearIcon()}
                         </Show>
                     </button>
                 </Show>
-                <div class={`${cssClasses.PREFIX}-range-input-suffix`} onClick={foundation.handleRangeInputAffixClick}>
+                <div class={clsx(`${cssClasses.PREFIX}-range-input-suffix`, props.classNames?.suffix)} style={props.styles?.suffix} onClick={foundation.handleRangeInputAffixClick}>
                     {props.type.includes('Time') ? <IconCalendarClock /> : <IconCalendar />}
                 </div>
             </>
@@ -309,8 +315,10 @@ export default function DateInput(rawProps: DateInputProps) {
             aria-invalid={props['aria-invalid']}
             aria-required={props['aria-required']}
             inputRef={props.inputRef}
-            class={clsx(inputCls(), props.inputClassName)}
-            style={props.inputStyle}
+            class={clsx(inputCls(), props.classNames?.input)}
+            style={props.styles?.input}
+            classNames={{ suffix: props.classNames?.suffix, clear: props.classNames?.clear }}
+            styles={{ suffix: props.styles?.suffix, clear: props.styles?.clear }}
             autofocus={props.autofocus}
             borderless={props.borderless}
             clearIcon={props.clearIcon}

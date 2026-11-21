@@ -1,5 +1,5 @@
 import type { ClassValue, StyleValue, VNode } from 'vue';
-import type { RadioPart } from '@fibrae/semi-foundation/components/radio/constants';
+import type { RadioGroupPart, RadioPart } from '@fibrae/semi-foundation/components/radio/constants';
 
 export type RadioValue = string | number | boolean;
 export type RadioType = 'default' | 'button' | 'card' | 'pureCard';
@@ -76,6 +76,8 @@ export interface RadioGroupProps<T extends RadioValue = RadioValue> {
     mode?: RadioMode;
     type?: RadioType;
     buttonSize?: RadioGroupButtonSize;
+    classNames?: Partial<Record<RadioGroupPart, ClassValue>>;
+    styles?: Partial<Record<RadioGroupPart, StyleValue>>;
 }
 
 export interface RadioGroupOptionSlotProps {

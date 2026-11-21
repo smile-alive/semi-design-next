@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { AnnotationPart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import type { ContainerProps } from '../container/interface.js';
 
 export interface AnnotationItem {
@@ -33,6 +34,8 @@ export interface AnnotationItemSnippetProps {
 }
 
 interface AnnotationContentOwnProps {
+    classNames?: Partial<Record<AnnotationPart, ClassValue>>;
+    styles?: Partial<Record<AnnotationPart, string>>;
     /** Bindable; the open groups */
     activeKey?: string | string[];
     info?: AnnotationInfo[];
@@ -47,6 +50,6 @@ interface AnnotationContentOwnProps {
 export interface AnnotationContentProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange' | 'onclick'>, AnnotationContentOwnProps {}
 
 // The container's `header` replaces its header, so the content's group header is renamed `infoHeader`
-export interface AnnotationProps extends Omit<ContainerProps, 'onchange' | 'onclick' | 'children'>, Omit<AnnotationContentOwnProps, 'header'> {
+export interface AnnotationProps extends Omit<ContainerProps, 'onchange' | 'onclick' | 'children' | 'classNames' | 'styles'>, Omit<AnnotationContentOwnProps, 'header'> {
     infoHeader?: Snippet<[AnnotationHeaderSnippetProps]>;
 }

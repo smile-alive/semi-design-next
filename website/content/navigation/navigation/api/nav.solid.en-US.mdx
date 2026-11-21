@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| classNames | Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `body`, `list`, `item`, `itemIcon`, `itemText`, `itemToggleIcon`, `subNav`, `subNavTitle`, `subNavList` and `subNavDropdown`; merged with the built-in classes. The `item*` keys apply to every item, and `itemIcon`, `itemText` and `itemToggleIcon` also to the title of a sub nav; the `subNav*` keys apply to every sub nav. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | defaultIsCollapsed | Whether the navigation starts collapsed. Applies only when `mode` is `vertical`. | `boolean` | - |
 | defaultOpenKeys | `itemKey`s of the sub navigations open initially. Applies only when `mode` is `vertical` and the sidebar is expanded. | `ItemKey[]` | - |
 | defaultSelectedKeys | `itemKey`s of the items selected initially. | `ItemKey[]` | - |

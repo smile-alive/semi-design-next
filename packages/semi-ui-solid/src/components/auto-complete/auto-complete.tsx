@@ -410,6 +410,8 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
             validateStatus={props.validateStatus}
             showClear={local.showClear}
             clearIcon={clearIcon()}
+            classNames={{ input: local.classNames?.input, prefix: local.classNames?.prefix, suffix: local.classNames?.suffix, clear: local.classNames?.clear }}
+            styles={{ input: local.styles?.input, prefix: local.styles?.prefix, suffix: local.styles?.suffix, clear: local.styles?.clear }}
             // the host's own adornments only: global Input defaults must not add any
             prefix={labelNode() ?? null}
             suffix={suffixNode() ?? null}
@@ -447,6 +449,8 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
                                 current={index() === state().focusIndex}
                                 focused={index() === state().focusIndex}
                                 prefixCls={cssClasses.PREFIX_OPTION}
+                                parentClassNames={local.classNames}
+                                parentStyles={local.styles}
                                 semiOptionId={optionId(index())}
                                 showTick={false}
                                 onMouseEnter={() => foundation.handleOptionMouseEnter(index())}

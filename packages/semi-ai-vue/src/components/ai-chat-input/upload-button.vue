@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, h, useTemplateRef } from 'vue';
+    import { computed, h, useTemplateRef, type ClassValue, type StyleValue } from 'vue';
     import { omit } from 'es-toolkit';
     import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
     import Tooltip, { type TooltipProps } from '@fibrae/semi-ui-vue/tooltip/index';
@@ -12,6 +12,8 @@
         attachments: Attachment[];
         tipProps?: Omit<TooltipProps, 'content'>;
         hidden: boolean;
+        buttonClass?: ClassValue;
+        buttonStyle?: StyleValue;
     }>();
 
     const emit = defineEmits<{ change: [props: UploadOnChangeProps] }>();
@@ -29,7 +31,7 @@
     const openFileDialog = () => upload.value?.openFileDialog();
 
     const slotProps = (): AIChatInputUploadButtonSlotProps => ({
-        defaultNode: h(UploadIcon, { disabled: disabled.value }),
+        defaultNode: h(UploadIcon, { disabled: disabled.value, class: props.buttonClass, style: props.buttonStyle }),
         onOpenFileDialog: openFileDialog,
         disabled: disabled.value,
         attachments: props.attachments,
@@ -48,11 +50,11 @@
                     <slot name="uploadTip" />
                 </template>
                 <slot v-if="$slots.uploadButton" name="uploadButton" v-bind="slotProps()" />
-                <UploadIcon v-else :disabled="disabled" />
+                <UploadIcon v-else :class="props.buttonClass" :disabled="disabled" :style="props.buttonStyle" />
             </Tooltip>
             <template v-else>
                 <slot v-if="$slots.uploadButton" name="uploadButton" v-bind="slotProps()" />
-                <UploadIcon v-else :disabled="disabled" />
+                <UploadIcon v-else :class="props.buttonClass" :disabled="disabled" :style="props.buttonStyle" />
             </template>
         </template>
     </Upload>

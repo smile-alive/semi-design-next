@@ -6,7 +6,20 @@
     import type { DescriptionsData, DescriptionsProps } from './interface.js';
 
     const defaults = useDefaultProps('Descriptions');
-    const { align = defaults('align', 'center'), row = defaults('row', false), size = defaults('size', 'medium'), data = defaults('data', []), layout = defaults('layout', 'vertical'), column = defaults('column', 3), itemKey, value, ...rest }: DescriptionsProps = $props();
+
+    const {
+        align = defaults('align', 'center'),
+        classNames = defaults('classNames'),
+        row = defaults('row', false),
+        size = defaults('size', 'medium'),
+        data = defaults('data', []),
+        layout = defaults('layout', 'vertical'),
+        column = defaults('column', 3),
+        styles = defaults('styles'),
+        itemKey,
+        value,
+        ...rest
+    }: DescriptionsProps = $props();
 
     const prefixCls = cssClasses.PREFIX;
 
@@ -18,26 +31,28 @@
               )
             : []
     );
+
+    const joinStyles = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(';') || undefined;
 </script>
 
 {#snippet cells(item: DescriptionsData, index: number, span: number | undefined)}
     {#if align === 'plain'}
         <td class={`${prefixCls}-item`} colspan={span || 1}>
-            <span class={[`${prefixCls}-key`, item.classNames?.key]} style={item.styles?.key}>
+            <span class={[`${prefixCls}-key`, classNames?.itemKey, item.classNames?.key]} style={joinStyles(styles?.itemKey, item.styles?.key)}>
                 {#if itemKey}{@render itemKey({ item, index })}{:else}{item.key}{/if}:</span
             >
-            <span class={`${prefixCls}-value`}>
+            <span class={[`${prefixCls}-value`, classNames?.itemValue, item.classNames?.value]} style={joinStyles(styles?.itemValue, item.styles?.value)}>
                 {#if value}{@render value({ item, index })}{:else}{item.value}{/if}
             </span>
         </td>
     {:else}
         <th class={[`${prefixCls}-item`, `${prefixCls}-item-th`]}>
-            <span class={[`${prefixCls}-key`, item.classNames?.key]} style={item.styles?.key}>
+            <span class={[`${prefixCls}-key`, classNames?.itemKey, item.classNames?.key]} style={joinStyles(styles?.itemKey, item.styles?.key)}>
                 {#if itemKey}{@render itemKey({ item, index })}{:else}{item.key}{/if}
             </span>
         </th>
         <td class={[`${prefixCls}-item`, `${prefixCls}-item-td`]} colspan={span ? span * 2 - 1 : 1}>
-            <span class={`${prefixCls}-value`}>
+            <span class={[`${prefixCls}-value`, classNames?.itemValue, item.classNames?.value]} style={joinStyles(styles?.itemValue, item.styles?.value)}>
                 {#if value}{@render value({ item, index })}{:else}{item.value}{/if}
             </span>
         </td>

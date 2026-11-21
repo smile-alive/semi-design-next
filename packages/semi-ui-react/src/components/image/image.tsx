@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { omit } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/components/image/image-foundation';
 import '@fibrae/semi-foundation/components/image/image.scss';
@@ -66,15 +65,7 @@ export default function Image(rawProps: ImageProps) {
     const unregisterImage = context?.unregisterImage;
     const groupPreviewSrc = preview ? previewSrc : undefined;
     const previewTitle = previewObject?.previewTitle;
-
-    const previewProps =
-        previewObject && canPreview
-            ? {
-                  ...omit(previewObject, ['classNames', 'styles']),
-                  className: previewObject.classNames?.preview,
-                  style: previewObject.styles?.preview,
-              }
-            : {};
+    const previewProps = previewObject && canPreview ? previewObject : {};
 
     useLayoutEffect(() => {
         if (!isInGroup) {
@@ -132,7 +123,11 @@ export default function Image(rawProps: ImageProps) {
                     onError={foundation.handleError}
                     onLoad={foundation.handleLoaded}
                 />
-                {extra && <div className={`${prefixCls}-overlay`}>{extra}</div>}
+                {extra && (
+                    <div className={clsx(`${prefixCls}-overlay`, classNames?.overlay)} style={styles?.overlay}>
+                        {extra}
+                    </div>
+                )}
             </div>
             {/* a sibling: clicks inside the portal bubble through the React tree and would reopen the thumbnail */}
             {canPreview && (

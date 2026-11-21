@@ -1453,6 +1453,63 @@ describe('Dropdown 行为', () => {
         expect(screen.queryByRole('menuitem', { name: 'Deep' })).toBeNull();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['wrapper', 'content', 'menu', 'item', 'itemIcon'] as const;
+        const selectors = { wrapper: `.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`, content: `.${BASE_CLASS_PREFIX}-dropdown`, menu: `.${BASE_CLASS_PREFIX}-dropdown-menu`, item: el_item, itemIcon: `${el_item}-icon` };
+        render(
+            <Dropdown classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} menu={[{ node: 'item', name: 'A', icon: <i /> }]} motion={false} trigger="custom" visible>
+                text trigger
+            </Dropdown>
+        );
+        for (const part of parts) {
+            const el = document.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('Dropdown 的 item、itemIcon 在子菜单里继续生效，Dropdown.Item 自己的 classNames 排在其后', () => {
+        render(
+            <Dropdown
+                classNames={{ item: 'outer-item', itemIcon: 'outer-icon', menu: 'outer-menu' }}
+                styles={{ item: { order: 1 } }}
+                motion={false}
+                render={
+                    <Dropdown.Menu>
+                        <Dropdown
+                            classNames={{ item: 'inner-item' }}
+                            styles={{ item: { opacity: 0.5 } }}
+                            motion={false}
+                            render={
+                                <Dropdown.Menu>
+                                    <Dropdown.Item classNames={{ icon: 'own-icon' }} style={{ order: 3 }} styles={{ icon: { order: 4 } }} icon={<i />}>
+                                        Inner
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            }
+                            trigger="custom"
+                            visible
+                        >
+                            <Dropdown.Item>Parent</Dropdown.Item>
+                        </Dropdown>
+                    </Dropdown.Menu>
+                }
+                trigger="custom"
+                visible
+            >
+                <button>owner</button>
+            </Dropdown>
+        );
+        const custom = (el: Element) => [...el.classList].filter((c) => /^(outer|inner|own)-/.test(c));
+        const inner = screen.getByRole('menuitem', { name: 'Inner' });
+        expect(custom(inner)).toEqual(['outer-item', 'inner-item']);
+        expect(inner).toHaveStyle({ order: '3', opacity: '0.5' });
+        expect(custom(inner.querySelector(`${el_item}-icon`))).toEqual(['outer-icon', 'own-icon']);
+        expect(inner.querySelector(`${el_item}-icon`)).toHaveStyle({ order: '4' });
+        expect(custom(inner.parentElement)).toEqual(['outer-menu']);
+        expect(custom(screen.getByRole('menuitem', { name: 'Parent' }))).toEqual(['outer-item']);
+    });
+
     it('文本输入框作触发器时能输入空格', async () => {
         render(
             <Dropdown menu={[{ node: 'item', name: 'Alpha' }]} motion={false} trigger="click">

@@ -148,6 +148,9 @@
             get align() {
                 return align;
             },
+            get classNames() {
+                return classNames;
+            },
             get customMarkDownComponents() {
                 return customMarkDownComponents;
             },
@@ -162,6 +165,9 @@
             },
             get roleConfig() {
                 return roleConfig;
+            },
+            get styles() {
+                return styles;
             },
         },
         snippets: {
@@ -231,27 +237,27 @@
 
 <div {...rest} class={[PREFIX, rest.class]} role={namedRole(rest)} ondragend={onDragEnd} ondragover={onDragOver} ondragstart={onDragStart}>
     {#if uploadWays.dragUpload && states().uploadAreaVisible}
-        <div bind:this={dropArea} class="{PREFIX}-dropArea" role="presentation" ondragleave={foundation.handleContainerDragLeave} ondragover={foundation.handleContainerDragOver} ondrop={foundation.handleContainerDrop}>
+        <div bind:this={dropArea} class={[`${PREFIX}-dropArea`, classNames?.dropArea]} role="presentation" style={styles?.dropArea} ondragleave={foundation.handleContainerDragLeave} ondragover={foundation.handleContainerDragOver} ondrop={foundation.handleContainerDrop}>
             <span class="{PREFIX}-dropArea-text">{locale().locale.dropAreaText}</span>
         </div>
     {/if}
     <div class="{PREFIX}-inner">
         {@render topSlot?.()}
         <div class="{PREFIX}-content">
-            <div {@attach observeResize(foundation.handleScrollContainerResize)} aria-busy={streaming} aria-label={locale().locale.messages} bind:this={container} class="{PREFIX}-container" role="log" tabindex="-1" onscroll={foundation.containerScroll}>
+            <div {@attach observeResize(foundation.handleScrollContainerResize)} aria-busy={streaming} aria-label={locale().locale.messages} bind:this={container} class={[`${PREFIX}-container`, classNames?.messages]} role="log" style={styles?.messages} tabindex="-1" onscroll={foundation.containerScroll}>
                 {#each currentChats as item, index (item.id)}
                     {#if item.role === ROLE.DIVIDER}
                         {#if divider}
                             {@render divider({ message: item })}
                         {:else}
-                            <Divider class={PREFIX_DIVIDER}>{locale().locale.clearContext}</Divider>
+                            <Divider class={[PREFIX_DIVIDER, classNames?.divider]} style={styles?.divider}>{locale().locale.clearContext}</Divider>
                         {/if}
                     {:else}
                         <ChatBox continueSend={index > 0 && item.role === currentChats[index - 1].role} isLast={index === currentChats.length - 1} message={item} />
                     {/if}
                 {/each}
                 {#if hints?.length}
-                    <Hint class={classNames?.hint} {hintBox} {hints} onHintClick={foundation.handleHintClick} style={styles?.hint} />
+                    <Hint class={classNames?.hint} {hintBox} {hints} itemClass={classNames?.hintItem} itemStyle={styles?.hintItem} onHintClick={foundation.handleHintClick} style={styles?.hint} />
                 {/if}
             </div>
             <!-- outside the log: a toast inside it would be announced as one more log entry -->
@@ -261,7 +267,7 @@
         </div>
         {#if showBackBottom}
             <span {@attach handoverToInput} class="{PREFIX}-action">
-                <Button aria-label={locale().locale.backToBottom} class="{PREFIX}-action-content {PREFIX}-action-backBottom" type="tertiary" onclick={foundation.scrollToBottomWithAnimation}>
+                <Button aria-label={locale().locale.backToBottom} class={[`${PREFIX}-action-content`, `${PREFIX}-action-backBottom`, classNames?.backBottom]} style={styles?.backBottom} type="tertiary" onclick={foundation.scrollToBottomWithAnimation}>
                     {#snippet icon()}
                         <IconChevronDown size="extra-large" />
                     {/snippet}
@@ -270,7 +276,7 @@
         {/if}
         {#if generating}
             <span {@attach handoverToInput} class="{PREFIX}-action">
-                <Button class="{PREFIX}-action-content {PREFIX}-action-stop" type="tertiary" onclick={foundation.stopGenerate}>
+                <Button class={[`${PREFIX}-action-content`, `${PREFIX}-action-stop`, classNames?.stop]} style={styles?.stop} type="tertiary" onclick={foundation.stopGenerate}>
                     {#snippet icon()}
                         <IconDisc size="extra-large" />
                     {/snippet}
@@ -287,12 +293,16 @@
             {inputArea}
             inputBoxClass={classNames?.inputBox}
             inputBoxStyle={styles?.inputBox}
+            inputClass={classNames?.input}
+            inputStyle={styles?.input}
             onClear={foundation.clearContext}
             onInputChange={foundation.handleInputChange}
             onSend={foundation.sendMessage}
             pasteUpload={uploadWays.pasteUpload}
             {placeholder}
+            sendClass={classNames?.send}
             {sendHotKey}
+            sendStyle={styles?.send}
             {showClearContext}
             {uploadButton}
             {uploadProps}

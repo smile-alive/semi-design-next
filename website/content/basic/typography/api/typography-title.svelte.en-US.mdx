@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by expand (expand or collapse button) and copy (copy button; the wrapping span still takes copyable.class); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTypographyTitlePart, ClassValue>>"}>Type</ApiType> | - |
 | component | Tag name of the element to render. Defaults to h1 to h6 by heading. | `string` | - |
 | copyable | Whether the text can be copied; pass an object for the Copyable Config. | `TypographyCopyableConfig \| boolean` | - |
 | copyAction | Snippet that replaces the whole copy node, with the argument `{ copied, copy, config }`; `copy` takes the click event. | <ApiType detail={"Snippet\u003c[TypographyCopyActionProps]>"}>Type</ApiType> | - |
@@ -19,6 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | link | Whether the text is a link; with an object, its attributes (href, target, class, style, onclick and so on) are applied to the a element. | `LinkType` | - |
 | mark | Adds a highlight. | `boolean` | - |
 | strong | Whether the text is bold. | `boolean` | - |
+| styles | Inline styles of the inner parts, as strings, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTypographyTitlePart, string>>"}>Type</ApiType> | - |
 | type | Text type. | `TypographyBaseType` | - |
 | underline | Adds an underline. | `boolean` | - |
 | weight | Font weight: light, regular, medium, semibold, bold, default, or a number. | <ApiType detail={"'bold' \u007c 'default' \u007c 'light' \u007c 'medium' \u007c 'regular' \u007c 'semibold' \u007c number"}>Type</ApiType> | - |

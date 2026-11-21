@@ -25,8 +25,8 @@
                 "en-US": "Class name of the outermost element inside the portal."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与组件自带的类名合并；自定义 `header` 时没有 `header` 部位。",
-                "en-US": "Class names of the inner parts, keyed by `mask`, `content`, `header`, `body` and `footer`; merged with the built-in classes. There is no `header` part when `header` is customized."
+                "zh-CN": "内部各部位的类名，键为 `mask`、`content`、`header`、`title`、`icon`、`close`、`body`、`footer`，与组件自带的类名合并；自定义 `header` 时没有 `header`、`title`、`icon`、`close` 部位。",
+                "en-US": "Class names of the inner parts, keyed by `mask`, `content`, `header`, `title`, `icon`, `close`, `body` and `footer`; merged with the built-in classes. There are no `header`, `title`, `icon` and `close` parts when `header` is customized."
             },
             "closable": {
                 "zh-CN": "是否显示右上角的关闭按钮。",

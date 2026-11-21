@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | adaptiveTip | Tip of the fit-to-page button; without it, the locale text is used. | `string` | - |
 | children | The Image components to preview. | `ReactNode` | - |
 | className | Class name of the group root div. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `preview` (the preview layer, the `role="dialog"` element), `header`, `title`, `close`, `img` (the enlarged image), `prev`, `next`, `footer`, `page` and `action` (every button of the footer toolbar); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePreviewPart, string>>"}>Type</ApiType> | - |
 | closable | Whether to show the close button. | `boolean` | `true` |
 | closeOnEsc | Whether pressing Esc closes the preview, `true` by default. | `boolean` | - |
 | crossOrigin | The crossOrigin passed to the native img element of the preview image, `anonymous` or `use-credentials`. | `'anonymous' \| 'use-credentials'` | - |

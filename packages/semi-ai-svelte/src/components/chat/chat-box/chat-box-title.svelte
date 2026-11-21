@@ -5,13 +5,13 @@
 
     let { message, role }: { message: ChatMessage; role: ChatMetadata } = $props();
 
-    const { snippets } = getChatContext();
+    const { view, snippets } = getChatContext();
 
     const titleClass = `${cssClasses.PREFIX_CHAT_BOX}-title`;
 </script>
 
 {#snippet defaultTitle()}
-    <span class={titleClass}>{role.name}</span>
+    <span class={[titleClass, view.classNames?.itemTitle]} style={view.styles?.itemTitle}>{role.name}</span>
 {/snippet}
 
 {#if snippets.title}

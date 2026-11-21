@@ -3,7 +3,7 @@
     import DropdownMenuFoundation, { type DropdownContextAdapter } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
     import { useFoundation } from '../../base/index.js';
     import { getConfigContext } from '../config-provider/context.js';
-    import { getDropdownContext, menuContext } from './context.js';
+    import { getDropdownContext, joinStyles, menuContext } from './context.js';
     import type { DropdownMenuProps } from './interface.js';
 
     type Adapter = DropdownContextAdapter<DropdownMenuProps, Record<string, never>>;
@@ -29,6 +29,6 @@
 </script>
 
 <!-- role and aria-orientation precede the spread so the caller can override them -->
-<ul aria-orientation="vertical" role="menu" {...rest} class={[`${cssClasses.PREFIX}-menu`, rest.class]} onkeydown={handleKeyDown}>
+<ul aria-orientation="vertical" role="menu" {...rest} class={[`${cssClasses.PREFIX}-menu`, rest.class, ctx?.view.classNames?.menu]} style={joinStyles(ctx?.view.styles?.menu, rest.style)} onkeydown={handleKeyDown}>
     {@render children?.()}
 </ul>

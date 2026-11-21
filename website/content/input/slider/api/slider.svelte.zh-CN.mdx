@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | 手柄的可访问名称；range 模式下两个手柄在其后分别追加语言包中的起点、终点。 | `string \| null` | - |
 | aria-labelledby | 引用标签元素的 id，作为手柄的可访问名称；range 模式下每个手柄再加上起点或终点。 | `string \| null` | - |
 | aria-valuetext | 为当前值提供用户友好的名称。 | `string \| null` | - |
-| classNames | 内部各部位的类名，键为 rail，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `rail`、`track`、`handle`、`dot`、`mark`、`dropdown`，值的写法同 class（字符串、数组或对象），与组件自带的类名合并；`dropdown` 是悬停、拖动或聚焦手柄时显示当前值的提示弹出层。 | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, ClassValue>>"}>Type</ApiType> | - |
 | disabled | 滑块是否禁用。 | `boolean` | `false` |
 | getAriaValueText | 为当前值提供用户友好的名称，参数为滑块的值与滑块的顺序。 | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |
 | handleDot | 滑块上的圆点，单个滑块传一个对象，range 时按手柄传数组。 | `HandleDot \| HandleDot[]` | - |
@@ -28,7 +28,7 @@ import ApiType from '#/components/ApiType.astro';
 | showBoundary | 是否在悬停时展示最大值与最小值。 | `boolean` | `false` |
 | showMarkLabel | 是否显示刻度标签。 | `boolean` | `true` |
 | step | 步长，从 min 起计算。 | `number` | `1` |
-| styles | 内部各部位的样式字符串，键为 rail。 | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
+| styles | 内部各部位的样式字符串，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cSliderPart, string>>"}>Type</ApiType> | - |
 | tip | 自定义手柄提示内容的 snippet；参数为 `{ value, handle }`，value 为 tipFormatter 的结果，handle 为 min 或 max。 | <ApiType detail={"Snippet\u003c[SliderTipSnippetProps]>"}>Type</ApiType> | - |
 | tipFormatter | 设置提示的展示格式，每个手柄单独调用，参数为该手柄的值；默认显示当前取值，null 隐藏提示。 | <ApiType detail={"((value: number) => string \u007c number) \u007c null"}>Type</ApiType> | <ApiType detail={"(tipValue: number) => tipValue"}>Type</ApiType> |
 | tooltipOnMark | 刻度上是否带有提示。 | `boolean` | `false` |

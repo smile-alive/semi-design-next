@@ -1,13 +1,14 @@
 <script lang="ts">
     import { type Snippet, tick } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { handoverFocus } from '@fibrae/semi-foundation/utils';
     import { IconChevronRightStroked } from '@fibrae/semi-icons-svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
 
-    let { children }: { children?: Snippet } = $props();
+    let { children, class: className, style }: { children?: Snippet; class?: ClassValue; style?: string } = $props();
 
     const locale = useLocale('AIChatInput');
 
@@ -57,7 +58,7 @@
     };
 </script>
 
-<div bind:this={wrapper} class={`${prefix}-scroll-wrapper`}>
+<div bind:this={wrapper} class={[`${prefix}-scroll-wrapper`, className]} {style}>
     {#if canScrollLeft}
         <button aria-label={locale().locale.scrollLeft} class={[`${prefix}-scroll-button`, `${prefix}-scroll-button-left`]} type="button" onclick={() => scroll(-numbers.SCROLL_AMOUNT)}>
             <IconChevronRightStroked class={`${prefix}-scroll-button-left-icon`} />

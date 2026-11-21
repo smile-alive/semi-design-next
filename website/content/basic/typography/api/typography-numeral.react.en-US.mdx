@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | children | Content to format. Numbers are formatted in text at any depth, including inside child elements. | `React.ReactNode` | - |
+| classNames | Class names of the inner parts, keyed by `icon` (icon container); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTypographyNumeralPart, string>>"}>Type</ApiType> | - |
 | code | Whether the text is wrapped in a `code` element. | `boolean` | - |
 | component | Tag name or component the root element renders as. Defaults to `span`; use `div` when the content has block elements such as `p`. | `React.ElementType` | - |
 | copyable | Whether the text can be copied; pass an object to configure it, see Copyable Config. | `CopyableConfig \| boolean` | - |
@@ -19,6 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | rule | Parsing rule: `text` only rounds, `numbers` filters out non-numeric characters, `bytes-decimal` and `bytes-binary` convert byte units (1 KB is 1000 bytes, 1 KiB is 1024 bytes), `percentages` converts to percent, `exponential` converts to scientific notation. | `TypographyBaseRule` | `"text"` |
 | size | Text size: `normal`, `small` or `inherit`. `inherit` takes the size of the enclosing Typography component. Defaults to `normal`. | `TypographyBaseSize` | - |
 | strong | Whether the text is bold. | `boolean` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTypographyNumeralPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | truncate | How the kept decimals are rounded, matching `Math.ceil`, `Math.floor` and `Math.round`. | `TypographyBaseTruncate` | `"round"` |
 | type | Text type: `primary`, `secondary`, `danger`, `warning`, `success`, `tertiary` or `quaternary`. Defaults to `primary`. | `TypographyBaseType` | - |
 | underline | Adds an underline. Link text shows it only on hover and active. | `boolean` | - |

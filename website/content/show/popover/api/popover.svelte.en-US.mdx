@@ -13,7 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
 | child | Snippet that renders the trigger element itself. Its argument `{ props }` must be spread whole onto the trigger; when `child` is passed, `children` has no effect. | `TooltipProps['child']` | - |
 | children | Snippet for the trigger. It is wrapped in Tooltip's own span, which receives the trigger attributes. | `TooltipProps['children']` | - |
-| class | Class name of the popup. | `string` | - |
+| class | Class name of the popup. | `ClassValue` | - |
 | classNames | Class names of the inner parts, keyed by `content` (the content card) and `arrow`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cPopoverPart, ClassValue>>"}>Type</ApiType> | - |
 | clickToHide | Whether a click on the popup or anything inside it closes the popup. | `boolean` | - |
 | closeOnEsc | Whether Esc closes the open popup. With trigger custom it only calls onEscKeyDown and the caller decides whether to close. | `boolean` | `true` |

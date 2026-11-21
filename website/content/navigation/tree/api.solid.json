@@ -183,8 +183,8 @@
                 "en-US": "Renders a node's label with the label, the node data and the search word; called again when one of them changes. Search still matches the label text in treeData."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `search`（搜索框容器），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `search` (the search box container); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `search`、`list`、`empty`、`item`、`itemSwitcher`、`itemCheckbox`、`itemIcon`、`itemTitle`，与组件自带的类名合并。`item*` 作用到每个节点：`item` 是节点行（`role=\"treeitem\"`），`itemSwitcher` 是展开箭头位；`itemIcon` 只作用于 `directory` 的内置图标，自定义图标不带它，自定义 `expandIcon` 只带 `itemSwitcher` 的类名、不带样式。",
+                "en-US": "Class names of the inner parts, keyed by `search`, `list`, `empty`, `item`, `itemSwitcher`, `itemCheckbox`, `itemIcon` and `itemTitle`; merged with the built-in classes. The `item*` keys apply to every node: `item` is the node row (`role=\"treeitem\"`) and `itemSwitcher` the expand arrow; `itemIcon` only reaches the built-in `directory` icons, so a custom icon does not take it, and a custom `expandIcon` receives the `itemSwitcher` class but no style."
             },
             "searchPlaceholder": {
                 "zh-CN": "搜索框的占位文字。",

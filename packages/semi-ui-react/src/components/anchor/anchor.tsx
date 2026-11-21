@@ -2,7 +2,7 @@ import type React from 'react';
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/anchor/constants';
+import { cssClasses, strings, type AnchorPart } from '@fibrae/semi-foundation/components/anchor/constants';
 import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/components/anchor/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/anchor/anchor.scss';
@@ -26,6 +26,8 @@ type AnchorClickEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTML
 export interface AnchorProps extends ElementProps<'div', 'onChange' | 'onClick'> {
     autoCollapse?: boolean;
     className?: string;
+    /** `item*` keys apply to every Anchor.Link, before the link's own classNames */
+    classNames?: Partial<Record<AnchorPart, string>>;
     children?: React.ReactNode;
     defaultAnchor?: string;
     getContainer?: () => HTMLElement | Window | null;
@@ -40,6 +42,7 @@ export interface AnchorProps extends ElementProps<'div', 'onChange' | 'onClick'>
     showTooltip?: boolean | ShowTooltip;
     size?: ArrayElement<typeof strings.SIZE>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<AnchorPart, React.CSSProperties>>;
     targetOffset?: number;
     onChange?: (currentLink: string, previousLink: string) => void;
     onClick?: (e: AnchorClickEvent, currentLink: string) => void;
@@ -67,7 +70,7 @@ const defaultProps = {
 
 function Anchor(rawProps: AnchorProps) {
     const props = useDefaultProps('Anchor', rawProps, defaultProps);
-    const { ref, size, railTheme, style, className, children, maxWidth, maxHeight, showTooltip, position, autoCollapse, defaultAnchor, getContainer, offsetTop, scrollMotion, scrollIntoViewOptions, targetOffset, onChange, onClick, 'aria-label': ariaLabel, ...rest } = props;
+    const { ref, size, railTheme, style, className, classNames, styles, children, maxWidth, maxHeight, showTooltip, position, autoCollapse, defaultAnchor, getContainer, offsetTop, scrollMotion, scrollIntoViewOptions, targetOffset, onChange, onClick, 'aria-label': ariaLabel, ...rest } = props;
 
     const { locale } = useLocale('Anchor');
 
@@ -92,13 +95,17 @@ function Anchor(rawProps: AnchorProps) {
         [`${prefixCls}-size-${size}`]: size,
     });
 
-    const slideCls = clsx(`${prefixCls}-slide`, `${prefixCls}-slide-${railTheme}`);
+    const slideCls = clsx(`${prefixCls}-slide`, `${prefixCls}-slide-${railTheme}`, classNames?.rail);
 
-    const slideBarCls = clsx(`${prefixCls}-slide-bar`, {
-        [`${prefixCls}-slide-bar-${size}`]: size,
-        [`${prefixCls}-slide-bar-${railTheme}`]: railTheme,
-        [`${prefixCls}-slide-bar-active`]: activeLink,
-    });
+    const slideBarCls = clsx(
+        `${prefixCls}-slide-bar`,
+        {
+            [`${prefixCls}-slide-bar-${size}`]: size,
+            [`${prefixCls}-slide-bar-${railTheme}`]: railTheme,
+            [`${prefixCls}-slide-bar-active`]: activeLink,
+        },
+        classNames?.indicator
+    );
 
     const childMap = useMemo(() => AnchorFoundation.getRegisteredChildMap(linkParents), [linkParents]);
 
@@ -112,13 +119,15 @@ function Anchor(rawProps: AnchorProps) {
             childMap,
             autoCollapse,
             size,
+            classNames,
+            styles,
             level: 1,
             parentHref: undefined,
             onClick: foundation.handleClick,
             addLink: foundation.addLink,
             removeLink: foundation.removeLink,
         }),
-        [activeLink, showTooltip, position, childMap, autoCollapse, size, foundation]
+        [activeLink, showTooltip, position, childMap, autoCollapse, size, classNames, styles, foundation]
     );
 
     // every commit: a stable getContainer can return a node that appears later, and links above the active one can
@@ -132,12 +141,12 @@ function Anchor(rawProps: AnchorProps) {
         <AnchorContext value={contextValue}>
             <div {...rest} ref={mergedRef} className={wrapperCls} style={{ ...style, maxWidth, maxHeight }} aria-label={ariaLabel || locale.label} role="navigation">
                 <div className={`${prefixCls}-rail-wrapper`}>
-                    <div className={slideCls} aria-hidden>
-                        <span className={slideBarCls} style={{ top: slideBarTop }} />
+                    <div className={slideCls} style={styles?.rail} aria-hidden>
+                        <span className={slideBarCls} style={{ top: slideBarTop, ...styles?.indicator }} />
                     </div>
                     {/* a narrower container wraps link titles, which moves the active link without any commit */}
                     <ReactResizeObserver onResize={foundation.syncSlideBar}>
-                        <div className={`${prefixCls}-link-wrapper`} role="list">
+                        <div className={clsx(`${prefixCls}-link-wrapper`, classNames?.list)} style={styles?.list} role="list">
                             {children}
                         </div>
                     </ReactResizeObserver>

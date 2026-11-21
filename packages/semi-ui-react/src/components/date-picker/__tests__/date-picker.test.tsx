@@ -369,20 +369,47 @@ describe(`DatePicker`, () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        const { container } = render(<DatePicker classNames={{ dropdown: 'my-dropdown', input: 'my-input' }} styles={{ dropdown: { color: 'red' }, input: { color: 'blue' } }} defaultOpen motion={false} />);
-        const dropdown = document.querySelector('.my-dropdown');
-        expect(dropdown).toHaveClass(dp);
-        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        const input = container.querySelector('.my-input');
-        expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper`);
-        expect(input).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+        const parts = ['dropdown', 'input', 'suffix', 'clear', 'header', 'body', 'item', 'presets', 'switch', 'footer'] as const;
+        const selectors = {
+            dropdown: `.${BASE_CLASS_PREFIX}-popover .${dp}`,
+            input: `.${BASE_CLASS_PREFIX}-input-wrapper`,
+            suffix: `.${BASE_CLASS_PREFIX}-input-suffix`,
+            clear: `.${BASE_CLASS_PREFIX}-input-clearbtn`,
+            header: `.${dp}-navigation`,
+            body: `.${dp}-month`,
+            item: `.${dp}-day`,
+            presets: `.${dp}-quick-control`,
+            switch: `.${dp}-switch`,
+            footer: `.${dp}-footer`,
+        };
+        render(<DatePicker type="dateTime" classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} defaultValue={baseDate} defaultOpen motion={false} needConfirm presets={[{ start: baseDate, end: baseDate, text: 'p' }]} />);
+        for (const part of parts) {
+            const el = document.querySelector(`.my-${part}`);
+            expect(el).toBeInTheDocument();
+            expect(el.matches(selectors[part])).toBe(true);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
-    it('范围选择的两个输入框都带 input 部位', () => {
-        const { container } = render(<DatePicker type="dateRange" classNames={{ input: 'my-input' }} styles={{ input: { color: 'blue' } }} motion={false} />);
-        const inputs = container.querySelectorAll('.my-input');
-        expect(inputs).toHaveLength(2);
-        inputs.forEach((el) => expect(el).toHaveStyle({ color: 'rgb(0, 0, 255)' }));
+    it('范围选择的 input、separator、suffix、clear 部位落在自己渲染的元素上', () => {
+        const parts = ['input', 'suffix', 'clear', 'separator', 'header', 'body'] as const;
+        const selectors = {
+            input: `.${BASE_CLASS_PREFIX}-input-wrapper`,
+            suffix: `.${dp}-range-input-suffix`,
+            clear: `.${dp}-range-input-clearbtn`,
+            separator: `.${dp}-range-input-separator`,
+            header: `.${dp}-navigation`,
+            body: `.${dp}-month`,
+        };
+        render(<DatePicker type="dateRange" classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} defaultValue={[baseDate, baseDate]} defaultOpen motion={false} />);
+        for (const part of parts) {
+            const els = document.querySelectorAll(`.my-${part}`);
+            expect(els).toHaveLength(part === 'input' || part === 'header' || part === 'body' ? 2 : 1);
+            els.forEach((el) => {
+                expect(el.matches(selectors[part])).toBe(true);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            });
+        }
     });
 
     it('onClear', async () => {

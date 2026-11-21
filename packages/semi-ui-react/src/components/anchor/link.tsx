@@ -1,7 +1,7 @@
 import type React from 'react';
 import { Children, isValidElement, useLayoutEffect, useMemo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
+import { cssClasses, type AnchorLinkPart } from '@fibrae/semi-foundation/components/anchor/constants';
 import AnchorFoundation, { type AnchorNode } from '@fibrae/semi-foundation/components/anchor/foundation';
 import { isEnterPress } from '@fibrae/semi-foundation/utils';
 import type { ElementProps } from '../../base/index';
@@ -14,8 +14,11 @@ export interface LinkProps extends ElementProps<'div', 'title'> {
     href?: string;
     title?: React.ReactNode;
     className?: string;
+    /** Applied after the `itemTitle` classNames of the parent Anchor */
+    classNames?: Partial<Record<AnchorLinkPart, string>>;
     children?: React.ReactNode;
     style?: React.CSSProperties;
+    styles?: Partial<Record<AnchorLinkPart, React.CSSProperties>>;
     disabled?: boolean;
     /** Attached to the link's list item div */
     ref?: React.Ref<HTMLDivElement>;
@@ -31,7 +34,7 @@ function normalizeChildren(children: React.ReactNode): AnchorNode[] {
     });
 }
 
-export default function Link({ ref, href = '#', title = '', className, children, style, disabled = false, ...rest }: LinkProps) {
+export default function Link({ ref, href = '#', title = '', className, classNames, children, style, styles, disabled = false, ...rest }: LinkProps) {
     const context = useAnchorContext('Anchor.Link');
 
     let titleNode = title;
@@ -76,13 +79,18 @@ export default function Link({ ref, href = '#', title = '', className, children,
     const expanded = !autoCollapse || active || nestedLinks.has(activeLink) || childMap[href]?.has(activeLink);
 
     return (
-        <div {...rest} ref={ref} className={clsx(`${prefixCls}-link`, className)} style={style} role="listitem">
+        <div {...rest} ref={ref} className={clsx(`${prefixCls}-link`, context.classNames?.item, className)} style={{ ...context.styles?.item, ...style }} role="listitem">
             <div
-                className={clsx(`${prefixCls}-link-title`, {
-                    [cssClasses.LINK_TITLE_ACTIVE]: active,
-                    [`${prefixCls}-link-title-disabled`]: disabled,
-                })}
-                style={{ paddingInlineStart: 8 * level }}
+                className={clsx(
+                    `${prefixCls}-link-title`,
+                    {
+                        [cssClasses.LINK_TITLE_ACTIVE]: active,
+                        [`${prefixCls}-link-title-disabled`]: disabled,
+                    },
+                    context.classNames?.itemTitle,
+                    classNames?.title
+                )}
+                style={{ paddingInlineStart: 8 * level, ...context.styles?.itemTitle, ...styles?.title }}
                 aria-current={active ? 'location' : undefined}
                 aria-disabled={disabled}
                 role="link"

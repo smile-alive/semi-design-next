@@ -113,7 +113,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         const fieldBridge = useFieldBridge();
         const inForm = fieldBridge !== undefined;
 
-        const formProps = inForm ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol', 'disabled', 'showValidateIcon', 'extraTextPosition', 'stopValidateWithError', 'trigger', 'allowEmpty', 'keepState', 'schema', 'validator']) : {};
+        const formProps = inForm ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol', 'disabled', 'showValidateIcon', 'extraTextPosition', 'stopValidateWithError', 'trigger', 'allowEmpty', 'keepState', 'schema', 'validator', 'classNames', 'styles']) : {};
         const required = inForm && isRequiredByRules(formProps, rules);
         const { labelPosition: labelPos, labelWidth: mergeLabelWidth, labelAlign: mergeLabelAlign, labelCol: mergeLabelCol, wrapperCol: mergeWrapperCol, extraTextPosition: mergeExtraPos, trigger: mergeTrigger } = mergeFieldConfig(props, formProps);
 
@@ -220,14 +220,18 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         }
 
         const renderField = () => {
-            const extraCls = clsx(`${prefix}-field-extra`, {
-                [`${prefix}-field-extra-string`]: typeof extraText === 'string',
-                [`${prefix}-field-extra-middle`]: mergeExtraPos === 'middle',
-                [`${prefix}-field-extra-bottom`]: mergeExtraPos === 'bottom',
-            });
+            const extraCls = clsx(
+                `${prefix}-field-extra`,
+                {
+                    [`${prefix}-field-extra-string`]: typeof extraText === 'string',
+                    [`${prefix}-field-extra-middle`]: mergeExtraPos === 'middle',
+                    [`${prefix}-field-extra-bottom`]: mergeExtraPos === 'bottom',
+                },
+                formProps.classNames?.extra
+            );
 
             const extraContent = extraText ? (
-                <div id={ids.extraText} className={extraCls} x-semi-prop="extraText">
+                <div id={ids.extraText} className={extraCls} style={formProps.styles?.extra} x-semi-prop="extraText">
                     {extraText}
                 </div>
             ) : null;
@@ -299,7 +303,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             }
 
             const fieldMainContent = (
-                <div className={`${prefix}-field-main`}>
+                <div className={clsx(`${prefix}-field-main`, formProps.classNames?.content)} style={formProps.styles?.content}>
                     {mergeExtraPos === 'middle' && extraContent}
                     <Control {...newProps} />
                     {!noErrorMessage && <InternalErrorMessage error={error} errorMessageId={ids.errorMessage} helpText={helpText} helpTextId={ids.helpText} showValidateIcon={formProps.showValidateIcon} validateStatus={shownStatus} />}
@@ -341,7 +345,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             // a component with inner state must not be memoized, or it would miss its own state updates
             return renderField();
         }
-        return <MemoizedField deps={[value, error, touched, status, field, mergeLabelPos, mergeLabelAlign, mergeLabelWidth, mergeLabelCol, mergeWrapperCol, mergeExtraPos, formProps.disabled, formProps.showValidateIcon]} fieldProps={props} render={renderField} />;
+        return <MemoizedField deps={[value, error, touched, status, field, mergeLabelPos, mergeLabelAlign, mergeLabelWidth, mergeLabelCol, mergeWrapperCol, mergeExtraPos, formProps.disabled, formProps.showValidateIcon, formProps.classNames, formProps.styles]} fieldProps={props} render={renderField} />;
     }
 
     function SemiField(props: any) {

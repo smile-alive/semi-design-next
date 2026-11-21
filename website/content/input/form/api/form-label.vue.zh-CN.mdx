@@ -1,16 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性     | 说明                                                                                                                 | 类型               | 默认值      |
-| -------- | -------------------------------------------------------------------------------------------------------------------- | ------------------ | ----------- |
-| align    | Label 文本的对齐方式。                                                                                               | `string`           | `"left"`    |
-| disabled | 是否为禁用样式。                                                                                                     | `boolean`          | `undefined` |
-| extra    | 跟随在 label 文本后的内容，extra 插槽优先。                                                                          | `string \| number` | `undefined` |
-| name     | 所标注控件的 id，写入 label 的 for 属性。                                                                            | `string`           | `undefined` |
-| optional | 是否在文本后追加语言包中的可选标识。为 true 时不再显示 required 的 \*。                                              | `boolean`          | `false`     |
-| required | 是否显示必填的 \* 号。                                                                                               | `boolean`          | `false`     |
-| text     | Label 文本，默认插槽优先。                                                                                           | `string \| number` | `undefined` |
-| tooltip  | label 旁问号按钮的 Tooltip 内容，tooltip 插槽优先；按钮在 label 元素之外，不计入字段的可访问名称，按钮名称取语言包。 | `string \| number` | `undefined` |
-| width    | Label 宽度，数字单位为 px。                                                                                          | `string \| number` | `undefined` |
+| 属性       | 说明                                                                                                                 | 类型                                                                                    | 默认值      |
+| ---------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ----------- |
+| align      | Label 文本的对齐方式。                                                                                               | `string`                                                                                | `"left"`    |
+| classNames | 内部各部位的类名，键为 `text`、`extra`、`tooltip`，与组件自带的类名合并。                                            | <ApiType detail={"Partial\u003cRecord\u003cFormLabelPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| disabled   | 是否为禁用样式。                                                                                                     | `boolean`                                                                               | `undefined` |
+| extra      | 跟随在 label 文本后的内容，extra 插槽优先。                                                                          | `string \| number`                                                                      | `undefined` |
+| name       | 所标注控件的 id，写入 label 的 for 属性。                                                                            | `string`                                                                                | `undefined` |
+| optional   | 是否在文本后追加语言包中的可选标识。为 true 时不再显示 required 的 \*。                                              | `boolean`                                                                               | `false`     |
+| required   | 是否显示必填的 \* 号。                                                                                               | `boolean`                                                                               | `false`     |
+| styles     | 内部各部位的内联样式，键同 `classNames`。                                                                            | <ApiType detail={"Partial\u003cRecord\u003cFormLabelPart, StyleValue>>"}>Type</ApiType> | `undefined` |
+| text       | Label 文本，默认插槽优先。                                                                                           | `string \| number`                                                                      | `undefined` |
+| tooltip    | label 旁问号按钮的 Tooltip 内容，tooltip 插槽优先；按钮在 label 元素之外，不计入字段的可访问名称，按钮名称取语言包。 | `string \| number`                                                                      | `undefined` |
+| width      | Label 宽度，数字单位为 px。                                                                                          | `string \| number`                                                                      | `undefined` |
 
 **Events**
 

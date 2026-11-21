@@ -37,7 +37,7 @@
     <component :is="props.tag" ref="root" :class="prefix">
         <Decorate :tags="props.decorations">
             <template v-for="(icons, index) in [slotNodes($slots.icon?.() ?? [])]" :key="index">
-                <span v-if="icons.length" :class="`${prefix}-icon`" x-semi-prop="icon">
+                <span v-if="icons.length" :class="[`${prefix}-icon`, props.classNames?.icon]" :style="props.styles?.icon" x-semi-prop="icon">
                     <component :is="node" v-for="[node, key] in icons" :key="key" v-bind="elementType(node) === 'Icon' ? { size: props.iconSize } : {}" />
                 </span>
             </template>
@@ -49,10 +49,10 @@
                 <NumeralNodes v-else :format="props.format" :nodes="props.nodes" />
             </Decorate>
         </Decorate>
-        <button v-if="props.action" ref="expandButton" :aria-expanded="props.action.expanded" :class="`${prefix}-ellipsis-expand`" type="button" @click="emit('toggle', $event)">
+        <button v-if="props.action" ref="expandButton" :aria-expanded="props.action.expanded" :class="[`${prefix}-ellipsis-expand`, props.classNames?.expand]" :style="props.styles?.expand" type="button" @click="emit('toggle', $event)">
             {{ props.action.text }}
         </button>
-        <Copyable v-if="props.copy" ref="copyable" v-bind="props.copy" @copiedChange="emit('copiedChange')" @copy="(...args) => emit('copy', ...args)">
+        <Copyable v-if="props.copy" ref="copyable" v-bind="props.copy" :buttonClass="props.classNames?.copy" :buttonStyle="props.styles?.copy" @copiedChange="emit('copiedChange')" @copy="(...args) => emit('copy', ...args)">
             <template v-for="(_, name) in $slots" #[name]="scope">
                 <slot :name="name as keyof typeof slots" v-bind="scope" />
             </template>

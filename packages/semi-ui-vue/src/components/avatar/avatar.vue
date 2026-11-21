@@ -31,6 +31,8 @@
         bottomSlot: semiGlobalDefault('Avatar', 'bottomSlot'),
         border: semiGlobalDefault('Avatar', 'border'),
         contentMotion: semiGlobalDefault('Avatar', 'contentMotion'),
+        classNames: semiGlobalDefault('Avatar', 'classNames'),
+        styles: semiGlobalDefault('Avatar', 'styles'),
         onError: undefined,
     });
 
@@ -75,7 +77,7 @@
     const image = computed(() => {
         if (!isImg.value) return undefined;
         // imgAttr.alt replaces alt even when it is explicitly undefined; mergeProps runs both onError listeners.
-        return mergeProps({ src: props.src, srcset: props.srcSet, alt: props.alt }, { ...props.imgAttr }, { onError: foundation.handleImgLoadError });
+        return mergeProps({ src: props.src, srcset: props.srcSet, alt: props.alt }, { ...props.imgAttr }, { class: props.classNames?.image, style: props.styles?.image }, { onError: foundation.handleImgLoadError });
     });
 
     const isPresetSize = computed(() => strings.SIZE.some((preset) => preset === size.value));
@@ -94,11 +96,14 @@
         },
     ]);
 
-    const borderClass = computed(() => [`${prefix}-additionalBorder`, `${prefix}-additionalBorder-${size.value}`, `${prefix}-${shape.value}`]);
-    const borderStyle = computed(() => (typeof props.border === 'object' ? { borderColor: props.border.color } : {}));
+    const borderClass = computed(() => [`${prefix}-additionalBorder`, `${prefix}-additionalBorder-${size.value}`, `${prefix}-${shape.value}`, props.classNames?.border]);
+    const borderStyle = computed<StyleValue>(() => [typeof props.border === 'object' ? { borderColor: props.border.color } : {}, props.styles?.border]);
 
     provideAvatarGroupMoreContext(undefined);
     provideAvatarGroupContext(undefined);
+
+    // attrs are not reactive, so this must run in the render
+    const rootStyle = (): StyleValue => [sizeStyle.value, more?.value.itemStyle, attrs.style as StyleValue];
 
     const wrapped = () => Boolean(props.topSlot || props.bottomSlot || slots.topSlot || slots.bottomSlot || slots.topSlotText || slots.bottomSlotText || props.border);
 
@@ -120,6 +125,10 @@
             controlAttrs: control,
             hovered: state.value.hovered,
             image: image.value,
+            labelClass: props.classNames?.label,
+            labelStyle: props.styles?.label,
+            maskClass: props.classNames?.mask,
+            maskStyle: props.styles?.mask,
             scale: state.value.scale,
             text: text(),
         };
@@ -137,7 +146,7 @@
 </script>
 
 <template>
-    <span v-if="wrapped()" :class="`${prefix}-wrapper`" :style="[sizeStyle, $attrs.style as StyleValue]" @mouseenter="foundation.handleEnter" @mouseleave="foundation.handleLeave">
+    <span v-if="wrapped()" :class="`${prefix}-wrapper`" :style="rootStyle()" @mouseenter="foundation.handleEnter" @mouseleave="foundation.handleLeave">
         <div v-if="props.border" :style="[{ position: 'relative' }, sizeStyle]">
             <AvatarContent ref="content" v-bind="contentBinding()">
                 <slot /> <template v-if="$slots.hoverMask" #hoverMask><slot name="hoverMask" /></template>
@@ -174,7 +183,7 @@
             </slot>
         </template>
     </span>
-    <AvatarContent v-else ref="content" v-bind="contentBinding()" :style="[sizeStyle, $attrs.style as StyleValue]" @mouseenter="foundation.handleEnter" @mouseleave="foundation.handleLeave">
+    <AvatarContent v-else ref="content" v-bind="contentBinding()" :style="rootStyle()" @mouseenter="foundation.handleEnter" @mouseleave="foundation.handleLeave">
         <slot /> <template v-if="$slots.hoverMask" #hoverMask><slot name="hoverMask" /></template>
     </AvatarContent>
 </template>

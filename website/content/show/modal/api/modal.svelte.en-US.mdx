@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | cancelText | Cancel button text. Defaults to the locale entry Modal.cancel. | `string` | - |
 | centered | Whether the dialog is vertically centered. | `boolean` | `false` |
 | children | Body of the dialog, written inside the tag. | `Snippet` | - |
-| classNames | Class names of the inner parts, keyed by mask, content, header, body and footer; values take anything class takes (string, array or object) and merge with the built-in classes. There is no header part when header is customized. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by mask, content, header, title, icon, close, body and footer; values take anything class takes (string, array or object) and merge with the built-in classes. There are no header, title, icon and close parts when header is customized. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, ClassValue>>"}>Type</ApiType> | - |
 | closable | Whether the close button in the corner is shown. | `boolean` | `true` |
 | closeIcon | Snippet for the icon inside the close button. | `Snippet` | - |
 | closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `true` |

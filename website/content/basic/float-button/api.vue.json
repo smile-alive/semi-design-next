@@ -6,6 +6,10 @@
                 "zh-CN": "徽章参数，同 Badge 的 props；class、style 以及 onClick、onMouseenter、onMouseleave 落在 Badge 根元素上。",
                 "en-US": "Badge props, same as Badge. class, style, onClick, onMouseenter and onMouseleave reach the Badge root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `body`，与组件自带的类名合并；`body` 是按钮的可见主体，图标放在其中。",
+                "en-US": "Class names of the inner parts, keyed by `body`; merged with the built-in classes. `body` is the visible body of the button, holding the icon."
+            },
             "colorful": { "zh-CN": "多彩悬浮按钮。", "en-US": "Colorful float button." },
             "disabled": { "zh-CN": "禁用状态。", "en-US": "Disabled state." },
             "href": {
@@ -18,6 +22,7 @@
             },
             "shape": { "zh-CN": "形状，可选 round、square。", "en-US": "Shape: round or square." },
             "size": { "zh-CN": "尺寸，可选 default、small、large。", "en-US": "Size: default, small or large." },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "target": {
                 "zh-CN": "指定在何处显示链接的 URL，仅在设置 href 时生效。",
                 "en-US": "Where to display the linked URL. Only takes effect with href."
@@ -41,8 +46,13 @@
     "float-button-group": {
         "source": "packages/semi-ui-vue/src/components/float-button/float-button-group.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`，与组件自带的类名合并；`item` 是每个按钮，单个子项自己的类名排在其后。",
+                "en-US": "Class names of the inner parts, keyed by `item`; merged with the built-in classes. `item` is each button; an item's own class name comes after it."
+            },
             "disabled": { "zh-CN": "禁用全部子项。", "en-US": "Disables every item." },
-            "items": { "zh-CN": "子项列表。", "en-US": "List of items." }
+            "items": { "zh-CN": "子项列表。", "en-US": "List of items." },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`；单个子项自己的样式后写。", "en-US": "Inline styles of the inner parts, keyed like `classNames`; an item's own style is applied after it." }
         },
         "events": {
             "click": {

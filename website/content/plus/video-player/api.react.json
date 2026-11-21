@@ -5,6 +5,10 @@
             "autoPlay": { "zh-CN": "是否自动播放。", "en-US": "Whether to play automatically." },
             "captionsSrc": { "zh-CN": "字幕资源地址，传入后默认显示字幕。", "en-US": "Captions source URL; the captions are shown by default once set." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `video`、`poster`、`playIcon`、`error`、`notification`、`controls`、`progress`、`progressBuffered`、`progressPlayed`、`progressHandle`、`time`、`volumeDropdown`、`dropdown`，与组件自带的类名合并。`progressBuffered`、`progressPlayed` 作用到每个标记分段；`dropdown` 落在倍速、清晰度、线路菜单的浮层上。",
+                "en-US": "Class names of the inner parts, keyed by `video`, `poster`, `playIcon`, `error`, `notification`, `controls`, `progress`, `progressBuffered`, `progressPlayed`, `progressHandle`, `time`, `volumeDropdown` and `dropdown`; merged with the built-in classes. `progressBuffered` and `progressPlayed` apply to every marker segment; `dropdown` lands on the popup of the playback rate, quality and route menus."
+            },
             "clickToPlay": { "zh-CN": "点击视频画面时是否切换播放与暂停。", "en-US": "Whether clicking the video toggles playback." },
             "controlsList": {
                 "zh-CN": "控制栏展示的控件，默认展示全部。控件还要满足依赖的属性已提供才会显示。",
@@ -89,6 +93,10 @@
             "style": {
                 "zh-CN": "根元素的内联样式，写在 width、height 之后，同名属性以它为准。",
                 "en-US": "Inline style of the root element, applied after width and height, so it overrides them."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "theme": {
                 "zh-CN": "主题，仅影响背景色，可选 `dark` 或 `light`。",

@@ -2,13 +2,15 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性        | 说明                                                                  | 类型                                                       | 默认值   |
-| ----------- | --------------------------------------------------------------------- | ---------------------------------------------------------- | -------- |
-| bordered    | 是否展示边框，仅在非全屏模式下有效。                                  | `boolean`                                                  | -        |
-| closeIcon   | 替换关闭按钮内的图标；传 null 时不显示关闭按钮。                      | `JSX.Element`                                              | -        |
-| description | 描述内容。                                                            | `JSX.Element`                                              | -        |
-| fullMode    | 是否为全屏模式。                                                      | `boolean`                                                  | `true`   |
-| icon        | 替换 type 对应的图标；传 null 时不显示图标。                          | `JSX.Element`                                              | -        |
-| onClose     | 点击关闭按钮时调用，参数为按钮的原生 click 事件；回调返回后横幅隐藏。 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | -        |
-| title       | 标题内容。                                                            | `JSX.Element`                                              | -        |
-| type        | 类型，可选 info、success、danger、warning。                           | `BannerType`                                               | `"info"` |
+| 属性        | 说明                                                                                                                                  | 类型                                                                                                      | 默认值   |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------- |
+| bordered    | 是否展示边框，仅在非全屏模式下有效。                                                                                                  | `boolean`                                                                                                 | -        |
+| classNames  | 内部各部位的类名，键为 `icon`、`title`、`description`、`close`、`extra`，与组件自带的类名合并；`extra` 是 `children` 所在的附加区域。 | <ApiType detail={"Partial\u003cRecord\u003cBannerPart, string>>"}>Type</ApiType>                          | -        |
+| closeIcon   | 替换关闭按钮内的图标；传 null 时不显示关闭按钮。                                                                                      | `JSX.Element`                                                                                             | -        |
+| description | 描述内容。                                                                                                                            | `JSX.Element`                                                                                             | -        |
+| fullMode    | 是否为全屏模式。                                                                                                                      | `boolean`                                                                                                 | `true`   |
+| icon        | 替换 type 对应的图标；传 null 时不显示图标。                                                                                          | `JSX.Element`                                                                                             | -        |
+| onClose     | 点击关闭按钮时调用，参数为按钮的原生 click 事件；回调返回后横幅隐藏。                                                                 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType>                                                | -        |
+| styles      | 内部各部位的内联样式，键同 `classNames`。                                                                                             | <ApiType detail={"Partial\u003cRecord\u003cBannerPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -        |
+| title       | 标题内容。                                                                                                                            | `JSX.Element`                                                                                             | -        |
+| type        | 类型，可选 info、success、danger、warning。                                                                                           | `BannerType`                                                                                              | `"info"` |

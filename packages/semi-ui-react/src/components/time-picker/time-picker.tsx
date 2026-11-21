@@ -33,7 +33,7 @@ interface TimePickerCommonProps extends ElementProps<'input', 'size' | 'type' | 
     autoFocus?: boolean;
     borderless?: boolean;
     className?: string;
-    /** `dropdown` is the panel card; `input` is the Input's root element */
+    /** `dropdown` is the panel card; `input` is the Input's root element; `header`, `content` and `footer` are the panel's ScrollList header, body and footer; `item` is every time option */
     classNames?: Partial<Record<TimePickerPart, string>>;
     styles?: Partial<Record<TimePickerPart, React.CSSProperties>>;
     clearIcon?: React.ReactNode;
@@ -298,6 +298,8 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
             {(isRange ? [0, 1] : [0]).map((index) => (
                 <Combobox
                     key={index}
+                    classNames={classNames}
+                    styles={styles}
                     // an empty range starts its end panel in the afternoon
                     defaultIsAM={index === 0}
                     // getOptions, hideDisabledOptions included, works on the resolved functions

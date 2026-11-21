@@ -1,4 +1,5 @@
 import { type JSX, Index, Match, Show, Switch, createMemo } from 'solid-js';
+import clsx from 'clsx';
 import { cssClasses, strings, type ChatMode } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import ChatFoundation, { type Content } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import { getFileType } from '@fibrae/semi-ai-foundation/utils';
@@ -18,12 +19,14 @@ interface ChatBoxContentProps {
     message: Message;
     customRenderFunc?: (props: RenderContentProps) => JSX.Element;
     markdownRenderProps?: MarkdownRenderProps;
+    class?: string;
+    style?: JSX.CSSProperties | string;
 }
 
 export default function ChatBoxContent(props: ChatBoxContentProps) {
     const markdownComponents = createMemo<MarkdownRenderComponents>(() => ChatFoundation.mergeMarkdownComponents({ code: Code, SemiFile: FileAttachment, img: ImageAttachment }, props.customMarkDownComponents));
 
-    const wrapCls = () => ChatFoundation.getContentClass(props.message.role, props.message.status, props.mode);
+    const wrapCls = () => clsx(ChatFoundation.getContentClass(props.message.role, props.message.status, props.mode), props.class);
 
     const markdown = (text: () => string | undefined) => <MarkdownRender format="md" {...props.markdownRenderProps} components={markdownComponents()} raw={ChatFoundation.getMarkdownRaw(text(), props.message.role, props.escapeHtml)} />;
 
@@ -55,7 +58,15 @@ export default function ChatBoxContent(props: ChatBoxContentProps) {
     );
 
     return (
-        <Show when={props.customRenderFunc} keyed fallback={<div class={wrapCls()}>{node()}</div>}>
+        <Show
+            when={props.customRenderFunc}
+            keyed
+            fallback={
+                <div class={wrapCls()} style={props.style}>
+                    {node()}
+                </div>
+            }
+        >
             {(render) =>
                 render({
                     get message() {

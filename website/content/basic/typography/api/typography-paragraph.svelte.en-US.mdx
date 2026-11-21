@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by expand (expand or collapse button) and copy (copy button; the wrapping span still takes copyable.class); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTypographyParagraphPart, ClassValue>>"}>Type</ApiType> | - |
 | component | Tag name of the element to render. Defaults to p. | `string` | `'p'` |
 | copyable | Whether the text can be copied; pass an object for the Copyable Config. | `TypographyCopyableConfig \| boolean` | - |
 | copyAction | Snippet that replaces the whole copy node, with the argument `{ copied, copy, config }`; `copy` takes the click event. | <ApiType detail={"Snippet\u003c[TypographyCopyActionProps]>"}>Type</ApiType> | - |
@@ -20,5 +21,6 @@ import ApiType from '#/components/ApiType.astro';
 | size | Text size; inherit takes the size of the enclosing Text or Paragraph. | `TypographyBaseSize` | - |
 | spacing | Line spacing; extended is looser. | `TypographyBaseSpacing` | - |
 | strong | Whether the text is bold. | `boolean` | - |
+| styles | Inline styles of the inner parts, as strings, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTypographyParagraphPart, string>>"}>Type</ApiType> | - |
 | type | Text type. | `TypographyBaseType` | - |
 | underline | Adds an underline. | `boolean` | - |

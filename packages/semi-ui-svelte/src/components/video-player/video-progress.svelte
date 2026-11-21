@@ -11,7 +11,7 @@
     type Foundation = VideoProgressFoundation<VideoProgressBaseProps>;
     type Adapter = VideoProgressAdapter<VideoProgressBaseProps>;
 
-    let { value, max, step, bufferedValue, markers, showTooltip = true, onChange }: VideoProgressProps = $props();
+    let { value, max, step, bufferedValue, classNames, markers, showTooltip = true, styles, onChange }: VideoProgressProps = $props();
 
     const locale = useLocale('VideoPlayer');
 
@@ -60,8 +60,9 @@
         aria-valuemin="0"
         aria-valuenow={value}
         aria-valuetext={`${formatTimeText(value, texts)} / ${formatTimeText(max, texts)}`}
-        class={[prefix, { [`${prefix}-dragging`]: states().isDragging }]}
+        class={[prefix, { [`${prefix}-dragging`]: states().isDragging }, classNames?.progress]}
         role="slider"
+        style={styles?.progress}
         tabindex="0"
         onfocus={foundation.handleFocus}
         onkeydown={foundation.handleKeyDown}
@@ -74,12 +75,12 @@
             {#each markersList as marker, index (`${marker.start}-${index}`)}
                 <div class={[`${prefix}-slider`, { [`${prefix}-slider-active`]: index === states().activeIndex && states().isDragging }]} style={`left: ${marker.left}; width: ${marker.width}`}>
                     <div class={`${prefix}-slider-list`}></div>
-                    <div class={`${prefix}-slider-buffered`} style={`width: ${VideoProgressFoundation.getValueWidth(marker, bufferedValue)}`}></div>
-                    <div class={`${prefix}-slider-played`} style={`width: ${VideoProgressFoundation.getValueWidth(marker, value)}`}></div>
+                    <div class={[`${prefix}-slider-buffered`, classNames?.progressBuffered]} style={`width: ${VideoProgressFoundation.getValueWidth(marker, bufferedValue)}; ${styles?.progressBuffered ?? ''}`}></div>
+                    <div class={[`${prefix}-slider-played`, classNames?.progressPlayed]} style={`width: ${VideoProgressFoundation.getValueWidth(marker, value)}; ${styles?.progressPlayed ?? ''}`}></div>
                 </div>
             {/each}
         </div>
-        <div class={`${prefix}-handle`} style={`left: ${VideoProgressFoundation.getHandleLeft(value, max)}`}></div>
+        <div class={[`${prefix}-handle`, classNames?.progressHandle]} style={`left: ${VideoProgressFoundation.getHandleLeft(value, max)}; ${styles?.progressHandle ?? ''}`}></div>
     </div>
 {/snippet}
 

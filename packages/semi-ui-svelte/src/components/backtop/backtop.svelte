@@ -18,10 +18,12 @@
     // badge, colorful, shape and size have no fallback here: FloatButton owns their defaults, and a fallback would hide its global ones
     let {
         badge = defaults('badge'),
+        classNames = defaults('classNames'),
         colorful = defaults('colorful'),
         duration = defaults('duration', numbers.DEFAULT_DURATION),
         shape = defaults('shape'),
         size = defaults('size'),
+        styles = defaults('styles'),
         target = defaults('target'),
         visibilityHeight = defaults('visibilityHeight', numbers.DEFAULT_VISIBILITY_HEIGHT),
         badgeCount,
@@ -84,5 +86,5 @@
 {/snippet}
 
 {#if states().visible}
-    <FloatButton {...rest} {@attach captureButton} aria-label={ariaLabel} {badge} {badgeCount} class={[prefix, rest.class]} {colorful} icon={iconPart} {shape} {size} x-semi-prop="children" onclick={foundation.onClick} />
+    <FloatButton {...rest} {@attach captureButton} aria-label={ariaLabel} {badge} {badgeCount} class={[prefix, rest.class]} classNames={classNames ?? {}} {colorful} icon={iconPart} {shape} {size} styles={styles ?? {}} x-semi-prop="children" onclick={foundation.onClick} />
 {/if}

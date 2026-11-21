@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/components/float-button/constants';
+import type { FloatButtonPart, strings } from '@fibrae/semi-foundation/components/float-button/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ElementProps } from '../../base/index';
 import type { BadgeProps } from '../badge';
@@ -11,7 +11,11 @@ export type FloatButtonElement = HTMLButtonElement | HTMLAnchorElement;
 // `type` and form* are omitted: the element is always `type="button"` or an `<a>`
 export type FloatButtonOmittedKeys = 'ref' | 'onClick' | 'children' | 'type' | 'form' | 'formaction' | 'formenctype' | 'formmethod' | 'formnovalidate' | 'formtarget';
 
+type Style = JSX.CSSProperties | string;
+
 export interface FloatButtonProps extends ElementProps<'button', FloatButtonOmittedKeys> {
+    classNames?: Partial<Record<FloatButtonPart, string>>;
+    styles?: Partial<Record<FloatButtonPart, Style>>;
     shape?: FloatButtonShape;
     colorful?: boolean;
     icon?: JSX.Element;

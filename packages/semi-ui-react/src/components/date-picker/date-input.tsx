@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { cssClasses, strings, type DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type RangeInput, type InsetInputChangeProps, type InsetInputChangeFoundationProps, type InsetInputProps } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
@@ -22,6 +22,8 @@ type RangeFocusEvent = React.FocusEvent<HTMLDivElement> | React.MouseEvent<HTMLE
 export interface DateInputProps
     extends DateInputFoundationProps, BaseProps, Pick<InputProps, 'role' | 'aria-label' | 'aria-labelledby' | 'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'aria-describedby' | 'aria-errormessage' | 'aria-invalid' | 'aria-required' | 'insetLabelId' | 'clearIcon' | 'size' | 'tabIndex'> {
     locale: Locale['DatePicker'];
+    classNames?: Partial<Record<DatePickerPart, string>>;
+    styles?: Partial<Record<DatePickerPart, React.CSSProperties>>;
     placeholder?: string | string[];
     block?: boolean;
     /** text shown instead of the one formatted from `value` */
@@ -65,7 +67,6 @@ export default function DateInput(rawProps: DateInputProps) {
         onClear: rawProps.onClear ?? noop,
         onFocus: rawProps.onFocus ?? noop,
         type: rawProps.type ?? 'date',
-        inputStyle: rawProps.inputStyle ?? {},
         inputReadOnly: rawProps.inputReadOnly ?? false,
         rangeSeparator: rawProps.rangeSeparator ?? strings.DEFAULT_SEPARATOR_RANGE,
     };
@@ -75,8 +76,8 @@ export default function DateInput(rawProps: DateInputProps) {
         type,
         value,
         inputValue,
-        inputClassName,
-        inputStyle,
+        classNames,
+        styles,
         disabled,
         showClear,
         inputReadOnly,
@@ -194,8 +195,8 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         ref={rangeInputStartRef}
-                        className={inputClassName}
-                        style={inputStyle}
+                        className={classNames?.input}
+                        style={styles?.input}
                         autoFocus={autofocus}
                         disabled={disabled}
                         placeholder={rangeStartPlaceholder}
@@ -217,9 +218,14 @@ export default function DateInput(rawProps: DateInputProps) {
                     />
                 </div>
                 <span
-                    className={clsx(`${cssClasses.PREFIX}-range-input-separator`, {
-                        [`${cssClasses.PREFIX}-range-input-separator-active`]: (rangeStart || rangeEnd) && !disabled,
-                    })}
+                    className={clsx(
+                        `${cssClasses.PREFIX}-range-input-separator`,
+                        {
+                            [`${cssClasses.PREFIX}-range-input-separator-active`]: (rangeStart || rangeEnd) && !disabled,
+                        },
+                        classNames?.separator
+                    )}
+                    style={styles?.separator}
                     onClick={(e) => foundation.handleRangeInputFocus(e, 'rangeStart')}
                 >
                     {rangeSeparatorNode ?? rangeSeparator}
@@ -228,8 +234,8 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         ref={rangeInputEndRef}
-                        className={inputClassName}
-                        style={inputStyle}
+                        className={classNames?.input}
+                        style={styles?.input}
                         disabled={disabled}
                         placeholder={rangeEndPlaceholder}
                         readOnly={inputReadOnly}
@@ -249,12 +255,12 @@ export default function DateInput(rawProps: DateInputProps) {
                     />
                 </div>
                 {allowClear && (
-                    <button ref={clearHandover} type="button" className={`${prefixCls}-range-input-clearbtn`} aria-label={locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
+                    <button ref={clearHandover} type="button" className={clsx(`${prefixCls}-range-input-clearbtn`, classNames?.clear)} style={styles?.clear} aria-label={locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
                         {clearIcon || <IconClear />}
                     </button>
                 )}
                 {Boolean(suffix) && (
-                    <div className={`${prefixCls}-range-input-suffix`} onClick={foundation.handleRangeInputAffixClick}>
+                    <div className={clsx(`${prefixCls}-range-input-suffix`, classNames?.suffix)} style={styles?.suffix} onClick={foundation.handleRangeInputAffixClick}>
                         {suffix}
                     </div>
                 )}
@@ -298,8 +304,10 @@ export default function DateInput(rawProps: DateInputProps) {
             <InternalInput
                 {...rest}
                 ref={inputRef}
-                className={clsx(inputCls, inputClassName)}
-                style={inputStyle}
+                className={clsx(inputCls, classNames?.input)}
+                classNames={{ suffix: classNames?.suffix, clear: classNames?.clear }}
+                style={styles?.input}
+                styles={{ suffix: styles?.suffix, clear: styles?.clear }}
                 autoFocus={autofocus}
                 disabled={disabled}
                 placeholder={type === 'monthRange' && Array.isArray(placeholder) ? placeholder[0] + rangeSeparator + placeholder[1] : (placeholder as string)}

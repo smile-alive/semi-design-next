@@ -1,3 +1,5 @@
+import type { ClassValue } from 'svelte/elements';
+import type { ImagePreviewPart } from '@fibrae/semi-foundation/components/image/constants';
 import type { RatioType } from '../interface.js';
 
 export const FOOTER_ITEMS = ['prev', 'page', 'next', 'zoomOut', 'slider', 'zoomIn', 'ratio', 'rotate', 'download'] as const;
@@ -21,6 +23,8 @@ export interface FooterView {
     step: number;
     ratio: RatioType;
     zoomLabel: string;
+    classNames?: Partial<Record<ImagePreviewPart, ClassValue>>;
+    styles?: Partial<Record<ImagePreviewPart, string>>;
     buttons: Record<FooterButtonName, FooterButton>;
     onSlide: (value: number | number[]) => void;
 }

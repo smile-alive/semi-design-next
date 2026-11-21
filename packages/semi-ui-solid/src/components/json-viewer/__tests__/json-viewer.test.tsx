@@ -313,6 +313,23 @@ describe('JsonViewer', () => {
         expect(trigger()).toBeInTheDocument();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['editor', 'searchTrigger', 'searchBox', 'searchInput', 'searchOptions', 'replaceInput'] as const;
+        const selectors = { editor: prefixCls, searchTrigger: `${prefixCls}-search-bar-trigger`, searchBox: `${prefixCls}-search-bar-container`, searchInput: `${prefixCls}-search-bar-input`, searchOptions: `${prefixCls}-search-options`, replaceInput: `${prefixCls}-replace-bar-input` };
+        render(() => <JsonViewer value="1" classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]))} />);
+        const check = (part: (typeof parts)[number]) => {
+            const el = document.querySelector(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        };
+        check('editor');
+        check('searchTrigger');
+        fireEvent.click(trigger());
+        for (const part of parts.slice(2)) {
+            check(part);
+        }
+    });
+
     it('showSearch 为 false 时隐藏搜索按钮', () => {
         render(() => <JsonViewer value="1" showSearch={false} />);
         expect(queryTrigger()).toBeNull();

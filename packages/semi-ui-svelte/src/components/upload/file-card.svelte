@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+    import { cssClasses, strings, type UploadFileCardPart, type UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
     import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils';
@@ -11,6 +11,7 @@
     import Spin from '../spin/spin.svelte';
     import Tooltip from '../tooltip/tooltip.svelte';
     import TypographyText from '../typography/text.svelte';
+    import { getUploadContext } from './context.js';
     import type { FileCardProps, UploadFileItemSlotProps } from './interface.js';
 
     // A static subcomponent: it reads no global defaults.
@@ -25,6 +26,8 @@
         showTooltip = true,
         picWidth,
         picHeight,
+        classNames,
+        styles,
         validateMessage,
         onPreviewClick,
         onRemove,
@@ -42,9 +45,20 @@
     }: FileCardProps = $props();
 
     const locale = useLocale('Upload');
+    const upload = getUploadContext();
 
     // The failed url is kept instead of a flag so a new url (e.g. a server thumbnail replacing a blob url) gets its own try
     let failedUrl = $state<string>();
+
+    const itemParts = {
+        thumbnail: 'itemThumbnail',
+        name: 'itemName',
+        progress: 'itemProgress',
+        validateMessage: 'itemValidateMessage',
+        retry: 'itemRetry',
+        replace: 'itemReplace',
+        close: 'itemClose',
+    } as const satisfies Record<UploadFileCardPart, UploadPart>;
 
     const prefix = cssClasses.PREFIX;
     const info = `${prefix}-file-card-info`;
@@ -67,6 +81,13 @@
     // Shortcut: a snippet cannot be asked whether it renders anything, so the icon follows the message text only;
     // `fileValidateMessage` replaces the text inside the tooltip and gets the message as `validateMessage`.
     const validateIcon = $derived(message ? (file.status === strings.FILE_STATUS_VALIDATING ? 'loading' : flags.failed ? 'error' : undefined) : undefined);
+
+    // The parent Upload's item* parts come first, the card's own parts after them
+    const partClass = (key: UploadFileCardPart) => [upload?.classNames?.[itemParts[key]], classNames?.[key]];
+
+    const joinStyles = (...values: Array<string | undefined>) => values.filter(Boolean).join(';') || undefined;
+
+    const partStyle = (key: UploadFileCardPart) => joinStyles(upload?.styles?.[itemParts[key]], styles?.[key]);
 
     const slotProps = (): UploadFileItemSlotProps => ({
         file,
@@ -108,6 +129,7 @@
         {...rest}
         class={[
             `${prefix}-file-card`,
+            upload?.classNames?.item,
             rest.class,
             {
                 [`${prefix}-file-card-fail`]: flags.failed,
@@ -115,6 +137,7 @@
             },
         ]}
         role="listitem"
+        style={joinStyles(upload?.styles?.item, rest.style ?? undefined)}
         onclick={() => onPreviewClick?.()}
     >
         {#if onPreviewClick}
@@ -127,7 +150,9 @@
                 {
                     [`${prefix}-file-card-preview-placeholder`]: !file.preview || previewFile || fallbackPreview,
                 },
+                partClass('thumbnail'),
             ]}
+            style={partStyle('thumbnail')}
         >
             {#if previewFile}
                 {@render previewFile(slotProps())}
@@ -139,7 +164,7 @@
         </div>
         <div class={`${info}-main`}>
             <div class={`${info}-main-text`}>
-                <TypographyText class={`${info}-name`} ellipsis={nameEllipsis} {ellipsisTooltip}>{file.name}</TypographyText>
+                <TypographyText class={[`${info}-name`, partClass('name')]} ellipsis={nameEllipsis} {ellipsisTooltip} style={partStyle('name')}>{file.name}</TypographyText>
                 <span>
                     <span class={`${info}-size`}>{size}</span>
                     {#if flags.showReplace}
@@ -149,8 +174,9 @@
                                 <Button
                                     {...props}
                                     aria-label={locale().locale.replace}
-                                    class={`${prefix}-file-card-replace`}
+                                    class={[`${prefix}-file-card-replace`, partClass('replace')]}
                                     size="small"
+                                    style={partStyle('replace')}
                                     theme="borderless"
                                     type="tertiary"
                                     onclick={(event) => {
@@ -167,10 +193,10 @@
                 </span>
             </div>
             {#if flags.showListProgress}
-                <Progress aria-label={locale().locale.uploadProgress} percent={file.percent} style="width: 100%" />
+                <Progress aria-label={locale().locale.uploadProgress} class={partClass('progress')} percent={file.percent} style={joinStyles('width: 100%', partStyle('progress'))} />
             {/if}
             <div class={`${info}-main-control`}>
-                <span class={`${info}-validate-message`}>
+                <span class={[`${info}-validate-message`, partClass('validateMessage')]} style={partStyle('validateMessage')}>
                     {#if fileValidateMessage}
                         {@render fileValidateMessage(slotProps())}
                     {:else if typeof message === 'string'}
@@ -184,7 +210,8 @@
                 </span>
                 {#if flags.showRetry}
                     <button
-                        class={`${info}-retry`}
+                        class={[`${info}-retry`, partClass('retry')]}
+                        style={partStyle('retry')}
                         type="button"
                         onclick={(event) => {
                             event.stopPropagation();
@@ -201,8 +228,9 @@
         {:else if !disabled}
             <Button
                 aria-label={locale().locale.remove}
-                class={`${prefix}-file-card-close`}
+                class={[`${prefix}-file-card-close`, partClass('close')]}
                 size="small"
+                style={partStyle('close')}
                 theme="borderless"
                 type="tertiary"
                 onclick={(event) => {
@@ -219,6 +247,7 @@
         {...rest}
         class={[
             `${prefix}-picture-file-card`,
+            upload?.classNames?.item,
             rest.class,
             {
                 [`${prefix}-picture-file-card-preview-fallback`]: fallbackPreview,
@@ -230,26 +259,27 @@
             },
         ]}
         role="listitem"
-        style={[rest.style, sizeStyle].filter(Boolean).join(';') || undefined}
+        style={joinStyles(upload?.styles?.item, rest.style ?? undefined, sizeStyle)}
         onclick={() => onPreviewClick?.()}
     >
         {#if thumbnail}
             {@render thumbnail(slotProps())}
         {:else if !fallbackPreview}
-            <img alt={file.name} src={file.url} style={sizeStyle || undefined} onerror={onImageError} />
+            <img alt={file.name} class={partClass('thumbnail')} src={file.url} style={joinStyles(sizeStyle, partStyle('thumbnail'))} onerror={onImageError} />
         {:else}
-            <IconFile size="large" />
+            <IconFile class={partClass('thumbnail')} size="large" style={partStyle('thumbnail')} />
         {/if}
         {#if onPreviewClick}
             <button aria-label={locale().locale.preview} class={`${prefix}-preview-trigger`} type="button"></button>
         {/if}
         {#if flags.showPicProgress}
-            <Progress aria-label={locale().locale.uploadProgress} orbitStroke="var(--semi-color-white)" percent={file.percent} size="small" type="circle" />
+            <Progress aria-label={locale().locale.uploadProgress} class={partClass('progress')} orbitStroke="var(--semi-color-white)" percent={file.percent} size="small" style={partStyle('progress')} type="circle" />
         {/if}
         {#if flags.showRetry}
             <button
                 aria-label={locale().locale.retry}
-                class={`${prefix}-picture-file-card-retry`}
+                class={[`${prefix}-picture-file-card-retry`, partClass('retry')]}
+                style={partStyle('retry')}
                 type="button"
                 onclick={(event) => {
                     event.stopPropagation();
@@ -265,7 +295,8 @@
                     <button
                         {...props}
                         aria-label={locale().locale.replace}
-                        class={`${prefix}-picture-file-card-replace`}
+                        class={[`${prefix}-picture-file-card-replace`, partClass('replace')]}
+                        style={partStyle('replace')}
                         type="button"
                         onclick={(event) => {
                             event.stopPropagation();
@@ -298,7 +329,7 @@
             {#if picClose}
                 {@render picClose({ class: `${prefix}-picture-file-card-close`, onRemove: removeFromClose })}
             {:else}
-                <button aria-label={locale().locale.remove} class={`${prefix}-picture-file-card-close`} type="button" onclick={removeFromClose}>
+                <button aria-label={locale().locale.remove} class={[`${prefix}-picture-file-card-close`, partClass('close')]} style={partStyle('close')} type="button" onclick={removeFromClose}>
                     <IconClear class={`${prefix}-picture-file-card-icon-close`} />
                 </button>
             {/if}
@@ -307,11 +338,11 @@
             <Tooltip position="bottom" trigger="hover">
                 {#snippet child({ props })}
                     {#if validateIcon === 'loading'}
-                        <span {...props} class={[`${prefix}-tooltip-children-wrapper`, `${prefix}-picture-file-card-icon-loading`]}>
+                        <span {...props} class={[`${prefix}-tooltip-children-wrapper`, `${prefix}-picture-file-card-icon-loading`, partClass('validateMessage')]} style={partStyle('validateMessage')}>
                             <Spin size="small" />
                         </span>
                     {:else}
-                        <div {...props} class={`${prefix}-picture-file-card-icon-error`}>
+                        <div {...props} class={[`${prefix}-picture-file-card-icon-error`, partClass('validateMessage')]} style={partStyle('validateMessage')}>
                             <svg aria-hidden="true" fill="none" focusable="false" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="7.99992" cy="7.99992" fill="white" r="6.66667" />
                                 <path

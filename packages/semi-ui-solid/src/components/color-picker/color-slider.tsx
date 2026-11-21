@@ -1,8 +1,10 @@
+import type { JSX } from 'solid-js';
 import clsx from 'clsx';
 import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/components/color-picker/color-slider-foundation';
-import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import { cssClasses, type ColorPickerPart } from '@fibrae/semi-foundation/components/color-picker/constants';
 import { hsvaToHslString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
 import { useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import { useLocale } from '../locale';
 
 export interface ColorSliderProps {
@@ -11,6 +13,8 @@ export interface ColorSliderProps {
     height: number;
     handleSize: number;
     class?: string;
+    classNames?: Partial<Record<ColorPickerPart, string>>;
+    styles?: Partial<Record<ColorPickerPart, JSX.CSSProperties | string>>;
     onChange: (hue: number) => void;
 }
 
@@ -46,17 +50,27 @@ export default function ColorSlider(props: ColorSliderProps) {
     );
 
     return (
-        <div ref={(node) => (dom = node)} class={clsx(`${cssClasses.PREFIX}-colorSlider`, props.class)} style={{ width: `${props.width}px`, height: `${props.height}px` }} onLostPointerCapture={foundation.handleLostPointerCapture} onPointerDown={foundation.handlePointerDown} onPointerMove={foundation.handlePointerMove}>
+        <div
+            ref={(node) => (dom = node)}
+            class={clsx(`${cssClasses.PREFIX}-colorSlider`, props.class, props.classNames?.hue)}
+            style={mergeStyles({ width: `${props.width}px`, height: `${props.height}px` }, props.styles?.hue)}
+            onLostPointerCapture={foundation.handleLostPointerCapture}
+            onPointerDown={foundation.handlePointerDown}
+            onPointerMove={foundation.handlePointerMove}
+        >
             <div
-                class={`${cssClasses.PREFIX}-handle`}
-                style={{
-                    width: `${props.handleSize}px`,
-                    height: `${props.handleSize}px`,
-                    left: `${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    'background-color': hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 }),
-                }}
+                class={clsx(`${cssClasses.PREFIX}-handle`, props.classNames?.handle)}
+                style={mergeStyles(
+                    {
+                        width: `${props.handleSize}px`,
+                        height: `${props.handleSize}px`,
+                        left: `${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        'background-color': hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 }),
+                    },
+                    props.styles?.handle
+                )}
             >
                 <input
                     type="range"

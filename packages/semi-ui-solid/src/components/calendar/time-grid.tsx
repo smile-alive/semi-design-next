@@ -6,7 +6,7 @@ import { calcRowHeight, toPercent } from '@fibrae/semi-foundation/components/cal
 import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
-import { hasContent, mergeRefs } from '../../utils/index';
+import { hasContent, mergeRefs, mergeStyles } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
 import ByKey from './by-key';
@@ -82,7 +82,7 @@ export default function TimeGrid(props: TimeGridProps) {
                         <div role="cell">{header()}</div>
                     </div>
                 </Show>
-                <div class={`${prefixCls}-header`} role="row">
+                <div class={clsx(`${prefixCls}-header`, local.classNames?.header)} style={local.styles?.header} role="row">
                     <div id={monthId} class={`${cssClasses.PREFIX}-tag ${prefixCls}-tag ${prefixCls}-sticky-left`} role="cell">
                         <span>{data().month}</span>
                     </div>
@@ -91,10 +91,14 @@ export default function TimeGrid(props: TimeGridProps) {
                             <For each={data().week}>
                                 {(day) => (
                                     <div
-                                        class={clsx({
-                                            [`${cssClasses.PREFIX}-today`]: isToday(day.date),
-                                            [`${cssClasses.PREFIX}-weekend`]: local.markWeekend && day.isWeekend,
-                                        })}
+                                        class={clsx(
+                                            {
+                                                [`${cssClasses.PREFIX}-today`]: isToday(day.date),
+                                                [`${cssClasses.PREFIX}-weekend`]: local.markWeekend && day.isWeekend,
+                                            },
+                                            local.classNames?.headerCell
+                                        )}
+                                        style={local.styles?.headerCell}
                                         aria-current={isToday(day.date) ? 'date' : undefined}
                                         role="columnheader"
                                     >
@@ -116,7 +120,7 @@ export default function TimeGrid(props: TimeGridProps) {
                         </div>
                     </div>
                 </div>
-                <div class={allDayCls} style={allDayEventsRender() ? undefined : { height: `${calcRowHeight(allDayEvents())}em` }} role="row">
+                <div class={clsx(allDayCls, local.classNames?.allDay)} style={mergeStyles(allDayEventsRender() ? undefined : { height: `${calcRowHeight(allDayEvents())}em` }, local.styles?.allDay)} role="row">
                     <div class={`${cssClasses.PREFIX}-tag ${allDayCls}-tag ${prefixCls}-sticky-left`} role="rowheader">
                         <span>{locale().locale.allDay}</span>
                     </div>
@@ -132,12 +136,15 @@ export default function TimeGrid(props: TimeGridProps) {
                                     <ByKey each={allDayEvents()} by={(event, index) => event.key || `allDay-${index}`}>
                                         {(event) => (
                                             <li
-                                                class={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`}
-                                                style={{
-                                                    'inset-inline-start': toPercent(event().leftPos!),
-                                                    width: toPercent(event().width!),
-                                                    top: `${event().topInd}em`,
-                                                }}
+                                                class={clsx(`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`, local.classNames?.event)}
+                                                style={mergeStyles(
+                                                    {
+                                                        'inset-inline-start': toPercent(event().leftPos!),
+                                                        width: toPercent(event().width!),
+                                                        top: `${event().topInd}em`,
+                                                    },
+                                                    local.styles?.event
+                                                )}
                                             >
                                                 <EventContent of={event().children} />
                                             </li>
@@ -154,12 +161,14 @@ export default function TimeGrid(props: TimeGridProps) {
             </div>
             <div class={`${prefixCls}-scroll-wrapper`} role="rowgroup">
                 <div ref={scrollRef} class={`${prefixCls}-scroll`} role="row">
-                    <TimeCol class={`${prefixCls}-sticky-left`} renderTimeDisplay={renderTimeDisplay()} />
+                    <TimeCol class={`${prefixCls}-sticky-left`} classNames={local.classNames} styles={local.styles} renderTimeDisplay={renderTimeDisplay()} />
                     <ByKey each={data().week} by={(day) => day.date.toString()}>
                         {(day) => {
                             const dayEvents = createMemo(() => CalendarFoundation.getParseDailyEvents(parsedEvents().day?.get(day().date.toString()) ?? [], day().date).day);
                             return (
                                 <DayCol
+                                    classNames={local.classNames}
+                                    styles={local.styles}
                                     displayValue={day().date}
                                     events={dayEvents()}
                                     isWeekend={Boolean(local.markWeekend && day().isWeekend)}

@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性      | 说明                                                    | 类型                 | 默认值      |
-| --------- | ------------------------------------------------------- | -------------------- | ----------- |
-| activeKey | 当前展开的分组 key，配合 v-model:activeKey 使用。       | `string \| string[]` | `undefined` |
-| info      | 参考来源分组列表，每组包含 header、key 与 annotations。 | `AnnotationInfo[]`   | `[]`        |
+| 属性       | 说明                                                                                                                                | 类型                                                                                     | 默认值      |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
+| activeKey  | 当前展开的分组 key，配合 v-model:activeKey 使用。                                                                                   | `string \| string[]`                                                                     | `undefined` |
+| classNames | 内部各部位的类名，键为 groupHeader、groupContent、item、itemTitle、itemDetail、itemFooter，与组件自带的类名合并，值的写法同 class。 | <ApiType detail={"Partial\u003cRecord\u003cAnnotationPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| info       | 参考来源分组列表，每组包含 header、key 与 annotations。                                                                             | `AnnotationInfo[]`                                                                       | `[]`        |
+| styles     | 内部各部位的内联样式，键同 classNames。                                                                                             | <ApiType detail={"Partial\u003cRecord\u003cAnnotationPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

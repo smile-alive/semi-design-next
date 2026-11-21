@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | activeKey | Key of the selected option in the main view; bind it with v-model:activeKey. | `string` | `semiGlobalDefault("Sidebar", "activeKey")` |
+| classNames | Class names of the inner parts, keyed by header, title, close, copy, content, options, option and mainContent; merged with the built-in classes. Values take the same forms as class. In detail modes header, title and close apply to the detail header, where close is the button that goes back to the main view and copy is the copy button. | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Sidebar", "classNames")` |
 | closeOnEsc | Whether pressing Esc emits cancel. | `boolean` | `semiGlobalDefault("Sidebar", "closeOnEsc")` |
 | defaultSize | Initial width and height; applies only when resizable is true. | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Sidebar", "defaultSize")` |
 | detailContent | The item shown in code and file modes: the CodeItem or FileItem props plus a key; a new key remounts it. In file mode its editable and imgUploadProps have no effect, as fileEditable and imgUploadProps decide them. | `SideBarDetailContent` | `semiGlobalDefault("Sidebar", "detailContent")` |
@@ -17,6 +18,7 @@ import ApiType from '#/components/ApiType.astro';
 | options | Option buttons at the top of the main view, each with a name and a key; icons use the optionIcon slot. | `SideBarOption[]` | `semiGlobalDefault("Sidebar", "options")` |
 | resizable | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean` | `semiGlobalDefault("Sidebar", "resizable")` |
 | showClose | Whether the header shows the close button. | `boolean` | `semiGlobalDefault("Sidebar", "showClose")` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Sidebar", "styles")` |
 | title | Plain-text title of the main view; the title slot takes precedence. Detail views use the detail header. | `string` | `semiGlobalDefault("Sidebar", "title")` |
 | visible | Whether it is shown; bind it with v-model:visible. | `boolean` | `semiGlobalDefault("Sidebar", "visible")` |
 

@@ -37,7 +37,7 @@ const defaultProps = {
 
 export default function Tag(rawProps: TagProps) {
     const props = useDefaultProps('Tag', rawProps, defaultProps);
-    const { ref, tagKey, children, size, color, closable, visible, onClose, onClick, className, type, shape, avatarSrc, avatarShape, tabIndex, prefixIcon, suffixIcon, colorful, gradient, ...attr } = props;
+    const { ref, tagKey, children, size, color, closable, visible, onClose, onClick, className, classNames, styles, type, shape, avatarSrc, avatarShape, tabIndex, prefixIcon, suffixIcon, colorful, gradient, ...attr } = props;
 
     const { locale } = useLocale('Tag');
 
@@ -91,13 +91,23 @@ export default function Tag(rawProps: TagProps) {
 
     const content = (
         <>
-            {Boolean(prefixIcon) && <div className={`${prefixCls}-prefix-icon`}>{prefixIcon}</div>}
-            {Boolean(avatarSrc) && <Avatar alt="" shape={avatarShape} src={avatarSrc} />}
-            <div className={clsx(`${prefixCls}-content`, `${prefixCls}-content-${text === undefined ? 'center' : 'ellipsis'}`)}>{children}</div>
-            {Boolean(suffixIcon) && <div className={`${prefixCls}-suffix-icon`}>{suffixIcon}</div>}
+            {Boolean(prefixIcon) && (
+                <div className={clsx(`${prefixCls}-prefix-icon`, classNames?.prefix)} style={styles?.prefix}>
+                    {prefixIcon}
+                </div>
+            )}
+            {Boolean(avatarSrc) && <Avatar className={classNames?.avatar} style={styles?.avatar} alt="" shape={avatarShape} src={avatarSrc} />}
+            <div className={clsx(`${prefixCls}-content`, `${prefixCls}-content-${text === undefined ? 'center' : 'ellipsis'}`, classNames?.content)} style={styles?.content}>
+                {children}
+            </div>
+            {Boolean(suffixIcon) && (
+                <div className={clsx(`${prefixCls}-suffix-icon`, classNames?.suffix)} style={styles?.suffix}>
+                    {suffixIcon}
+                </div>
+            )}
             {closable && (
                 // a pointer shortcut only: keyboard users close with Backspace / Delete and the label says Closable
-                <div className={`${prefixCls}-close`} aria-hidden onClick={close}>
+                <div className={clsx(`${prefixCls}-close`, classNames?.close)} style={styles?.close} aria-hidden onClick={close}>
                     <IconClose size="small" />
                 </div>
             )}

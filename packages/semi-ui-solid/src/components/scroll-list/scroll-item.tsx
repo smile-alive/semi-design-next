@@ -1,6 +1,6 @@
-import { type Ref, For, Show, createMemo, createUniqueId, splitProps } from 'solid-js';
+import { type JSX, type Ref, For, Show, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+import { cssClasses, type ScrollListItemPart } from '@fibrae/semi-foundation/components/scroll-list/constants';
 import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, type ScrollItemRow, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -10,10 +10,12 @@ const prefix = cssClasses.PREFIX;
 
 export interface ScrollItemProps<T extends Item = Item> extends ElementProps<'div', 'onSelect' | 'children' | 'ref'> {
     mode?: string;
+    classNames?: Partial<Record<ScrollListItemPart, string>>;
     cycled?: boolean;
     list?: T[];
     selectedIndex?: number;
     onSelect?: (data: T & { index: number }) => void;
+    styles?: Partial<Record<ScrollListItemPart, JSX.CSSProperties | string>>;
     transform?: (value: T['value'], text?: string) => string;
     motion?: boolean;
     ref?: Ref<ScrollItemElement>;
@@ -39,7 +41,7 @@ const defaultProps = {
 
 export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemProps<T>) {
     const props = useDefaultProps('ScrollItem', rawProps, defaultProps) as ScrollItemProps<T> & Required<Pick<ScrollItemProps<T>, keyof typeof defaultProps>>;
-    const [local, rest] = splitProps(props, ['mode', 'cycled', 'list', 'selectedIndex', 'onSelect', 'transform', 'class', 'motion', 'ref', 'aria-label', 'aria-labelledby', 'aria-describedby']);
+    const [local, rest] = splitProps(props, ['mode', 'cycled', 'list', 'selectedIndex', 'onSelect', 'transform', 'class', 'classNames', 'styles', 'motion', 'ref', 'aria-label', 'aria-labelledby', 'aria-describedby']);
 
     let root!: HTMLDivElement;
     let listbox!: HTMLUListElement;
@@ -86,11 +88,15 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
         return (
             <li
                 id={copy ? undefined : optionId(index)}
-                classList={{
-                    [`${prefix}-item-sel`]: selected() && !isWheel(),
-                    [cssClasses.SELECTED]: isWheel() && key === state().highlightedKey,
-                    [`${prefix}-item-disabled`]: item().disabled,
-                }}
+                class={clsx(
+                    {
+                        [`${prefix}-item-sel`]: selected() && !isWheel(),
+                        [cssClasses.SELECTED]: isWheel() && key === state().highlightedKey,
+                        [`${prefix}-item-disabled`]: item().disabled,
+                    },
+                    local.classNames?.option
+                )}
+                style={local.styles?.option}
                 aria-disabled={item().disabled}
                 aria-hidden={copy ? true : undefined}
                 aria-selected={selected()}
@@ -115,7 +121,9 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
             aria-label={local['aria-label']}
             aria-labelledby={local['aria-labelledby']}
             aria-multiselectable={false}
+            class={local.classNames?.list}
             role="listbox"
+            style={local.styles?.list}
             tabIndex={0}
             onClick={(event) => {
                 if (isWheel()) {
@@ -132,7 +140,7 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
         <div {...rest} ref={(node) => mergeRefs(local.ref)((root = Object.assign(node, handle)))} class={clsx(isWheel() ? `${prefix}-item-wheel` : `${prefix}-item`, local.class)}>
             <Show when={isWheel()} fallback={renderListbox()}>
                 <div class={`${prefix}-shade ${prefix}-shade-pre`} />
-                <div ref={(node) => (selector = node)} class={`${prefix}-selector`} />
+                <div ref={(node) => (selector = node)} class={clsx(`${prefix}-selector`, local.classNames?.selector)} style={local.styles?.selector} />
                 <div class={`${prefix}-shade ${prefix}-shade-post`} />
                 <div ref={(node) => (outer = node)} class={clsx(`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !local.cycled })} onScroll={foundation.handleScroll}>
                     {renderListbox()}

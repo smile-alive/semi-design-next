@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoClearSearchValue | 多选选中后是否自动清空搜索关键字。 | `boolean` | `true` |
 | autofocus | 挂载后是否自动聚焦。 | `boolean` | `false` |
 | borderless | 是否无边框。 | `boolean` | `false` |
-| classNames | 内部各部位的类名，键为 dropdown（下拉层），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、groupLabel、item、itemIcon、itemContent，值的写法同 class（字符串、数组或对象），与组件自带的类名合并。content 是触发器中间的已选内容区，input 是触发器内搜索框的根元素（与 Input 的 input 不同，后者是原生输入框），search 是 searchPosition="dropdown" 时下拉层顶部的搜索区域，dropdown 是弹出层最外层，list 是选项列表。item、itemIcon、itemContent 作用到全部选项，先于 optionList 条目自己的 classNames（键为 icon、content）生效，对 optionItem、createItem snippet 渲染的选项不生效。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, ClassValue>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮图标，snippet。 | `Snippet` | - |
 | clickToHide | 多选时点击选项后是否关闭下拉列表。 | `boolean` | `false` |
 | createItem | 创建选项那一行的内容，snippet，参数为 `{ inputValue, focus, style }`；虚拟化时要把 `style` 用在自定义元素上。 | <ApiType detail={"Snippet\u003c[SelectCreateItemSnippetProps]>"}>Type</ApiType> | - |
@@ -49,7 +49,7 @@ import ApiType from '#/components/ApiType.astro';
 | onSelect | 选中某个选项时的回调。 | <ApiType detail={"(value: string \u007c number \u007c boolean, option: SelectOptionProps) => void"}>Type</ApiType> | - |
 | optionItem | 替换整个选项行，snippet，参数含 `id`、`value`、`label`、`selected`、`focused`、`disabled`、`inputValue`、`class`、`style`、`onclick`、`onmouseenter` 以及条目上的其他字段。`id` 要与 `role="option"` 一起写在选项元素上。 | <ApiType detail={"Snippet\u003c[SelectOptionItemSnippetProps]>"}>Type</ApiType> | - |
 | optionLabel | 只替换选项行里的文字，snippet，参数为 `{ option }`。选中图标、行的 `role="option"`、状态与键盘行为不变；`label` 仍用于搜索与可访问名称，内容里不高亮搜索关键字。 | <ApiType detail={"Snippet\u003c[SelectOptionLabelSnippetProps]>"}>Type</ApiType> | - |
-| optionList | 选项数据，条目含 `value`、`label`、`disabled`、`showTick`、`class`、`style` 以及可选的 `group: { key, label }`，其他字段随选项记录回传。同一分组的条目必须相邻。 | `SelectOptionProps[]` | - |
+| optionList | 选项数据，条目含 `value`、`label`、`disabled`、`showTick`、`class`、`style`、`classNames`、`styles`（键为 `icon`、`content`，分别是选中的对勾图标容器与文本元素）以及可选的 `group: { key, label }`，其他字段随选项记录回传。同一分组的条目必须相邻。 | `SelectOptionProps[]` | - |
 | outerBottomSlot | 下拉层底部与选项列表平级的内容，snippet，列表滚动时始终展现。 | `Snippet` | - |
 | outerTopSlot | 下拉层顶部与选项列表平级的内容，snippet，列表滚动时始终展现。 | `Snippet` | - |
 | placeholder | 未选中时的占位文字。 | `string` | - |

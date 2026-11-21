@@ -6,7 +6,7 @@
     import { getCollapseContext } from './context.js';
     import type { CollapsePanelProps } from './interface.js';
 
-    let { itemKey, showArrow = true, disabled = false, onMotionEnd, header, extra, children, ...rest }: CollapsePanelProps = $props();
+    let { itemKey, showArrow = true, disabled = false, classNames, styles, onMotionEnd, header, extra, children, ...rest }: CollapsePanelProps = $props();
 
     const ctx = getCollapseContext('Collapse.Panel');
 
@@ -24,7 +24,12 @@
     const iconLeft = $derived(ctx.expandIconPosition === 'left');
     const iconEnabled = $derived(hasBody && !disabled);
     const contentMounted = $derived(CollapseFoundation.isContentMounted({ hasBody, active, keepDOM: ctx.keepDOM, lazyRender: ctx.lazyRender, everOpened }));
-    const iconClass = $derived([`${prefixCls}-header-icon`, { [`${prefixCls}-header-iconDisabled`]: !iconEnabled }]);
+    const iconClass = $derived([`${prefixCls}-header-icon`, { [`${prefixCls}-header-iconDisabled`]: !iconEnabled }, ctx.classNames?.itemIcon, classNames?.icon]);
+
+    // The parent Collapse's item* style comes first, the panel's own after it
+    const joinStyles = (...values: Array<string | undefined>) => values.filter(Boolean).join(';') || undefined;
+
+    const iconStyle = $derived(joinStyles(ctx.styles?.itemIcon, styles?.icon));
 
     const handleHeaderClick = (event: MouseEvent) => {
         // The only toggle handler: the button's click (also fired by Enter, Space and assistive tech) bubbles here, so a
@@ -58,15 +63,15 @@
     {/if}
 {/snippet}
 
-<div {...rest} class={[`${prefixCls}-item`, rest.class, { [`${prefixCls}-item-active`]: active }]}>
-    <div class={[`${prefixCls}-header`, { [`${prefixCls}-header-disabled`]: disabled, [`${prefixCls}-header-iconLeft`]: iconLeft }]} onclick={handleHeaderClick}>
+<div {...rest} class={[`${prefixCls}-item`, rest.class, { [`${prefixCls}-item-active`]: active }, ctx.classNames?.item]} style={joinStyles(ctx.styles?.item, rest.style ?? undefined)}>
+    <div class={[`${prefixCls}-header`, { [`${prefixCls}-header-disabled`]: disabled, [`${prefixCls}-header-iconLeft`]: iconLeft }, ctx.classNames?.itemHeader, classNames?.header]} style={joinStyles(ctx.styles?.itemHeader, styles?.header)} onclick={handleHeaderClick}>
         {#if showArrow && iconLeft}
-            <span aria-hidden="true" bind:this={leftIcon} class={iconClass}>{@render arrow()}</span>
+            <span aria-hidden="true" bind:this={leftIcon} class={iconClass} style={iconStyle}>{@render arrow()}</span>
         {/if}
         <!-- APG Accordion: the button sits in a heading. role="heading" rather than h3, since host pages often style h3
             without a layer and those rules would beat Semi's layered styles. Level 3 as in Radix Accordion, which
             assumes the accordion sits under the page's h1 and a section h2. -->
-        <div aria-level="3" class={`${prefixCls}-header-title`} role="heading">
+        <div aria-level="3" class={[`${prefixCls}-header-title`, ctx.classNames?.itemTitle, classNames?.title]} role="heading" style={joinStyles(ctx.styles?.itemTitle, styles?.title)}>
             <button aria-controls={contentMounted ? ariaId : undefined} aria-expanded={active} bind:this={button} class={`${prefixCls}-header-button`} {disabled} id={headerId} type="button">
                 {@render header?.()}
             </button>
@@ -74,15 +79,15 @@
         <!-- extra stays outside the button so it may hold its own controls. The wrapper is always present, a snippet
             cannot be inspected for text: a text header needs the empty extra span, whose end padding spaces the arrow. -->
         <span class={`${prefixCls}-header-right`}>
-            <span>{@render extra?.()}</span>
+            <span class={[`${prefixCls}-header-extra`, ctx.classNames?.itemExtra, classNames?.extra]} style={joinStyles(ctx.styles?.itemExtra, styles?.extra)}>{@render extra?.()}</span>
             {#if showArrow && !iconLeft}
-                <span aria-hidden="true" bind:this={rightIcon} class={iconClass}>{@render arrow()}</span>
+                <span aria-hidden="true" bind:this={rightIcon} class={iconClass} style={iconStyle}>{@render arrow()}</span>
             {/if}
         </span>
     </div>
     {#if hasBody}
         <Collapsible isOpen={active} keepDOM={ctx.keepDOM} lazyRender={ctx.lazyRender} motion={ctx.motion} {onMotionEnd}>
-            <div aria-labelledby={headerId} class={`${prefixCls}-content`} id={ariaId} inert={active ? undefined : true} role="region">
+            <div aria-labelledby={headerId} class={[`${prefixCls}-content`, ctx.classNames?.itemBody, classNames?.body]} id={ariaId} inert={active ? undefined : true} role="region" style={joinStyles(ctx.styles?.itemBody, styles?.body)}>
                 <div class={`${prefixCls}-content-wrapper`}>
                     {@render children?.()}
                 </div>

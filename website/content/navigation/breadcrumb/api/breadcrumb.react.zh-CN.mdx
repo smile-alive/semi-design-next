@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoCollapse | 超出 `maxItemCount` 时是否自动折叠为省略号。 | `boolean` | `true` |
 | children | `Breadcrumb.Item` 子节点；传入非空的 `routes` 时不渲染 children。 | `ReactNode` | - |
 | className | 根元素 nav 的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `list`、`item`、`itemLink`、`itemIcon`、`itemTitle`、`separator`、`more`，与组件自带的类名合并。`item*` 作用到每一项，`separator` 同时作用于折叠项后的分隔符，`more` 是省略号按钮。 | <ApiType detail={"Partial\u003cRecord\u003cBreadcrumbPart, string>>"}>Type</ApiType> | - |
 | compact | 是否使用紧凑尺寸，影响文字与 Semi 图标的尺寸。 | `boolean` | `true` |
 | maxItemCount | 级别数超过该值后折叠，首项、当前项与末项始终可见。 | `number` | `4` |
 | moreType | 内置省略号区域的渲染类型，可选 `default` 或 `popover`；提供 `renderMore` 时以 `renderMore` 为准。 | `MoreType` | `"default"` |
@@ -20,3 +21,4 @@ import ApiType from '#/components/ApiType.astro';
 | separator | 自定义分隔符，可以是文字或 React 节点。 | `React.ReactNode` | `"/"` |
 | showTooltip | 标题溢出时是否展示 Tooltip 及相关配置：`width` 为截断宽度，数字按 px 计算；`ellipsisPos` 为截断位置，`end` 或 `middle`；`opts` 为传给 Tooltip 的属性，不含 `content`，未设置时为 `{ autoAdjustOverflow: true, position: 'top' }`。传 `false` 时不展示 Tooltip，标题仍按 `width` 截断。 | `boolean \| ShowTooltipProps` | `{ width: 150, ellipsisPos: 'end' }` |
 | style | 根元素 nav 的内联样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cBreadcrumbPart, React.CSSProperties>>"}>Type</ApiType> | - |

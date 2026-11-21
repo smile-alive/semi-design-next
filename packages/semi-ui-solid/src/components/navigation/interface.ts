@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
+import type { NavFooterPart, NavHeaderPart, NavItemPart, NavPart, SubNavPart } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { ItemKey, SelectedItemProps } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import type { ElementProps } from '../../base/index';
@@ -14,6 +14,7 @@ export interface SelectedData extends SelectedItemProps<NavItemProps> {
 }
 
 export interface NavItemProps extends ElementProps<'li', 'onClick' | 'children' | 'tabIndex'> {
+    classNames?: Partial<Record<NavItemPart, string>>;
     disabled?: boolean;
     forwardRef?: (ele: HTMLLIElement) => void;
     icon?: JSX.Element;
@@ -25,6 +26,7 @@ export interface NavItemProps extends ElementProps<'li', 'onClick' | 'children' 
     level?: number;
     link?: string;
     linkOptions?: JSX.AnchorHTMLAttributes<HTMLAnchorElement>;
+    styles?: Partial<Record<NavItemPart, JSX.CSSProperties | string>>;
     /** On the link or button that takes focus */
     tabIndex?: number;
     text?: JSX.Element;
@@ -74,7 +76,7 @@ export interface OnOpenChangeData {
 }
 
 /** An entry of `items`: Item or Sub data, the attributes its li takes, and nested entries; Nav's `renderItem*` give its content */
-export interface NavItemConfig extends Omit<NavItemProps, 'icon' | 'level' | 'text' | 'toggleIcon'>, Pick<SubNavProps, 'classNames' | 'dropdownProps' | 'styles' | 'subDropdownProps'> {
+export interface NavItemConfig extends Omit<NavItemProps, 'classNames' | 'icon' | 'level' | 'styles' | 'text' | 'toggleIcon'>, Pick<SubNavProps, 'classNames' | 'dropdownProps' | 'styles' | 'subDropdownProps'> {
     items?: (string | NavItemConfig)[];
     /** The entry's text and payload; `renderItemText` replaces what is shown */
     text?: string | number;
@@ -99,17 +101,21 @@ export interface RenderWrapperData {
 }
 
 export interface NavHeaderProps extends ElementProps<'div'> {
+    classNames?: Partial<Record<NavHeaderPart, string>>;
     link?: string;
     linkOptions?: JSX.AnchorHTMLAttributes<HTMLAnchorElement>;
     logo?: JSX.Element;
+    styles?: Partial<Record<NavHeaderPart, JSX.CSSProperties | string>>;
     /** Also names the header link while the Nav is collapsed and the text is hidden; other content goes in children */
     text?: string | number;
 }
 
 export interface NavFooterProps extends ElementProps<'div'> {
+    classNames?: Partial<Record<NavFooterPart, string>>;
     /** `true` for the built-in button, or a node to use instead; only shown when the footer has no children */
     collapseButton?: JSX.Element;
     collapseText?: (collapsed?: boolean) => JSX.Element;
+    styles?: Partial<Record<NavFooterPart, JSX.CSSProperties | string>>;
 }
 
 /** The `header` prop as data: content comes from render functions, called only when shown */
@@ -124,6 +130,8 @@ export interface NavFooterConfig extends Omit<NavFooterProps, 'children' | 'coll
 }
 
 export interface CollapseButtonProps {
+    class?: string;
+    style?: JSX.CSSProperties | string;
     locale?: Locale['Navigation'];
     collapseText?: (isCollapsed: boolean) => JSX.Element;
     isCollapsed?: boolean;

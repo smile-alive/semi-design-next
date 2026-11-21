@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | alt | Image description, also the accessible name of a previewable thumbnail. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `img` (the inner img element); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `img` (the image itself) and `overlay` (the layer holding the loading placeholder or the failure fallback; not rendered once loaded); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cImagePart, ClassValue>>"}>Type</ApiType> | - |
 | closeIcon | Custom close icon. It applies to this Image's own preview only and has no effect inside an ImagePreview. | `Snippet` | - |
 | crossOrigin | The crossorigin attribute passed to the native img element. | `'anonymous' \| 'use-credentials'` | - |
 | fallback | Fallback image URL shown when loading fails, or a snippet for custom content. | `string \| Snippet` | - |

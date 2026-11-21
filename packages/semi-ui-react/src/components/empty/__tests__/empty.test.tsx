@@ -58,6 +58,18 @@ describe('Empty', () => {
         expect(nodeImage).toHaveClass('semi-empty-image', 'img-cls');
         expect(urlImage.querySelector('img')).toHaveAttribute('src', imgUrl);
         expect(illustrationImage.querySelector('svg')).not.toBeNull();
+
+        const parts = ['image', 'title', 'description', 'footer'] as const;
+        const { container: all } = render(
+            <Empty classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p, i) => [p, { order: i + 1 }]))} title="t" description="d" image="abc">
+                <button type="button">go</button>
+            </Empty>
+        );
+        for (const [index, part] of parts.entries()) {
+            const el = all.querySelector(`.semi-empty-${part}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(index + 1) });
+        }
     });
 
     it('默认垂直布局', () => {

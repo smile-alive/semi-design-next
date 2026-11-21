@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import type { ClassValue, StyleValue } from 'vue';
+    import { cssClasses, type ImagePreviewPart } from '@fibrae/semi-foundation/components/image/constants';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import useLocale from '../../locale/use-locale';
     import type { ImagePreviewSlots } from '../interface';
@@ -11,6 +12,8 @@
         titleId: string;
         hidden: boolean;
         index: number;
+        classNames?: Partial<Record<ImagePreviewPart, ClassValue>>;
+        styles?: Partial<Record<ImagePreviewPart, StyleValue>>;
     }>();
 
     const emit = defineEmits<{ close: [event: MouseEvent] }>();
@@ -22,12 +25,12 @@
 </script>
 
 <template>
-    <section :class="[cls, { [`${cssClasses.PREFIX}-preview-hide`]: props.hidden }]">
-        <section :id="props.titleId" :class="`${cls}-title`">
+    <section :class="[cls, { [`${cssClasses.PREFIX}-preview-hide`]: props.hidden }, props.classNames?.header]" :style="props.styles?.header">
+        <section :id="props.titleId" :class="[`${cls}-title`, props.classNames?.title]" :style="props.styles?.title">
             <slot v-if="$slots.title" :index="props.index" name="title" :title="props.title" />
             <template v-else>{{ props.title }}</template>
         </section>
-        <button v-if="props.closable" :aria-label="locale.locale.close" :class="`${cls}-close`" type="button" @click="emit('close', $event)">
+        <button v-if="props.closable" :aria-label="locale.locale.close" :class="[`${cls}-close`, props.classNames?.close]" :style="props.styles?.close" type="button" @click="emit('close', $event)">
             <slot name="closeIcon">
                 <IconClose />
             </slot>

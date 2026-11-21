@@ -14,11 +14,13 @@
     defineOptions({ name: 'ScrollItem', inheritAttrs: false });
 
     const props = withDefaults(defineProps<ScrollItemProps<T> & /* @vue-ignore */ ElementProps<'div', keyof ScrollItemProps<T> | EmitHandlers<ScrollItemEmits<T>>>>(), {
+        classNames: semiGlobalDefault('ScrollItem', 'classNames'),
         cycled: () => semiDefault('ScrollItem', 'cycled', false),
         list: semiGlobalDefault('ScrollItem', 'list'),
         mode: () => semiDefault('ScrollItem', 'mode', wheelMode),
         motion: () => semiDefault('ScrollItem', 'motion', true),
         selectedIndex: semiGlobalDefault('ScrollItem', 'selectedIndex'),
+        styles: semiGlobalDefault('ScrollItem', 'styles'),
         transform: undefined,
     });
 
@@ -109,12 +111,34 @@
     <div ref="root" v-bind="splitControlAttrs($attrs, isControlKey).root" :class="isWheel ? `${prefix}-item-wheel` : `${prefix}-item`">
         <template v-if="isWheel">
             <div :class="[`${prefix}-shade`, `${prefix}-shade-pre`]" />
-            <div ref="selector" :class="`${prefix}-selector`" />
+            <div ref="selector" :class="[`${prefix}-selector`, props.classNames?.selector]" :style="props.styles?.selector" />
             <div :class="[`${prefix}-shade`, `${prefix}-shade-post`]" />
         </template>
         <component :is="isWheel ? 'div' : SlotFragment" ref="outer" v-bind="outerAttrs">
-            <ul ref="listbox" v-bind="splitControlAttrs($attrs, isControlKey).control" :aria-activedescendant="list[selectedIndex] ? optionId(selectedIndex) : undefined" aria-multiselectable="false" role="listbox" tabindex="0" @click="onListClick" @keydown="foundation.handleKeyDown($event)">
-                <li v-for="option in options" :id="option.id" :key="option.key" :aria-disabled="option.disabled" :aria-hidden="option.copy || undefined" :aria-selected="option.selected" :class="option.class" role="option" @click="option.clickable ? foundation.selectIndex(option.index) : undefined">
+            <ul
+                ref="listbox"
+                v-bind="splitControlAttrs($attrs, isControlKey).control"
+                :aria-activedescendant="list[selectedIndex] ? optionId(selectedIndex) : undefined"
+                aria-multiselectable="false"
+                :class="props.classNames?.list"
+                role="listbox"
+                :style="props.styles?.list"
+                tabindex="0"
+                @click="onListClick"
+                @keydown="foundation.handleKeyDown($event)"
+            >
+                <li
+                    v-for="option in options"
+                    :id="option.id"
+                    :key="option.key"
+                    :aria-disabled="option.disabled"
+                    :aria-hidden="option.copy || undefined"
+                    :aria-selected="option.selected"
+                    :class="[option.class, props.classNames?.option]"
+                    role="option"
+                    :style="props.styles?.option"
+                    @click="option.clickable ? foundation.selectIndex(option.index) : undefined"
+                >
                     {{ option.text }}
                 </li>
             </ul>

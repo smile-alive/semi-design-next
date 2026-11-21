@@ -1126,11 +1126,74 @@ describe('AIChatDialogue 消息操作', () => {
 });
 
 describe('AIChatDialogue 提示', () => {
-    it('classNames 与 styles 按部位落到对应元素', () => {
-        const { container } = renderDialogue({ hints: ['first'], classNames: { hint: 'my-hint' }, styles: { hint: 'order: 1' } });
-        const section = container.querySelector(`.${prefix}-hints`);
-        expect(section).toHaveClass('my-hint');
-        expect(section).toHaveStyle({ order: '1' });
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        mockListScroll();
+        const parts = ['messages', 'item', 'itemCheckbox', 'itemAvatar', 'itemTitle', 'itemContent', 'itemActions', 'reasoning', 'references', 'annotation', 'file', 'image', 'loading', 'code', 'hint', 'hintItem', 'backBottom'] as const;
+        const selectors = {
+            messages: 'list',
+            item: 'wrapper',
+            itemCheckbox: 'checkbox',
+            itemAvatar: 'avatar',
+            itemTitle: 'title',
+            itemContent: 'content',
+            itemActions: 'action',
+            reasoning: 'reasoning-wrapper',
+            references: 'references',
+            annotation: 'annotation-wrapper',
+            file: 'content-file',
+            image: 'content-img',
+            loading: 'content-loading',
+            code: 'code',
+            hint: 'hints',
+            hintItem: 'hint-item',
+            backBottom: 'backBottom-button',
+        };
+        const annotations = [{ type: 'url_citation', title: 'A', url: 'https://a.example', logo: 'https://a.example/logo.png' }];
+        const { container } = renderDialogue({
+            selecting: true,
+            hints: ['first'],
+            chats: [
+                {
+                    id: '1',
+                    role: 'user',
+                    status: 'completed',
+                    content: [
+                        {
+                            type: 'message',
+                            content: [
+                                { type: 'input_image', image_url: 'https://example.com/a.png' },
+                                { type: 'input_file', filename: 'report.pdf', file_url: 'https://example.com/r.pdf', size: '1KB' },
+                            ],
+                        },
+                    ],
+                    references: [{ id: 'r', type: 'file', name: 'doc.docx' }],
+                },
+                {
+                    id: '2',
+                    role: 'assistant',
+                    status: 'completed',
+                    content: [
+                        { type: 'reasoning', status: 'completed', content: [{ text: 'thinking' }] },
+                        { type: 'message', content: [{ type: 'output_text', text: '```js\nconst a = 1;\n```', annotations }] },
+                    ],
+                },
+                { id: '3', role: 'assistant', status: 'in_progress', content: '' },
+            ],
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+        });
+        const list = getList(container);
+        list.scrollTop = 0;
+        list.dispatchEvent(new Event('scroll'));
+        await waitFor(() => {
+            expect(container.querySelector(`.${prefix}-code`)).not.toBeNull();
+            expect(container.querySelector(`.${prefix}-backBottom-button`)).not.toBeNull();
+        });
+        for (const part of parts) {
+            const el = container.querySelector(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('渲染提示，点击后追加一条用户消息', async () => {

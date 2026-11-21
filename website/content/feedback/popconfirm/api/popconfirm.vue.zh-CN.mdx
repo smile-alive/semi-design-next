@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | cancelButtonProps | 取消按钮的属性，autoFocus 为 true 时打开后聚焦该按钮，class、style 落在按钮上。 | `PopconfirmButtonProps` | `semiGlobalDefault("Popconfirm", "cancelButtonProps")` |
 | cancelText | 取消按钮文字，缺省取语言包 Popconfirm.cancel。 | `string` | `semiGlobalDefault("Popconfirm", "cancelText")` |
 | cancelType | 取消按钮类型。 | `Type` | `"tertiary"` |
-| classNames | 内部各部位的类名，键为 `content`（弹出层内的内容容器 `.semi-popover`）、`arrow`（箭头），与组件自带的类名合并；确认卡片 `.semi-popconfirm` 的类名用 `class`。 | <ApiType detail={"Partial\u003cRecord\u003cPopconfirmPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Popconfirm", "classNames")` |
+| classNames | 内部各部位的类名，键为 `content`（弹出层内的外层卡片 `.semi-popover`）、`arrow`（箭头）、`header`（头部）、`icon`（图标）、`title`（标题）、`close`（关闭按钮）、`body`（`content` 插槽渲染的内容区，不是 `content` 键）、`footer`（底部按钮区），与组件自带的类名合并；确认卡片 `.semi-popconfirm` 的类名用 `class`。 | <ApiType detail={"Partial\u003cRecord\u003cPopconfirmPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Popconfirm", "classNames")` |
 | clickToHide | 点击弹出层及其内部任一元素时是否关闭。 | `boolean` | `semiGlobalDefault("Popconfirm", "clickToHide")` |
 | closeOnEsc | 弹出层打开期间按 Esc 是否关闭确认框；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。 | `boolean` | `semiGlobalDefault("Popconfirm", "closeOnEsc")` |
 | condition | 是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效。由 true 变为 false 时立即关闭已显示的确认框；visible 受控时只发出 update:visible 与 visibleChange(false)，使用方回写后才关闭。 | `boolean` | `semiGlobalDefault("Popconfirm", "condition")` |
@@ -37,7 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | showCloseIcon | 是否显示右上角关闭按钮。 | `boolean` | `true` |
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number; }` | `semiGlobalDefault("Popconfirm", "spacing")` |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡；确认卡片内的 click 始终不冒泡。 | `string \| boolean` | `true` |
-| styles | 内部各部位的内联样式，键同 `classNames`。`content` 是内容容器的样式；`arrow` 是箭头的 `borderColor`、`backgroundColor` 与 `borderOpacity`。 | `{ content?: StyleValue; arrow?: ArrowStyle \| undefined; }` | `semiGlobalDefault("Popconfirm", "styles")` |
+| styles | 内部各部位的内联样式，键同 `classNames`。`content`、`header`、`icon`、`title`、`close`、`body`、`footer` 是对应元素的样式；`arrow` 是箭头的 `borderColor`、`backgroundColor` 与 `borderOpacity`。 | <ApiType detail={"(Partial\u003cRecord\u003c\"body\" \u007c \"close\" \u007c \"content\" \u007c \"footer\" \u007c \"header\" \u007c \"icon\" \u007c \"title\", StyleValue>> & Pick\u003c{ content?: StyleValue; arrow?: ArrowStyle \u007c undefined; }, \"arrow\">)"}>Type</ApiType> | `semiGlobalDefault("Popconfirm", "styles")` |
 | title | 纯文本标题，同时作为对话框的可访问名称；同时传入 #title 插槽时以插槽为准。声明为 prop，不会作为原生 title 属性落到元素上。 | `string` | `undefined` |
 | trigger | 触发展示的时机，可选 hover、focus、click、contextMenu 或 custom。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `"click"` |
 | visible | 是否展示，配合 v-model:visible 使用；传入后由该值决定显示，trigger 保持原值，触发器事件仍然生效。 | `boolean` | `semiGlobalDefault("Popconfirm", "visible")` |

@@ -7,10 +7,18 @@
                 "en-US": "Audio address: a string, an AudioInfo object, or an array of them. An array shows the previous and next track buttons."
             },
             "autoPlay": { "zh-CN": "是否自动播放。", "en-US": "Whether to play automatically." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 controls、playButton、cover、title、error、sliderTrack、sliderProgress、sliderThumb、toolbar、speed、volumeDropdown、speedDropdown，与组件自带的类名合并。slider* 同时作用于进度条与音量条；speedDropdown 落在倍速菜单容器上。",
+                "en-US": "Class names of the inner parts, keyed by controls, playButton, cover, title, error, sliderTrack, sliderProgress, sliderThumb, toolbar, speed, volumeDropdown and speedDropdown; merged with the built-in classes. The slider* keys apply to both the progress and the volume slider; speedDropdown lands on the playback rate menu container."
+            },
             "showToolbar": { "zh-CN": "是否显示工具栏。", "en-US": "Whether to display the toolbar." },
             "skipDuration": {
                 "zh-CN": "后退、前进按钮每次跳转的秒数。",
                 "en-US": "Seconds skipped by each backward or forward button press."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
             },
             "theme": {
                 "zh-CN": "播放器主题，可选 dark 或 light。",

@@ -31,8 +31,8 @@ interface InputBoxProps {
     showClearContext?: boolean;
     sendHotKey?: SendHotKey;
     placeholder?: string;
-    class?: string;
-    style?: JSX.CSSProperties | string;
+    classNames?: ChatProps['classNames'];
+    styles?: ChatProps['styles'];
     disableSend?: boolean;
     uploadTipProps?: TooltipProps;
     uploadProps?: ChatProps['uploadProps'];
@@ -136,7 +136,8 @@ export default function InputBox(props: InputBoxProps) {
         <div class={`${PREFIX_INPUT_BOX}-inputArea`}>
             <InternalTextArea
                 textareaRef={textareas.add}
-                class={`${PREFIX_INPUT_BOX}-textarea`}
+                class={clsx(`${PREFIX_INPUT_BOX}-textarea`, props.classNames?.input)}
+                style={props.styles?.input}
                 aria-label={locale().locale.input}
                 placeholder={props.placeholder}
                 value={state().content}
@@ -160,7 +161,8 @@ export default function InputBox(props: InputBoxProps) {
     const sendNode = () => (
         <Button
             type="primary"
-            class={`${PREFIX_INPUT_BOX}-sendButton`}
+            class={clsx(`${PREFIX_INPUT_BOX}-sendButton`, props.classNames?.send)}
+            style={props.styles?.send}
             aria-label={locale().locale.send}
             disabled={InputBoxFoundation.getDisableSend(state().content, state().attachment, props.disableSend, props.canSend)}
             theme="solid"
@@ -170,7 +172,7 @@ export default function InputBox(props: InputBoxProps) {
     );
 
     const nodes = () => (
-        <div class={clsx(PREFIX_INPUT_BOX, props.class)} style={props.style}>
+        <div class={clsx(PREFIX_INPUT_BOX, props.classNames?.inputBox)} style={props.styles?.inputBox}>
             <div class={`${PREFIX_INPUT_BOX}-inner`} onClick={focus}>
                 <Show when={props.showClearContext}>{clearNode()}</Show>
                 <div class={`${PREFIX_INPUT_BOX}-container`}>

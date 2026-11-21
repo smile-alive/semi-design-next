@@ -11,7 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | centered | Whether the dialog is vertically centered. | `boolean` | `false` |
 | children | Body of the dialog. | `JSX.Element` | - |
 | class | Class name of the outermost element inside the portal. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `mask`, `content`, `header`, `body` and `footer`; merged with the built-in classes. There is no `header` part when `header` is customized. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `mask`, `content`, `header`, `title`, `icon`, `close`, `body` and `footer`; merged with the built-in classes. There are no `header`, `title`, `icon` and `close` parts when `header` is customized. | <ApiType detail={"Partial\u003cRecord\u003cModalPart, string>>"}>Type</ApiType> | - |
 | closable | Whether the close button in the corner is shown. | `boolean` | `true` |
 | closeIcon | Icon inside the close button. The default icon is used when omitted. | `JSX.Element` | - |
 | closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `true` |

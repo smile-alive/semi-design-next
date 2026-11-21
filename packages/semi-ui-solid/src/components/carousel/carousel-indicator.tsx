@@ -13,10 +13,15 @@ export default function CarouselIndicator(props: CarouselIndicatorProps) {
     return (
         <div
             ref={props.ref}
-            class={clsx(cssClasses.CAROUSEL_INDICATOR, {
-                [`${cssClasses.CAROUSEL_INDICATOR}-${props.type}`]: props.type,
-                [`${cssClasses.CAROUSEL_INDICATOR}-${props.position}`]: props.position,
-            })}
+            class={clsx(
+                cssClasses.CAROUSEL_INDICATOR,
+                {
+                    [`${cssClasses.CAROUSEL_INDICATOR}-${props.type}`]: props.type,
+                    [`${cssClasses.CAROUSEL_INDICATOR}-${props.position}`]: props.position,
+                },
+                props.classNames?.indicators
+            )}
+            style={props.styles?.indicators}
             aria-label={locale().locale.indicators}
             role="tablist"
         >
@@ -25,11 +30,16 @@ export default function CarouselIndicator(props: CarouselIndicatorProps) {
                     <button
                         id={props.getTabId(i)}
                         type="button"
-                        class={clsx(`${cssClasses.CAROUSEL_INDICATOR}-item`, {
-                            [`${cssClasses.CAROUSEL_INDICATOR}-item-active`]: i === props.activeIndex,
-                            [`${cssClasses.CAROUSEL_INDICATOR}-item-${props.theme}`]: props.theme,
-                            [`${cssClasses.CAROUSEL_INDICATOR}-item-${props.size}`]: props.size,
-                        })}
+                        class={clsx(
+                            `${cssClasses.CAROUSEL_INDICATOR}-item`,
+                            {
+                                [`${cssClasses.CAROUSEL_INDICATOR}-item-active`]: i === props.activeIndex,
+                                [`${cssClasses.CAROUSEL_INDICATOR}-item-${props.theme}`]: props.theme,
+                                [`${cssClasses.CAROUSEL_INDICATOR}-item-${props.size}`]: props.size,
+                            },
+                            props.classNames?.indicator
+                        )}
+                        style={props.styles?.indicator}
                         data-index={i}
                         aria-controls={props.getSlideId(i)}
                         aria-label={formatLocale(locale().locale.slideN, { index: i + 1 })}

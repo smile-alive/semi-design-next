@@ -1,5 +1,6 @@
-import type { IntrinsicElementAttributes, StyleValue, VNode, VNodeChild } from 'vue';
+import type { ClassValue, IntrinsicElementAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
+import type { FormLabelPart, FormPart, FormSectionPart } from '@fibrae/semi-foundation/components/form/constants';
 import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { arrayState, JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 import type { ColProps } from '../grid/interface';
@@ -24,6 +25,8 @@ export interface LabelProps {
     name?: string;
     /** Width of the label; a number is in px */
     width?: number | string;
+    classNames?: Partial<Record<FormLabelPart, ClassValue>>;
+    styles?: Partial<Record<FormLabelPart, StyleValue>>;
 }
 
 export interface LabelSlots {
@@ -51,6 +54,8 @@ export interface AllFormProps<Values extends Record<string, any> = any, Output =
     /** Initial values of the fields, copied once when the Form is created; may leave out any part of the values */
     initValues?: DeepPartial<Values>;
     layout?: 'horizontal' | 'vertical';
+    classNames?: Partial<Record<FormPart, ClassValue>>;
+    styles?: Partial<Record<FormPart, StyleValue>>;
     labelPosition?: 'top' | 'left' | 'inset';
     labelWidth?: number | string;
     labelAlign?: 'left' | 'right';
@@ -231,6 +236,11 @@ export interface FormErrorMessageProps {
 export interface FormErrorMessageSlots {
     helpText?: () => VNode[];
     error?: (props: { error: FieldError }) => VNode[];
+}
+
+export interface FormSectionProps {
+    classNames?: Partial<Record<FormSectionPart, ClassValue>>;
+    styles?: Partial<Record<FormSectionPart, StyleValue>>;
 }
 
 export interface FormSectionSlots {

@@ -61,7 +61,9 @@ export default function Transfer(rawProps: TransferProps) {
 
     const [local, rest] = splitProps(props, [
         'class',
+        'classNames',
         'style',
+        'styles',
         'ref',
         'disabled',
         'dataSource',
@@ -231,16 +233,20 @@ export default function Transfer(rawProps: TransferProps) {
         const content = children(() => emptyProps.content);
         return (
             <Show when={content() !== null}>
-                <div class={clsx(`${prefixCls}-empty`, `${prefixCls}-${emptyProps.side}-empty`)}>{hasContent(content()) ? content() : emptyProps.fallback}</div>
+                <div class={clsx(`${prefixCls}-empty`, `${prefixCls}-${emptyProps.side}-empty`, local.classNames?.empty)} style={local.styles?.empty}>
+                    {hasContent(content()) ? content() : emptyProps.fallback}
+                </div>
             </Show>
         );
     };
 
     const Header = (headerProps: { side: 'left' | 'right'; total: string; action: string; showButton: boolean; onClick: () => void }) => (
-        <div class={clsx(`${prefixCls}-header`, `${prefixCls}-${headerProps.side}-header`)}>
-            <span class={`${prefixCls}-header-total`}>{headerProps.total}</span>
+        <div class={clsx(`${prefixCls}-header`, `${prefixCls}-${headerProps.side}-header`, local.classNames?.header)} style={local.styles?.header}>
+            <span class={clsx(`${prefixCls}-header-total`, local.classNames?.title)} style={local.styles?.title}>
+                {headerProps.total}
+            </span>
             <Show when={headerProps.showButton}>
-                <Button type="tertiary" class={`${prefixCls}-header-all`} disabled={local.disabled} size="small" theme="borderless" onClick={() => headerProps.onClick()}>
+                <Button type="tertiary" class={clsx(`${prefixCls}-header-all`, local.classNames?.action)} style={local.styles?.action} disabled={local.disabled} size="small" theme="borderless" onClick={() => headerProps.onClick()}>
                     {headerProps.action}
                 </Button>
             </Show>
@@ -277,7 +283,8 @@ export default function Transfer(rawProps: TransferProps) {
                 when={local.renderSourceItem}
                 fallback={
                     <Checkbox
-                        class={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: itemProps.item.disabled })}
+                        class={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: itemProps.item.disabled }, local.classNames?.item)}
+                        style={local.styles?.item}
                         role="listitem"
                         checked={checked()}
                         disabled={itemProps.item.disabled || local.disabled}
@@ -305,7 +312,8 @@ export default function Transfer(rawProps: TransferProps) {
 
     const SourceList = () => (
         <div
-            class={`${prefixCls}-left-list`}
+            class={clsx(`${prefixCls}-left-list`, local.classNames?.list)}
+            style={local.styles?.list}
             aria-label={locale().locale.optionList}
             role="list"
             // disabled checkboxes leave nothing focusable, so the list takes the Tab stop to stay scrollable
@@ -318,7 +326,7 @@ export default function Transfer(rawProps: TransferProps) {
                         const titleId = `${idPrefix}-group-${groupIndex}`;
                         return (
                             <div role="listitem">
-                                <div id={titleId} class={`${prefixCls}-group-title`}>
+                                <div id={titleId} class={clsx(`${prefixCls}-group-title`, local.classNames?.groupTitle)} style={local.styles?.groupTitle}>
                                     {group()?.title}
                                 </div>
                                 <div aria-labelledby={titleId} role="list">
@@ -384,9 +392,9 @@ export default function Transfer(rawProps: TransferProps) {
             keyed
             when={local.renderSourcePanel}
             fallback={
-                <section class={`${prefixCls}-left`}>
+                <section class={clsx(`${prefixCls}-left`, local.classNames?.source)} style={local.styles?.source}>
                     <Show when={local.filter !== false}>
-                        <search class={`${prefixCls}-filter`} aria-label={locale().locale.filter}>
+                        <search class={clsx(`${prefixCls}-filter`, local.classNames?.filter)} style={local.styles?.filter} aria-label={locale().locale.filter}>
                             <Input tabIndex={local.tabIndex} disabled={local.disabled} placeholder={locale().locale.placeholder} value={state().inputValue} addonAfter={null} addonBefore={null} insetLabel={null} showClear prefix={<IconSearch />} suffix={null} onChange={sourcePanelProps.onSearch} {...inputRest()} />
                         </search>
                     </Show>
@@ -402,18 +410,28 @@ export default function Transfer(rawProps: TransferProps) {
         // a list keeps its handle for as long as it lives: Sortable gives one to every item, the plain lists none or the stand-in
         const sortableHandle = untrack(() => itemProps.sortableHandle);
         const isStatic = sortableHandle === staticHandle;
-        const DragHandle = untrack(() => local.draggable) && sortableHandle ? sortableHandle(() => <IconHandle class={`${prefixCls}-right-item-drag-handler`} {...(isStatic ? { 'aria-label': locale().locale.dragSort, role: 'button', 'aria-disabled': 'true' } : {})} />) : undefined;
+        const DragHandle =
+            untrack(() => local.draggable) && sortableHandle
+                ? sortableHandle(() => <IconHandle class={clsx(`${prefixCls}-right-item-drag-handler`, local.classNames?.itemDragHandle)} style={local.styles?.itemDragHandle} {...(isStatic ? { 'aria-label': locale().locale.dragSort, role: 'button', 'aria-disabled': 'true' } : {})} />)
+                : undefined;
         const onRemove = () => selectedPanelProps.onRemove(itemProps.item);
 
         const defaultItem = () => (
-            <div class={clsx(`${prefixCls}-item`, `${prefixCls}-right-item`, { [`${prefixCls}-right-item-draggable`]: local.draggable })} role="listitem">
+            <div class={clsx(`${prefixCls}-item`, `${prefixCls}-right-item`, { [`${prefixCls}-right-item-draggable`]: local.draggable }, local.classNames?.item)} style={local.styles?.item} role="listitem">
                 {DragHandle && <DragHandle />}
                 <div class={`${prefixCls}-right-item-text`}>
                     <Show when={isTree() && local.showPath} fallback={<Label item={itemProps.item} />}>
                         {TransferFoundation.generatePath(itemProps.item)}
                     </Show>
                 </div>
-                <button type="button" class={clsx(`${prefixCls}-item-close-icon`, { [`${prefixCls}-item-close-icon-disabled`]: itemProps.item.disabled })} aria-label={locale().locale.remove} disabled={itemProps.item.disabled || local.disabled} onClick={onRemove}>
+                <button
+                    type="button"
+                    class={clsx(`${prefixCls}-item-close-icon`, { [`${prefixCls}-item-close-icon-disabled`]: itemProps.item.disabled }, local.classNames?.itemRemove)}
+                    style={local.styles?.itemRemove}
+                    aria-label={locale().locale.remove}
+                    disabled={itemProps.item.disabled || local.disabled}
+                    onClick={onRemove}
+                >
                     <IconClose />
                 </button>
             </div>
@@ -439,11 +457,11 @@ export default function Transfer(rawProps: TransferProps) {
 
     const SelectedListOuter = (outerProps: JSX.HTMLAttributes<HTMLDivElement>) => (
         // disabled buttons leave nothing focusable, so the list itself takes the Tab stop to stay scrollable
-        <div {...outerProps} aria-label={locale().locale.selectedList} role="list" tabIndex={local.disabled ? 0 : undefined} />
+        <div {...outerProps} class={clsx(outerProps.class, local.classNames?.list)} style={mergeStyles(outerProps.style, local.styles?.list)} aria-label={locale().locale.selectedList} role="list" tabIndex={local.disabled ? 0 : undefined} />
     );
 
     const SelectedList = (listProps: { sortableHandle?: SortableHandle }) => (
-        <div class={`${prefixCls}-right-list`} aria-label={locale().locale.selectedList} role="list" tabIndex={local.disabled ? 0 : undefined}>
+        <div class={clsx(`${prefixCls}-right-list`, local.classNames?.list)} style={local.styles?.list} aria-label={locale().locale.selectedList} role="list" tabIndex={local.disabled ? 0 : undefined}>
             <For each={selectedList()}>{(item) => <SelectedItem item={item} sortableHandle={listProps.sortableHandle} />}</For>
         </div>
     );
@@ -509,7 +527,7 @@ export default function Transfer(rawProps: TransferProps) {
             keyed
             when={local.renderSelectedPanel}
             fallback={
-                <section class={`${prefixCls}-right`}>
+                <section class={clsx(`${prefixCls}-right`, local.classNames?.selected)} style={local.styles?.selected}>
                     <SelectedHeader />
                     <Switch fallback={<SelectedList />}>
                         <Match when={selectedList().length === 0}>

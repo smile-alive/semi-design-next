@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import type { HTMLAttributes } from 'svelte/elements';
+    import type { ClassValue, HTMLAttributes } from 'svelte/elements';
     import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
     import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
@@ -10,10 +10,12 @@
     import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import { DropdownItem } from '../dropdown/index.js';
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';
-    import { getNavContext } from './context.js';
-    import type { NavIconArgs, NavLinkOptions, OnSelectedData, SelectedData } from './interface.js';
+    import { getNavContext, joinStyles } from './context.js';
+    import type { NavIconArgs, NavItemProps, NavLinkOptions, OnSelectedData, SelectedData } from './interface.js';
 
     interface ItemShellProps extends Omit<HTMLAttributes<HTMLLIElement>, 'children'> {
+        classNames?: NavItemProps['classNames'];
+        styles?: NavItemProps['styles'];
         isSubNav?: boolean;
         /** Resolved by the caller: a Sub provides its own context to the subtree, which includes this shell */
         isInSubNav: boolean;
@@ -41,7 +43,7 @@
     type Foundation = ItemFoundation<ItemProps>;
     type Adapter = ItemAdapter<ItemProps>;
 
-    let { isSubNav = false, isInSubNav, level, disabled, indent, isCollapsed: ownCollapsed, itemKey, link, linkOptions, text, tooltipHideDelay, tooltipShowDelay, reported, itemConfig, icon, toggleIcon, label, content, onItemClick, ...rest }: ItemShellProps = $props();
+    let { classNames, styles, isSubNav = false, isInSubNav, level, disabled, indent, isCollapsed: ownCollapsed, itemKey, link, linkOptions, text, tooltipHideDelay, tooltipShowDelay, reported, itemConfig, icon, toggleIcon, label, content, onItemClick, ...rest }: ItemShellProps = $props();
 
     const ctx = getNavContext('Nav.Item');
 
@@ -114,6 +116,10 @@
         [`${itemPrefix}-disabled`]: disabled,
     });
 
+    // a Sub styles its own root (subNav), so only a leaf item takes the item part
+    const itemClass = $derived(isSubNav ? undefined : ctx.classNames?.item);
+    const itemStyle = $derived(isSubNav ? undefined : ctx.styles?.item);
+
     const handleClick = (event: MouseEvent) => foundation.handleClick(event);
 
     // Dropdown activates the li on Enter/Space; click the inner link instead so target and rel apply (it bubbles back here)
@@ -133,7 +139,14 @@
         handleClick(event);
     };
 
-    const iconClass = (toggle: boolean) => [`${itemPrefix}-icon`, toggle ? `${itemPrefix}-icon-toggle-${ctx.toggleIconPosition}` : `${itemPrefix}-icon-info`];
+    // the blank indent slots are not the icon, so they take no icon part
+    const iconClass = (toggle: boolean, placeholder = false): ClassValue => [
+        `${itemPrefix}-icon`,
+        toggle ? `${itemPrefix}-icon-toggle-${ctx.toggleIconPosition}` : `${itemPrefix}-icon-info`,
+        ...(placeholder ? [] : toggle ? [ctx.classNames?.itemToggleIcon, classNames?.toggleIcon] : [ctx.classNames?.itemIcon, classNames?.icon]),
+    ];
+
+    const iconStyle = (toggle: boolean) => (toggle ? joinStyles(ctx.styles?.itemToggleIcon, styles?.toggleIcon) : joinStyles(ctx.styles?.itemIcon, styles?.icon));
 
     const toggleShown = (position: 'left' | 'right') => ctx.toggleIconPosition === position && (!horizontal || Boolean(toggleIcon));
 </script>
@@ -148,19 +161,19 @@
 
 {#snippet body()}
     {#each placeholders as n (n)}
-        <i class={iconClass(false)}></i>
+        <i class={iconClass(false, true)}></i>
     {/each}
     {#if toggleShown('left')}
-        <i class={iconClass(true)} x-semi-prop="toggleIcon">{@render toggleIcon?.({ size: 'default' })}</i>
+        <i class={iconClass(true)} style={iconStyle(true)} x-semi-prop="toggleIcon">{@render toggleIcon?.({ size: 'default' })}</i>
     {/if}
     {#if infoIconShown}
-        <i class={iconClass(false)} x-semi-prop="icon">{@render icon?.({ size: 'large' })}</i>
+        <i class={iconClass(false)} style={iconStyle(false)} x-semi-prop="icon">{@render icon?.({ size: 'large' })}</i>
     {/if}
     {#if text != null || label}
-        <span class={`${prefix}-item-text`} x-semi-prop="label">{@render shownText()}</span>
+        <span class={[`${prefix}-item-text`, ctx.classNames?.itemText, classNames?.text]} style={joinStyles(ctx.styles?.itemText, styles?.text)} x-semi-prop="label">{@render shownText()}</span>
     {/if}
     {#if toggleShown('right')}
-        <i class={iconClass(true)} x-semi-prop="toggleIcon">{@render toggleIcon?.({ size: 'default' })}</i>
+        <i class={iconClass(true)} style={iconStyle(true)} x-semi-prop="toggleIcon">{@render toggleIcon?.({ size: 'default' })}</i>
     {/if}
 {/snippet}
 
@@ -201,13 +214,14 @@
         {@render inner()}
     </li>
 {:else if popup}
-    <DropdownItem {...rest} active={selected} aria-current={selected && !isSubNav ? 'page' : undefined} class={[rest.class, itemPrefix, stateClasses, { [`${itemPrefix}-selected`]: selected }]} disabled={disabled ?? false} onclick={handlePopupClick}>
+    <DropdownItem {...rest} active={selected} aria-current={selected && !isSubNav ? 'page' : undefined} class={[itemClass, rest.class, itemPrefix, stateClasses, { [`${itemPrefix}-selected`]: selected }]} disabled={disabled ?? false} style={joinStyles(itemStyle, rest.style)} onclick={handlePopupClick}>
         {@render inner()}
     </DropdownItem>
 {:else}
     <li
         {...attrs.root}
         class={[
+            itemClass,
             isSubNav ? rest.class : rest.class || `${itemPrefix}-normal`,
             itemPrefix,
             stateClasses,
@@ -217,6 +231,7 @@
                 [`${itemPrefix}-has-button`]: !hasLink && !isSubNav,
             },
         ]}
+        style={joinStyles(itemStyle, rest.style)}
     >
         {@render inner()}
     </li>

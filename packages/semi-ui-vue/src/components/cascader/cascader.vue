@@ -296,11 +296,14 @@
         return { shown: true, text: labels.join(props.separator) };
     };
 
-    const singleTextClass = (shown: boolean) => ({
-        [`${prefix}-selection-placeholder`]: !shown,
-        [`${prefix}-selection-text-hide`]: view.value.showInput && view.value.inputValue,
-        [`${prefix}-selection-text-inactive`]: view.value.showInput && !view.value.inputValue,
-    });
+    const singleTextClass = (shown: boolean) => [
+        {
+            [`${prefix}-selection-placeholder`]: !shown,
+            [`${prefix}-selection-text-hide`]: view.value.showInput && view.value.inputValue,
+            [`${prefix}-selection-text-inactive`]: view.value.showInput && !view.value.inputValue,
+        },
+        !shown && props.classNames?.placeholder,
+    ];
 
     const searchInputBindings = () => ({
         ...comboboxAttrs(),
@@ -446,14 +449,20 @@
             <slot v-if="$slots.trigger" name="trigger" v-bind="triggerSlotProps()" />
             <template v-else>
                 <template v-for="(k, i) in [kinds()]" :key="i">
-                    <div v-if="k.prefix || k.insetLabel" :id="prefixId()" :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: k.insetLabel, [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon' }]" x-semi-prop="prefix,insetLabel">
+                    <div
+                        v-if="k.prefix || k.insetLabel"
+                        :id="prefixId()"
+                        :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: k.insetLabel, [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon' }, props.classNames?.prefix]"
+                        :style="props.styles?.prefix"
+                        x-semi-prop="prefix,insetLabel"
+                    >
                         <slot v-if="k.prefix" name="prefix" />
                         <slot v-else name="insetLabel" />
                     </div>
-                    <div :class="[`${prefix}-selection`, { [`${prefix}-selection-multiple`]: multiple && view.checkedKeys.size > 0 }]">
+                    <div :class="[`${prefix}-selection`, { [`${prefix}-selection-multiple`]: multiple && view.checkedKeys.size > 0 }, props.classNames?.content]" :style="props.styles?.content">
                         <div v-if="triggerSearch && !multiple" :class="[`${prefix}-search-wrapper`, { [`${prefix}-search-wrapper-${looks.size}`]: looks.size !== 'default' }]">
                             <template v-for="(display, d) in [displayContent()]" :key="d">
-                                <span :id="selectionTextId" :class="singleTextClass(display.shown)">
+                                <span :id="selectionTextId" :class="singleTextClass(display.shown)" :style="display.shown ? undefined : props.styles?.placeholder">
                                     <template v-if="!display.shown">{{ inputPlaceholder }}</template>
                                     <template v-else-if="display.nodes">
                                         <component :is="node" v-for="[node, key] in display.nodes" :key="key" />
@@ -461,7 +470,7 @@
                                     <template v-else>{{ display.text }}</template>
                                 </span>
                             </template>
-                            <Input v-if="view.showInput" ref="searchInput" v-bind="searchInputBindings()" :class="`${prefix}-input`" :disabled="looks.disabled" :modelValue="view.inputValue" :size="looks.size" @change="foundation.handleInputChange" />
+                            <Input v-if="view.showInput" ref="searchInput" v-bind="searchInputBindings()" :class="[`${prefix}-input`, props.classNames?.input]" :disabled="looks.disabled" :modelValue="view.inputValue" :size="looks.size" :style="props.styles?.input" @change="foundation.handleInputChange" />
                         </div>
                         <!-- the trigger draws its own clear button and its search text only becomes a search: global TagInput defaults must not add a clear button, drag handles or add-on-blur tags -->
                         <TagInput
@@ -470,7 +479,7 @@
                             v-bind="comboboxAttrs()"
                             :addOnBlur="false"
                             aria-autocomplete="list"
-                            :class="`${prefix}-tagInput-wrapper`"
+                            :class="[`${prefix}-tagInput-wrapper`, props.classNames?.input]"
                             :disabled="looks.disabled"
                             :draggable="false"
                             :expandRestTagsOnClick="false"
@@ -483,22 +492,27 @@
                             :showClear="false"
                             :showRestTagsPopover="props.showRestTagsPopover"
                             :size="looks.size"
+                            :style="props.styles?.input"
                             @inputChange="foundation.handleInputChange"
                             @remove="foundation.handleTagRemoveByKey"
                         >
                             <template #tag="{ value: key, index }">
                                 <template v-if="entityOf(key)">
                                     <slot v-if="$slots.tag" name="tag" v-bind="tagSlotProps(key, index)" />
-                                    <Tag v-else :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: isTagDisabled(key) }]" :closable="!isTagDisabled(key)" color="white" :size="tagSize()" :tagKey="key" @close="removeTag(key, $event)">{{ entityOf(key)?.data[props.displayProp] }}</Tag>
+                                    <Tag v-else :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: isTagDisabled(key) }, props.classNames?.tag]" :closable="!isTagDisabled(key)" color="white" :size="tagSize()" :style="props.styles?.tag" :tagKey="key" @close="removeTag(key, $event)">{{
+                                        entityOf(key)?.data[props.displayProp]
+                                    }}</Tag>
                                 </template>
                             </template>
                         </TagInput>
                         <template v-else-if="multiple">
-                            <span v-if="view.checkedKeys.size === 0" :class="`${prefix}-selection-placeholder`">{{ props.placeholder }}</span>
+                            <span v-if="view.checkedKeys.size === 0" :class="[`${prefix}-selection-placeholder`, props.classNames?.placeholder]" :style="props.styles?.placeholder">{{ props.placeholder }}</span>
                             <template v-for="(key, index) in [...realKeys]" v-else :key="`tag-${key}-${index}`">
                                 <template v-if="isShownTag(index) && entityOf(key)">
                                     <slot v-if="$slots.tag" name="tag" v-bind="tagSlotProps(key, index)" />
-                                    <Tag v-else :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: isTagDisabled(key) }]" :closable="!isTagDisabled(key)" color="white" :size="tagSize()" :tagKey="key" @close="removeTag(key, $event)">{{ entityOf(key)?.data[props.displayProp] }}</Tag>
+                                    <Tag v-else :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: isTagDisabled(key) }, props.classNames?.tag]" :closable="!isTagDisabled(key)" color="white" :size="tagSize()" :style="props.styles?.tag" :tagKey="key" @close="removeTag(key, $event)">{{
+                                        entityOf(key)?.data[props.displayProp]
+                                    }}</Tag>
                                 </template>
                             </template>
                             <component :is="props.showRestTagsPopover ? Popover : SlotFragment" v-if="view.checkedKeys.size > 0 && !isShownTag(realKeys.size - 1)" v-bind="props.showRestTagsPopover ? restPopoverBindings() : {}">
@@ -507,14 +521,16 @@
                                     <template v-for="(key, index) in [...realKeys]" :key="`tag-${key}-${index}`">
                                         <template v-if="!isShownTag(index) && entityOf(key)">
                                             <slot v-if="$slots.tag" name="tag" v-bind="tagSlotProps(key, index)" />
-                                            <Tag v-else :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: isTagDisabled(key) }]" :closable="!isTagDisabled(key)" color="white" :size="tagSize()" :tagKey="key" @close="removeTag(key, $event)">{{ entityOf(key)?.data[props.displayProp] }}</Tag>
+                                            <Tag v-else :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: isTagDisabled(key) }, props.classNames?.tag]" :closable="!isTagDisabled(key)" color="white" :size="tagSize()" :style="props.styles?.tag" :tagKey="key" @close="removeTag(key, $event)">{{
+                                                entityOf(key)?.data[props.displayProp]
+                                            }}</Tag>
                                         </template>
                                     </template>
                                 </template>
                             </component>
                         </template>
                         <template v-for="(display, d) in [displayContent()]" v-else :key="d">
-                            <span :class="singleTextClass(display.shown)">
+                            <span :class="singleTextClass(display.shown)" :style="display.shown ? undefined : props.styles?.placeholder">
                                 <template v-if="!display.shown">{{ props.placeholder }}</template>
                                 <template v-else-if="display.nodes">
                                     <component :is="node" v-for="[node, key] in display.nodes" :key="key" />
@@ -523,18 +539,18 @@
                             </span>
                         </template>
                     </div>
-                    <div v-if="k.suffix" :class="[`${prefix}-suffix`, { [`${prefix}-suffix-text`]: k.suffix === 'text', [`${prefix}-suffix-icon`]: k.suffix === 'icon' }]" x-semi-prop="suffix">
+                    <div v-if="k.suffix" :class="[`${prefix}-suffix`, { [`${prefix}-suffix-text`]: k.suffix === 'text', [`${prefix}-suffix-icon`]: k.suffix === 'icon' }, props.classNames?.suffix]" :style="props.styles?.suffix" x-semi-prop="suffix">
                         <slot name="suffix" />
                     </div>
                 </template>
                 <!-- the stylesheet shows it in the arrow's place on hover, while open and while focus is inside;
                      .stop keeps its Enter and Space from the owner's keydown listeners, which listen to the combobox -->
-                <button v-if="clearable" :ref="clearHandover" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="handleClearClick" @keydown.enter.space.stop>
+                <button v-if="clearable" :ref="clearHandover" :aria-label="locale.locale.clear" :class="[`${prefix}-clearbtn`, props.classNames?.clear]" :style="props.styles?.clear" type="button" @click="handleClearClick" @keydown.enter.space.stop>
                     <slot name="clearIcon">
                         <IconClear />
                     </slot>
                 </button>
-                <div v-if="!$slots.arrowIcon || hasSlotContent($slots.arrowIcon)" :class="`${prefix}-arrow`" x-semi-prop="arrowIcon">
+                <div v-if="!$slots.arrowIcon || hasSlotContent($slots.arrowIcon)" :class="[`${prefix}-arrow`, props.classNames?.arrow]" :style="props.styles?.arrow" x-semi-prop="arrowIcon">
                     <slot name="arrowIcon">
                         <IconChevronDown />
                     </slot>
@@ -551,6 +567,7 @@
                     :ariaLabel="nameAttrs()['aria-label']"
                     :ariaLabelledby="nameAttrs()['aria-labelledby']"
                     :checkedKeys="view.checkedKeys"
+                    :classNames="props.classNames"
                     :data="renderData"
                     :halfCheckedKeys="view.halfCheckedKeys"
                     :hasLoadData="Boolean(loadData)"
@@ -564,6 +581,7 @@
                     :selectedKeys="view.selectedKeys"
                     :separator="props.separator"
                     :showNext="props.showNext"
+                    :styles="props.styles"
                     :virtualize="props.virtualizeInSearch"
                     @itemCheckboxClick="foundation.onItemCheckboxClick"
                     @itemClick="foundation.handleItemClick"

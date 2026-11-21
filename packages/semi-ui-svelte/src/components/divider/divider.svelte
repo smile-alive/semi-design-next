@@ -6,7 +6,7 @@
     import type { DividerProps } from './interface.js';
 
     const defaults = useDefaultProps('Divider');
-    let { layout = defaults('layout', 'horizontal'), align = defaults('align', 'center'), dashed = defaults('dashed'), margin = defaults('margin'), children, ...rest }: DividerProps = $props();
+    let { layout = defaults('layout', 'horizontal'), align = defaults('align', 'center'), dashed = defaults('dashed'), margin = defaults('margin'), classNames = defaults('classNames'), styles = defaults('styles'), children, ...rest }: DividerProps = $props();
 
     const prefixCls = cssClasses.PREFIX;
 
@@ -39,6 +39,6 @@
     style={style || undefined}
 >
     {#if withText}
-        <span class={`${prefixCls}_inner-text`} x-semi-prop="children">{@render children?.()}</span>
+        <span class={[`${prefixCls}_inner-text`, classNames?.content]} style={styles?.content} x-semi-prop="children">{@render children?.()}</span>
     {/if}
 </div>

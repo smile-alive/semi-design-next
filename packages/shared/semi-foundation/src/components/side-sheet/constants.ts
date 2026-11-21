@@ -5,7 +5,7 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type SideSheetPart = 'mask' | 'content' | 'header' | 'body' | 'footer';
+export type SideSheetPart = 'mask' | 'content' | 'header' | 'title' | 'close' | 'body' | 'footer';
 
 export const strings = {
     HEIGHT: 448,

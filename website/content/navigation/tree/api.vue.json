@@ -127,8 +127,8 @@
                 "en-US": "List virtualization for many nodes: height, width and itemSize (required). Animation is off once enabled."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 search（搜索框容器），值的写法同 class，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by search (the search box container); values take any class binding and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 search、list、empty、item、itemSwitcher、itemCheckbox、itemIcon、itemTitle，值的写法同 class，与组件自带的类名合并。item* 作用到每个节点：item 是节点行（role=\"treeitem\"），itemSwitcher 是展开箭头位；itemIcon 只作用于 directory 的内置图标，icon 插槽的内容不带它，expandIcon 插槽只收到带 itemSwitcher 类名的 class、不带样式。",
+                "en-US": "Class names of the inner parts, keyed by search, list, empty, item, itemSwitcher, itemCheckbox, itemIcon and itemTitle; values take any class binding and merge with the built-in classes. The item* keys apply to every node: item is the node row (role=\"treeitem\") and itemSwitcher the expand arrow; itemIcon only reaches the built-in directory icons, so content of the icon slot does not take it, and the expandIcon slot receives a class that includes the itemSwitcher class but no style."
             },
             "searchPlaceholder": {
                 "zh-CN": "搜索框的占位文字。",

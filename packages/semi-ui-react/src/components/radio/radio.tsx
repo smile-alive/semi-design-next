@@ -110,6 +110,8 @@ export default function Radio(rawProps: RadioProps) {
     );
 
     const radioGroup = context?.radioGroup;
+    const groupClassNames = context?.classNames;
+    const groupStyles = context?.styles;
     const { checked, disabled, isButtonRadio, isCardRadio, isPureCardRadio, buttonSize } = RadioFoundation.deriveView(props, state, context);
     const isButtonRadioComponent = !radioGroup && isButtonRadio;
     const addonId = addonIdProp || `addon-${generatedId}`;
@@ -130,6 +132,7 @@ export default function Radio(rawProps: RadioProps) {
             [`${prefix}-cardRadioGroup_checked`]: isCardRadio && checked && !disabled,
             [`${prefix}-cardRadioGroup_checked_disabled`]: isCardRadio && checked && disabled,
         },
+        groupClassNames?.item,
         className
     );
 
@@ -141,7 +144,8 @@ export default function Radio(rawProps: RadioProps) {
             [`${prefix}-addon-buttonRadio-disabled`]: isButtonRadio && disabled,
             [`${prefix}-addon-buttonRadio-${buttonSize}`]: isButtonRadio && buttonSize,
         },
-        classNames?.addon
+        groupClassNames?.itemLabel,
+        classNames?.label
     );
 
     const hasChildren = hasContent(children);
@@ -151,12 +155,12 @@ export default function Radio(rawProps: RadioProps) {
         hasChildren || hasExtra ? (
             <div className={clsx([`${prefix}-content`, { [`${prefix}-isCardRadioGroup_content`]: isCardRadio }])}>
                 {hasChildren && (
-                    <span id={addonId} className={addonCls} style={styles?.addon} x-semi-prop="children">
+                    <span id={addonId} className={addonCls} style={{ ...groupStyles?.itemLabel, ...styles?.label }} x-semi-prop="children">
                         {children}
                     </span>
                 )}
                 {hasExtra && (
-                    <div id={extraId} className={`${prefix}-extra`} x-semi-prop="extra">
+                    <div id={extraId} className={clsx(`${prefix}-extra`, groupClassNames?.itemExtra, classNames?.extra)} style={{ ...groupStyles?.itemExtra, ...styles?.extra }} x-semi-prop="extra">
                         {extra}
                     </div>
                 )}
@@ -177,7 +181,7 @@ export default function Radio(rawProps: RadioProps) {
         <label
             {...rest}
             className={wrapper}
-            style={style}
+            style={{ ...groupStyles?.item, ...style }}
             onClick={(e) => {
                 if (e.target === inputRef.current) {
                     onClick?.(e);
@@ -188,6 +192,8 @@ export default function Radio(rawProps: RadioProps) {
                 ref={inputRef}
                 id={id}
                 name={radioGroup?.name ?? name}
+                iconClassName={clsx(groupClassNames?.itemIcon, classNames?.icon)}
+                iconStyle={{ ...groupStyles?.itemIcon, ...styles?.icon }}
                 aria-describedby={ariaDescribedby}
                 aria-errormessage={ariaErrormessage}
                 aria-invalid={ariaInvalid}

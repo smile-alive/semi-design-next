@@ -5,7 +5,13 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type DropdownPart = 'content' | 'wrapper';
+export type DropdownPart = 'content' | 'wrapper' | 'menu' | 'item' | 'itemIcon';
+
+/** Keys of `classNames` and `styles` of Dropdown.Item */
+export type DropdownItemPart = 'icon';
+
+/** The parts a Dropdown hands down to the menu and items it renders */
+export type DropdownMenuPart = Extract<DropdownPart, 'menu' | 'item' | 'itemIcon'>;
 
 export const strings = {
     DEFAULT_LEAVE_DELAY: 100,

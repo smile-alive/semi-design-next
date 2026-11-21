@@ -1,15 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性     | 说明                                                                                                     | 类型                              | 默认值                                       |
-| -------- | -------------------------------------------------------------------------------------------------------- | --------------------------------- | -------------------------------------------- |
-| badge    | 徽章参数，同 Badge 的 props；class、style 以及 onClick、onMouseenter、onMouseleave 落在 Badge 根元素上。 | `FloatButtonBadge`                | `semiGlobalDefault("FloatButton", "badge")`  |
-| colorful | 多彩悬浮按钮。                                                                                           | `boolean`                         | `false`                                      |
-| disabled | 禁用状态。                                                                                               | `boolean`                         | `false`                                      |
-| href     | 链接地址，设置后渲染为 a；禁用时去掉 href。                                                              | `string`                          | `semiGlobalDefault("FloatButton", "href")`   |
-| rel      | 与链接目标的关系，仅在设置 href 时生效。                                                                 | `string`                          | `semiGlobalDefault("FloatButton", "rel")`    |
-| shape    | 形状，可选 round、square。                                                                               | `"round" \| "square"`             | `"round"`                                    |
-| size     | 尺寸，可选 default、small、large。                                                                       | `"default" \| "large" \| "small"` | `"default"`                                  |
-| target   | 指定在何处显示链接的 URL，仅在设置 href 时生效。                                                         | `string`                          | `semiGlobalDefault("FloatButton", "target")` |
+| 属性       | 说明                                                                                                     | 类型                                                                               | 默认值                                           |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------ |
+| badge      | 徽章参数，同 Badge 的 props；class、style 以及 onClick、onMouseenter、onMouseleave 落在 Badge 根元素上。 | `FloatButtonBadge`                                                                 | `semiGlobalDefault("FloatButton", "badge")`      |
+| classNames | 内部各部位的类名，键为 `body`，与组件自带的类名合并；`body` 是按钮的可见主体，图标放在其中。             | <ApiType detail={"Partial\u003cRecord\u003c\"body\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("FloatButton", "classNames")` |
+| colorful   | 多彩悬浮按钮。                                                                                           | `boolean`                                                                          | `false`                                          |
+| disabled   | 禁用状态。                                                                                               | `boolean`                                                                          | `false`                                          |
+| href       | 链接地址，设置后渲染为 a；禁用时去掉 href。                                                              | `string`                                                                           | `semiGlobalDefault("FloatButton", "href")`       |
+| rel        | 与链接目标的关系，仅在设置 href 时生效。                                                                 | `string`                                                                           | `semiGlobalDefault("FloatButton", "rel")`        |
+| shape      | 形状，可选 round、square。                                                                               | `"round" \| "square"`                                                              | `"round"`                                        |
+| size       | 尺寸，可选 default、small、large。                                                                       | `"default" \| "large" \| "small"`                                                  | `"default"`                                      |
+| styles     | 内部各部位的内联样式，键同 `classNames`。                                                                | <ApiType detail={"Partial\u003cRecord\u003c\"body\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("FloatButton", "styles")`     |
+| target     | 指定在何处显示链接的 URL，仅在设置 href 时生效。                                                         | `string`                                                                           | `semiGlobalDefault("FloatButton", "target")`     |
 
 **Events**
 

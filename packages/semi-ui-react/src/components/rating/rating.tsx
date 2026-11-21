@@ -2,7 +2,7 @@ import type React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
-import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+import { cssClasses, type RatingPart } from '@fibrae/semi-foundation/components/rating/constants';
 import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale';
 import { noop } from '@fibrae/semi-foundation/utils';
@@ -36,6 +36,8 @@ export interface RatingProps extends ElementProps<'ul', 'defaultValue' | 'onChan
     allowHalf?: boolean;
     allowClear?: boolean;
     style?: React.CSSProperties;
+    classNames?: Partial<Record<RatingPart, string>>;
+    styles?: Partial<Record<RatingPart, React.CSSProperties>>;
     onChange?: (value: number) => void;
     /** `undefined` when the pointer leaves the stars or a click clears the value */
     onHoverChange?: (value?: number) => void;
@@ -73,8 +75,10 @@ export default function Rating(rawProps: RatingProps) {
     const {
         ref,
         style,
+        styles,
         disabled,
         className,
+        classNames,
         id,
         count,
         allowHalf,
@@ -165,6 +169,8 @@ export default function Rating(rawProps: RatingProps) {
                         starsRef.current.delete(ind);
                     };
                 }}
+                className={classNames?.item}
+                style={styles?.item}
                 disabled={disabled}
                 value={value}
                 allowHalf={allowHalf}
@@ -189,6 +195,8 @@ export default function Rating(rawProps: RatingProps) {
                 <Tooltip
                     key={ind}
                     // the rating drives this tip, which Escape cannot hide, so the key goes on to the layer below
+                    className={classNames?.dropdown}
+                    style={styles?.dropdown}
                     closeOnEsc={false}
                     content={tooltips[ind] ?? ''}
                     trigger="custom"

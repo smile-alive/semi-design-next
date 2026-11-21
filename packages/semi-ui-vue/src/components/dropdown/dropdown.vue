@@ -102,12 +102,25 @@
     );
 
     const context: DropdownContext = {
-        view: computed(() => ({
-            menuDepth: DropdownFoundation.getChildMenuDepth(parent?.view.value.menuDepth),
-            showTick: props.showTick,
-            selectionMode: props.selectionMode,
-            trigger: props.trigger,
-        })),
+        view: computed(() => {
+            const inherited = parent?.view.value;
+            return {
+                menuDepth: DropdownFoundation.getChildMenuDepth(inherited?.menuDepth),
+                showTick: props.showTick,
+                selectionMode: props.selectionMode,
+                trigger: props.trigger,
+                classNames: {
+                    menu: [inherited?.classNames?.menu, props.classNames?.menu],
+                    item: [inherited?.classNames?.item, props.classNames?.item],
+                    itemIcon: [inherited?.classNames?.itemIcon, props.classNames?.itemIcon],
+                },
+                styles: {
+                    menu: [inherited?.styles?.menu, props.styles?.menu],
+                    item: [inherited?.styles?.item, props.styles?.item],
+                    itemIcon: [inherited?.styles?.itemIcon, props.styles?.itemIcon],
+                },
+            };
+        }),
         close: foundation.close,
         closeAll: foundation.closeAll,
         getPopupId,

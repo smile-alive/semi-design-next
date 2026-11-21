@@ -14,7 +14,7 @@ type Store = AvatarGroupProps & { custom?: boolean; explicitMoreSize?: string; v
 function setup(props: Store = {}) {
     const store = createStore<Store>(props);
     const view = render(GroupFixture, { props: { store } });
-    return { store, container: view.container };
+    return { store, container: view.container, unmount: view.unmount };
 }
 
 afterEach(() => {
@@ -22,6 +22,21 @@ afterEach(() => {
 });
 
 describe('Svelte AvatarGroup', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const props = { maxCount: 4, classNames: { more: 'c-more' }, styles: { more: 'opacity: 0.5' } };
+        const { container, unmount } = setup(props);
+        const more = container.querySelector(`.${prefix}-item-more`);
+        expect(more).toHaveClass('c-more');
+        expect(more).toHaveStyle({ opacity: '0.5' });
+        expect(avatars(container)[0]).not.toHaveClass('c-more');
+        unmount();
+
+        const custom = setup({ ...props, custom: true });
+        const last = avatars(custom.container)[4];
+        expect(last).toHaveClass('c-more');
+        expect(last).toHaveStyle({ opacity: '0.5' });
+    });
+
     it('默认中号圆形，组覆盖每个头像的配置并保留 class', () => {
         const { container } = setup();
         expect(screen.getAllByRole('listitem')).toHaveLength(5);

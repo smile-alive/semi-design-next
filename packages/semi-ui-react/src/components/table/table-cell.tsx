@@ -32,6 +32,8 @@ export interface TableCellProps extends BaseProps {
     renderExpandIcon?: (record: Record<string, any>) => ReactNode;
     hideExpandedColumn?: boolean;
     component?: any;
+    /** The cell belongs to a data row, so `classNames.cell` and `styles.cell` apply */
+    dataCell?: boolean;
     isSection?: boolean;
     width?: string | number;
     height?: string | number;
@@ -63,11 +65,12 @@ function TableCell({
     hovered,
     isSection,
     component: BodyCell = 'td',
+    dataCell,
     lastFixedLeft,
     firstFixedRight,
     columnsToEnd,
 }: TableCellProps) {
-    const { direction, renderSelection, anyColumnFixed, splitTable } = useTableContext('Table.Cell');
+    const { direction, renderSelection, anyColumnFixed, splitTable, classNames, styles } = useTableContext('Table.Cell');
 
     let tdProps: { style?: Partial<React.CSSProperties>; colSpan?: number; rowSpan?: number } = {};
     let customCellProps: Record<string, any> = {};
@@ -92,6 +95,10 @@ function TableCell({
 
     if (height != null) {
         tdProps.style = { ...tdProps.style, height };
+    }
+
+    if (dataCell && styles?.cell) {
+        tdProps.style = { ...tdProps.style, ...styles.cell };
     }
 
     if (column.onCell) {
@@ -177,7 +184,7 @@ function TableCell({
 
     const [isFixedLeft, isFixedLeftLast, isFixedRight, isFixedRightFirst] = isRTL ? [fixedRightFlag, firstFixedRight, fixedLeftFlag, lastFixedLeft] : [fixedLeftFlag, lastFixedLeft, fixedRightFlag, firstFixedRight];
 
-    const columnCls = clsx(className, `${prefixCls}-row-cell`, customCellProps?.className, renderClassName, {
+    const columnCls = clsx(className, `${prefixCls}-row-cell`, dataCell && classNames?.cell, customCellProps?.className, renderClassName, {
         [`${prefixCls}-cell-fixed-left`]: isFixedLeft,
         [`${prefixCls}-cell-fixed-left-last`]: isFixedLeftLast,
         [`${prefixCls}-cell-fixed-right`]: isFixedRight,

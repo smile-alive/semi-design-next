@@ -8,6 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoCollapse | 是否动态展示下一级锚点：只展开当前高亮链接所在的分支。 | `boolean` | `false` |
 | children | `Anchor.Link` 元素，嵌套的 `Anchor.Link` 表示下一级锚点。 | `React.ReactNode` | - |
 | className | 根导航元素的类名。 | `string` | `""` |
+| classNames | 内部各部位的类名，键为 `rail`、`indicator`、`list`、`item`、`itemTitle`，与组件自带的类名合并。`rail` 是左侧的轨道，`indicator` 是轨道上跟随高亮链接移动的指示条，`item`、`itemTitle` 作用到每个链接。 | <ApiType detail={"Partial\u003cRecord\u003cAnchorPart, string>>"}>Type</ApiType> | - |
 | defaultAnchor | 挂载后默认高亮并滚动到该锚点，不触发 onChange 与 onClick。 | `string` | `""` |
 | getContainer | 指定滚动的容器；返回 null 时回落到 window。 | <ApiType detail={"() => HTMLElement \u007c Window \u007c null"}>Type</ApiType> | <ApiType detail={"() => window"}>Type</ApiType> |
 | maxHeight | 组件的 max-height，超出时显示滚动条。该属性覆盖 style 中的 max-height。 | `string \| number` | `"750px"` |
@@ -23,4 +24,5 @@ import ApiType from '#/components/ApiType.astro';
 | showTooltip | 文字缩略时是否显示浮层及相关配置：type 为浮层组件，支持 `tooltip`（默认）和 `popover`，opts 为传给浮层组件的属性。 | `boolean \| ShowTooltip` | `false` |
 | size | 锚点尺寸，可选 `small`、`default`。 | `'default' \| 'small'` | `"default"` |
 | style | 根导航元素的样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cAnchorPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | targetOffset | 锚点滚动结束时，目标距离容器顶部的偏移量。 | `number` | `0` |

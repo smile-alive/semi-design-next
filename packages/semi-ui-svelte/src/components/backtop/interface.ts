@@ -1,7 +1,11 @@
 import type { Snippet } from 'svelte';
+import type { ClassValue } from 'svelte/elements';
+import type { BackTopPart } from '@fibrae/semi-foundation/components/backtop/constants';
 import type { FloatButtonProps } from '../float-button/interface.js';
 
-export interface BackTopProps extends Omit<FloatButtonProps, 'children' | 'disabled' | 'href' | 'rel' | 'target' | 'icon'> {
+export interface BackTopProps extends Omit<FloatButtonProps, 'children' | 'classNames' | 'disabled' | 'href' | 'rel' | 'styles' | 'target' | 'icon'> {
+    classNames?: Partial<Record<BackTopPart, ClassValue>>;
+    styles?: Partial<Record<BackTopPart, string>>;
     /** Milliseconds the scroll to the top takes; clicks repeat at most this often */
     duration?: number;
     /** The scrolled element; defaults to the window. Read on mount and whenever the function itself changes */

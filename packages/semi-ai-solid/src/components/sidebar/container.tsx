@@ -25,7 +25,7 @@ const defaultProps = {
 
 export default function Container(rawProps: ContainerSolidProps) {
     const props = mergeProps(defaultProps, rawProps);
-    const [local, rest] = splitProps(props, ['ref', 'containerRef', 'title', 'renderHeader', 'children', 'style', 'class', 'visible', 'motion', 'resizable', 'minWidth', 'maxWidth', 'defaultSize', 'showClose', 'onCancel', 'afterVisibleChange', 'closeOnEsc']);
+    const [local, rest] = splitProps(props, ['ref', 'containerRef', 'classNames', 'styles', 'title', 'renderHeader', 'children', 'style', 'class', 'visible', 'motion', 'resizable', 'minWidth', 'maxWidth', 'defaultSize', 'showClose', 'onCancel', 'afterVisibleChange', 'closeOnEsc']);
 
     const locale = useLocale('Sidebar');
 
@@ -68,17 +68,21 @@ export default function Container(rawProps: ContainerSolidProps) {
             <Show
                 when={hasContent(customHeader())}
                 fallback={
-                    <div class={`${prefixCls}-container-header`}>
-                        <div class={`${prefixCls}-container-header-title`}>{local.title}</div>
+                    <div class={clsx(`${prefixCls}-container-header`, local.classNames?.header)} style={local.styles?.header}>
+                        <div class={clsx(`${prefixCls}-container-header-title`, local.classNames?.title)} style={local.styles?.title}>
+                            {local.title}
+                        </div>
                         <Show when={local.showClose}>
-                            <Button type="tertiary" class={`${prefixCls}-container-header-closeBtn`} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={(e) => local.onCancel?.(e)} />
+                            <Button type="tertiary" class={clsx(`${prefixCls}-container-header-closeBtn`, local.classNames?.close)} style={local.styles?.close} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={(e) => local.onCancel?.(e)} />
                         </Show>
                     </div>
                 }
             >
                 {customHeader()}
             </Show>
-            <div class={`${prefixCls}-container-content`}>{local.children}</div>
+            <div class={clsx(`${prefixCls}-container-content`, local.classNames?.content)} style={local.styles?.content}>
+                {local.children}
+            </div>
         </div>
     );
 

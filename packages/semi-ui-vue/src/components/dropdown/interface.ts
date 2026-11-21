@@ -1,5 +1,5 @@
 import type { CSSProperties, VNode } from 'vue';
-import type { DropdownPart } from '@fibrae/semi-foundation/components/dropdown/constants';
+import type { DropdownItemPart, DropdownPart } from '@fibrae/semi-foundation/components/dropdown/constants';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import type { TooltipEmits, TooltipProps } from '../tooltip/interface';
 
@@ -7,10 +7,15 @@ export type { Position, Trigger } from '../tooltip/interface';
 
 export type Type = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';
 
+// one level deep, for the same TS2589 reason as Dropdown's classNames below
+// false, null and undefined keep Vue's ClassValue and StyleValue assignable to these
+type PartClass = string | false | null | undefined | Record<string, unknown> | unknown[];
+type PartStyle = string | false | null | undefined | CSSProperties | any[];
+
 /** Arrow and arrow keys are fixed: no arrow, and the Dropdown alone moves focus with Up and Down. */
 export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPointAtCenter' | 'disableArrowKeyDown' | 'classNames' | 'styles'> {
     // one level deep: ref() over the recursive ClassValue/StyleValue with the menu items hits TS2589, as in Navigation
-    classNames?: Partial<Record<DropdownPart, string | Record<string, unknown> | unknown[]>>;
+    classNames?: Partial<Record<DropdownPart, PartClass>>;
     menu?: DropdownMenuItem[];
     /**
      * How the items of this menu are selected (a submenu takes its own Dropdown's value); `active` marks the selected
@@ -21,7 +26,7 @@ export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPo
      */
     selectionMode?: DropdownSelectionMode;
     showTick?: boolean;
-    styles?: Partial<Record<DropdownPart, string | CSSProperties>>;
+    styles?: Partial<Record<DropdownPart, PartStyle>>;
 }
 
 export interface DropdownEmits extends TooltipEmits {}
@@ -54,7 +59,9 @@ export interface DropdownMenuSlots {
 
 export interface DropdownItemProps {
     active?: boolean;
+    classNames?: Partial<Record<DropdownItemPart, PartClass>>;
     disabled?: boolean;
+    styles?: Partial<Record<DropdownItemPart, PartStyle>>;
     /** Takes effect only outside a Dropdown; inside one, the Dropdown's showTick applies. */
     showTick?: boolean;
     type?: Type;

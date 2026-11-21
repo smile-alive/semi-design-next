@@ -61,7 +61,7 @@ const defaultProps = {
 
 export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
     const props = useDefaultProps('Feedback', rawProps, defaultProps);
-    const { className, children, type, mode, onValueChange, textAreaProps, radioGroupProps, checkboxGroupProps, renderContent, onCancel, onOk, ...restProps } = props;
+    const { className, classNames, styles, children, type, mode, onValueChange, textAreaProps, radioGroupProps, checkboxGroupProps, renderContent, onCancel, onOk, ...restProps } = props;
 
     const { locale } = useLocale('Feedback');
 
@@ -84,6 +84,10 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
 
     // a forwarded `undefined` must not replace the preset values spread before `rest`
     const rest = omitBy(restProps, (value) => value === undefined);
+
+    // `emoji` is Feedback's own part and lies outside the Modal and SideSheet types
+    const { emoji: emojiClassName, ...overlayClassNames } = classNames ?? {};
+    const { emoji: emojiStyle, ...overlayStyles } = styles ?? {};
     const { value, onOKReturnPromiseStatus, onCancelReturnPromiseStatus } = state;
     const disabledOkButton = isFeedbackValueEmpty(value);
     const shown = FeedbackFoundation.getContentValues(value);
@@ -101,9 +105,10 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
                     {Object.entries(Emoji).map(([name, item]) => (
                         <label
                             key={item}
-                            className={clsx(`${prefixCls}-emoji-item`, {
+                            className={clsx(`${prefixCls}-emoji-item`, emojiClassName, {
                                 [`${prefixCls}-emoji-item-selected`]: item === emoji,
                             })}
+                            style={emojiStyle}
                             data-value={item}
                         >
                             <input name={emojiGroupName} type="radio" className={`${prefixCls}-emoji-input`} aria-label={locale[name as keyof typeof Emoji]} checked={item === emoji} value={item} onChange={() => foundation.handleEmojiChange(item)} />
@@ -141,6 +146,8 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
         return (
             <Modal
                 className={realCls}
+                classNames={overlayClassNames}
+                styles={overlayStyles}
                 cancelText={locale.cancel}
                 // a disabled the caller gives wins; custom content relies on it to gate submit
                 okButtonProps={{ ...modalOkButtonProps, disabled: modalOkButtonProps?.disabled ?? disabledOkButton }}
@@ -160,6 +167,8 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
     return (
         <SideSheet
             className={realCls}
+            classNames={overlayClassNames}
+            styles={overlayStyles}
             canVerticalSetWidth
             closeOnEsc
             disableScroll={false}

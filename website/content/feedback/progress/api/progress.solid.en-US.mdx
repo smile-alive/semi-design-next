@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by rail (the full-length groove), track (the completed part) and text (the percentage text); merged with the built-in classes. rail and track here are the reverse of the built-in class semi-progress-track, which is the groove. | <ApiType detail={"Partial\u003cRecord\u003cProgressPart, string>>"}>Type</ApiType> | - |
 | direction | Direction of the line progress bar: horizontal or vertical. | `'horizontal' \| 'vertical'` | `"horizontal"` |
 | format | Formatting function. It receives the shown percentage (clamped to 0-100) and returns JSX rendered in the center of a circle or on the right of a bar. It runs only when the text is shown. | <ApiType detail={"(percent: number) => JSX.Element"}>Type</ApiType> | <ApiType detail={"(percent: number) => `${percent}%`"}>Type</ApiType> |
 | indeterminate | Whether the progress is indeterminate. When on, percent no longer controls the length, the text is hidden and aria-valuenow is omitted. | `boolean` | `false` |
@@ -16,5 +17,6 @@ import ApiType from '#/components/ApiType.astro';
 | strokeGradient | Whether to generate gradient colors between intervals. Requires at least one interval in stroke. | `boolean` | `false` |
 | strokeLinecap | Line cap of the circle progress bar: round or square. Has no effect on a line progress bar. | `'round' \| 'square'` | `"round"` |
 | strokeWidth | Stroke width of the circle progress bar. | `number` | `4` |
+| styles | Inline styles of the inner parts, keyed like classNames; each value is an object (kebab-case keys) or a string. In a circle, rail and track are SVG circles, so use SVG properties such as stroke. | <ApiType detail={"Partial\u003cRecord\u003cProgressPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | type | Type: line or circle. | `'circle' \| 'line'` | `"line"` |
 | width | Diameter of the circle progress bar. Defaults to 24 when size is small and 72 otherwise. | `number` | - |

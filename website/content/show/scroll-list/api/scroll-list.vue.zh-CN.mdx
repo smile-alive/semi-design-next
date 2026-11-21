@@ -1,10 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性       | 说明                                     | 类型               | 默认值                                          |
-| ---------- | ---------------------------------------- | ------------------ | ----------------------------------------------- |
-| bodyHeight | 列表主体的高度。                         | `string \| number` | `semiGlobalDefault("ScrollList", "bodyHeight")` |
-| footer     | 底部内容；传入 footer 插槽时以插槽为准。 | `string`           | `semiGlobalDefault("ScrollList", "footer")`     |
-| header     | 头部内容；传入 header 插槽时以插槽为准。 | `string`           | `semiGlobalDefault("ScrollList", "header")`     |
+| 属性       | 说明                                                                               | 类型                                                                                     | 默认值                                          |
+| ---------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| bodyHeight | 列表主体的高度。                                                                   | `string \| number`                                                                       | `semiGlobalDefault("ScrollList", "bodyHeight")` |
+| classNames | 内部各部位的类名，键为 `header`、`title`、`body`、`footer`，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("ScrollList", "classNames")` |
+| footer     | 底部内容；传入 footer 插槽时以插槽为准。                                           | `string`                                                                                 | `semiGlobalDefault("ScrollList", "footer")`     |
+| header     | 头部内容；传入 header 插槽时以插槽为准。                                           | `string`                                                                                 | `semiGlobalDefault("ScrollList", "header")`     |
+| styles     | 内部各部位的内联样式，键同 `classNames`。                                          | <ApiType detail={"Partial\u003cRecord\u003cScrollListPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("ScrollList", "styles")`     |
 
 **Events**
 

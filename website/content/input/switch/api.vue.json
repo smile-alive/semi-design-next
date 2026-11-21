@@ -6,6 +6,14 @@
                 "zh-CN": "是否选中，配合 v-model 使用；传入后由该值决定显示，只传不回写时点击仅触发通知。",
                 "en-US": "Whether the switch is on, used with v-model. When given, this value decides; without a write-back, a click only notifies."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `indicator`、`content`，与组件自带的类名合并。`indicator` 是滑块，加载中时是加载图标；`content` 是选中或未选中时显示的文字。",
+                "en-US": "Class names of the inner parts, keyed by `indicator` and `content`; merged with the built-in classes. `indicator` is the knob, or the loading icon while loading; `content` is the checked or unchecked text."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "defaultChecked": { "zh-CN": "非受控时的初始选中状态。", "en-US": "Initial state when uncontrolled." },
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the switch is disabled." },
             "loading": {

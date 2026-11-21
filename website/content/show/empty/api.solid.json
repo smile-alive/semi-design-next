@@ -15,8 +15,8 @@
                 "en-US": "Placeholder image: a JSX element such as an illustration component, an image URL string, or an in-page SVG sprite symbol as `{ id }`. An empty string counts as no image."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 image，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by image; merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 image、title、description、footer（children 所在的底部区域），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by image, title, description and footer (the bottom area holding children); merged with the built-in classes."
             },
             "styles": {
                 "zh-CN": "内部各部位的样式，键为 image，值可以是样式对象（键用 kebab-case）或字符串。",

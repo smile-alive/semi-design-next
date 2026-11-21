@@ -110,8 +110,8 @@
                 "en-US": "Validation status: default, error, warning or success."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 input（原生 input 元素），值的写法同 class，与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by input (the native input element); values take any class binding and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 input（原生 input 元素）、prefix（前缀与 insetLabel）、suffix、clear（清除按钮）、addonBefore、addonAfter、actions（步进按钮组）、upButton、downButton，值的写法同 class，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by input (the native input element), prefix (also holds insetLabel), suffix, clear (the clear button), addonBefore, addonAfter, actions (the step button group), upButton and downButton; values take any class binding and merge with the built-in classes."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 classNames。",

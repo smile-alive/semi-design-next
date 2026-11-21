@@ -27,6 +27,9 @@ export interface CopyableProps {
 interface CopyableInnerProps extends CopyableProps {
     /** After the copy action swapped to or from the copied tip, whose width differs: the text beside it is measured again */
     onCopiedChange?: () => void;
+    /** The `copy` part: the button, while `class` and `style` stay on the wrapping span */
+    buttonClass?: string;
+    buttonStyle?: JSX.CSSProperties | string;
 }
 
 export default function Copyable(props: CopyableInnerProps) {
@@ -81,9 +84,14 @@ export default function Copyable(props: CopyableInnerProps) {
                 {(getTriggerProps) => (
                     <button
                         {...getTriggerProps({ type: 'button' })}
-                        class={clsx(`${prefixCls}-action-btn`, {
-                            [`${prefixCls}-action-copy-icon`]: !copied() && icon() == null,
-                        })}
+                        class={clsx(
+                            `${prefixCls}-action-btn`,
+                            {
+                                [`${prefixCls}-action-copy-icon`]: !copied() && icon() == null,
+                            },
+                            props.buttonClass
+                        )}
+                        style={props.buttonStyle}
                         aria-label={copied() ? copiedName() : copyName()}
                         onClick={(e) => {
                             if (!copied()) {

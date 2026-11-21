@@ -44,6 +44,18 @@ function setupModes(mode: 'bind' | 'function' | 'one-way' | 'uncontrolled', valu
     return store;
 }
 
+describe('Svelte PinCode 部位', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        mount({ count: 3, classNames: { input: 'my-input' }, styles: { input: 'order: 2' } });
+        const cells = Array.from(document.querySelectorAll(`${wrapperSelector} > .${BASE_CLASS_PREFIX}-input-wrapper`));
+        expect(cells).toHaveLength(3);
+        for (const cell of cells) {
+            expect(cell).toHaveClass('my-input');
+            expect(cell).toHaveStyle({ order: '2' });
+        }
+    });
+});
+
 describe('Svelte PinCode 受控值（$bindable）', () => {
     it('非受控：输入、退格后 onChange 收到整串', async () => {
         const store = setupModes('uncontrolled', undefined, true, { count: 4 });

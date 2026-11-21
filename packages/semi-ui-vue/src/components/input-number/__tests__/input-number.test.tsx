@@ -112,10 +112,40 @@ describe('InputNumber', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        render(InputNumber, { props: { classNames: { input: 'my-input' }, styles: { input: { order: 2 } } } });
-        expect(getInput()).toHaveClass(`${prefixCls}`, 'my-input');
-        expect(getInput()).toHaveStyle({ order: '2' });
+        const parts = ['input', 'prefix', 'suffix', 'clear', 'addonBefore', 'addonAfter', 'actions', 'upButton', 'downButton'] as const;
+        const selectors = {
+            input: prefixCls,
+            prefix: `${prefixCls}-prefix`,
+            suffix: `${prefixCls}-suffix`,
+            clear: `${prefixCls}-clearbtn`,
+            addonBefore: `${prefixCls}-prepend`,
+            addonAfter: `${prefixCls}-append`,
+            actions: `${prefixCls}-number-suffix-btns`,
+            upButton: `${prefixCls}-number-button-up`,
+            downButton: `${prefixCls}-number-button-down`,
+        };
+        render(InputNumber, {
+            props: {
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+                defaultValue: 1,
+                showClear: true,
+            },
+            slots: { addonAfter: () => 'a', addonBefore: () => 'b', prefix: () => 'p', suffix: () => 's' },
+        });
+        for (const part of parts) {
+            const el = document.querySelector(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
         expect(getWrapper()).not.toHaveClass('my-input');
+    });
+
+    it('innerButtons 时 actions 落在 suffix 内的步进按钮组上', async () => {
+        await mount({ innerButtons: true, classNames: { actions: 'my-actions', suffix: 'my-suffix' } });
+        await fireEvent.mouseEnter(getWrapper());
+        expect(getButtons()).toHaveClass('my-actions');
+        expect(getButtons()?.parentElement).toHaveClass('my-suffix');
     });
 
     it(`使用 'defaultValue'、'showClear'、'size'、'suffix'、ref`, async () => {

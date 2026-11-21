@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `editor`, `searchTrigger`, `searchBox`, `searchInput`, `searchOptions` and `replaceInput`; values take any class binding and merge with the built-in classes. `editor` is the element the editor mounts in; the search panel parts exist only while the panel is open. | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, ClassValue>>"}>Type</ApiType> | - |
 | customRender | Replaces the content of a token matched by options.customRenderRule, with the matched rule item, its index and the token text content as snippet arguments. A snippet that draws nothing leaves the token's text in place. Only takes effect in read-only mode. | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType> | - |
 | height | Height. A number is taken as px; a string is used as is. | `number \| string` | `400` |
 | limitSearchButtonBounds | Whether to limit the search button drag bounds within the component container. | `boolean` | `false` |
@@ -11,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | options | Editor options; see JsonViewerOptions for the fields. The defaults of ariaLabel, readOnly and autoWrap merge per key, so passing some fields keeps the defaults of the others. A deep change re-creates the editor; mutating a nested object such as formatOptions or customRenderRule in place goes unnoticed, so replace it with a new object. | `JsonViewerOptions` | - |
 | searchButton | Replaces the default search button as a whole. defaultButton is the default button's snippet, drawn with `{@render defaultButton()}`; the other arguments build a custom search UI. Not rendered when showSearch is false. | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType> | - |
 | showSearch | Whether to show the search button. | `boolean` | `true` |
+| styles | Inline style strings of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, string>>"}>Type</ApiType> | - |
 | value | Text of the editor, used with bind:value. A value different from the editor's current content re-creates the editor; echoing the current content back keeps the caret. Without it the editor starts empty. | `string` | - |
 | width | Width. A number is taken as px; a string is used as is. | `number \| string` | `400` |
 

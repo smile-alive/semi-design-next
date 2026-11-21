@@ -2,12 +2,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性        | 说明                              | 类型                     | 默认值                                         |
-| ----------- | --------------------------------- | ------------------------ | ---------------------------------------------- |
-| maxCount    | 显示的最大头像数，超出后显示 +N。 | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")` |
-| overlapFrom | 头像重叠方向，可选 start 或 end。 | `AvatarGroupOverlapFrom` | `"start"`                                      |
-| shape       | 组内头像的形状。                  | `AvatarShape`            | `"circle"`                                     |
-| size        | 组内头像的尺寸。                  | `string`                 | `"medium"`                                     |
+| 属性        | 说明                                                                                                                                                          | 类型                                                                               | 默认值                                           |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------ |
+| classNames  | 内部各部位的类名，键为 more，对应超出 maxCount 后显示「+N」的头像（用 more 插槽自定义时同样合并到其中的 Avatar 上），值的写法同 class，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003c\"more\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AvatarGroup", "classNames")` |
+| maxCount    | 显示的最大头像数，超出后显示 +N。                                                                                                                             | `number`                                                                           | `semiGlobalDefault("AvatarGroup", "maxCount")`   |
+| overlapFrom | 头像重叠方向，可选 start 或 end。                                                                                                                             | `AvatarGroupOverlapFrom`                                                           | `"start"`                                        |
+| shape       | 组内头像的形状。                                                                                                                                              | `AvatarShape`                                                                      | `"circle"`                                       |
+| size        | 组内头像的尺寸。                                                                                                                                              | `string`                                                                           | `"medium"`                                       |
+| styles      | 内部各部位的内联样式，键同 classNames。                                                                                                                       | <ApiType detail={"Partial\u003cRecord\u003c\"more\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AvatarGroup", "styles")`     |
 
 **Events**
 

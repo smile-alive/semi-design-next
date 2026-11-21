@@ -6,6 +6,7 @@
     import useLocale from '../locale/use-locale.svelte.js';
     import { toDragEvent } from './drag-event.js';
     import type { ColorSliderProps } from './interface.js';
+    import { joinStyle } from './join-style.js';
 
     type Foundation = ColorSliderFoundation<ColorSliderBaseProps>;
     type Adapter = ColorSliderAdapter<ColorSliderBaseProps>;
@@ -49,21 +50,15 @@
 
 <div
     bind:this={dom}
-    class={[`${cssClasses.PREFIX}-colorSlider`, props.class]}
-    style:height={`${props.height}px`}
-    style:width={`${props.width}px`}
+    class={[`${cssClasses.PREFIX}-colorSlider`, props.class, props.classNames?.hue]}
+    style={joinStyle(`height: ${props.height}px; width: ${props.width}px`, props.styles?.hue)}
     onlostpointercapture={foundation.handleLostPointerCapture}
     onpointerdown={(event) => foundation.handlePointerDown(toDragEvent(event))}
     onpointermove={(event) => foundation.handlePointerMove(toDragEvent(event))}
 >
     <div
-        class={`${cssClasses.PREFIX}-handle`}
-        style:background-color={hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 })}
-        style:height={`${props.handleSize}px`}
-        style:left={`${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`}
-        style:top="50%"
-        style:transform="translateY(-50%)"
-        style:width={`${props.handleSize}px`}
+        class={[`${cssClasses.PREFIX}-handle`, props.classNames?.handle]}
+        style={joinStyle(`background-color: ${hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 })}; height: ${props.handleSize}px; left: ${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px; top: 50%; transform: translateY(-50%); width: ${props.handleSize}px`, props.styles?.handle)}
     >
         <input aria-label={locale().locale.hue} class={`${cssClasses.PREFIX}-handleSlider`} max={360} min={0} type="range" value={Math.round(props.hue)} oninput={handleInput} onkeydown={foundation.handleKeyDown} />
     </div>

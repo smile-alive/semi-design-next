@@ -2,7 +2,7 @@ import type React from 'react';
 import { cloneElement, useLayoutEffect, type CSSProperties } from 'react';
 import clsx from 'clsx';
 import { type AutoCloseListState, isAlertType } from '@fibrae/semi-foundation/base';
-import { numbers, cssClasses, getStackLayerTransform } from '@fibrae/semi-foundation/components/toast/constants';
+import { numbers, cssClasses, getStackLayerTransform, type ToastPart } from '@fibrae/semi-foundation/components/toast/constants';
 import ToastFoundation, { type ToastAdapter, type ToastInstance, type ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { IconClose, IconAlertTriangle, IconInfoCircle, IconTickCircle, IconAlertCircle } from '@fibrae/semi-icons-react';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -19,6 +19,9 @@ const prefixCls = cssClasses.PREFIX;
 
 export interface ToastItemProps extends ToastInstance, ElementProps<'div', 'content' | 'style' | 'className' | 'id' | 'onAnimationEnd' | 'onAnimationStart' | 'children' | 'dangerouslySetInnerHTML'> {
     style?: CSSProperties;
+    /** `icon` lands on a type icon or a Semi icon; a custom icon node of another kind has no element of its own to take it */
+    classNames?: Partial<Record<ToastPart, string>>;
+    styles?: Partial<Record<ToastPart, CSSProperties>>;
     icon?: React.ReactNode;
     content: React.ReactNode;
     stack?: boolean;
@@ -55,7 +58,39 @@ const typeIcons: Record<string, React.ReactElement<any>> = {
 
 export default function Toast(rawProps: ToastItemProps) {
     const props = useDefaultProps('Toast', rawProps, defaultProps);
-    const { ref, id, motion, top, bottom, left, right, zIndex, getPopupContainer, duration, onClose, close, content, type, theme, textMaxWidth, showClose, icon: rawIcon, direction: propDirection, stack, stackExpanded, positionInList, listState, className, style, onAnimationStart, onAnimationEnd, ...rest } = props;
+
+    const {
+        ref,
+        id,
+        motion,
+        top,
+        bottom,
+        left,
+        right,
+        zIndex,
+        getPopupContainer,
+        duration,
+        onClose,
+        close,
+        content,
+        type,
+        theme,
+        textMaxWidth,
+        showClose,
+        icon: rawIcon,
+        direction: propDirection,
+        stack,
+        stackExpanded,
+        positionInList,
+        listState,
+        className,
+        classNames,
+        style,
+        styles,
+        onAnimationStart,
+        onAnimationEnd,
+        ...rest
+    } = props;
 
     const { direction: contextDirection } = useConfigContext();
     const { locale } = useLocale('Toast');
@@ -90,13 +125,15 @@ export default function Toast(rawProps: ToastItemProps) {
         iconNode = isSemiIcon(icon)
             ? cloneElement(icon as React.ReactElement<any>, {
                   size: (icon as React.ReactElement<any>).props.size ?? 'large',
-                  className: clsx(`${prefixCls}-icon`, (icon as React.ReactElement<any>).props.className),
+                  className: clsx(`${prefixCls}-icon`, (icon as React.ReactElement<any>).props.className, classNames?.icon),
+                  style: { ...(icon as React.ReactElement<any>).props.style, ...styles?.icon },
               })
             : icon;
     } else if (type && typeIcons[type]) {
         iconNode = cloneElement(typeIcons[type], {
             size: 'large',
-            className: clsx(`${prefixCls}-icon`, `${prefixCls}-icon-${type}`),
+            className: clsx(`${prefixCls}-icon`, `${prefixCls}-icon-${type}`, classNames?.icon),
+            style: styles?.icon,
         });
     }
 
@@ -116,13 +153,13 @@ export default function Toast(rawProps: ToastItemProps) {
             onAnimationEnd={onAnimationEnd}
             onAnimationStart={onAnimationStart}
         >
-            <div className={`${prefixCls}-content`}>
+            <div className={clsx(`${prefixCls}-content`, classNames?.content)} style={styles?.content}>
                 {iconNode}
-                <span className={`${prefixCls}-content-text`} style={{ maxWidth: textMaxWidth }} x-semi-prop="content">
+                <span className={clsx(`${prefixCls}-content-text`, classNames?.text)} style={{ maxWidth: textMaxWidth, ...styles?.text }} x-semi-prop="content">
                     {content}
                 </span>
                 {showClose && (
-                    <div className={`${prefixCls}-close-button`}>
+                    <div className={clsx(`${prefixCls}-close-button`, classNames?.close)} style={styles?.close}>
                         <Button type="tertiary" aria-label={locale.close} size="small" theme="borderless" icon={<IconClose x-semi-prop="icon" />} onClick={foundation.close} />
                     </div>
                 )}

@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
 import { IconSidebar } from '@fibrae/semi-icons-solid';
 import Button from '../button';
@@ -9,7 +10,7 @@ export default function CollapseButton(props: CollapseButtonProps) {
 
     // One element tree for both states: swapping the wrapper would remount the button and drop the focus it holds
     return (
-        <div class={`${cssClasses.PREFIX}-collapse-btn`}>
+        <div class={clsx(`${cssClasses.PREFIX}-collapse-btn`, props.class)} style={props.style}>
             <Tooltip condition={Boolean(props.isCollapsed)} content={label()} position="right">
                 {(trigger: GetTriggerProps) => (
                     <Button

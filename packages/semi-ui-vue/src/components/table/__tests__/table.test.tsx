@@ -710,20 +710,27 @@ describe('Table 行为基线', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        mountTable({
-            classNames: { header: 'custom-head' },
-            styles: { header: { color: 'red', fontWeight: 700 } },
-            columns: [
-                { title: 'Name', dataIndex: 'name', onHeaderCell: () => ({ style: { color: 'blue' } }) },
-                { title: 'Age', dataIndex: 'age' },
-            ],
-            dataSource: smallData(),
-            pagination: false,
-        });
+        const parts = ['header', 'title', 'row', 'cell', 'footer', 'pagination', 'empty'] as const;
+        const selectors = { header: `.${P}-thead .${P}-row-head`, title: `.${P}-title`, row: `.${P}-tbody .${P}-row`, cell: `.${P}-row-cell`, footer: `.${P}-footer`, pagination: `.${P}-pagination-outer`, empty: `.${P}-empty` };
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]));
+        const columns = [
+            { title: 'Name', dataIndex: 'name', onHeaderCell: () => ({ style: { color: 'blue' } }) },
+            { title: 'Age', dataIndex: 'age' },
+        ];
+        mountTable({ classNames, styles: { ...styles, header: { ...styles.header, color: 'red' } }, columns, dataSource: smallData(), pagination: { pageSize: 10 }, title: 't', footer: 'f' });
+        mountTable({ classNames, styles, columns, dataSource: [], pagination: false });
+        for (const part of parts) {
+            const els = queryAll(selectors[part]);
+            expect(els.length).toBeGreaterThan(0);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
         const heads = getHeads();
-        expect(heads[0]).toHaveClass('custom-head');
-        expect(heads[1]).toHaveClass('custom-head');
-        expect(heads[0]).toHaveStyle({ color: 'rgb(0, 0, 255)', fontWeight: '700' });
+        expect(heads[0]).toHaveClass('my-header');
+        expect(heads[0]).toHaveStyle({ color: 'rgb(0, 0, 255)' });
         expect(heads[1]).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 });

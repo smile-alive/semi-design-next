@@ -290,24 +290,29 @@ describe('Radio', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['icon', 'label', 'extra'] as const;
+        const selectors = { icon: 'inner-display', label: 'addon', extra: 'extra' };
         render(Radio, {
-            props: { classNames: { addon: 'ac' }, styles: { addon: { color: 'red' } } },
-            slots: { default: () => 'A' },
+            props: { classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) },
+            slots: { default: () => 'A', extra: () => 'more' },
         });
-        const addon = getElement(`.${prefixCls}-addon`);
-        expect(addon).toHaveClass('ac');
-        expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(getElement(`.${prefixCls}`)).not.toHaveClass('ac');
+        for (const part of parts) {
+            const el = getElement(`.${prefixCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+        expect(getElement(`.${prefixCls}`)).not.toHaveClass('my-label');
     });
 
-    it('button 类型隐藏 extra，不引用它，并应用 classNames.addon 与 styles.addon', () => {
+    it('button 类型下 label 落在按钮面，没有 icon 与 extra', () => {
         render(Radio, {
-            props: { type: 'button', classNames: { addon: 'ac' }, styles: { addon: { color: 'red' } } },
+            props: { type: 'button', classNames: { icon: 'ic', label: 'ac' }, styles: { label: { color: 'red' } } },
             slots: { default: () => 'A', extra: () => 'more' },
         });
         const addon = getElement(`.${prefixCls}-addon-buttonRadio`);
         expect(addon).toHaveClass('ac');
         expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(document.querySelector('.ic')).toBeNull();
         expect(document.querySelector(`.${prefixCls}-extra`)).toBeNull();
         expect(getRadio()).not.toHaveAttribute('aria-describedby');
     });

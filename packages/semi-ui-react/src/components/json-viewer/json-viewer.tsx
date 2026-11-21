@@ -2,7 +2,7 @@ import type React from 'react';
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
+import { cssClasses, type JsonViewerPart } from '@fibrae/semi-foundation/components/json-viewer/constants';
 import JsonViewerFoundation, { type FindMatch, type JsonViewerOptions, type JsonViewerAdapter, type JsonViewerBaseState, type SearchOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
@@ -24,7 +24,9 @@ export interface JsonViewerProps extends ElementProps<'div', 'onChange' | 'child
     height?: number | string;
     showSearch?: boolean;
     className?: string;
+    classNames?: Partial<Record<JsonViewerPart, string>>;
     style?: React.CSSProperties;
+    styles?: Partial<Record<JsonViewerPart, React.CSSProperties>>;
     onChange?: (value: string) => void;
     options?: JsonViewerOptions;
     limitSearchButtonBounds?: boolean;
@@ -78,7 +80,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
 
     // ariaLabel is part of options, so a locale switch re-creates the editor
     const props = { ...defaultedProps, options: JsonViewerFoundation.mergeOptions(defaultedProps.options, locale.content) };
-    const { ref, value, width, height, showSearch, className, style, onChange, options, limitSearchButtonBounds, renderSearchButton, ...rest } = props;
+    const { ref, value, width, height, showSearch, className, classNames, style, styles, onChange, options, limitSearchButtonBounds, renderSearchButton, ...rest } = props;
 
     const editorRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<InputHandle>(null);
@@ -130,11 +132,12 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
     const searchHandler = () => foundation.search(searchInputRef.current?.input?.value);
 
     const renderSearchBox = () => (
-        <search className={`${prefixCls}-search-bar-container`} style={{ position: 'absolute', top: 20, right: 20 }} aria-label={locale.search}>
+        <search className={clsx(`${prefixCls}-search-bar-container`, classNames?.searchBox)} style={{ position: 'absolute', top: 20, right: 20, ...styles?.searchBox }} aria-label={locale.search}>
             <div className={`${prefixCls}-search-bar`}>
                 <Input
                     ref={searchInputRef}
-                    className={`${prefixCls}-search-bar-input`}
+                    className={clsx(`${prefixCls}-search-bar-input`, classNames?.searchInput)}
+                    style={styles?.searchInput}
                     aria-label={locale.search}
                     placeholder={locale.search}
                     // the bar lays out a fixed row: the adornments and showClear are set so global Input defaults cannot add them
@@ -159,7 +162,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                     }}
                     onKeyDown={closeOnEscape}
                 />
-                <ul className={`${prefixCls}-search-options`}>
+                <ul className={clsx(`${prefixCls}-search-options`, classNames?.searchOptions)} style={styles?.searchOptions}>
                     {searchOptionItems.map(({ key, icon: Icon }) => (
                         <li
                             key={key}
@@ -196,7 +199,8 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
             <div className={`${prefixCls}-replace-bar`}>
                 <Input
                     ref={replaceInputRef}
-                    className={`${prefixCls}-replace-bar-input`}
+                    className={clsx(`${prefixCls}-replace-bar-input`, classNames?.replaceInput)}
+                    style={styles?.replaceInput}
                     aria-label={locale.replaceWith}
                     placeholder={locale.replace}
                     addonAfter={null}
@@ -238,8 +242,8 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                 {!state.showSearchBar ? (
                     <Button
                         ref={triggerRef}
-                        className={`${prefixCls}-search-bar-trigger`}
-                        style={{ position: 'absolute', top: 20, right: 20 }}
+                        className={clsx(`${prefixCls}-search-bar-trigger`, classNames?.searchTrigger)}
+                        style={{ position: 'absolute', top: 20, right: 20, ...styles?.searchTrigger }}
                         aria-label={locale.search}
                         icon={<IconSearch />}
                         onClick={(e) => {
@@ -286,7 +290,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
     return (
         <>
             <div role={namedRole(rest)} {...rest} className={className} style={{ width, height, position: 'relative', ...style }}>
-                <div ref={editorRef} className={clsx(prefixCls, `${prefixCls}-background`)} style={{ width, height }} />
+                <div ref={editorRef} className={clsx(prefixCls, `${prefixCls}-background`, classNames?.editor)} style={{ width, height, ...styles?.editor }} />
                 {showSearch && (renderSearchButton ? renderSearchButton(defaultSearchButton, searchControls) : defaultSearchButton)}
             </div>
             {Array.from(customRenderMap, ([el, node]) => createPortal(node, el))}

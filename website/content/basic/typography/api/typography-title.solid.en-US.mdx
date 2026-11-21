@@ -2,17 +2,19 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property  | Description                                                                                                                              | Type                                                                                                                                       | Default |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
-| component | Element to render: a tag name or a component. Defaults to h1 to h6 by heading.                                                           | `ValidComponent`                                                                                                                           | -       |
-| copyable  | Whether the text can be copied; pass an object for the Copyable Config.                                                                  | `CopyableConfig \| boolean`                                                                                                                | -       |
-| delete    | Adds a strikethrough.                                                                                                                    | `boolean`                                                                                                                                  | -       |
-| disabled  | Disables the text.                                                                                                                       | `boolean`                                                                                                                                  | -       |
-| ellipsis  | Truncates overflowing text; pass an object for the Ellipsis Config.                                                                      | `Ellipsis \| boolean`                                                                                                                      | -       |
-| heading   | Heading level, matching h1 to h6. Defaults to 1.                                                                                         | `1 \| 2 \| 3 \| 4 \| 5 \| 6`                                                                                                               | -       |
-| link      | Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element. | `LinkType`                                                                                                                                 | -       |
-| mark      | Adds a highlight.                                                                                                                        | `boolean`                                                                                                                                  | -       |
-| strong    | Whether the text is bold.                                                                                                                | `boolean`                                                                                                                                  | -       |
-| type      | Text type. Defaults to primary.                                                                                                          | `TypographyBaseType`                                                                                                                       | -       |
-| underline | Adds an underline.                                                                                                                       | `boolean`                                                                                                                                  | -       |
-| weight    | Font weight: light, regular, medium, semibold, bold, default, or a number.                                                               | <ApiType detail={"'bold' \u007c 'default' \u007c 'light' \u007c 'medium' \u007c 'regular' \u007c 'semibold' \u007c number"}>Type</ApiType> | -       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by expand (expand or collapse button) and copy (copy button; the wrapping span still takes copyable.class); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTypographyTitlePart, string>>"}>Type</ApiType> | - |
+| component | Element to render: a tag name or a component. Defaults to h1 to h6 by heading. | `ValidComponent` | - |
+| copyable | Whether the text can be copied; pass an object for the Copyable Config. | `CopyableConfig \| boolean` | - |
+| delete | Adds a strikethrough. | `boolean` | - |
+| disabled | Disables the text. | `boolean` | - |
+| ellipsis | Truncates overflowing text; pass an object for the Ellipsis Config. | `Ellipsis \| boolean` | - |
+| heading | Heading level, matching h1 to h6. Defaults to 1. | `1 \| 2 \| 3 \| 4 \| 5 \| 6` | - |
+| link | Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element. | `LinkType` | - |
+| mark | Adds a highlight. | `boolean` | - |
+| strong | Whether the text is bold. | `boolean` | - |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cTypographyTitlePart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
+| type | Text type. Defaults to primary. | `TypographyBaseType` | - |
+| underline | Adds an underline. | `boolean` | - |
+| weight | Font weight: light, regular, medium, semibold, bold, default, or a number. | <ApiType detail={"'bold' \u007c 'default' \u007c 'light' \u007c 'medium' \u007c 'regular' \u007c 'semibold' \u007c number"}>Type</ApiType> | - |

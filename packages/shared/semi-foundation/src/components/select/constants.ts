@@ -8,7 +8,10 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type SelectPart = 'dropdown';
+export type SelectPart = 'prefix' | 'suffix' | 'content' | 'placeholder' | 'input' | 'search' | 'tag' | 'clear' | 'arrow' | 'dropdown' | 'list' | 'empty' | 'groupLabel' | 'item' | 'itemIcon' | 'itemContent';
+
+/** Keys of `classNames` and `styles` of `Select.Option`; the root element takes `className` and `style`. The `item*` keys of Select apply to every option and come first */
+export type OptionPart = 'icon' | 'content';
 
 export const strings = {
     SIZE_SET: ['small', 'large', 'default'],

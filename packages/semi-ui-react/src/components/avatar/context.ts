@@ -11,6 +11,6 @@ export type AvatarContextType = {
     item?: Pick<AvatarProps, 'size' | 'shape' | 'className'>;
     // cloneElement on renderMore's result would reach a wrapper or Fragment, not the avatar, so it reads these here
     // (its own props win)
-    moreItem?: Pick<AvatarProps, 'size' | 'shape' | 'className'>;
+    moreItem?: Pick<AvatarProps, 'size' | 'shape' | 'className' | 'style'>;
 };
 export const [AvatarGroupContext, useAvatarGroupContext] = createContext<AvatarContextType>('AvatarGroup', { defaultValue: {} });

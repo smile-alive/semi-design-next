@@ -57,7 +57,7 @@ export interface TimePickerProps extends Omit<HTMLInputAttributes, NativeInputKe
     inputReadOnly?: boolean;
     validateStatus?: ValidateStatus;
     insetLabelId?: string;
-    /** `dropdown` is the panel card; `input` is the Input's root element */
+    /** `dropdown` is the panel card; `input` is the Input's root element; `header`, `content` and `footer` are the panel's ScrollList header, body and footer; `item` is every time option */
     classNames?: Partial<Record<TimePickerPart, ClassValue>>;
     styles?: Partial<Record<TimePickerPart, string>>;
     autofocus?: boolean;
@@ -117,6 +117,8 @@ export interface TimeInputProps extends Omit<InputProps, 'value' | 'onChange' | 
 }
 
 export interface ComboboxProps {
+    classNames?: TimePickerProps['classNames'];
+    styles?: TimePickerProps['styles'];
     timeStampValue?: TimeStamp;
     format?: string;
     /** Prefix of the column class names (`${prefixCls}-list-hour` and so on); without it the columns get none */

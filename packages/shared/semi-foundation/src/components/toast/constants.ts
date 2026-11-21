@@ -7,6 +7,9 @@ export const cssClasses = {
     WRAPPER: `${PREFIX}-wrapper`,
 };
 
+/** Keys of `classNames` and `styles` in the options of one toast; the toast element takes `className` and `style` */
+export type ToastPart = 'content' | 'icon' | 'text' | 'close';
+
 export const strings = {
     themes: ['normal', 'light'],
 };

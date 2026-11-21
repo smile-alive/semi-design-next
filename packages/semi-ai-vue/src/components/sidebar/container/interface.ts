@@ -1,6 +1,9 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { SidebarContainerPart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 
 export interface ContainerProps {
+    classNames?: Partial<Record<SidebarContainerPart, ClassValue>>;
+    styles?: Partial<Record<SidebarContainerPart, StyleValue>>;
     visible?: boolean;
     /** Plain-text title; the `#title` slot takes precedence */
     title?: string;

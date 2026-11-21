@@ -11,8 +11,8 @@
                 "en-US": "Class name of the root element."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `image`（占位图区域），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `image` (the placeholder image area); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `image`（占位图区域）、`title`、`description`、`footer`（`children` 所在的底部区域），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `image` (the placeholder image area), `title`, `description` and `footer` (the bottom area holding `children`); merged with the built-in classes."
             },
             "darkModeImage": {
                 "zh-CN": "暗色模式下的占位图，跟随 html 元素的 theme-mode 属性变化；取值同 image。",

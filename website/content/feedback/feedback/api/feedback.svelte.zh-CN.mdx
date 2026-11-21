@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackCheckboxGroupProps` | - |
 | checkboxLabel | 自定义 checkboxGroupProps.options 中每一项文本的 snippet，参数为 `{ option, index }`。 | <ApiType detail={"Snippet\u003c[FeedbackCheckboxSnippetProps]>"}>Type</ApiType> | - |
 | children | type 为 custom 时的反馈内容。 | `Snippet` | - |
-| classNames | 内部各部位的类名，键为 mask、header、body，值的写法同 class（字符串、数组或对象），与组件自带的类名合并，传给当前模式的 Modal 或 SideSheet。 | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 mask、content（role="dialog" 的面板本体）、header、title、close、body、footer、emoji（type 为 emoji 时的单个表情选项），值的写法同 class（字符串、数组或对象），与组件自带的类名合并。除 emoji 外的键传给当前模式的 Modal 或 SideSheet。 | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, ClassValue>>"}>Type</ApiType> | - |
 | closable | 是否显示右上角的关闭按钮。 | `boolean` | - |
 | closeIcon | 关闭按钮中的图标。 | `Snippet` | - |
 | closeOnEsc | 是否允许按 Esc 取消。 | `boolean` | - |
@@ -53,7 +53,7 @@ import ApiType from '#/components/ApiType.astro';
 | role | 仅 modal 模式：对话框的 role，可选 dialog 或 alertdialog。 | `'alertdialog' \| 'dialog'` | - |
 | size | 宽度档位：small 为 448px，medium 为 684px，large 为 920px；popup 模式仅 placement 为 left、right 时生效。 | `Size` | - |
 | style | 样式字符串；落点见下方说明。 | `string` | - |
-| styles | 内部各部位的内联样式，键同 classNames，每个值是样式字符串，传给当前模式的 Modal 或 SideSheet。 | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, string>>"}>Type</ApiType> | - |
+| styles | 内部各部位的内联样式，键同 classNames，每个值是样式字符串。 | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, string>>"}>Type</ApiType> | - |
 | textAreaProps | type 为 text 与 emoji 时多行输入框的属性；其中的 onChange 照常调用，不会替换内置处理。 | `FeedbackTextAreaProps` | - |
 | title | 标题，可以是字符串或 snippet，同时作为对话框的可访问名称。 | `string \| Snippet` | - |
 | type | 反馈内容的类型。custom 时内容写在子节点中。 | `FeedbackType` | `"emoji"` |

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, h, normalizeStyle, onUpdated, Text, useTemplateRef, type ClassValue, type CSSProperties, type HTMLAttributes, type StyleValue, type VNode } from 'vue';
-    import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/components/tabs/constants';
+    import { cssClasses, getBarItemKey, type TabsPart } from '@fibrae/semi-foundation/components/tabs/constants';
     import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
     import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
@@ -33,8 +33,8 @@
         showRestInDropdown: boolean;
         more?: number | TabsMore;
         arrowPosition: 'both' | 'start' | 'end';
-        classNames?: Partial<Record<'visibleTabs', ClassValue>>;
-        styles?: Partial<Record<'visibleTabs', StyleValue>>;
+        classNames?: Partial<Record<TabsPart, ClassValue>>;
+        styles?: Partial<Record<TabsPart, StyleValue>>;
         dropdownProps?: TabsDropdownProps;
         tablistAttrs: Record<string, unknown>;
     }>();
@@ -100,6 +100,8 @@
         position,
         showRestInDropdown: props.showRestInDropdown,
         dropdownProps: props.dropdownProps?.[position],
+        classNames: props.classNames,
+        styles: props.styles,
         onArrowClick: () => foundation.handleArrowClick(items, position),
         onTabClick,
     });
@@ -146,7 +148,9 @@
                 [cssClasses.TABS_BAR_SLASH]: props.type === 'slash',
                 [`${prefix}-collapse`]: collapsed,
             },
+            props.classNames?.tabBar,
         ]"
+        :style="props.styles?.tabBar"
     >
         <OverflowList
             v-if="collapsed"
@@ -194,9 +198,9 @@
                     </template>
                 </TabItem>
             </div>
-            <Dropdown v-if="view.hidden.length" :class="`${prefix}-more-dropdown-${props.type}`" clickToHide position="bottomLeft" showTick trigger="hover" v-bind="view.dropdownProps">
+            <Dropdown v-if="view.hidden.length" :class="[`${prefix}-more-dropdown-${props.type}`, props.classNames?.dropdown]" clickToHide position="bottomLeft" showTick :style="props.styles?.dropdown" trigger="hover" v-bind="view.dropdownProps">
                 <slot name="more">
-                    <button :class="[`${prefix}-more-trigger`, `${prefix}-more-trigger-${props.type}`]" type="button">
+                    <button :class="[`${prefix}-more-trigger`, `${prefix}-more-trigger-${props.type}`, props.classNames?.more]" :style="props.styles?.more" type="button">
                         <span :class="`${prefix}-more-trigger-content`">
                             <span>{{ locale.locale.more }}</span>
                             <IconChevronDown :class="`${prefix}-more-trigger-content-icon`" />
@@ -231,7 +235,7 @@
             </template>
         </template>
         <template v-for="(nodes, n) in [extraNodes()]" :key="n">
-            <div v-if="nodes.length" :class="[cssClasses.TABS_BAR_EXTRA, `${prefix}-${props.type}-extra`, `${prefix}-${props.type}-extra-${props.size}`]" :style="{ float: extraFloat(nodes) }" x-semi-prop="tabBarExtraContent">
+            <div v-if="nodes.length" :class="[cssClasses.TABS_BAR_EXTRA, `${prefix}-${props.type}-extra`, `${prefix}-${props.type}-extra-${props.size}`, props.classNames?.extra]" :style="[{ float: extraFloat(nodes) }, props.styles?.extra]" x-semi-prop="tabBarExtraContent">
                 <component :is="node" v-for="[node, key] in nodes" :key="key" />
             </div>
         </template>

@@ -28,11 +28,13 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
     // a double-click expands, so clicks right after the first do not select again
     const [debouncedSelect] = useState(() => debounce((select: () => void) => select(), 500, { edges: ['leading'] }));
 
+    const { classNames, styles } = context;
+
     useEffect(() => () => debouncedSelect.cancel(), [debouncedSelect]);
 
     if (empty) {
         return (
-            <ul className={clsx(prefixcls, `${prefixcls}-empty`)}>
+            <ul className={clsx(prefixcls, `${prefixcls}-empty`, classNames?.empty)} style={styles?.empty}>
                 <li className={`${prefixcls}-label ${prefixcls}-label-empty`} x-semi-prop="emptyContent">
                     {emptyContent}
                 </li>
@@ -44,7 +46,8 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
     const isLeaf = isTreeNodeLeaf(props, loadData);
     const disabled = Boolean(treeDisabled || disabledProp);
     const rowFlags = { disabled, focused, draggable, labelEllipsis: Boolean(labelEllipsis), fullLabel: Boolean(renderFullLabel), dragOverNodeKey, dropPosition };
-    const nodeCls = clsx(getTreeRowClassMap(props, rowFlags));
+    const nodeCls = clsx(getTreeRowClassMap(props, rowFlags), classNames?.item);
+    const rowStyle = styles?.item ? { ...style, ...styles.item } : style;
     const rowAria = { id, ...getTreeRowAria(props, { disabled, isLeaf, multiple }) };
 
     const onSelect = (e: React.MouseEvent | React.KeyboardEvent) => context.onNodeSelect(e, props);
@@ -138,31 +141,33 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
     const renderArrow = () => {
         if (loading) {
             // the row carries aria-busy; the spinner's own name would join the row's name
-            return <Spin className={`${prefixcls}-spin-icon`} aria-hidden />;
+            return <Spin className={clsx(`${prefixcls}-spin-icon`, classNames?.itemSwitcher)} style={styles?.itemSwitcher} aria-hidden />;
         }
         if (!isLeaf) {
+            // a custom expandIcon takes the part class only: its element is the user's own
+            const expandCls = clsx(`${prefixcls}-expand-icon`, classNames?.itemSwitcher);
             if (expandIcon) {
                 if (typeof expandIcon === 'function') {
-                    return expandIcon({ onClick: onExpand, className: `${prefixcls}-expand-icon`, expanded });
+                    return expandIcon({ onClick: onExpand, className: expandCls, expanded });
                 }
                 if (React.isValidElement<{ className?: string; onClick?: typeof onExpand }>(expandIcon)) {
                     return React.cloneElement(expandIcon, {
                         onClick: onExpand,
-                        className: clsx(`${prefixcls}-expand-icon`, expandIcon.props.className),
+                        className: clsx(expandCls, expandIcon.props.className),
                     });
                 }
                 return expandIcon;
             }
-            return <IconTreeTriangleDown className={`${prefixcls}-expand-icon`} size="small" onClick={onExpand} />;
+            return <IconTreeTriangleDown className={expandCls} style={styles?.itemSwitcher} size="small" onClick={onExpand} />;
         }
         if (showLine) {
             return (
-                <span className={`${prefixcls}-switcher`}>
+                <span className={clsx(`${prefixcls}-switcher`, classNames?.itemSwitcher)} style={styles?.itemSwitcher}>
                     <span className={`${prefixcls}-switcher-leaf-line`} />
                 </span>
             );
         }
-        return <span className={`${prefixcls}-empty-icon`} />;
+        return <span className={clsx(`${prefixcls}-empty-icon`, classNames?.itemSwitcher)} style={styles?.itemSwitcher} />;
     };
 
     const renderIcon = () => {
@@ -173,10 +178,12 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
             return typeof treeIcon === 'function' ? treeIcon(props) : treeIcon;
         }
         if (directory) {
+            // a custom icon is the user's own element and takes no part class
+            const iconCls = clsx(`${prefixcls}-item-icon`, classNames?.itemIcon);
             if (isLeaf) {
-                return <IconFile className={`${prefixcls}-item-icon`} />;
+                return <IconFile className={iconCls} style={styles?.itemIcon} />;
             }
-            return expanded ? <IconFolderOpen className={`${prefixcls}-item-icon`} /> : <IconFolder className={`${prefixcls}-item-icon`} />;
+            return expanded ? <IconFolderOpen className={iconCls} style={styles?.itemIcon} /> : <IconFolder className={iconCls} style={styles?.itemIcon} />;
         }
         return null;
     };
@@ -201,7 +208,7 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
             data,
             level,
             onCheck,
-            style,
+            style: rowStyle,
             expandIcon: renderArrow(),
             checkStatus: { checked, halfChecked },
             expandStatus: { expanded, loading },
@@ -211,7 +218,7 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
         // text, arrays and fragments cannot carry the treeitem attributes, so an li wraps them
         if (!React.isValidElement<{ style?: React.CSSProperties }>(customLabel) || customLabel.type === React.Fragment) {
             return (
-                <li style={style} {...rowAria} role="treeitem" {...dragProps}>
+                <li className={classNames?.item} style={rowStyle} {...rowAria} role="treeitem" {...dragProps}>
                     {customLabel}
                 </li>
             );
@@ -224,28 +231,30 @@ function TreeNode(props: TreeNodeProps): React.ReactNode {
             } as React.Attributes);
         }
         // in virtualization, style holds the row position
-        return isEmptyStyle(style)
+        return isEmptyStyle(rowStyle)
             ? React.cloneElement(customLabel, customRowProps as React.Attributes)
             : React.cloneElement(customLabel, {
                   ...customRowProps,
-                  style: { ...customLabel.props.style, ...style },
+                  style: { ...customLabel.props.style, ...rowStyle },
               } as React.Attributes);
     }
 
     const labelCls = clsx(getTreeLabelClassMap(props, rowFlags));
 
     return (
-        <li className={nodeCls} style={style} data-key={eventKey} {...rowAria} role="treeitem" onClick={onClick} onContextMenu={onContextMenu} {...dragProps}>
+        <li className={nodeCls} style={rowStyle} data-key={eventKey} {...rowAria} role="treeitem" onClick={onClick} onContextMenu={onContextMenu} {...dragProps}>
             <Indent isEnd={isEnd} level={level} prefixcls={prefixcls} showLine={showLine} />
             {renderArrow()}
             <span className={labelCls}>
                 {multiple && (
-                    <div role="none" onClick={onCheck}>
+                    <div className={classNames?.itemCheckbox} style={styles?.itemCheckbox} role="none" onClick={onCheck}>
                         <Checkbox aria-hidden tabIndex={-1} checked={checked} disabled={disabled} indeterminate={halfChecked} />
                     </div>
                 )}
                 {renderIcon()}
-                <span className={`${prefixcls}-label-text`}>{renderRealLabel()}</span>
+                <span className={clsx(`${prefixcls}-label-text`, classNames?.itemTitle)} style={styles?.itemTitle}>
+                    {renderRealLabel()}
+                </span>
             </span>
         </li>
     );

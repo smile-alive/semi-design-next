@@ -12,7 +12,7 @@
     import { getConfigContext } from '../config-provider/context.js';
     import { setTooltipPrefixContext } from '../tooltip/context.js';
     import { Tooltip, type RenderContentProps, type TooltipProps, type TooltipTriggerProps } from '../tooltip/index.js';
-    import { type DropdownContext, getDropdownContext, menuContext, menuItems } from './context.js';
+    import { type DropdownContext, getDropdownContext, joinStyles, menuContext, menuItems } from './context.js';
     import DropdownDivider from './dropdown-divider.svelte';
     import DropdownItem from './dropdown-item.svelte';
     import DropdownMenu from './dropdown-menu.svelte';
@@ -155,6 +155,20 @@
 
     const context: DropdownContext = {
         view: {
+            get classNames() {
+                return {
+                    menu: [parent?.view.classNames?.menu, classNames?.menu],
+                    item: [parent?.view.classNames?.item, classNames?.item],
+                    itemIcon: [parent?.view.classNames?.itemIcon, classNames?.itemIcon],
+                };
+            },
+            get styles() {
+                return {
+                    menu: joinStyles(parent?.view.styles?.menu, styles?.menu),
+                    item: joinStyles(parent?.view.styles?.item, styles?.item),
+                    itemIcon: joinStyles(parent?.view.styles?.itemIcon, styles?.itemIcon),
+                };
+            },
             get menuDepth() {
                 return DropdownFoundation.getChildMenuDepth(parent?.view.menuDepth);
             },
@@ -252,7 +266,7 @@
 {/snippet}
 
 {#snippet popup({ initialFocusRef }: RenderContentProps)}
-    <DropdownPopup contentClass={classNames?.content} {context} {focusTarget} {initialFocusRef} {prefixCls} style={[style, styles?.content].filter(Boolean).join('; ') || undefined}>
+    <DropdownPopup contentClass={classNames?.content} {context} {focusTarget} {initialFocusRef} {prefixCls} style={joinStyles(style, styles?.content)}>
         {#if content}
             {@render content()}
         {:else if menu}

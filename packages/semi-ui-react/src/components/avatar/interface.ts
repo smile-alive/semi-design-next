@@ -1,5 +1,5 @@
 import React, { type CSSProperties } from 'react';
-import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
+import type { AvatarGroupPart, AvatarPart, strings } from '@fibrae/semi-foundation/components/avatar/constants';
 import type { ElementProps, BaseProps } from '../../base/index';
 
 export type AvatarShape = 'circle' | 'square';
@@ -47,6 +47,8 @@ export interface AvatarProps extends BaseProps, ElementProps<'span', 'onError'> 
           }
         | boolean;
     contentMotion?: boolean;
+    classNames?: Partial<Record<AvatarPart, string>>;
+    styles?: Partial<Record<AvatarPart, CSSProperties>>;
     /** Attached to the `.semi-avatar` element, which sits inside a wrapper when topSlot, bottomSlot or border is set */
     ref?: React.Ref<HTMLSpanElement>;
 }
@@ -63,6 +65,8 @@ export interface AvatarGroupProps extends ElementProps<'div'> {
     overlapFrom?: AvatarGroupOverlapFrom;
     maxCount?: number;
     renderMore?: (restNumber?: number, restAvatars?: React.ReactNode[]) => React.ReactNode;
+    classNames?: Partial<Record<AvatarGroupPart, string>>;
+    styles?: Partial<Record<AvatarGroupPart, CSSProperties>>;
     /** Attached to the root element, the list */
     ref?: React.Ref<HTMLDivElement>;
 }

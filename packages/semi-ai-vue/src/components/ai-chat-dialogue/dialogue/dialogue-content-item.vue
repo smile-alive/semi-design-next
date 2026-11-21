@@ -64,7 +64,7 @@
         </div>
         <template v-else-if="props.parent">
             <template v-if="type !== undefined && TEXT_TYPES.includes(type)">
-                <AnnotationWidget v-if="citations.length > 0" :annotation="citations" :maxCount="15" @click="annotationClick(citations)" />
+                <AnnotationWidget v-if="citations.length > 0" :annotation="citations" :class="view.classNames?.annotation" :maxCount="15" :style="view.styles?.annotation" @click="annotationClick(citations)" />
                 <DialogueMarkdown v-if="text !== ''" :message="props.message" :text="text" />
                 <DialogueMarkdown v-if="refusal !== ''" :message="props.message" :text="refusal" />
             </template>
@@ -77,8 +77,10 @@
                             [`${PREFIX_CONTENT}-img-list`]: imageList,
                             [`${PREFIX_CONTENT}-img-last`]: layout.isLast,
                         },
+                        view.classNames?.image,
                     ]"
                     :src="image.image_url"
+                    :style="view.styles?.image"
                     @click="imageClick(image)"
                 />
                 <br v-if="layout.breakAfter" />
@@ -100,7 +102,7 @@
                 </DialogueContentItem>
             </template>
         </template>
-        <ReasoningWidget v-else-if="type === MESSAGE_ITEM_TYPE.REASONING" :content="reasoning.content" :markdownRenderProps="view.markdownRenderProps" :status="reasoning.status" :summary="reasoning.summary" />
+        <ReasoningWidget v-else-if="type === MESSAGE_ITEM_TYPE.REASONING" :class="view.classNames?.reasoning" :content="reasoning.content" :markdownRenderProps="view.markdownRenderProps" :status="reasoning.status" :style="view.styles?.reasoning" :summary="reasoning.summary" />
         <div v-else-if="type === MESSAGE_ITEM_TYPE.FUNCTION_CALL || type === MESSAGE_ITEM_TYPE.CUSTOM_TOOL_CALL" :class="`${PREFIX_CONTENT}-tool-call`"><IconWrench />{{ toolCall.name }} {{ toolCall.arguments ?? toolCall.input }}</div>
     </template>
 </template>

@@ -70,8 +70,8 @@
             "insetLabel": { "zh-CN": "内嵌标签，显示在输入框内部。", "en-US": "Inset label, shown inside the input." },
             "insetLabelId": { "zh-CN": "内嵌标签的 id。", "en-US": "The id of the inset label." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `input`（原生 input 元素），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `input` (the native input element); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `input`（原生 input 元素）、`prefix`（前缀与 `insetLabel`）、`suffix`、`clear`（清除按钮）、`addonBefore`、`addonAfter`、`actions`（步进按钮组）、`upButton`、`downButton`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `input` (the native input element), `prefix` (also holds `insetLabel`), `suffix`, `clear` (the clear button), `addonBefore`, `addonAfter`, `actions` (the step button group), `upButton` and `downButton`; merged with the built-in classes."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 `classNames`。",

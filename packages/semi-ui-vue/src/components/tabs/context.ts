@@ -1,9 +1,12 @@
-import type { ComputedRef } from 'vue';
+import type { ClassValue, ComputedRef, StyleValue } from 'vue';
+import type { TabsPart } from '@fibrae/semi-foundation/components/tabs/constants';
 import { createContext } from '../../base/index';
 import type { TabPosition, TabSize, TabType } from './interface';
 
 export interface TabsView {
     activeKey: string | null;
+    classNames?: Partial<Record<TabsPart, ClassValue>>;
+    styles?: Partial<Record<TabsPart, StyleValue>>;
     /** The previously selected key, null on mount; the entering pane slides in from its side */
     prevActiveKey: string | null;
     /** A pane added and selected by the same update shows without sliding in */

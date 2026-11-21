@@ -85,15 +85,6 @@ export default function Image(rawProps: ImageProps) {
 
     const rootStyle = () => mergeStyles(sizeStyle(), local.style);
 
-    const previewInnerProps = () => {
-        const object = previewObject();
-        if (!object) {
-            return {};
-        }
-        const { classNames, styles, ...others } = object;
-        return { ...others, class: classNames?.preview, style: styles?.preview };
-    };
-
     const fallbackContent = () => {
         const value = fallback();
         if (typeof value === 'string' && value) {
@@ -158,7 +149,7 @@ export default function Image(rawProps: ImageProps) {
                     onLoad={foundation.handleLoaded}
                 />
                 <Show when={loadStatus() !== 'success'}>
-                    <div class={`${prefixCls}-overlay`}>
+                    <div class={clsx(`${prefixCls}-overlay`, local.classNames?.overlay)} style={local.styles?.overlay}>
                         <Switch fallback={<Skeleton.Image style={sizeStyle()} />}>
                             <Match when={loadStatus() === 'error'}>
                                 <div class={statusCls}>{fallbackContent()}</div>
@@ -172,7 +163,7 @@ export default function Image(rawProps: ImageProps) {
             </div>
             {/* a sibling: clicks inside the portal bubble through the component tree and would reopen the thumbnail */}
             <Show when={canPreview()}>
-                <PreviewInner {...previewInnerProps()} alt={local.alt} crossOrigin={local.crossOrigin ?? previewObject()?.crossOrigin} setDownloadName={local.setDownloadName} src={previewSrc()} visible={previewVisible()} onVisibleChange={foundation.handlePreviewVisibleChange} />
+                <PreviewInner {...(previewObject() ?? {})} alt={local.alt} crossOrigin={local.crossOrigin ?? previewObject()?.crossOrigin} setDownloadName={local.setDownloadName} src={previewSrc()} visible={previewVisible()} onVisibleChange={foundation.handlePreviewVisibleChange} />
             </Show>
         </>
     );

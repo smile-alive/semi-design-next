@@ -1,7 +1,7 @@
 import type React from 'react';
 import { Children, cloneElement, createElement, isValidElement, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
+import { cssClasses, type TypographyTextPart } from '@fibrae/semi-foundation/components/typography/constants';
 import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
 import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import { warning } from '@fibrae/semi-foundation/utils';
@@ -21,6 +21,8 @@ import { TypographyElement, type TypographyProps } from './typography';
 
 interface BaseTypographyProps extends BaseProps, TypographyCommonProps, TypographyEllipsisProps {
     icon?: React.ReactNode;
+    classNames?: Partial<Record<TypographyTextPart, string>>;
+    styles?: Partial<Record<TypographyTextPart, React.CSSProperties>>;
     size?: TypographyBaseSize;
     code?: boolean;
     children?: React.ReactNode;
@@ -170,6 +172,8 @@ export default function Base({
     style,
     ellipsis = false,
     icon: rawIcon = '',
+    classNames,
+    styles,
     size = 'normal',
     link = false,
     headingTag,
@@ -279,7 +283,7 @@ export default function Base({
 
     if (expandButton) {
         expandNode = (
-            <button key="expand" ref={mergedExpandRef} type="button" className={`${prefixCls}-ellipsis-expand`} aria-expanded={expandButton.expanded} onClick={toggleOverflow}>
+            <button key="expand" ref={mergedExpandRef} type="button" className={clsx(`${prefixCls}-ellipsis-expand`, classNames?.expand)} style={styles?.expand} aria-expanded={expandButton.expanded} onClick={toggleOverflow}>
                 {expandButton.text}
             </button>
         );
@@ -290,7 +294,7 @@ export default function Base({
     if (icon) {
         const iconSize: Size = realSize === 'small' ? 'small' : 'default';
         iconNode = (
-            <span className={`${prefixCls}-icon`} x-semi-prop="icon">
+            <span className={clsx(`${prefixCls}-icon`, classNames?.icon)} style={styles?.icon} x-semi-prop="icon">
                 {isSemiIcon(icon) ? cloneElement(icon as React.ReactElement<any>, { size: iconSize }) : icon}
             </span>
         );
@@ -361,7 +365,7 @@ export default function Base({
             <>
                 {textNode}
                 {expandNode}
-                {copyable && <Copyable {...getCopyConfig(copyable, getCopyText(copyable, children))} ref={copyRef} onCopiedChange={() => hasEllipsis && runtime.schedule()} />}
+                {copyable && <Copyable {...getCopyConfig(copyable, getCopyText(copyable, children))} ref={copyRef} buttonClassName={classNames?.copy} buttonStyle={styles?.copy} onCopiedChange={() => hasEllipsis && runtime.schedule()} />}
             </>
         ),
     };

@@ -24,7 +24,7 @@ interface ChatBoxActionProps extends ChatBoxProps {
 }
 
 export default function ChatBoxAction(props: ChatBoxActionProps) {
-    const { message = {}, isLast, customRenderFunc } = props;
+    const { message = {}, isLast, customRenderFunc, className, style } = props;
 
     const { locale } = useLocale('Chat');
 
@@ -71,10 +71,14 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
     const flags = getChatBoxActionFlags({ role: message.role, status: message.status, isLast });
     const { finished, showReset } = flags;
 
-    const wrapCls = clsx(PREFIX_CHAT_BOX_ACTION, {
-        [`${PREFIX_CHAT_BOX_ACTION}-show`]: ChatBoxActionFoundation.isActionBarShown({ showReset, finished, showAction }),
-        [`${PREFIX_CHAT_BOX_ACTION}-hidden`]: !finished,
-    });
+    const wrapCls = clsx(
+        PREFIX_CHAT_BOX_ACTION,
+        {
+            [`${PREFIX_CHAT_BOX_ACTION}-show`]: ChatBoxActionFoundation.isActionBarShown({ showReset, finished, showAction }),
+            [`${PREFIX_CHAT_BOX_ACTION}-hidden`]: !finished,
+        },
+        className
+    );
 
     const copyNode = <Button key="copy" type="tertiary" className={`${PREFIX_CHAT_BOX_ACTION}-btn`} aria-label={locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={foundation.copyMessage} />;
     const likeNode = <Button key="like" type="tertiary" className={`${PREFIX_CHAT_BOX_ACTION}-btn`} aria-label={locale.like} aria-pressed={Boolean(like)} theme="borderless" icon={like ? <IconLikeThumb /> : <IconThumbUpStroked />} onClick={foundation.likeMessage} />;
@@ -144,5 +148,9 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
         });
     }
 
-    return <div className={wrapCls}>{defaultActions}</div>;
+    return (
+        <div className={wrapCls} style={style}>
+            {defaultActions}
+        </div>
+    );
 }

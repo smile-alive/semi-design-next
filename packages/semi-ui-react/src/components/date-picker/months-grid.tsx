@@ -18,6 +18,8 @@ const { PANEL_TYPE_LEFT, PANEL_TYPE_RIGHT } = strings;
 export type DatePickerTimePickerOpts = Partial<Pick<ComboboxProps, 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'defaultIsAM' | 'scrollItemProps'>>;
 
 export interface MonthsGridProps extends MonthsGridFoundationProps, BaseProps {
+    classNames?: DatePickerProps['classNames'];
+    styles?: DatePickerProps['styles'];
     renderDate?: DatePickerProps['renderDate'];
     renderFullDate?: DatePickerProps['renderFullDate'];
     timePickerOpts?: DatePickerTimePickerOpts;
@@ -45,6 +47,8 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     };
 
     const {
+        classNames,
+        styles,
         type,
         insetInput,
         weekStartsOn,
@@ -121,6 +125,8 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         return (
             <div ref={attachNode('wrap', panelType)} style={style}>
                 <Navigation
+                    className={classNames?.header}
+                    style={styles?.header}
                     density={density}
                     locale={locale}
                     monthText={monthText}
@@ -134,6 +140,8 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
                     onPrevYear={() => foundation.prevYear(panelType)}
                 />
                 <Month
+                    classNames={classNames}
+                    styles={styles}
                     multiple={multiple || isRange}
                     disabledDate={disabledDate}
                     focusRecords={focusRecords}
@@ -206,7 +214,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         const textCls = `${prefixCls}-switch-text`;
 
         return (
-            <div ref={attachNode('switch', panelType)} className={`${prefixCls}-switch`}>
+            <div ref={attachNode('switch', panelType)} className={clsx(`${prefixCls}-switch`, classNames?.switch)} style={styles?.switch}>
                 <button
                     type="button"
                     className={clsx(`${prefixCls}-switch-date`, {

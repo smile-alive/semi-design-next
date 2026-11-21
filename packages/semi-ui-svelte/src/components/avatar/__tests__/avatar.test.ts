@@ -27,6 +27,32 @@ afterEach(() => {
 });
 
 describe('Svelte Avatar', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const classNames = { image: 'c-image', label: 'c-label', mask: 'c-mask', border: 'c-border' };
+        const styles = { image: 'opacity: 0.5', label: 'opacity: 0.4', mask: 'opacity: 0.3', border: 'opacity: 0.2' };
+        const { container, unmount } = setup({ src, imgAttr: { class: 'own-image', style: 'opacity: 0.9' }, border: { motion: true }, hover: 'm', classNames, styles });
+        await fireEvent.mouseEnter(getElement(`.${prefix}-wrapper`, container));
+        const image = container.querySelector('img');
+        expect(image).toHaveClass('own-image', 'c-image');
+        expect(image).toHaveStyle({ opacity: '0.5' });
+        const mask = container.querySelector(`.${prefix}-hover`);
+        expect(mask).toHaveClass('c-mask');
+        expect(mask).toHaveStyle({ opacity: '0.3' });
+        const borders = container.querySelectorAll(`.${prefix}-additionalBorder`);
+        expect(borders).toHaveLength(2);
+        borders.forEach((border) => {
+            expect(border).toHaveClass('c-border');
+            expect(border).toHaveStyle({ opacity: '0.2' });
+        });
+        expect(root(container)).not.toHaveClass('c-image', 'c-mask', 'c-border');
+        unmount();
+
+        const text = setup({ classNames, styles });
+        const label = text.container.querySelector(`.${prefix}-label`);
+        expect(label).toHaveClass('c-label');
+        expect(label).toHaveStyle({ opacity: '0.4' });
+    });
+
     it('独立头像无列表语义，默认灰色中号圆形，透传原生属性', () => {
         const { container } = setup({ id: 'avatar', title: 'title', class: 'own', 'data-avatar': 'yes', style: 'margin: 4px' });
         expect(root(container)).toHaveClass(prefix, `${prefix}-grey`, `${prefix}-medium`, `${prefix}-circle`, 'own');

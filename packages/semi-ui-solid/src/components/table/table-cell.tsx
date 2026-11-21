@@ -31,6 +31,8 @@ export interface TableCellProps {
     height?: string | number;
     hovered?: boolean;
     isSection?: boolean;
+    /** The cell belongs to a data row, so `classNames.cell` and `styles.cell` apply */
+    dataCell?: boolean;
 }
 
 const EMPTY_COLUMN: ColumnProps = {};
@@ -106,12 +108,12 @@ export default function TableCell(props: TableCellProps) {
         }
         const align = column().align;
         const alignStyle = align ? { 'text-align': getRTLAlign(align, table.view().direction), 'justify-content': getRTLFlexAlign(align, table.view().direction) } : undefined;
-        return mergeStyles(position, (custom() as Record<string, any>).style, alignStyle);
+        return mergeStyles(position, props.dataCell ? table.props.styles?.cell : undefined, (custom() as Record<string, any>).style, alignStyle);
     };
 
     const cls = () => {
         const [isFixedLeft, isFixedLeftLast, isFixedRight, isFixedRightFirst] = isRTL() ? [fixedRightFlag(), props.firstFixedRight, fixedLeftFlag(), props.lastFixedLeft] : [fixedLeftFlag(), props.lastFixedLeft, fixedRightFlag(), props.firstFixedRight];
-        return clsx(column().class, `${prefixCls()}-row-cell`, (custom() as Record<string, any>).class, {
+        return clsx(column().class, `${prefixCls()}-row-cell`, props.dataCell && table.props.classNames?.cell, (custom() as Record<string, any>).class, {
             [`${prefixCls()}-cell-fixed-left`]: isFixedLeft,
             [`${prefixCls()}-cell-fixed-left-last`]: isFixedLeftLast,
             [`${prefixCls()}-cell-fixed-right`]: isFixedRight,

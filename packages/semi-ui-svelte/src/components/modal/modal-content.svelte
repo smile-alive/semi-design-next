@@ -143,7 +143,7 @@
 
 {#snippet iconPart()}
     {#if icon}
-        <span class={`${prefix}-icon-wrapper`} x-semi-prop="icon">
+        <span class={[`${prefix}-icon-wrapper`, classNames?.icon]} style={styles?.icon} x-semi-prop="icon">
             {@render icon()}
         </span>
     {/if}
@@ -165,7 +165,7 @@
 
 {#snippet closePart()}
     {#if closable}
-        <IconButton aria-label={locale().locale.close} class={`${prefix}-close`} icon={closeIconPart} size="small" theme="borderless" type="tertiary" onclick={foundation.close} />
+        <IconButton aria-label={locale().locale.close} class={[`${prefix}-close`, classNames?.close]} icon={closeIconPart} size="small" style={styles?.close} theme="borderless" type="tertiary" onclick={foundation.close} />
     {/if}
 {/snippet}
 
@@ -192,7 +192,7 @@
             <div class={[`${prefix}-header`, classNames?.header]} style={styles?.header}>
                 {@render iconPart()}
                 <!-- h5 look, h2 outline: the sheet's title is level 2 as well -->
-                <h2 class={[typographyClasses.PREFIX, `${typographyClasses.PREFIX}-h5`, `${prefix}-title`]} id={`${idPrefix}-title`} x-semi-prop="title">
+                <h2 class={[typographyClasses.PREFIX, `${typographyClasses.PREFIX}-h5`, `${prefix}-title`, classNames?.title]} id={`${idPrefix}-title`} style={styles?.title} x-semi-prop="title">
                     {#if typeof title === 'string'}
                         {title}
                     {:else}

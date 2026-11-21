@@ -1,5 +1,5 @@
 import type { ClassValue, StyleValue, VNode } from 'vue';
-import type { SelectPart } from '@fibrae/semi-foundation/components/select/constants';
+import type { OptionPart, SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import type { SelectRawValue } from '@fibrae/semi-foundation/components/select/option-foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { InputProps, ValidateStatus } from '../input/interface';
@@ -37,6 +37,8 @@ export interface SelectOptionBaseProps<V extends SelectRawValue = SelectRawValue
     label?: string | number;
     disabled?: boolean;
     showTick?: boolean;
+    classNames?: Partial<Record<OptionPart, ClassValue>>;
+    styles?: Partial<Record<OptionPart, StyleValue>>;
 }
 
 export interface SelectOptionProps<V extends SelectRawValue = SelectRawValue> extends SelectOptionBaseProps<V> {

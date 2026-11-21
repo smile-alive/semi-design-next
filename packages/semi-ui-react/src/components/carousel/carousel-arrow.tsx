@@ -36,7 +36,7 @@ function hasReadableText(node: ReactNode) {
     return false;
 }
 
-export default function CarouselArrow({ type, theme, prev, next, arrowProps }: CarouselArrowProps) {
+export default function CarouselArrow({ type, theme, prev, next, arrowProps, classNames, styles }: CarouselArrowProps) {
     const { locale } = useLocale('Carousel');
     const leftChildren = useUnwrappedLazy(arrowProps?.leftArrow?.children);
     const rightChildren = useUnwrappedLazy(arrowProps?.rightArrow?.children);
@@ -45,14 +45,20 @@ export default function CarouselArrow({ type, theme, prev, next, arrowProps }: C
 
     return (
         <div
-            className={clsx(cssClasses.CAROUSEL_ARROW, themeCls, {
-                [`${cssClasses.CAROUSEL_ARROW}-hover`]: type === 'hover',
-            })}
+            className={clsx(
+                cssClasses.CAROUSEL_ARROW,
+                themeCls,
+                {
+                    [`${cssClasses.CAROUSEL_ARROW}-hover`]: type === 'hover',
+                },
+                classNames?.arrows
+            )}
+            style={styles?.arrows}
         >
-            <button type="button" className={clsx(`${cssClasses.CAROUSEL_ARROW}-prev`, themeCls)} aria-label={hasReadableText(leftChildren) ? undefined : locale.prev} onClick={prev} {...arrowProps?.leftArrow?.props} x-semi-prop="arrowProps.leftArrow.children">
+            <button type="button" className={clsx(`${cssClasses.CAROUSEL_ARROW}-prev`, themeCls, classNames?.prevArrow)} style={styles?.prevArrow} aria-label={hasReadableText(leftChildren) ? undefined : locale.prev} onClick={prev} {...arrowProps?.leftArrow?.props} x-semi-prop="arrowProps.leftArrow.children">
                 {leftChildren === undefined ? <IconChevronLeft size="inherit" /> : leftChildren}
             </button>
-            <button type="button" className={clsx(`${cssClasses.CAROUSEL_ARROW}-next`, themeCls)} aria-label={hasReadableText(rightChildren) ? undefined : locale.next} onClick={next} {...arrowProps?.rightArrow?.props} x-semi-prop="arrowProps.rightArrow.children">
+            <button type="button" className={clsx(`${cssClasses.CAROUSEL_ARROW}-next`, themeCls, classNames?.nextArrow)} style={styles?.nextArrow} aria-label={hasReadableText(rightChildren) ? undefined : locale.next} onClick={next} {...arrowProps?.rightArrow?.props} x-semi-prop="arrowProps.rightArrow.children">
                 {rightChildren === undefined ? <IconChevronRight size="inherit" /> : rightChildren}
             </button>
         </div>

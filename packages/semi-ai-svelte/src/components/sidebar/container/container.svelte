@@ -14,7 +14,7 @@
     import type { ContainerProps } from './interface.js';
 
     // No fallback on `visible`: a bound `undefined` would throw with one, and undefined means hidden
-    let { visible = $bindable(), title, motion = true, resizable = true, minWidth = 150, maxWidth, defaultSize, showClose = true, closeOnEsc = false, onCancel, afterVisibleChange, header, children, onintroend, onoutroend, ...rest }: ContainerProps = $props();
+    let { visible = $bindable(), classNames, styles, title, motion = true, resizable = true, minWidth = 150, maxWidth, defaultSize, showClose = true, closeOnEsc = false, onCancel, afterVisibleChange, header, children, onintroend, onoutroend, ...rest }: ContainerProps = $props();
 
     const locale = useLocale('Sidebar');
 
@@ -102,12 +102,12 @@
         {#if header}
             {@render header()}
         {:else}
-            <div class={`${prefix}-container-header`}>
-                <div class={`${prefix}-container-header-title`} x-semi-prop="title">
+            <div class={[`${prefix}-container-header`, classNames?.header]} style={styles?.header}>
+                <div class={[`${prefix}-container-header-title`, classNames?.title]} style={styles?.title} x-semi-prop="title">
                     {#if typeof title === 'string'}{title}{:else}{@render title?.()}{/if}
                 </div>
                 {#if showClose}
-                    <Button aria-label={locale().locale.close} class={`${prefix}-container-header-closeBtn`} size="small" theme="borderless" type="tertiary" onclick={cancel}>
+                    <Button aria-label={locale().locale.close} class={[`${prefix}-container-header-closeBtn`, classNames?.close]} size="small" style={styles?.close} theme="borderless" type="tertiary" onclick={cancel}>
                         {#snippet icon()}
                             <IconClose />
                         {/snippet}
@@ -115,7 +115,7 @@
                 {/if}
             </div>
         {/if}
-        <div class={`${prefix}-container-content`}>
+        <div class={[`${prefix}-container-content`, classNames?.content]} style={styles?.content}>
             {@render children?.()}
         </div>
     </div>

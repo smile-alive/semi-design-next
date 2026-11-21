@@ -8,6 +8,7 @@ import DisabledParent from './disabled-parent.svelte';
 import DropdownCase from './dropdown-case.svelte';
 import MenuCase from './menu-case.svelte';
 import NestedCase from './nested-case.svelte';
+import PartsCase from './parts-case.svelte';
 
 type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
 type Entry = [label: string, props?: Record<string, unknown>];
@@ -53,13 +54,29 @@ afterEach(() => {
 
 describe('Svelte Dropdown 渲染', () => {
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        setup({ classNames: { content: 'my-content', wrapper: 'my-wrapper' }, styles: { content: 'order: 2', wrapper: 'order: 3' }, trigger: 'custom' }, { mode: 'bind', value: true, trigger: 'text' });
+        const parts = ['wrapper', 'content', 'menu', 'item', 'itemIcon'] as const;
+        const selectors = { wrapper: '.semi-tooltip-trigger-wrapper', content: '.semi-dropdown', menu: '.semi-dropdown-menu', item: '.semi-dropdown-item', itemIcon: '.semi-dropdown-item-icon' };
+        setup({ classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])), trigger: 'custom' }, { mode: 'bind', value: true, trigger: 'text', content: 'data', menu: [{ node: 'item', name: 'A' }], icons: true });
         await settle();
-        expect(document.querySelector('.semi-dropdown')).toHaveClass('my-content');
-        expect(document.querySelector('.semi-dropdown')).toHaveStyle({ order: '2' });
-        const wrapper = screen.getByText('text trigger');
-        expect(wrapper).toHaveClass('my-wrapper');
-        expect(wrapper).toHaveStyle({ order: '3' });
+        for (const part of parts) {
+            const el = document.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('Dropdown 的 item、itemIcon 在子菜单里继续生效，DropdownItem 自己的 classNames 排在其后', async () => {
+        render(PartsCase);
+        await settle();
+        const custom = (el: Element) => [...el.classList].filter((c) => /^(outer|inner|own)-/.test(c));
+        const inner = item('Inner');
+        expect(custom(inner)).toEqual(['outer-item', 'inner-item']);
+        expect(inner).toHaveStyle({ order: '3', opacity: '0.5' });
+        const icon = inner.querySelector('.semi-dropdown-item-icon')!;
+        expect(custom(icon)).toEqual(['outer-icon', 'own-icon']);
+        expect(icon).toHaveStyle({ order: '4' });
+        expect(custom(inner.parentElement!)).toEqual(['outer-menu']);
+        expect(custom(item('Parent'))).toEqual(['outer-item']);
     });
 
     it('class 落在弹层外壳，style 落在菜单容器，未声明的属性不落在任何节点', async () => {

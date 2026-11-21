@@ -422,6 +422,20 @@ describe('OverflowList', () => {
         const wrapper = container.querySelector(`.${prefixCls}-scroll-wrapper`);
         expect(wrapper).toHaveClass(`${prefixCls}-scroll-wrapper`, 'my-wrapper');
         expect(wrapper).toHaveStyle({ order: '3' });
+
+        const resize = stubResizeObserver();
+        const collapse = render(<OverflowList classNames={{ item: 'my-item', overflow: 'my-overflow' }} styles={{ item: { order: 1 }, overflow: { order: 2 } }} items={items} overflowRenderer={plusRenderer} visibleItemRenderer={(item) => <span>{item.key}</span>} />);
+        measure(resize, collapse.container, 300);
+        resize(getList(collapse.container), 120);
+        const collapseItems = collapse.container.querySelectorAll(`.${prefixCls}-item`);
+        expect(collapseItems).not.toHaveLength(0);
+        for (const item of collapseItems) {
+            expect(item).toHaveClass('my-item');
+            expect(item).toHaveStyle({ order: '1' });
+        }
+        const overflow = collapse.container.querySelector(`.${prefixCls}-overflow`);
+        expect(overflow).toHaveClass('my-overflow');
+        expect(overflow).toHaveStyle({ order: '2' });
     });
 
     it.each<[NonNullable<OverflowListInternalProps['overflowRenderDirection']>, string[]]>([

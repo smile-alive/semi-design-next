@@ -165,6 +165,8 @@
             labelEllipsis: props.labelEllipsis ?? virtualized.value,
             dragOverNodeKey: dragOverNodeKey.value,
             dropPosition: dropPosition.value,
+            classNames: props.classNames,
+            styles: props.styles,
         })),
         onNodeExpand: foundation.handleNodeExpand,
         onNodeSelect: foundation.handleNodeSelect,
@@ -252,15 +254,27 @@
             </div>
         </template>
         <template v-if="noData()">
-            <div v-if="!$slots.emptyContent || hasSlotContent($slots.emptyContent)" :class="listClass()" role="none">
-                <ul :class="[`${prefix}-option`, `${prefix}-option-empty`]">
+            <div v-if="!$slots.emptyContent || hasSlotContent($slots.emptyContent)" :class="[listClass(), props.classNames?.list]" role="none" :style="props.styles?.list">
+                <ul :class="[`${prefix}-option`, `${prefix}-option-empty`, props.classNames?.empty]" :style="props.styles?.empty">
                     <li :class="[`${prefix}-option-label`, `${prefix}-option-label-empty`]" x-semi-prop="emptyContent">
                         <slot name="emptyContent">{{ locale.locale.emptyText }}</slot>
                     </li>
                 </ul>
             </div>
         </template>
-        <ul v-else ref="treeRoot" v-bind="splitAttrs().control" :aria-activedescendant="activeKey === undefined ? undefined : nodeId(treeId, activeKey)" :aria-multiselectable="props.multiple" :class="listClass()" role="tree" :tabindex="treeTabIndex()" @focusin="handleTreeFocus" @keydown="foundation.handleKeyDown">
+        <ul
+            v-else
+            ref="treeRoot"
+            v-bind="splitAttrs().control"
+            :aria-activedescendant="activeKey === undefined ? undefined : nodeId(treeId, activeKey)"
+            :aria-multiselectable="props.multiple"
+            :class="[listClass(), props.classNames?.list]"
+            role="tree"
+            :style="props.styles?.list"
+            :tabindex="treeTabIndex()"
+            @focusin="handleTreeFocus"
+            @keydown="foundation.handleKeyDown"
+        >
             <NodeList ref="nodeList" :flattenList="cachedRows()" :flattenNodes="rows()" :motion="props.motion" :motionKeys="view.motionKeys" :motionType="view.motionType" :virtualize="props.virtualize">
                 <template #default="{ node, style }">
                     <template v-for="(row, i) in [rowProps(node)]" :key="i">

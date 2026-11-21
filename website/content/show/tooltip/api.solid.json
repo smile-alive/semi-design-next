@@ -12,8 +12,8 @@
             },
             "class": { "zh-CN": "弹出层的类名。", "en-US": "Class name of the popup." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `wrapper`（触发元素被 span 包裹时的该 span），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `wrapper`（触发元素被 span 包裹时的该 span）、`arrow`（默认箭头，传入自定义箭头节点时不生效），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `wrapper` (the span that wraps the trigger when a wrapper is needed) and `arrow` (the default arrow, not applied to a custom arrow node); merged with the built-in classes."
             },
             "style": {
                 "zh-CN": "弹出层的内联样式；箭头颜色只读取对象形式中的 `background-color`。",

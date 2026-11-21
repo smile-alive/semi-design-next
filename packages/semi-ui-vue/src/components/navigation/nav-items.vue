@@ -9,7 +9,7 @@
     const props = defineProps<{ items: NavItemType[]; level: number; subDropdownProps?: SubDropdownProps }>();
     defineSlots<Pick<NavSlots, 'icon' | 'text' | 'toggleIcon' | 'expandIcon'>>();
 
-    const ITEM_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'link', 'linkOptions', 'tooltipShowDelay', 'tooltipHideDelay']);
+    const ITEM_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'classNames', 'styles', 'link', 'linkOptions', 'tooltipShowDelay', 'tooltipHideDelay']);
     const SUB_KEYS = new Set(['itemKey', 'text', 'disabled', 'indent', 'classNames', 'styles', 'dropdownProps']);
     const LI_KEYS = new Set(['class', 'style', 'onMouseenter', 'onMouseleave']);
 

@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | autofocus | Focuses the input after mount. | `boolean` | `semiGlobalDefault("InputNumber", "autofocus")` |
 | borderless | Borderless mode. | `boolean` | `semiGlobalDefault("InputNumber", "borderless")` |
-| classNames | Class names of the inner parts, keyed by input (the native input element); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"input\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("InputNumber", "classNames")` |
+| classNames | Class names of the inner parts, keyed by input (the native input element), prefix (also holds insetLabel), suffix, clear (the clear button), addonBefore, addonAfter, actions (the step button group), upButton and downButton; values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("InputNumber", "classNames")` |
 | composition | Whether to enable composition mode. When enabled, change is not emitted during IME composition and is emitted once after it ends. | `boolean` | `semiGlobalDefault("InputNumber", "composition")` |
 | currency | Currency, such as CNY, EUR or USD. When true, uses defaultCurrency, or the currency of the locale pack when that is not set; a bare currency attribute equals true. | `string \| boolean` | `semiGlobalDefault("InputNumber", "currency")` |
 | currencyDisplay | How the currency is shown: symbol, code or name. | `"code" \| "name" \| "symbol"` | `semiGlobalDefault("InputNumber", "currencyDisplay")` |
@@ -40,7 +40,7 @@ import ApiType from '#/components/ApiType.astro';
 | showCurrencySymbol | Whether to show the currency symbol, code or name; only in currency mode. | `boolean` | `true` |
 | size | Input size: default, small or large. | `Size` | `undefined` |
 | step | Step of each change; may be a decimal. | `number` | `numbers.DEFAULT_STEP` |
-| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003c\"input\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("InputNumber", "styles")` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("InputNumber", "styles")` |
 | validateStatus | Validation status: default, error, warning or success. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("InputNumber", "validateStatus")` |
 
 **Events**

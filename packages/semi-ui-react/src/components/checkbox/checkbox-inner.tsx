@@ -26,10 +26,14 @@ export interface CheckboxInnerProps {
     /** Attached to the native input */
     tabIndex?: number;
     autoFocus?: boolean;
+    iconClassName?: string;
+    iconStyle?: React.CSSProperties;
 }
 
 export default function CheckboxInner({
     ref,
+    iconClassName,
+    iconStyle,
     indeterminate,
     checked,
     disabled,
@@ -90,7 +94,9 @@ export default function CheckboxInner({
                     e.currentTarget.indeterminate = showMixed;
                 }}
             />
-            <span className={`${prefix}-inner-display`}>{icon}</span>
+            <span className={clsx(`${prefix}-inner-display`, iconClassName)} style={iconStyle}>
+                {icon}
+            </span>
         </span>
     );
 }

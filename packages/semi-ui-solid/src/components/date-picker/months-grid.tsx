@@ -1,6 +1,6 @@
 import { type JSX, type Ref, For, Show, createMemo, createUniqueId, mergeProps, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { cssClasses, numbers, strings, type DatePickerPart } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { isRangeType, type DayStatusType } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale';
@@ -18,6 +18,8 @@ const { isYearOrTime } = MonthsGridFoundation;
 export type DatePickerTimePickerOpts = Partial<Pick<ComboboxProps, 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'defaultIsAM' | 'scrollItemProps'>>;
 
 export interface MonthsGridProps extends Omit<MonthsGridFoundationProps, 'renderDate' | 'renderFullDate' | 'locale'> {
+    classNames?: Partial<Record<DatePickerPart, string>>;
+    styles?: Partial<Record<DatePickerPart, JSX.CSSProperties | string>>;
     renderDate?: (dayNumber?: number, fullDate?: string) => JSX.Element;
     renderFullDate?: (dayNumber?: number, fullDate?: string, dayStatus?: DayStatusType) => JSX.Element;
     renderQuickControls?: () => JSX.Element;
@@ -106,6 +108,8 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
         return (
             <div ref={attach('wrap', panelType)} style={style()}>
                 <Navigation
+                    class={props.classNames?.header}
+                    style={props.styles?.header}
                     density={props.density}
                     locale={props.locale}
                     monthText={MonthsGridFoundation.formatMonthText(props.locale, detail().pickerDate)}
@@ -119,6 +123,8 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
                     onPrevYear={() => foundation.prevYear(panelType)}
                 />
                 <Month
+                    classNames={props.classNames}
+                    styles={props.styles}
                     multiple={props.multiple || isRange()}
                     disabledDate={props.disabledDate}
                     focusRecords={props.focusRecords ?? noFocusRecords}
@@ -201,7 +207,7 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
 
         return (
             <Show when={props.type.includes('Time') && !props.insetInput}>
-                <div ref={attach('switch', panelType)} class={`${prefixCls}-switch`}>
+                <div ref={attach('switch', panelType)} class={clsx(`${prefixCls}-switch`, props.classNames?.switch)} style={props.styles?.switch}>
                     <button type="button" class={clsx(`${prefixCls}-switch-date`, { [`${prefixCls}-switch-date-active`]: !detail().isTimePickerOpen })} aria-label={props.locale.switchToDate} onClick={() => foundation.showDatePanel(panelType)}>
                         <Show when={showSwitchIcon()}>
                             <IconCalendar />

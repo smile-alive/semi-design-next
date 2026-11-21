@@ -1,6 +1,6 @@
 import { children, createEffect, type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/backtop/constants';
+import { cssClasses, numbers, type BackTopPart } from '@fibrae/semi-foundation/components/backtop/constants';
 import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/components/backtop/foundation';
 import '@fibrae/semi-foundation/components/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-solid';
@@ -15,6 +15,8 @@ const prefixCls = cssClasses.PREFIX;
 export interface BackTopProps extends ElementProps<'button', FloatButtonOmittedKeys>, Pick<FloatButtonProps, 'icon' | 'shape' | 'size' | 'colorful' | 'badge' | 'onClick' | 'ref'> {
     /** Static content of the button, shown in place of `icon`; must not contain interactive elements */
     children?: JSX.Element;
+    classNames?: Partial<Record<BackTopPart, string>>;
+    styles?: Partial<Record<BackTopPart, JSX.CSSProperties | string>>;
     target?: () => Target | null;
     visibilityHeight?: number;
     duration?: number;
@@ -35,7 +37,7 @@ const defaultProps = {
 
 export default function BackTop(rawProps: BackTopProps) {
     const props = useDefaultProps('BackTop', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['children', 'icon', 'class', 'onClick', 'visibilityHeight', 'target', 'duration', 'aria-label', 'ref']);
+    const [local, rest] = splitProps(props, ['children', 'icon', 'class', 'classNames', 'styles', 'onClick', 'visibilityHeight', 'target', 'duration', 'aria-label', 'ref']);
 
     const locale = useLocale('BackTop');
 
@@ -67,6 +69,8 @@ export default function BackTop(rawProps: BackTopProps) {
                 {...rest}
                 ref={mergeRefs(local.ref, (node: FloatButtonElement) => (button = node))}
                 class={clsx(prefixCls, local.class)}
+                classNames={local.classNames ?? {}}
+                styles={local.styles ?? {}}
                 // static children are the visible name; a different default would contradict them
                 aria-label={local['aria-label'] ?? (hasChildren() ? undefined : locale().locale.backToTop)}
                 x-semi-prop="children"

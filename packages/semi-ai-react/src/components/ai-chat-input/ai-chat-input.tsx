@@ -186,7 +186,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const { hasTemplate } = skill ?? {};
 
     const configureNode = (
-        <div className={cssClasses.FOOTER_CONFIGURE}>
+        <div className={clsx(cssClasses.FOOTER_CONFIGURE, classNames?.configure)} style={styles?.configure}>
             <Configure ref={configureRef} onChange={foundation.onConfigureChange}>
                 {renderConfigureArea?.()}
             </Configure>
@@ -214,11 +214,16 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         <button
             key="send"
             type="button"
-            className={clsx(`${prefixCls}-footer-action-button`, {
-                [`${prefixCls}-footer-action-send`]: !generating,
-                [`${prefixCls}-footer-action-stop`]: generating,
-                [`${prefixCls}-footer-action-send-disabled`]: !generating && !sendEnabled,
-            })}
+            className={clsx(
+                `${prefixCls}-footer-action-button`,
+                {
+                    [`${prefixCls}-footer-action-send`]: !generating,
+                    [`${prefixCls}-footer-action-stop`]: generating,
+                    [`${prefixCls}-footer-action-send-disabled`]: !generating && !sendEnabled,
+                },
+                classNames?.send
+            )}
+            style={styles?.send}
             // not disabled: keeps focus, and handleSend already ignores the click
             aria-disabled={!generating && !sendEnabled ? 'true' : undefined}
             aria-label={generating ? locale.stop : locale.send}
@@ -228,7 +233,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         </button>
     );
 
-    const actionCls = `${prefixCls}-footer-action`;
+    const actionCls = clsx(`${prefixCls}-footer-action`, classNames?.actions);
 
     const setUpload = useCallback((upload: UploadHandle | null) => runtime.setUpload(upload), [runtime]);
 
@@ -252,22 +257,35 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         }
         if (skillVisible) {
             return (
-                <div ref={skillPanelRef} id={skillListId} className={`${prefixCls}-skill`} style={{ maxHeight: numbers.SKILL_MAX_HEIGHT }} aria-labelledby={editorId} role="listbox">
+                <div ref={skillPanelRef} id={skillListId} className={clsx(`${prefixCls}-skill`, classNames?.skills)} style={{ maxHeight: numbers.SKILL_MAX_HEIGHT, ...styles?.skills }} aria-labelledby={editorId} role="listbox">
                     {skills?.map((item, index) => (
                         // value is optional and may repeat; the list is replaced as a whole
-                        <SkillItem key={index} id={getOptionId(skillListId, index)} index={index} isActive={activeSkillIndex === index} skill={item} renderSkillItem={renderSkillItem} onClick={foundation.handleSkillSelect} onMouseEnter={foundation.setActiveSkillIndex} />
+                        <SkillItem
+                            key={index}
+                            id={getOptionId(skillListId, index)}
+                            partClassName={classNames?.skillItem}
+                            partStyle={styles?.skillItem}
+                            index={index}
+                            isActive={activeSkillIndex === index}
+                            skill={item}
+                            renderSkillItem={renderSkillItem}
+                            onClick={foundation.handleSkillSelect}
+                            onMouseEnter={foundation.setActiveSkillIndex}
+                        />
                     ))}
                 </div>
             );
         }
         if (suggestionVisible) {
             return (
-                <div ref={suggestionPanelRef} id={suggestionListId} className={`${prefixCls}-suggestion`} style={{ maxHeight: numbers.SUGGESTION_MAX_HEIGHT }} aria-labelledby={editorId} role="listbox">
+                <div ref={suggestionPanelRef} id={suggestionListId} className={clsx(`${prefixCls}-suggestion`, classNames?.suggestions)} style={{ maxHeight: numbers.SUGGESTION_MAX_HEIGHT, ...styles?.suggestions }} aria-labelledby={editorId} role="listbox">
                     {suggestions?.map((item, index) => (
                         <SuggestionItem
                             // suggestions may repeat and carry no id; the list is replaced as a whole
                             key={index}
                             id={getOptionId(suggestionListId, index)}
+                            partClassName={classNames?.suggestionItem}
+                            partStyle={styles?.suggestionItem}
                             index={index}
                             isActive={activeSuggestionIndex === index}
                             suggestion={item}
@@ -287,7 +305,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
             return null;
         }
         return (
-            <div className={`${prefixCls}-references`}>
+            <div className={clsx(`${prefixCls}-references`, classNames?.references)} style={styles?.references}>
                 {references.map((item) => {
                     if (renderReference) {
                         return <Fragment key={item.id}>{renderReference(item)}</Fragment>;
@@ -295,7 +313,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                     const { id, type, content, name, url } = item;
                     const signIconType = getContentType(getAttachmentType(item));
                     return (
-                        <div key={id} className={`${prefixCls}-reference`}>
+                        <div key={id} className={clsx(`${prefixCls}-reference`, classNames?.reference)} style={styles?.reference}>
                             <IconSendMsgStroked />
                             <button type="button" className={`${prefixCls}-reference-content`} onClick={() => foundation.handleReferenceClick(item)}>
                                 {type !== 'text' && (isImageFile(item.name, item.fileInstance?.type) ? <img className={`${prefixCls}-reference-img`} alt="" src={url} /> : <span className={`${prefixCls}-ref-icon ${prefixCls}-ref-icon-${signIconType} ${prefixCls}-reference-icon`}>{getIconByType(signIconType)}</span>)}
@@ -325,13 +343,13 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
             return null;
         }
         return (
-            <HorizontalScroller prefix={`${prefixCls}`}>
+            <HorizontalScroller className={clsx(`${prefixCls}-attachments`, classNames?.attachments)} style={styles?.attachments} prefix={prefixCls}>
                 {attachments.map((item: Attachment) => {
                     const realType = getAttachmentType(item);
                     const signIconType = getContentType(realType);
                     const { uid, name, url, size, percent } = item;
                     return (
-                        <div key={uid} className={`${prefixCls}-attachment`}>
+                        <div key={uid} className={clsx(`${prefixCls}-attachment`, classNames?.attachment)} style={styles?.attachment}>
                             {isImageFile(name, item.fileInstance?.type) ? <img className={`${prefixCls}-attachment-img`} alt="" src={url} /> : <span className={`${prefixCls}-attachment-icon ${prefixCls}-ref-icon ${prefixCls}-ref-icon-${signIconType}`}>{getIconByType(signIconType, 'large')}</span>}
                             <div className={`${prefixCls}-attachment-content`}>
                                 <div className={`${prefixCls}-attachment-content-name`}>{name}</div>
@@ -354,7 +372,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
             defaultNode: children ?? (
                 // Upload's add area yields its role and tab stop to this button; aria-disabled keeps it focusable so
                 // the upload tip reaches the keyboard
-                <button type="button" className={`${prefixCls}-footer-action-button ${prefixCls}-footer-action-upload`} aria-disabled={uploadProps?.disabled ? 'true' : undefined} aria-label={locale.upload}>
+                <button type="button" className={clsx(`${prefixCls}-footer-action-button`, `${prefixCls}-footer-action-upload`, classNames?.upload)} style={styles?.upload} aria-disabled={uploadProps?.disabled ? 'true' : undefined} aria-label={locale.upload}>
                     <IconPaperclip />
                 </button>
             ),
@@ -441,6 +459,8 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                 {topSlotPosition === 'bottom' && topSlot}
                 <RichTextInput
                     id={editorId}
+                    className={classNames?.editor}
+                    style={styles?.editor}
                     placeholder={placeholder}
                     activeDescendant={listbox?.activeId}
                     controls={listbox?.id}
@@ -457,9 +477,15 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                     onPaste={foundation.handlePaste}
                     onPasteEvent={onPaste}
                 />
-                <div className={clsx(`${prefixCls}-footer`, { [`${prefixCls}-footer-round`]: round })}>
+                <div className={clsx(`${prefixCls}-footer`, { [`${prefixCls}-footer-round`]: round }, classNames?.footer)} style={styles?.footer}>
                     {configureNode}
-                    {renderActionArea ? renderActionArea({ menuItem: actionNode, className: actionCls }) : <div className={actionCls}>{actionNode}</div>}
+                    {renderActionArea ? (
+                        renderActionArea({ menuItem: actionNode, className: actionCls })
+                    ) : (
+                        <div className={actionCls} style={styles?.actions}>
+                            {actionNode}
+                        </div>
+                    )}
                 </div>
             </div>
         </Popover>

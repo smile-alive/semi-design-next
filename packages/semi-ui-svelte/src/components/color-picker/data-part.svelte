@@ -11,6 +11,7 @@
     import { Select } from '../select/index.js';
     import { FORMAT_OPTIONS } from './constants.js';
     import type { DataPartProps } from './interface.js';
+    import { joinStyle } from './join-style.js';
 
     type Foundation = DataPartFoundation<DataPartBaseProps>;
     type Adapter = DataPartAdapter<DataPartBaseProps>;
@@ -43,14 +44,26 @@
 {/snippet}
 
 <div class={`${cssClasses.PREFIX}-dataPart`} style:width={`${props.width}px`}>
-    <div class={`${cssClasses.PREFIX}-colorDemoBlock`} style:background-color={`rgba(${props.currentColor.rgba.r},${props.currentColor.rgba.g},${props.currentColor.rgba.b},${props.currentColor.rgba.a})`} style:min-height="20px" style:min-width="20px"></div>
+    <div class={[`${cssClasses.PREFIX}-colorDemoBlock`, props.classNames?.preview]} style={joinStyle(`background-color: rgba(${props.currentColor.rgba.r},${props.currentColor.rgba.g},${props.currentColor.rgba.b},${props.currentColor.rgba.a}); min-height: 20px; min-width: 20px`, props.styles?.preview)}></div>
     <InputGroup class={`${cssClasses.PREFIX}-inputGroup`} size="small">
-        <Input aria-label={locale().locale.color} bind:value={() => states().inputValue, () => {}} class={`${cssClasses.PREFIX}-colorPickerInput`} onChange={foundation.handleInputValueChange} showClear={false} />
+        <Input aria-label={locale().locale.color} bind:value={() => states().inputValue, () => {}} class={[`${cssClasses.PREFIX}-colorPickerInput`, props.classNames?.input]} onChange={foundation.handleInputValueChange} showClear={false} style={props.styles?.input} />
         {#if props.alpha}
             <InputNumber aria-label={locale().locale.alpha} bind:value={() => Math.round(props.currentColor.rgba.a * 100), () => {}} class={`${cssClasses.PREFIX}-colorPickerInputNumber`} hideButtons max={100} min={0} onNumberChange={foundation.handleAlphaInputChange} showClear={false} suffix={percentSuffix} />
         {/if}
         <!-- a fixed list of three formats: global Select defaults must not make it search, create or multiple, nor add a clear button -->
-        <Select allowCreate={false} aria-label={locale().locale.format} bind:value={() => states().format, () => {}} class={`${cssClasses.PREFIX}-formatSelect`} filter={false} multiple={false} onSelect={handleSelectFormat} optionList={FORMAT_OPTIONS} showClear={false} size="small" />
+        <Select
+            allowCreate={false}
+            aria-label={locale().locale.format}
+            bind:value={() => states().format, () => {}}
+            class={[`${cssClasses.PREFIX}-formatSelect`, props.classNames?.format]}
+            filter={false}
+            multiple={false}
+            onSelect={handleSelectFormat}
+            optionList={FORMAT_OPTIONS}
+            showClear={false}
+            size="small"
+            style={props.styles?.format}
+        />
     </InputGroup>
     {#if props.eyeDropper}
         <Button aria-label={locale().locale.eyeDropper} icon={eyeDropperIcon} size="small" theme="light" type="tertiary" onclick={foundation.handlePickValueWithStraw} />

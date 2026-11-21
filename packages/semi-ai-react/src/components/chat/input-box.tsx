@@ -35,7 +35,7 @@ class TextAreaHolder {
 }
 
 function InputBox(props: InputBoxProps) {
-    const { ref, uploadProps, uploadRef, uploadTipProps, clickUpload, dragUpload, pasteUpload, placeholder, sendHotKey, onClearContext, renderInputArea, onSend, style, className, showClearContext, disableSend, canSend } = props;
+    const { ref, uploadProps, uploadRef, uploadTipProps, clickUpload, dragUpload, pasteUpload, placeholder, sendHotKey, onClearContext, renderInputArea, onSend, styles, classNames, showClearContext, disableSend, canSend } = props;
 
     const { locale } = useLocale('Chat');
 
@@ -86,7 +86,8 @@ function InputBox(props: InputBoxProps) {
         <div className={`${PREFIX_INPUT_BOX}-inputArea`}>
             <InternalTextArea
                 ref={setTextArea}
-                className={`${PREFIX_INPUT_BOX}-textarea`}
+                className={clsx(`${PREFIX_INPUT_BOX}-textarea`, classNames?.input)}
+                style={styles?.input}
                 aria-label={locale.input}
                 placeholder={placeholder}
                 value={content}
@@ -108,11 +109,20 @@ function InputBox(props: InputBoxProps) {
     const clearNode = <Button className={`${PREFIX_INPUT_BOX}-clearButton`} aria-label={locale.clear} theme="borderless" icon={<IconDeleteStroked />} onClick={onClearContext} />;
 
     const sendNode = (
-        <Button type="primary" className={`${PREFIX_INPUT_BOX}-sendButton`} aria-label={locale.send} disabled={InputBoxFoundation.getDisableSend(content, attachment, disableSend, canSend)} theme="solid" icon={<IconArrowUp className={`${PREFIX_INPUT_BOX}-sendButton-icon`} size="large" />} onClick={foundation.onSend} />
+        <Button
+            type="primary"
+            className={clsx(`${PREFIX_INPUT_BOX}-sendButton`, classNames?.send)}
+            style={styles?.send}
+            aria-label={locale.send}
+            disabled={InputBoxFoundation.getDisableSend(content, attachment, disableSend, canSend)}
+            theme="solid"
+            icon={<IconArrowUp className={`${PREFIX_INPUT_BOX}-sendButton-icon`} size="large" />}
+            onClick={foundation.onSend}
+        />
     );
 
     const nodes = (
-        <div className={clsx(PREFIX_INPUT_BOX, className)} style={style}>
+        <div className={clsx(PREFIX_INPUT_BOX, classNames?.inputBox)} style={styles?.inputBox}>
             <div className={`${PREFIX_INPUT_BOX}-inner`} onClick={onClick}>
                 {showClearContext && clearNode}
                 <div className={`${PREFIX_INPUT_BOX}-container`}>

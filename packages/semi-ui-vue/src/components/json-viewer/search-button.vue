@@ -50,7 +50,7 @@
 <template>
     <DragMove :constrainer="view.limitSearchButtonBounds ? 'parent' : undefined" @mouseMove="onDragMove" @mouseUp="onDragEnd" @touchCancel="onDragEnd" @touchEnd="onDragEnd" @touchMove="onDragMove">
         <div :style="{ position: 'absolute', top: 0, left: toCssLength(view.width) }">
-            <Button v-if="!view.showSearchBar" ref="trigger" :aria-label="locale.locale.search" :class="`${prefix}-search-bar-trigger`" style="position: absolute; top: 20px; right: 20px" @click="onTriggerClick">
+            <Button v-if="!view.showSearchBar" ref="trigger" :aria-label="locale.locale.search" :class="[`${prefix}-search-bar-trigger`, view.classNames?.searchTrigger]" :style="['position: absolute; top: 20px; right: 20px', view.styles?.searchTrigger]" @click="onTriggerClick">
                 <template #icon>
                     <IconSearch />
                 </template>

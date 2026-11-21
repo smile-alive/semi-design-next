@@ -127,6 +127,10 @@
     "skeleton-paragraph": {
         "source": "packages/semi-ui-react/src/components/skeleton/item.tsx#Paragraph",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `row`，与组件自带的类名合并；`row` 是段落的每一行 `li`。",
+                "en-US": "Class names of the inner parts, keyed by `row`; merged with the built-in classes. `row` is each `li` of the paragraph."
+            },
             "ref": {
                 "zh-CN": "占位段落根元素 `ul` 的引用。",
                 "en-US": "Reference to the root `ul` element of the paragraph placeholder."
@@ -134,6 +138,10 @@
             "rows": {
                 "zh-CN": "占位段落的行数，每行渲染为一个 `li`。",
                 "en-US": "Number of rows in the placeholder paragraph, each rendered as an `li`."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             }
         }
     }

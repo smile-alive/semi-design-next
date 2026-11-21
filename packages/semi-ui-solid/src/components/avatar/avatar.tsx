@@ -36,7 +36,7 @@ const slotText = (text: AvatarSlotText) => (typeof text === 'function' ? text() 
 
 function AvatarView(rawProps: AvatarProps) {
     const props = useDefaultProps('Avatar', rawProps, defaultProps);
-    const [local, attrs] = splitProps(props, ['children', 'color', 'shape', 'size', 'hoverMask', 'src', 'srcSet', 'alt', 'gap', 'onError', 'onClick', 'onMouseEnter', 'onMouseLeave', 'imgAttr', 'bottomSlot', 'topSlot', 'border', 'contentMotion', 'class', 'style', 'ref']);
+    const [local, attrs] = splitProps(props, ['children', 'color', 'shape', 'size', 'hoverMask', 'src', 'srcSet', 'alt', 'gap', 'onError', 'onClick', 'onMouseEnter', 'onMouseLeave', 'imgAttr', 'bottomSlot', 'topSlot', 'border', 'contentMotion', 'classNames', 'styles', 'class', 'style', 'ref']);
 
     // A clickable avatar has its own focus target, so what Tooltip injects (tabindex, aria-*) belongs there; on the
     // root it would add a second Tab stop
@@ -115,7 +115,7 @@ function AvatarView(rawProps: AvatarProps) {
 
     const focusClass = () => clsx({ [`${prefixCls}-no-focus-visible`]: clickable() });
 
-    const customStyle = () => mergeStyles(sizeStyle(size()), local.style);
+    const customStyle = () => mergeStyles(sizeStyle(size()), group.moreItem?.().style, local.style);
 
     const handleKeyDown = (event: KeyboardEvent & { currentTarget: HTMLElement }) => {
         if (event.key === 'Enter' || event.key === ' ') {
@@ -150,7 +150,8 @@ function AvatarView(rawProps: AvatarProps) {
                     src={local.src}
                     srcset={local.srcSet}
                     {...local.imgAttr}
-                    class={clsx(local.imgAttr?.class, focusClass())}
+                    class={clsx(local.imgAttr?.class, focusClass(), local.classNames?.image)}
+                    style={mergeStyles(local.imgAttr?.style, local.styles?.image)}
                     onError={(event) => {
                         callHandler(local.imgAttr?.onError, event);
                         foundation.handleImgLoadError(event);
@@ -167,7 +168,7 @@ function AvatarView(rawProps: AvatarProps) {
                     class={`${prefixCls}-content`}
                     style={{ transform: `scale(${state().scale})` }}
                 >
-                    <span class={clsx(`${prefixCls}-label`, focusClass())} aria-label={local.alt ?? text()} role="img" {...focusProps()} x-semi-prop="children">
+                    <span class={clsx(`${prefixCls}-label`, focusClass(), local.classNames?.label)} style={local.styles?.label} aria-label={local.alt ?? text()} role="img" {...focusProps()} x-semi-prop="children">
                         {text()}
                     </span>
                 </span>
@@ -205,7 +206,7 @@ function AvatarView(rawProps: AvatarProps) {
                     const hoverMask = children(() => local.hoverMask);
                     return (
                         <Show when={hasContent(hoverMask())}>
-                            <div class={`${prefixCls}-hover`} x-semi-prop="hoverContent">
+                            <div class={clsx(`${prefixCls}-hover`, local.classNames?.mask)} style={local.styles?.mask} x-semi-prop="hoverContent">
                                 {hoverMask()}
                             </div>
                         </Show>
@@ -218,10 +219,10 @@ function AvatarView(rawProps: AvatarProps) {
     const bordered = () => (
         <Show when={local.border} fallback={avatar()}>
             {(border) => {
-                const borderClass = () => clsx(`${prefixCls}-additionalBorder`, `${prefixCls}-additionalBorder-${size()}`, { [`${prefixCls}-${shape()}`]: shape() });
-                const borderStyle = (): JSX.CSSProperties => {
+                const borderClass = () => clsx(`${prefixCls}-additionalBorder`, `${prefixCls}-additionalBorder-${size()}`, { [`${prefixCls}-${shape()}`]: shape() }, local.classNames?.border);
+                const borderStyle = () => {
                     const value = border();
-                    return typeof value === 'object' ? { 'border-color': value.color } : {};
+                    return mergeStyles(typeof value === 'object' ? { 'border-color': value.color } : {}, local.styles?.border);
                 };
                 return (
                     // the caller's style stays on the wrapper; applying it here would double margins and padding

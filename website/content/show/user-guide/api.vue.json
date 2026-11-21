@@ -2,6 +2,10 @@
     "user-guide": {
         "source": "packages/semi-ui-vue/src/components/user-guide/user-guide.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `cover`、`body`、`title`、`description`、`progress`、`indicators`、`footer`，与组件自带的类名合并；`progress` 是形如 1/3 的序号文字，`indicators` 是封面下方的圆点指示器容器，只在 modal 模式且步骤有封面时存在。popup 模式的 `body` 还包住 `footer`，modal 模式的 `footer` 在 `body` 之外。",
+                "en-US": "Class names of the inner parts, keyed by `cover`, `body`, `title`, `description`, `progress`, `indicators` and `footer`; merged with the built-in classes. `progress` is the step counter text such as 1/3. `indicators` is the dot indicator container below the cover and exists only in modal mode when the step has a cover. In popup mode `body` also wraps `footer`; in modal mode `footer` sits outside `body`."
+            },
             "current": {
                 "zh-CN": "当前步骤的索引，对应 v-model:current；不传时由组件自己保存，从 0 开始。",
                 "en-US": "Index of the current step, for v-model:current. Without it the component keeps the index itself, starting at 0."
@@ -49,6 +53,10 @@
             "steps": {
                 "zh-CN": "引导步骤的数据；标题、描述和封面的自定义内容使用 title、description、cover 插槽。",
                 "en-US": "Data of the guide steps. Use the title, description and cover slots for custom content."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "theme": {
                 "zh-CN": "popup 模式的主题，可被步骤的 theme 覆盖。",

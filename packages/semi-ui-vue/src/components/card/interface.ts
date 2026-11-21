@@ -1,5 +1,5 @@
 import type { ClassValue, StyleValue, VNode } from 'vue';
-import type { CardPart } from '@fibrae/semi-foundation/components/card/constants';
+import type { CardMetaPart, CardPart } from '@fibrae/semi-foundation/components/card/constants';
 import type { SpaceProps } from '../space/interface';
 
 export type Shadows = 'hover' | 'always';
@@ -29,6 +29,8 @@ export interface CardSlots {
 }
 
 export interface MetaProps {
+    classNames?: Partial<Record<CardMetaPart, ClassValue>>;
+    styles?: Partial<Record<CardMetaPart, StyleValue>>;
     /** Shorthand for the `title` slot, which wins when both are given */
     title?: string;
 }

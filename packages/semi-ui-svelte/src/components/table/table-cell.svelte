@@ -26,13 +26,15 @@
         expandIconArgs?: { isNested: boolean; groupKey?: string | number };
         hovered?: boolean;
         isSection?: boolean;
+        /** The cell belongs to a data row, so `classNames.cell` and `styles.cell` apply */
+        dataCell?: boolean;
         width?: number;
         tag?: string;
         cellAttrs?: TableCellAttrs;
         children?: Snippet;
     }
 
-    let { column, record, index, fixedLeft, fixedRight, lastFixedLeft = false, firstFixedRight = false, columnsToEnd, indent, showExpandIcon = false, expandIconArgs, hovered = false, isSection = false, width, tag = 'td', cellAttrs, children }: TableCellProps = $props();
+    let { column, record, index, fixedLeft, fixedRight, lastFixedLeft = false, firstFixedRight = false, columnsToEnd, indent, showExpandIcon = false, expandIconArgs, hovered = false, isSection = false, dataCell = false, width, tag = 'td', cellAttrs, children }: TableCellProps = $props();
 
     const table = getTableContext('Table cell');
 
@@ -67,6 +69,7 @@
             class: [
                 column.class,
                 `${table.prefixCls}-row-cell`,
+                dataCell && table.classNames?.cell,
                 customClass,
                 {
                     [`${table.prefixCls}-cell-fixed-left`]: left,
@@ -84,7 +87,7 @@
             // virtualized body
             role: 'cell',
             title: shouldShowEllipsisTitle(column.ellipsis!) && inner === 'default' && !table.parts.cell && typeof text === 'string' ? text : undefined,
-            style: joinStyles(position, width != null && `width: ${toCssLength(width)}`, customStyle as string | undefined, align),
+            style: joinStyles(position, width != null && `width: ${toCssLength(width)}`, dataCell && table.styles?.cell, customStyle as string | undefined, align),
         };
     });
 </script>

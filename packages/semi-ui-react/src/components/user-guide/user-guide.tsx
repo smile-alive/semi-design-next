@@ -1,7 +1,7 @@
 import type React from 'react';
 import { type ReactNode, useId, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
+import { cssClasses, numbers, type UserGuidePart } from '@fibrae/semi-foundation/components/user-guide/constants';
 import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
 import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
 import { type BaseProps, useDefaultProps, useFoundation } from '../../base/index';
@@ -20,6 +20,7 @@ const modalPrefixCls = cssClasses.PREFIX_MODAL;
 
 export interface UserGuideProps extends Omit<BaseProps, 'children'> {
     className?: string;
+    classNames?: Partial<Record<UserGuidePart, string>>;
     current?: number;
     finishText?: string;
     mask?: boolean;
@@ -37,6 +38,7 @@ export interface UserGuideProps extends Omit<BaseProps, 'children'> {
     spotlightPadding?: number;
     steps: StepItem[];
     style?: React.CSSProperties;
+    styles?: Partial<Record<UserGuidePart, React.CSSProperties>>;
     theme?: 'default' | 'primary';
     visible?: boolean;
     getPopupContainer?: () => HTMLElement;
@@ -91,7 +93,7 @@ function withBuiltIn(custom: ButtonProps | undefined, handle: () => void, builtI
 
 export default function UserGuide(rawProps: UserGuideProps) {
     const props = useDefaultProps('UserGuide', rawProps, defaultProps);
-    const { className, finishText, mask, mode, nextButtonProps, position, prevButtonProps, showPrevButton, showSkipButton, steps, style, theme, visible, zIndex, getPopupContainer } = props;
+    const { className, classNames, finishText, mask, mode, nextButtonProps, position, prevButtonProps, showPrevButton, showSkipButton, steps, style, styles, theme, visible, zIndex, getPopupContainer } = props;
 
     const { locale } = useLocale('UserGuide');
 
@@ -147,8 +149,10 @@ export default function UserGuide(rawProps: UserGuideProps) {
             >
                 {cover && (
                     <>
-                        <div className={`${modalPrefixCls}-cover`}>{cover}</div>
-                        <div className={`${modalPrefixCls}-indicator`} aria-hidden="true">
+                        <div className={clsx(`${modalPrefixCls}-cover`, classNames?.cover)} style={styles?.cover}>
+                            {cover}
+                        </div>
+                        <div className={clsx(`${modalPrefixCls}-indicator`, classNames?.indicators)} style={styles?.indicators} aria-hidden="true">
                             {steps.map((_, i) => (
                                 <span
                                     key={i}
@@ -159,22 +163,26 @@ export default function UserGuide(rawProps: UserGuideProps) {
                                 />
                             ))}
                         </div>
-                        <span className={`${modalPrefixCls}-progress`}>
+                        <span className={clsx(`${modalPrefixCls}-progress`, classNames?.progress)} style={styles?.progress}>
                             {current + 1}/{steps.length}
                         </span>
                     </>
                 )}
                 {(title || description) && (
-                    <div className={`${modalPrefixCls}-body`}>
+                    <div className={clsx(`${modalPrefixCls}-body`, classNames?.body)} style={styles?.body}>
                         {title && (
-                            <div id={titleId} className={`${modalPrefixCls}-body-title`}>
+                            <div id={titleId} className={clsx(`${modalPrefixCls}-body-title`, classNames?.title)} style={styles?.title}>
                                 {title}
                             </div>
                         )}
-                        {description && <div className={`${modalPrefixCls}-body-description`}>{description}</div>}
+                        {description && (
+                            <div className={clsx(`${modalPrefixCls}-body-description`, classNames?.description)} style={styles?.description}>
+                                {description}
+                            </div>
+                        )}
                     </div>
                 )}
-                <div className={`${modalPrefixCls}-footer`}>
+                <div className={clsx(`${modalPrefixCls}-footer`, classNames?.footer)} style={styles?.footer}>
                     {showSkipButton && !isLast && (
                         <Button type="tertiary" onClick={foundation.handleSkip}>
                             {locale.skip}
@@ -214,17 +222,25 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     const content = (
         <div className={clsx(popupPrefixCls, { [`${popupPrefixCls}-primary`]: isPrimaryTheme })}>
-            {cover && <div className={`${popupPrefixCls}-cover`}>{cover}</div>}
-            <div className={`${popupPrefixCls}-body`}>
+            {cover && (
+                <div className={clsx(`${popupPrefixCls}-cover`, classNames?.cover)} style={styles?.cover}>
+                    {cover}
+                </div>
+            )}
+            <div className={clsx(`${popupPrefixCls}-body`, classNames?.body)} style={styles?.body}>
                 {title && (
-                    <div id={titleId} className={`${popupPrefixCls}-title`}>
+                    <div id={titleId} className={clsx(`${popupPrefixCls}-title`, classNames?.title)} style={styles?.title}>
                         {title}
                     </div>
                 )}
-                {description && <div className={`${popupPrefixCls}-description`}>{description}</div>}
-                <div className={`${popupPrefixCls}-footer`}>
+                {description && (
+                    <div className={clsx(`${popupPrefixCls}-description`, classNames?.description)} style={styles?.description}>
+                        {description}
+                    </div>
+                )}
+                <div className={clsx(`${popupPrefixCls}-footer`, classNames?.footer)} style={styles?.footer}>
                     {steps.length > 1 && (
-                        <div className={`${popupPrefixCls}-indicator`}>
+                        <div className={clsx(`${popupPrefixCls}-indicator`, classNames?.progress)} style={styles?.progress}>
                             {current + 1}/{steps.length}
                         </div>
                     )}

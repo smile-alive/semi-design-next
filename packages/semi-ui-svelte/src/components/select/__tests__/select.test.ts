@@ -313,12 +313,66 @@ describe('Svelte Select 搜索与新建', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        setup({ classNames: { dropdown: 'ddc' }, styles: { dropdown: 'color: red' } });
-        await clickTrigger();
-        const dropdown = getElement('.ddc');
-        expect(dropdown).toHaveClass(`${prefixCls}-option-list-wrapper`);
-        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        expect(dropdown).toContainElement(screen.getByRole('listbox'));
+        const parts = ['prefix', 'suffix', 'content', 'placeholder', 'input', 'search', 'tag', 'clear', 'arrow', 'dropdown', 'list', 'empty', 'groupLabel', 'item', 'itemIcon', 'itemContent'] as const;
+        const partProps = {
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+        };
+        const expectPart = (selector: string, part: (typeof parts)[number]) => {
+            const el = document.querySelector(selector);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        };
+
+        const first = setup(
+            { ...partProps, multiple: true, filter: true, showClear: true, defaultOpen: true, prefix: createRawSnippet(() => ({ render: () => '<span>pre</span>' })), suffix: createRawSnippet(() => ({ render: () => '<span>suf</span>' })) },
+            { value: ['abc'], optionList: [{ value: 'abc', label: 'Abc', group: { key: 'g', label: 'g' } }] }
+        );
+        await settle();
+        expectPart(`.${prefixCls}-prefix`, 'prefix');
+        expectPart(`.${prefixCls}-suffix`, 'suffix');
+        expectPart(`.${prefixCls}-selection`, 'content');
+        expectPart(`.${prefixCls}-input`, 'input');
+        expectPart('.semi-tag', 'tag');
+        expectPart(`.${prefixCls}-clear`, 'clear');
+        expectPart(`.${prefixCls}-arrow`, 'arrow');
+        expectPart(`.${prefixCls}-option-list-wrapper`, 'dropdown');
+        expectPart(`.${prefixCls}-option-list`, 'list');
+        expectPart(`.${prefixCls}-group`, 'groupLabel');
+        expectPart(`.${prefixCls}-option`, 'item');
+        expectPart(`.${prefixCls}-option-icon`, 'itemIcon');
+        expectPart(`.${prefixCls}-option-text`, 'itemContent');
+        first.unmount();
+
+        setup({ ...partProps, filter: true, searchPosition: 'dropdown', defaultOpen: true, placeholder: 'p' }, { optionList: [] });
+        await settle();
+        expectPart(`.${prefixCls}-selection-placeholder`, 'placeholder');
+        expectPart(`.${prefixCls}-dropdown-search-wrapper`, 'search');
+        expectPart(`.${prefixCls}-option-empty`, 'empty');
+        expect(document.querySelector(`.${prefixCls}-option-empty`)).not.toHaveClass('my-item');
+    });
+
+    it('Select 的 item 系列键先于选项自己的 classNames 与 styles 生效', async () => {
+        setup(
+            {
+                defaultOpen: true,
+                classNames: { item: 'p-item', itemIcon: 'p-icon', itemContent: 'p-content' },
+                styles: { item: 'order: 1; color: red', itemIcon: 'order: 1', itemContent: 'order: 1' },
+            },
+            { optionList: [{ value: 'abc', label: 'Abc', class: 'own-item', style: 'order: 2', classNames: { icon: 'own-icon', content: 'own-content' }, styles: { icon: 'order: 2', content: 'order: 2' } }] }
+        );
+        await settle();
+        const option = getOptions()[0];
+        expect(option.className).toMatch(/p-item.*own-item/);
+        expect(option).toHaveStyle({ order: '2', color: 'rgb(255, 0, 0)' });
+        for (const [selector, name] of [
+            [`.${prefixCls}-option-icon`, 'icon'],
+            [`.${prefixCls}-option-text`, 'content'],
+        ]) {
+            const el = defined(option.querySelector(selector));
+            expect(el.className).toMatch(new RegExp(`p-${name}.*own-${name}`));
+            expect(el).toHaveStyle({ order: '2' });
+        }
     });
 
     it('searchPosition 为 dropdown 时搜索框在下拉中，触发器仍是 combobox', async () => {

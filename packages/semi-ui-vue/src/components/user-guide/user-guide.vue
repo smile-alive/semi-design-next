@@ -22,6 +22,7 @@
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<UserGuideProps>(), {
+        classNames: semiGlobalDefault('UserGuide', 'classNames'),
         current: semiGlobalDefault('UserGuide', 'current'),
         finishText: semiGlobalDefault('UserGuide', 'finishText'),
         // Function-typed props cannot take a factory default; the global default is read in getContainer.
@@ -35,6 +36,7 @@
         showSkipButton: () => semiDefault('UserGuide', 'showSkipButton', true),
         spotlightPadding: semiGlobalDefault('UserGuide', 'spotlightPadding'),
         steps: () => semiDefault('UserGuide', 'steps', []),
+        styles: semiGlobalDefault('UserGuide', 'styles'),
         theme: () => semiDefault('UserGuide', 'theme', 'default'),
         visible: () => semiDefault('UserGuide', 'visible', false),
         zIndex: () => semiDefault('UserGuide', 'zIndex', numbers.DEFAULT_Z_INDEX),
@@ -157,21 +159,21 @@
                 <template #header />
                 <template #footer />
                 <template v-if="view.cover.length">
-                    <div :class="`${modalPrefix}-cover`"><StepNodes :nodes="view.cover" /></div>
-                    <div aria-hidden="true" :class="`${modalPrefix}-indicator`">
+                    <div :class="[`${modalPrefix}-cover`, props.classNames?.cover]" :style="props.styles?.cover"><StepNodes :nodes="view.cover" /></div>
+                    <div aria-hidden="true" :class="[`${modalPrefix}-indicator`, props.classNames?.indicators]" :style="props.styles?.indicators">
                         <span v-for="(_, i) in props.steps" :key="i" :class="[`${modalPrefix}-indicator-item`, { [`${modalPrefix}-indicator-item-active`]: i === current }]" :data-index="i" />
                     </div>
-                    <span :class="`${modalPrefix}-progress`">{{ current + 1 }}/{{ props.steps.length }}</span>
+                    <span :class="[`${modalPrefix}-progress`, props.classNames?.progress]" :style="props.styles?.progress">{{ current + 1 }}/{{ props.steps.length }}</span>
                 </template>
-                <div v-if="view.hasTitle || view.hasDescription" :class="`${modalPrefix}-body`">
-                    <div v-if="view.hasTitle" :id="titleId" :class="`${modalPrefix}-body-title`">
+                <div v-if="view.hasTitle || view.hasDescription" :class="[`${modalPrefix}-body`, props.classNames?.body]" :style="props.styles?.body">
+                    <div v-if="view.hasTitle" :id="titleId" :class="[`${modalPrefix}-body-title`, props.classNames?.title]" :style="props.styles?.title">
                         <StepNodes :fallback="view.item.title" :nodes="view.title" />
                     </div>
-                    <div v-if="view.hasDescription" :class="`${modalPrefix}-body-description`">
+                    <div v-if="view.hasDescription" :class="[`${modalPrefix}-body-description`, props.classNames?.description]" :style="props.styles?.description">
                         <StepNodes :fallback="view.item.description" :nodes="view.description" />
                     </div>
                 </div>
-                <div :class="`${modalPrefix}-footer`">
+                <div :class="[`${modalPrefix}-footer`, props.classNames?.footer]" :style="props.styles?.footer">
                     <Button v-if="props.showSkipButton && !isLast" type="tertiary" @click="foundation.handleSkip">
                         {{ locale.locale.skip }}
                     </Button>
@@ -207,18 +209,18 @@
                     <div :style="anchorStyle(state.spotlightRect)" tabindex="-1" />
                     <template #content>
                         <div :class="[popupPrefix, { [`${popupPrefix}-primary`]: primary }]">
-                            <div v-if="view.cover.length" :class="`${popupPrefix}-cover`">
+                            <div v-if="view.cover.length" :class="[`${popupPrefix}-cover`, props.classNames?.cover]" :style="props.styles?.cover">
                                 <StepNodes :nodes="view.cover" />
                             </div>
-                            <div :class="`${popupPrefix}-body`">
-                                <div v-if="view.hasTitle" :id="titleId" :class="`${popupPrefix}-title`">
+                            <div :class="[`${popupPrefix}-body`, props.classNames?.body]" :style="props.styles?.body">
+                                <div v-if="view.hasTitle" :id="titleId" :class="[`${popupPrefix}-title`, props.classNames?.title]" :style="props.styles?.title">
                                     <StepNodes :fallback="view.item.title" :nodes="view.title" />
                                 </div>
-                                <div v-if="view.hasDescription" :class="`${popupPrefix}-description`">
+                                <div v-if="view.hasDescription" :class="[`${popupPrefix}-description`, props.classNames?.description]" :style="props.styles?.description">
                                     <StepNodes :fallback="view.item.description" :nodes="view.description" />
                                 </div>
-                                <div :class="`${popupPrefix}-footer`">
-                                    <div v-if="props.steps.length > 1" :class="`${popupPrefix}-indicator`">{{ current + 1 }}/{{ props.steps.length }}</div>
+                                <div :class="[`${popupPrefix}-footer`, props.classNames?.footer]" :style="props.styles?.footer">
+                                    <div v-if="props.steps.length > 1" :class="[`${popupPrefix}-indicator`, props.classNames?.progress]" :style="props.styles?.progress">{{ current + 1 }}/{{ props.steps.length }}</div>
                                     <div :class="`${popupPrefix}-buttons`">
                                         <Button v-if="props.showSkipButton && !isLast" v-bind="secondaryBind()" @click="foundation.handleSkip">
                                             {{ locale.locale.skip }}

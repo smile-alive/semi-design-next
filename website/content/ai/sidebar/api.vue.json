@@ -2,6 +2,14 @@
     "container": {
         "source": "packages/semi-ai-vue/src/components/sidebar/container/container.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 header、title、close、content，与组件自带的类名合并，值的写法同 class。",
+                "en-US": "Class names of the inner parts, keyed by header, title, close and content; merged with the built-in classes. Values take the same forms as class."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "visible": {
                 "zh-CN": "是否显示容器，配合 v-model:visible 使用。",
                 "en-US": "Whether the container is shown; bind it with v-model:visible."
@@ -74,6 +82,14 @@
     "mcp-configure": {
         "source": "packages/semi-ai-vue/src/components/sidebar/mcp-configure/mcp-configure.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 header、title、close、content、toolbar、count、search、list、item、itemIcon、itemTitle、itemDescription、itemAction，与组件自带的类名合并，值的写法同 class。前四个键作用于外层容器，toolbar 是模式切换与已启用数量所在的行，item* 作用于每个 MCP 条目。",
+                "en-US": "Class names of the inner parts, keyed by header, title, close, content, toolbar, count, search, list, item, itemIcon, itemTitle, itemDescription and itemAction; merged with the built-in classes. Values take the same forms as class. The first four apply to the outer container, toolbar is the row with the mode switch and the enabled count, and the item* keys apply to every MCP entry."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "visible": {
                 "zh-CN": "是否显示，配合 v-model:visible 使用。",
                 "en-US": "Whether it is shown; bind it with v-model:visible."
@@ -201,6 +217,14 @@
     "annotation": {
         "source": "packages/semi-ai-vue/src/components/sidebar/annotation/annotation.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 header、title、close、content、groupHeader、groupContent、item、itemTitle、itemDetail、itemFooter，与组件自带的类名合并，值的写法同 class。前四个键作用于外层容器，group* 作用于每组来源，item* 作用于每条来源卡片。",
+                "en-US": "Class names of the inner parts, keyed by header, title, close, content, groupHeader, groupContent, item, itemTitle, itemDetail and itemFooter; merged with the built-in classes. Values take the same forms as class. The first four apply to the outer container, the group* keys to every source group, and the item* keys to every source card."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "visible": {
                 "zh-CN": "是否显示，配合 v-model:visible 使用。",
                 "en-US": "Whether it is shown; bind it with v-model:visible."
@@ -300,6 +324,14 @@
     "annotation-content": {
         "source": "packages/semi-ai-vue/src/components/sidebar/annotation/annotation-content.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 groupHeader、groupContent、item、itemTitle、itemDetail、itemFooter，与组件自带的类名合并，值的写法同 class。",
+                "en-US": "Class names of the inner parts, keyed by groupHeader, groupContent, item, itemTitle, itemDetail and itemFooter; merged with the built-in classes. Values take the same forms as class."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "activeKey": {
                 "zh-CN": "当前展开的分组 key，配合 v-model:activeKey 使用。",
                 "en-US": "Keys of the expanded groups; bind it with v-model:activeKey."
@@ -338,6 +370,14 @@
     "sidebar": {
         "source": "packages/semi-ai-vue/src/components/sidebar/sidebar.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 header、title、close、copy、content、options、option、mainContent，与组件自带的类名合并，值的写法同 class。详情视图下 header、title、close 落在详情头部，close 是返回主视图的按钮，copy 是复制内容的按钮。",
+                "en-US": "Class names of the inner parts, keyed by header, title, close, copy, content, options, option and mainContent; merged with the built-in classes. Values take the same forms as class. In detail modes header, title and close apply to the detail header, where close is the button that goes back to the main view and copy is the copy button."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "visible": {
                 "zh-CN": "是否显示，配合 v-model:visible 使用。",
                 "en-US": "Whether it is shown; bind it with v-model:visible."
@@ -477,6 +517,14 @@
     "code-content": {
         "source": "packages/semi-ai-vue/src/components/sidebar/code-content.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 itemHeader、itemExpand，作用于每个代码面板，与组件自带的类名合并，值的写法同 class。",
+                "en-US": "Class names of the inner parts, keyed by itemHeader and itemExpand; they apply to every code panel and merge with the built-in classes. Values take the same forms as class."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "activeKey": {
                 "zh-CN": "当前展开的代码面板 key，配合 v-model:activeKey 使用。",
                 "en-US": "Keys of the expanded code panels; bind it with v-model:activeKey."
@@ -553,6 +601,14 @@
     "file-content": {
         "source": "packages/semi-ai-vue/src/components/sidebar/file-content.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 itemHeader、itemExpand，作用于每个文件面板，与组件自带的类名合并，值的写法同 class。",
+                "en-US": "Class names of the inner parts, keyed by itemHeader and itemExpand; they apply to every file panel and merge with the built-in classes. Values take the same forms as class."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "activeKey": {
                 "zh-CN": "当前展开的文件面板 key，配合 v-model:activeKey 使用。",
                 "en-US": "Keys of the expanded file panels; bind it with v-model:activeKey."
@@ -582,6 +638,14 @@
     "file-item": {
         "source": "packages/semi-ai-vue/src/components/sidebar/file-item.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 menuBar、editor，与组件自带的类名合并，值的写法同 class。menuBar 仅在可编辑时渲染。",
+                "en-US": "Class names of the inner parts, keyed by menuBar and editor; merged with the built-in classes. Values take the same forms as class. menuBar is rendered only when the item is editable."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames."
+            },
             "name": {
                 "zh-CN": "文件名称，作为编辑区域的可访问名称，挂载后变化会同步到编辑器。",
                 "en-US": "File name, used as the accessible name of the editing area; later changes are synced to the editor."

@@ -201,6 +201,8 @@
             disabled: option.disabled,
             focused: index === states().focusIndex,
             label: option.label ?? option.value,
+            parentClassNames: classNames,
+            parentStyles: styles,
             prefixCls: cssClasses.PREFIX_OPTION,
             showTick: false,
             style: option.style,
@@ -269,6 +271,7 @@
                 aria-haspopup="listbox"
                 {autofocus}
                 bind:value={() => shownValue, () => undefined}
+                classNames={{ input: classNames?.input, prefix: classNames?.prefix, suffix: classNames?.suffix, clear: classNames?.clear }}
                 {clearIcon}
                 {disabled}
                 id={inputId}
@@ -283,6 +286,7 @@
                 role="combobox"
                 {showClear}
                 {size}
+                styles={{ input: styles?.input, prefix: styles?.prefix, suffix: styles?.suffix, clear: styles?.clear }}
                 {suffix}
                 {validateStatus}
             />

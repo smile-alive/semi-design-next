@@ -45,9 +45,9 @@
     <DialogueAction {isLastChat} {message} />
 {/snippet}
 
-<div class={[`${prefix}-wrapper`, { [`${prefix}-wrapper-selected`]: view.selecting && isSelected }]}>
+<div class={[`${prefix}-wrapper`, { [`${prefix}-wrapper-selected`]: view.selecting && isSelected }, view.classNames?.item]} style={view.styles?.item}>
     {#if view.selecting}
-        <div class="{prefix}-checkbox">
+        <div class={[`${prefix}-checkbox`, view.classNames?.itemCheckbox]} style={view.styles?.itemCheckbox}>
             <Checkbox aria-label={locale().locale.selectMessage} checked={isSelected} onChange={(event) => selectChange(event.target.checked, message.id)} />
         </div>
     {/if}

@@ -17,7 +17,7 @@ function pad(d: number) {
 }
 
 export default function DayCol(props: DayColProps) {
-    const { events, scrollHeight, minEventHeight = Number.MIN_SAFE_INTEGER, displayValue, isWeekend, dateGridRender, handleClick, showCurrTime = true } = props;
+    const { events, scrollHeight, minEventHeight = Number.MIN_SAFE_INTEGER, displayValue, isWeekend, dateGridRender, handleClick, showCurrTime = true, classNames, styles } = props;
 
     const [, state] = useFoundation<Foundation, Adapter, DayColProps, CalendarBaseState>(
         CalendarFoundation,
@@ -34,12 +34,12 @@ export default function DayCol(props: DayColProps) {
     });
 
     return (
-        <div className={prefixCls} role="cell">
+        <div className={clsx(prefixCls, classNames?.day)} style={styles?.day} role="cell">
             <div className={`${prefixCls}-content`}>
                 {showCurrTime && state.showCurrTime && (
                     <Fragment key={currPos}>
-                        <div className={`${prefixCls}-curr-circle`} style={{ top: currTop }} />
-                        <div className={`${prefixCls}-curr-line`} style={{ top: currTop }} />
+                        <div className={clsx(`${prefixCls}-curr-circle`, classNames?.currentTimeDot)} style={{ top: currTop, ...styles?.currentTimeDot }} />
+                        <div className={clsx(`${prefixCls}-curr-line`, classNames?.currentTimeLine)} style={{ top: currTop, ...styles?.currentTimeLine }} />
                     </Fragment>
                 )}
                 <div className={skCls}>
@@ -57,7 +57,7 @@ export default function DayCol(props: DayColProps) {
                         const top = startPos * scrollHeight;
                         const height = (endPos - startPos) * scrollHeight;
                         return (
-                            <li key={key} className={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-day`} style={{ top: `${top}px`, height: `${Math.max(minEventHeight, height)}px`, insetInlineStart: left }}>
+                            <li key={key} className={clsx(`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-day`, classNames?.event)} style={{ top: `${top}px`, height: `${Math.max(minEventHeight, height)}px`, insetInlineStart: left, ...styles?.event }}>
                                 {children}
                             </li>
                         );

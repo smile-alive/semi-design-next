@@ -22,6 +22,10 @@
                 "zh-CN": "根元素的类名。",
                 "en-US": "Class name of the root element."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `prefix`、`suffix`、`content`、`tag`、`input`、`clear`，与组件自带的类名合并。`input` 落在内嵌输入框的根元素上，不是原生 input；`tag` 只作用于默认标签，`renderTagItem` 渲染的节点自行控制样式。",
+                "en-US": "Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `tag`, `input` and `clear`; merged with the built-in classes. `input` lands on the root element of the inner Input, not the native input; `tag` applies to the default tags only, nodes from `renderTagItem` are styled by the caller."
+            },
             "clearIcon": {
                 "zh-CN": "替换清除按钮中的图标，未设置时使用默认图标。",
                 "en-US": "Replaces the icon in the clear button; the default icon is used when omitted."
@@ -153,6 +157,10 @@
             "style": {
                 "zh-CN": "根元素的样式。",
                 "en-US": "Style of the root element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "suffix": {
                 "zh-CN": "输入框后缀，文字或图标会自动带上左右间隔；自定义节点的左右间隔为 0，可在节点中自行设置。",

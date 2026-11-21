@@ -1,6 +1,6 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { strings } from '@fibrae/semi-foundation/components/anchor/constants';
+import type { AnchorLinkPart, AnchorPart, strings } from '@fibrae/semi-foundation/components/anchor/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { Position } from '../tooltip/interface';
 import type { ShowTooltip } from '../typography/interface';
@@ -9,6 +9,8 @@ export type AnchorClickEvent = MouseEvent | KeyboardEvent;
 
 export interface AnchorProps {
     autoCollapse?: boolean;
+    /** `item*` keys apply to every Anchor.Link, before the link's own classNames */
+    classNames?: Partial<Record<AnchorPart, ClassValue>>;
     defaultAnchor?: string;
     getContainer?: () => HTMLElement | Window | null;
     maxHeight?: string | number;
@@ -21,6 +23,7 @@ export interface AnchorProps {
     scrollIntoViewOptions?: ScrollIntoViewOptions;
     showTooltip?: boolean | ShowTooltip;
     size?: ArrayElement<typeof strings.SIZE>;
+    styles?: Partial<Record<AnchorPart, StyleValue>>;
     targetOffset?: number;
 }
 
@@ -37,8 +40,11 @@ export interface AnchorSlots {
 export type { AnchorBaseState as AnchorState } from '@fibrae/semi-foundation/components/anchor/foundation';
 
 export interface LinkProps {
+    /** Applied after the `itemTitle` classNames of the parent Anchor */
+    classNames?: Partial<Record<AnchorLinkPart, ClassValue>>;
     disabled?: boolean;
     href?: string;
+    styles?: Partial<Record<AnchorLinkPart, StyleValue>>;
     /** Plain-text title, also the native tooltip without showTooltip; the `#title` slot wins when both are given */
     title?: string;
 }

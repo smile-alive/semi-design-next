@@ -1,6 +1,6 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
+import { cssClasses, numbers, type PaginationPart } from '@fibrae/semi-foundation/components/pagination/constants';
 import PaginationFoundation, { type PageList, type PageRange, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
 import { formatLocale, type Locale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/pagination/pagination.scss';
@@ -38,7 +38,9 @@ export interface PaginationProps extends ElementProps<'nav', 'onChange'> {
     showQuickJumper?: boolean;
     popoverPosition?: PopoverPosition;
     style?: React.CSSProperties;
+    styles?: Partial<Record<PaginationPart, React.CSSProperties>>;
     className?: string;
+    classNames?: Partial<Record<PaginationPart, string>>;
     hideOnSinglePage?: boolean;
     hoverShowPageSelect?: boolean;
     disabled?: boolean;
@@ -110,7 +112,9 @@ export default function Pagination(rawProps: PaginationProps) {
         showQuickJumper,
         popoverPosition,
         style,
+        styles,
         className,
+        classNames,
         hideOnSinglePage,
         hoverShowPageSelect,
         disabled,
@@ -147,9 +151,15 @@ export default function Pagination(rawProps: PaginationProps) {
             <li>
                 <button
                     type="button"
-                    className={clsx(`${prefixCls}-item`, `${prefixCls}-prev`, {
-                        [`${prefixCls}-item-disabled`]: isDisabled,
-                    })}
+                    className={clsx(
+                        `${prefixCls}-item`,
+                        `${prefixCls}-prev`,
+                        {
+                            [`${prefixCls}-item-disabled`]: isDisabled,
+                        },
+                        classNames?.prev
+                    )}
+                    style={styles?.prev}
                     // visible text names the button (WCAG label in name); otherwise the locale does
                     aria-label={hasTextContent(prevText) ? undefined : locale.prev}
                     disabled={isDisabled}
@@ -166,7 +176,15 @@ export default function Pagination(rawProps: PaginationProps) {
         const isDisabled = nextDisabled || disabled;
         return (
             <li>
-                <button type="button" className={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: isDisabled }, `${prefixCls}-next`)} aria-label={hasTextContent(nextText) ? undefined : locale.next} disabled={isDisabled} x-semi-prop="nextText" onClick={foundation.goNext}>
+                <button
+                    type="button"
+                    className={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: isDisabled }, `${prefixCls}-next`, classNames?.next)}
+                    style={styles?.next}
+                    aria-label={hasTextContent(nextText) ? undefined : locale.next}
+                    disabled={isDisabled}
+                    x-semi-prop="nextText"
+                    onClick={foundation.goNext}
+                >
                     {hasContent(nextText) ? nextText : <IconChevronRight size="large" />}
                 </button>
             </li>
@@ -200,7 +218,7 @@ export default function Pagination(rawProps: PaginationProps) {
             return null;
         }
         return (
-            <li className={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: quickJumpDisabled })}>
+            <li className={clsx(`${prefixCls}-quickjump`, { [`${prefixCls}-quickjump-disabled`]: quickJumpDisabled }, classNames?.quickJumper)} style={styles?.quickJumper}>
                 <span>{locale.jumpTo}</span>
                 <InputNumber
                     className={`${prefixCls}-quickjump-input-number`}
@@ -225,23 +243,30 @@ export default function Pagination(rawProps: PaginationProps) {
     };
 
     const renderSmallPage = (locale: PaginationLocale) => {
-        const contentCls = clsx(`${prefixCls}-item`, `${prefixCls}-item-small`, {
-            [`${prefixCls}-item-all-disabled`]: disabled,
-        });
+        const contentCls = clsx(
+            `${prefixCls}-item`,
+            `${prefixCls}-item-small`,
+            {
+                [`${prefixCls}-item-all-disabled`]: disabled,
+            },
+            classNames?.item
+        );
         const text = `${currentPage}/${totalPageNum} `;
         return (
-            <ul className={clsx(`${prefixCls}-small`, prefixCls, { [`${prefixCls}-disabled`]: disabled })}>
+            <ul className={clsx(`${prefixCls}-small`, prefixCls, { [`${prefixCls}-disabled`]: disabled }, classNames?.list)} style={styles?.list}>
                 {renderPrevBtn(locale)}
                 <li>
                     {hoverShowPageSelect && !disabled ? (
                         // opens on hover or focus; ArrowDown moves into it
-                        <Popover content={renderRestPageList({ start: 1, count: totalPageNum }, locale)}>
-                            <button type="button" className={contentCls}>
+                        <Popover classNames={{ content: classNames?.dropdown }} styles={{ content: styles?.dropdown }} content={renderRestPageList({ start: 1, count: totalPageNum }, locale)}>
+                            <button type="button" className={contentCls} style={styles?.item}>
                                 {text}
                             </button>
                         </Popover>
                     ) : (
-                        <div className={contentCls}>{text}</div>
+                        <div className={contentCls} style={styles?.item}>
+                            {text}
+                        </div>
                     )}
                 </li>
                 {renderNextBtn(locale)}
@@ -256,9 +281,10 @@ export default function Pagination(rawProps: PaginationProps) {
         }
         const pageSizeToken = locale.pageSize;
         return (
-            <li className={`${prefixCls}-switch`}>
+            <li className={clsx(`${prefixCls}-switch`, classNames?.sizeChanger)} style={styles?.sizeChanger}>
                 <Select
-                    classNames={{ dropdown: `${prefixCls}-select-dropdown` }}
+                    classNames={{ dropdown: clsx(`${prefixCls}-select-dropdown`, classNames?.sizeChangerDropdown) }}
+                    styles={{ dropdown: styles?.sizeChangerDropdown }}
                     aria-label={locale.pageSizeSelector}
                     disabled={disabled}
                     multiple={false}
@@ -289,14 +315,22 @@ export default function Pagination(rawProps: PaginationProps) {
         const { pageList, restLeftRange, restRightRange } = PaginationFoundation.getPageList(currentPage, total, pageSize);
         return pageList.map((page, i) => {
             const isActive = currentPage === page;
+            const isEllipsis = page === '...';
             const pageEl = (
                 <button
                     type="button"
-                    className={clsx(`${prefixCls}-item`, {
-                        [`${prefixCls}-item-active`]: isActive,
-                        [`${prefixCls}-item-all-disabled`]: disabled,
-                        [`${prefixCls}-item-all-disabled-active`]: isActive && disabled,
-                    })}
+                    className={clsx(
+                        `${prefixCls}-item`,
+                        {
+                            [`${prefixCls}-item-active`]: isActive,
+                            [`${prefixCls}-item-all-disabled`]: disabled,
+                            [`${prefixCls}-item-all-disabled-active`]: isActive && disabled,
+                            [`${prefixCls}-item-ellipsis`]: isEllipsis,
+                        },
+                        classNames?.item,
+                        isEllipsis && classNames?.ellipsis
+                    )}
+                    style={{ ...styles?.item, ...(isEllipsis && styles?.ellipsis) }}
                     aria-current={isActive ? 'page' : undefined}
                     aria-label={page === '...' ? locale.more : formatLocale(locale.pageN, { page })}
                     disabled={disabled}
@@ -310,7 +344,7 @@ export default function Pagination(rawProps: PaginationProps) {
                 <li key={page === '...' ? (i < 3 ? 'rest-left' : 'rest-right') : page}>
                     {page === '...' && !disabled ? (
                         // opens on hover or focus; ArrowDown moves into it
-                        <Popover content={renderRestPageList(i < 3 ? restLeftRange : restRightRange, locale)} position={popoverPosition} trigger="hover">
+                        <Popover classNames={{ content: classNames?.dropdown }} styles={{ content: styles?.dropdown }} content={renderRestPageList(i < 3 ? restLeftRange : restRightRange, locale)} position={popoverPosition} trigger="hover">
                             {pageEl}
                         </Popover>
                     ) : (
@@ -322,8 +356,12 @@ export default function Pagination(rawProps: PaginationProps) {
     };
 
     const renderDefaultPage = (locale: PaginationLocale) => (
-        <ul className={clsx(prefixCls, { [`${prefixCls}-disabled`]: disabled })}>
-            {showTotal && <li className={`${prefixCls}-total`}>{formatLocale(locale.total, { total: totalPageNum })}</li>}
+        <ul className={clsx(prefixCls, { [`${prefixCls}-disabled`]: disabled }, classNames?.list)} style={styles?.list}>
+            {showTotal && (
+                <li className={clsx(`${prefixCls}-total`, classNames?.total)} style={styles?.total}>
+                    {formatLocale(locale.total, { total: totalPageNum })}
+                </li>
+            )}
             {renderPrevBtn(locale)}
             {renderPageList(locale)}
             {renderNextBtn(locale)}

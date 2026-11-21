@@ -12,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoPlay | Whether to play automatically, or an object with `interval` (milliseconds between slides, default 2000) and `hoverToPause` (pause while hovered, default true). | `CarouselAutoPlay` | `true` |
 | children | The slides, one per direct child element. A slide must be a DOM element, since Carousel sets its `id`, `role`, `inert` and `class` attributes directly. | `JSX.Element` | - |
 | class | Class name of the root element, merged with the built-in class names. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `content`, `indicators`, `indicator`, `arrows`, `prevArrow` and `nextArrow`; merged with the built-in classes. `indicators` is the tablist holding the indicator dots, `indicator` is a single dot and `arrows` is the container of the two arrow buttons. | <ApiType detail={"Partial\u003cRecord\u003cCarouselPart, string>>"}>Type</ApiType> | - |
 | defaultActiveIndex | Index of the slide shown initially, used when uncontrolled. | `number` | `0` |
 | indicatorPosition | Indicator position: `left`, `center` or `right`. | `'center' \| 'left' \| 'right'` | `"center"` |
 | indicatorSize | Indicator size: `small` or `medium`. | `'medium' \| 'small'` | `"small"` |
@@ -24,6 +25,7 @@ import ApiType from '#/components/ApiType.astro';
 | showIndicator | Whether to show the indicator. | `boolean` | `true` |
 | slideDirection | Slide direction when the animation is `slide`: `left` or `right`. | `'left' \| 'right'` | `"left"` |
 | speed | Transition duration in milliseconds. | `number` | `300` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cCarouselPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | theme | Theme of the indicator and arrows: `primary`, `light` or `dark`. | `'dark' \| 'light' \| 'primary'` | `"light"` |
 | trigger | How the indicator switches slides: `click` or `hover`. | `'click' \| 'hover'` | `"click"` |
 

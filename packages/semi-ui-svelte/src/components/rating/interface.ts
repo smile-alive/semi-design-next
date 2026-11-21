@@ -1,11 +1,14 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { RatingPart } from '@fibrae/semi-foundation/components/rating/constants';
 import type { TooltipTriggerProps } from '../tooltip/interface.js';
 
 export type { RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 
 export interface RatingProps extends Omit<HTMLAttributes<HTMLUListElement>, 'onblur' | 'onchange' | 'onclick' | 'onfocus' | 'onkeydown'> {
     value?: number;
+    classNames?: Partial<Record<RatingPart, ClassValue>>;
+    styles?: Partial<Record<RatingPart, string>>;
     count?: number;
     allowHalf?: boolean;
     allowClear?: boolean;
@@ -31,6 +34,8 @@ export interface RatingItemProps {
     /** The value the star fill shows: the hovered value while hovering, else `value` */
     displayValue: number;
     index: number;
+    itemClass?: ClassValue;
+    itemStyle?: string;
     prefixCls: string;
     allowHalf: boolean;
     disabled: boolean;

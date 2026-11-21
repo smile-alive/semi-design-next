@@ -8,7 +8,7 @@ import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/
 import { IconChevronDown, IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
 import { useFoundation } from '../../base/index';
 import { useResizeObserver } from '../../primitives/index';
-import { hasContent, serverHtml, mergeRefs } from '../../utils/index';
+import { hasContent, mergeRefs, mergeStyles, serverHtml } from '../../utils/index';
 import Button from '../button';
 import Dropdown, { type GetDropdownTriggerProps } from '../dropdown';
 import useLocale from '../locale/use-locale';
@@ -31,9 +31,7 @@ export default function TabBar(props: TabBarProps) {
         'classNames',
         'collapsible',
         'deleteTabItem',
-        'dropdownClassName',
         'dropdownProps',
-        'dropdownStyle',
         'handleKeyDown',
         'list',
         'more',
@@ -70,6 +68,8 @@ export default function TabBar(props: TabBarProps) {
     // read while OverflowList renders the arrow sides, which every change re-creates
     const showRestInDropdown = createMemo(() => local.showRestInDropdown);
     const renderArrow = createMemo(() => local.renderArrow);
+    const arrowClassName = createMemo(() => local.classNames?.arrow);
+    const arrowStyle = createMemo(() => local.styles?.arrow);
 
     const moreLayout = createMemo(() => {
         const more = local.more;
@@ -196,25 +196,33 @@ export default function TabBar(props: TabBarProps) {
     };
 
     const renderCollapse = (items: OverflowItem[], pos: Side) => {
-        const arrowClass = clsx(`${cssClasses.TABS_BAR}-arrow-${pos}`, `${cssClasses.TABS_BAR}-arrow`);
+        const arrowClass = clsx(`${cssClasses.TABS_BAR}-arrow-${pos}`, `${cssClasses.TABS_BAR}-arrow`, arrowClassName());
         const arrowButton = (disabled?: boolean) => <Button aria-label={pos === 'start' ? locale().locale.prevTabs : locale().locale.nextTabs} disabled={disabled} theme="borderless" icon={pos === 'start' ? <IconChevronLeft /> : <IconChevronRight />} />;
 
         if (!items.length) {
             return (
-                <div class={arrowClass} role="presentation">
+                <div class={arrowClass} style={arrowStyle()} role="presentation">
                     {arrowButton(true)}
                 </div>
             );
         }
         // the Button is the Tab stop; Dropdown would add 0 here
-        const own = { class: arrowClass, role: 'presentation', tabIndex: -1, onClick: () => foundation.handleArrowClick(items, pos) } as const;
+        const own = {
+            class: arrowClass,
+            get style() {
+                return arrowStyle();
+            },
+            role: 'presentation',
+            tabIndex: -1,
+            onClick: () => foundation.handleArrowClick(items, pos),
+        } as const;
         if (!showRestInDropdown()) {
             return <div {...own}>{arrowButton()}</div>;
         }
         const menuKeys = items.map((item) => item.itemKey);
         return (
             <Dropdown
-                style={local.dropdownStyle}
+                style={local.styles?.dropdown}
                 clickToHide
                 clickTriggerToHide
                 // prevent the panel from popping up again after clicking
@@ -229,7 +237,7 @@ export default function TabBar(props: TabBarProps) {
                 trigger="hover"
                 {...local.dropdownProps?.[pos]}
                 // the user's class adds to the built-in one: the built-in class supplies the popup's max-height and scrolling
-                class={clsx(local.dropdownClassName, `${cssClasses.TABS_BAR}-dropdown`, local.dropdownProps?.[pos]?.class)}
+                class={clsx(`${cssClasses.TABS_BAR}-dropdown`, local.classNames?.dropdown, local.dropdownProps?.[pos]?.class)}
             >
                 {(getTriggerProps: GetDropdownTriggerProps) => <div {...getTriggerProps(own)}>{arrowButton()}</div>}
             </Dropdown>
@@ -246,7 +254,10 @@ export default function TabBar(props: TabBarProps) {
                 {...getTriggerProps({
                     type: 'button',
                     get class() {
-                        return clsx(`${cssClasses.TABS_BAR}-more-trigger`, `${cssClasses.TABS_BAR}-more-trigger-${local.type}`);
+                        return clsx(`${cssClasses.TABS_BAR}-more-trigger`, `${cssClasses.TABS_BAR}-more-trigger-${local.type}`, local.classNames?.more);
+                    },
+                    get style() {
+                        return local.styles?.more;
                     },
                 })}
             >
@@ -277,14 +288,20 @@ export default function TabBar(props: TabBarProps) {
         <div
             {...rest}
             ref={mergeRefs(local.ref, (node: HTMLDivElement) => setBar(node))}
-            class={clsx(local.class, cssClasses.TABS_BAR, {
-                [cssClasses.TABS_BAR_LINE]: local.type === 'line',
-                [cssClasses.TABS_BAR_CARD]: local.type === 'card',
-                [cssClasses.TABS_BAR_BUTTON]: local.type === 'button',
-                [cssClasses.TABS_BAR_SLASH]: local.type === 'slash',
-                [`${cssClasses.TABS_BAR}-${local.tabPosition}`]: local.tabPosition,
-                [`${cssClasses.TABS_BAR}-collapse`]: collapsed(),
-            })}
+            class={clsx(
+                local.class,
+                cssClasses.TABS_BAR,
+                {
+                    [cssClasses.TABS_BAR_LINE]: local.type === 'line',
+                    [cssClasses.TABS_BAR_CARD]: local.type === 'card',
+                    [cssClasses.TABS_BAR_BUTTON]: local.type === 'button',
+                    [cssClasses.TABS_BAR_SLASH]: local.type === 'slash',
+                    [`${cssClasses.TABS_BAR}-${local.tabPosition}`]: local.tabPosition,
+                    [`${cssClasses.TABS_BAR}-collapse`]: collapsed(),
+                },
+                local.classNames?.tabBar
+            )}
+            style={mergeStyles(rest.style, local.styles?.tabBar)}
         >
             <TabsContext.Provider value={barContext}>
                 <Show
@@ -298,7 +315,8 @@ export default function TabBar(props: TabBarProps) {
                                 {(layout) => (
                                     <>
                                         <Dropdown
-                                            class={`${cssClasses.TABS_BAR}-more-dropdown-${local.type}`}
+                                            class={clsx(`${cssClasses.TABS_BAR}-more-dropdown-${local.type}`, local.classNames?.dropdown)}
+                                            style={local.styles?.dropdown}
                                             clickToHide
                                             position="bottomLeft"
                                             render={
@@ -350,11 +368,15 @@ export default function TabBar(props: TabBarProps) {
             </TabsContext.Provider>
             <Show when={hasContent(extra())}>
                 <div
-                    class={clsx(cssClasses.TABS_BAR_EXTRA, {
-                        [`${cssClasses.TABS_BAR}-${local.type}-extra`]: local.type,
-                        [`${cssClasses.TABS_BAR}-${local.type}-extra-${local.size}`]: local.type && local.size,
-                    })}
-                    style={{ float: extraFloat() as JSX.CSSProperties['float'] }}
+                    class={clsx(
+                        cssClasses.TABS_BAR_EXTRA,
+                        {
+                            [`${cssClasses.TABS_BAR}-${local.type}-extra`]: local.type,
+                            [`${cssClasses.TABS_BAR}-${local.type}-extra-${local.size}`]: local.type && local.size,
+                        },
+                        local.classNames?.extra
+                    )}
+                    style={mergeStyles({ float: extraFloat() as JSX.CSSProperties['float'] }, local.styles?.extra)}
                     x-semi-prop="tabBarExtraContent"
                 >
                     {extra()}

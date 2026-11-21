@@ -587,4 +587,42 @@ describe('ScrollItem 行为', () => {
         expect('default' in itemProps.transform).toBe(true);
         expect(itemProps.transform.default).toBeUndefined();
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['header', 'title', 'body', 'footer'] as const;
+        const selectors = { header: 'header', title: 'header-title', body: 'body', footer: 'footer' };
+        const { container } = render(ScrollList, {
+            props: {
+                header: 'h',
+                footer: 'f',
+                bodyHeight: 100,
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+            },
+            slots: { default: () => 'body' },
+        });
+        for (const part of parts) {
+            const el = container.querySelector(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+        expect(container.querySelector(`.${prefix}-body`)).toHaveStyle({ height: '100px' });
+    });
+
+    it('ScrollList.Item 的 classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['list', 'option', 'selector'] as const;
+        const { container } = renderItem({
+            list: numbers(2),
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+        });
+        const selectors = { list: 'ul[role="listbox"]', option: 'li[role="option"]', selector: `.${prefix}-selector` };
+        for (const part of parts) {
+            for (const el of container.querySelectorAll(selectors[part])) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+            expect(container.querySelector(selectors[part])).not.toBeNull();
+        }
+    });
 });

@@ -55,6 +55,16 @@ describe('Skeleton', () => {
         expect(view.container.querySelector(`.${prefixCls}-avatar`)).not.toBeNull();
     });
 
+    it('Paragraph 的 classNames 与 styles 按部位落到每一行', () => {
+        const { container } = render(Paragraph, { props: { rows: 3, classNames: { row: 'my-row' }, styles: { row: { order: 2 } } } });
+        const rows = container.querySelectorAll('li');
+        expect(rows).toHaveLength(3);
+        for (const row of rows) {
+            expect(row).toHaveClass('my-row');
+            expect(row).toHaveStyle({ order: '2' });
+        }
+    });
+
     it('kits 渲染', () => {
         const kits = [
             [Avatar, 'avatar'],

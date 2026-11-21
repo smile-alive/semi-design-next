@@ -1,7 +1,7 @@
 import type React from 'react';
 import { Children, isValidElement, useId } from 'react';
 import clsx from 'clsx';
-import { type RadioPart, radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
+import { type RadioGroupPart, type RadioPart, radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
@@ -35,8 +35,10 @@ export interface RadioGroupProps extends ElementProps<'div', 'onChange' | 'defau
     value?: string | number | boolean;
     onChange?: (event: RadioChangeEvent) => void;
     className?: string;
+    classNames?: Partial<Record<RadioGroupPart, string>>;
     children?: React.ReactNode;
     style?: React.CSSProperties;
+    styles?: Partial<Record<RadioGroupPart, React.CSSProperties>>;
     direction?: ArrayElement<typeof strings.DIRECTION_SET>;
     mode?: RadioMode;
     type?: RadioType;
@@ -65,7 +67,9 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         options,
         mode,
         className,
+        classNames,
         style,
+        styles,
         direction,
         type,
         buttonSize,
@@ -153,6 +157,8 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
                         buttonSize,
                     },
                     mode,
+                    classNames,
+                    styles,
                 }}
             >
                 {inner}

@@ -35,6 +35,8 @@
         defaultValue: semiGlobalDefault('TagInput', 'defaultValue'),
         inputValue: semiGlobalDefault('TagInput', 'inputValue'),
         inputValueModifiers: undefined,
+        classNames: semiGlobalDefault('TagInput', 'classNames'),
+        styles: semiGlobalDefault('TagInput', 'styles'),
         disabled: undefined,
         maxLength: semiGlobalDefault('TagInput', 'maxLength'),
         max: semiGlobalDefault('TagInput', 'max'),
@@ -266,7 +268,8 @@
             <div
                 v-if="k.prefix || k.insetLabel"
                 :id="prefixId()"
-                :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: k.insetLabel, [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon' }]"
+                :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: k.insetLabel, [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon' }, props.classNames?.prefix]"
+                :style="props.styles?.prefix"
                 x-semi-prop="prefix"
                 @click="foundation.handleClickPrefixOrSuffix"
                 @mousedown.prevent
@@ -275,10 +278,10 @@
                 <slot v-else name="insetLabel" />
             </div>
         </template>
-        <div ref="wrapper" :class="`${prefix}-wrapper`">
+        <div ref="wrapper" :class="[`${prefix}-wrapper`, props.classNames?.content]" :style="props.styles?.content">
             <component :is="Sortable" v-if="Sortable && sorting" :class="`${prefix}-sortable-list`" :dragHandleLabel="locale.locale.dragSort" :dragOverlayClass="`${prefix}-drag-item-move`" :items="sortIds.ids" :prefix="prefix" :transition="null" @dragging="dragging = $event" @sortEnd="handleSortEnd">
                 <template #item="{ index }">
-                    <TagItem :disabled="looks.disabled" draggableActive :index="index" :showContentTooltip="props.showContentTooltip" :size="looks.size" :value="tags[index]" withHandle @close="handleTagClose(index, $event)">
+                    <TagItem :disabled="looks.disabled" draggableActive :index="index" :showContentTooltip="props.showContentTooltip" :size="looks.size" :tagClass="props.classNames?.tag" :tagStyle="props.styles?.tag" :value="tags[index]" withHandle @close="handleTagClose(index, $event)">
                         <template v-if="$slots.tag" #tag="tagProps">
                             <slot name="tag" v-bind="tagProps" />
                         </template>
@@ -286,7 +289,20 @@
                 </template>
             </component>
             <template v-else>
-                <TagItem v-for="(value, index) in shownTags" :key="`${index}-${value}`" :disabled="looks.disabled" :draggableActive="draggableActive" :index="index" :showContentTooltip="props.showContentTooltip" :size="looks.size" :value="value" :withHandle="false" @close="handleTagClose(index, $event)">
+                <TagItem
+                    v-for="(value, index) in shownTags"
+                    :key="`${index}-${value}`"
+                    :disabled="looks.disabled"
+                    :draggableActive="draggableActive"
+                    :index="index"
+                    :showContentTooltip="props.showContentTooltip"
+                    :size="looks.size"
+                    :tagClass="props.classNames?.tag"
+                    :tagStyle="props.styles?.tag"
+                    :value="value"
+                    :withHandle="false"
+                    @close="handleTagClose(index, $event)"
+                >
                     <template v-if="$slots.tag" #tag="tagProps">
                         <slot name="tag" v-bind="tagProps" />
                     </template>
@@ -302,6 +318,8 @@
                             :index="shownTags.length + index"
                             :showContentTooltip="props.showContentTooltip"
                             :size="looks.size"
+                            :tagClass="props.classNames?.tag"
+                            :tagStyle="props.styles?.tag"
                             :value="value"
                             :withHandle="false"
                             @close="handleTagClose(shownTags.length + index, $event)"
@@ -320,7 +338,7 @@
                 :aria-invalid="ariaInvalid()"
                 :aria-label="ariaLabel()"
                 :aria-labelledby="ariaLabelledby()"
-                :class="[`${prefix}-wrapper-input`, `${prefix}-wrapper-input-${looks.size}`]"
+                :class="[`${prefix}-wrapper-input`, `${prefix}-wrapper-input-${looks.size}`, props.classNames?.input]"
                 :disabled="looks.disabled"
                 :modelModifiers="props.inputValueModifiers"
                 :modelValue="inputValue"
@@ -328,6 +346,7 @@
                 :preventScroll="props.preventScroll"
                 :showClear="false"
                 :size="looks.size"
+                :style="props.styles?.input"
                 @change="foundation.handleInputChange"
                 @compositionend="foundation.handleInputCompositionEnd"
                 @compositionstart="foundation.handleInputCompositionStart"
@@ -335,7 +354,7 @@
             />
         </div>
         <template v-if="props.showClear">
-            <button v-if="clearable" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clearBtn`" type="button" @click="handleClear">
+            <button v-if="clearable" ref="clearButton" :aria-label="locale.locale.clear" :class="[`${prefix}-clearBtn`, props.classNames?.clear]" :style="props.styles?.clear" type="button" @click="handleClear">
                 <slot name="clearIcon">
                     <IconClear />
                 </slot>
@@ -343,7 +362,7 @@
             <span v-else :class="`${prefix}-clearBtn-placeholder`" />
         </template>
         <template v-for="(k, i) in [kinds()]" :key="i">
-            <div v-if="k.suffix" :class="[`${prefix}-suffix`, { [`${prefix}-suffix-text`]: k.suffix === 'text', [`${prefix}-suffix-icon`]: k.suffix === 'icon' }]" x-semi-prop="suffix" @click="foundation.handleClickPrefixOrSuffix" @mousedown.prevent>
+            <div v-if="k.suffix" :class="[`${prefix}-suffix`, { [`${prefix}-suffix-text`]: k.suffix === 'text', [`${prefix}-suffix-icon`]: k.suffix === 'icon' }, props.classNames?.suffix]" :style="props.styles?.suffix" x-semi-prop="suffix" @click="foundation.handleClickPrefixOrSuffix" @mousedown.prevent>
                 <slot name="suffix" />
             </div>
         </template>

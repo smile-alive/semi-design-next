@@ -7,14 +7,16 @@
     import type { TimelineData, TimelineProps } from './interface.js';
 
     const defaults = useDefaultProps('Timeline');
-    let { mode = defaults('mode', 'left'), dataSource = defaults('dataSource'), content, time, extra, ...rest }: TimelineProps = $props();
+    let { mode = defaults('mode', 'left'), dataSource = defaults('dataSource'), classNames = defaults('classNames'), styles = defaults('styles'), content, time, extra, ...rest }: TimelineProps = $props();
 
     const prefixCls = cssClasses.PREFIX;
     const itemCls = cssClasses.ITEM;
 
+    const joinStyle = (...parts: Array<string | null | undefined>) => parts.filter(Boolean).join('; ') || undefined;
+
     const hasText = (value?: string | number) => value !== undefined && value !== '';
 
-    const itemAttrs = (item: TimelineData) => omit(item, ['content', 'time', 'extra', 'color', 'type', 'position', 'dot', 'onClick']);
+    const itemAttrs = (item: TimelineData) => omit(item, ['content', 'time', 'extra', 'color', 'type', 'position', 'dot', 'onClick', 'classNames', 'styles']);
 
     const handleClick = (event: MouseEvent & { currentTarget: HTMLElement }, onClick: (event: MouseEvent) => void) => {
         // Interactive content in an extra inside this item, nested items' extras included, must not also trigger the item
@@ -36,12 +38,12 @@
         {#snippet body()}
             {#if content}{@render content({ item, index })}{:else}{item.content}{/if}
         {/snippet}
-        <li {...itemAttrs(item)} class={[itemCls, item.class, getPosCls(mode, item.position, index)]} onclick={onClick ? (event) => handleClick(event, onClick) : undefined}>
-            <div aria-hidden="true" class={`${itemCls}-tail`}></div>
-            <div aria-hidden="true" class={[`${itemCls}-head`, `${itemCls}-head-${item.type ?? 'default'}`, { [`${itemCls}-head-custom`]: item.dot }]} style={item.color ? `background-color: ${item.color};` : undefined}>
+        <li {...itemAttrs(item)} class={[itemCls, classNames?.item, item.class, getPosCls(mode, item.position, index)]} style={joinStyle(styles?.item, item.style)} onclick={onClick ? (event) => handleClick(event, onClick) : undefined}>
+            <div aria-hidden="true" class={[`${itemCls}-tail`, classNames?.itemRail, item.classNames?.rail]} style={joinStyle(styles?.itemRail, item.styles?.rail)}></div>
+            <div aria-hidden="true" class={[`${itemCls}-head`, `${itemCls}-head-${item.type ?? 'default'}`, { [`${itemCls}-head-custom`]: item.dot }, classNames?.itemIcon, item.classNames?.icon]} style={joinStyle(item.color && `background-color: ${item.color}`, styles?.itemIcon, item.styles?.icon)}>
                 {@render item.dot?.()}
             </div>
-            <div class={`${itemCls}-content`}>
+            <div class={[`${itemCls}-content`, classNames?.itemContent, item.classNames?.content]} style={joinStyle(styles?.itemContent, item.styles?.content)}>
                 {#if onClick}
                     <div class={`${itemCls}-content-main`} role="button" tabindex="0" onkeydown={handleKeydown}>
                         {@render body()}
@@ -49,11 +51,11 @@
                 {:else}
                     {@render body()}
                 {/if}{#if extra || hasText(item.extra)}
-                    <div class={`${itemCls}-content-extra`}>
+                    <div class={[`${itemCls}-content-extra`, classNames?.itemExtra, item.classNames?.extra]} style={joinStyle(styles?.itemExtra, item.styles?.extra)}>
                         {#if extra}{@render extra({ item, index })}{:else}{item.extra}{/if}
                     </div>
                 {/if}{#if time || hasText(item.time)}
-                    <div class={`${itemCls}-content-time`}>
+                    <div class={[`${itemCls}-content-time`, classNames?.itemTime, item.classNames?.time]} style={joinStyle(styles?.itemTime, item.styles?.time)}>
                         {#if time}{@render time({ item, index })}{:else}{item.time}{/if}
                     </div>
                 {/if}

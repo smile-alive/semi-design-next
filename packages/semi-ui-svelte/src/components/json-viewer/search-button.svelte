@@ -67,7 +67,7 @@
     style:top="0"
 >
     {#if !ctx.showSearchBar}
-        <Button {@attach trackTrigger} aria-label={locale().locale.search} class={`${prefix}-search-bar-trigger`} style="position: absolute; top: 20px; right: 20px" onclick={onTriggerClick}>
+        <Button {@attach trackTrigger} aria-label={locale().locale.search} class={[`${prefix}-search-bar-trigger`, ctx.classNames?.searchTrigger]} style={['position: absolute; top: 20px; right: 20px', ctx.styles?.searchTrigger].filter(Boolean).join('; ')} onclick={onTriggerClick}>
             {#snippet icon()}
                 <IconSearch />
             {/snippet}

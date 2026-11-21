@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | canVerticalSetWidth | placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。 | `boolean` | `semiGlobalDefault("SideSheet", "canVerticalSetWidth")` |
-| classNames | 内部各部位的类名，键为 mask、content、header、body、footer，值的写法同 class，与组件自带的类名合并；content 落在对话框元素（.semi-sidesheet-inner）上。 | <ApiType detail={"Partial\u003cRecord\u003cSideSheetPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("SideSheet", "classNames")` |
+| classNames | 内部各部位的类名，键为 mask、content、header、title、close、body、footer，值的写法同 class，与组件自带的类名合并；content 落在对话框元素（.semi-sidesheet-inner）上。 | <ApiType detail={"Partial\u003cRecord\u003cSideSheetPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("SideSheet", "classNames")` |
 | closable | 是否显示右上角的关闭按钮。 | `boolean` | `true` |
 | closeOnEsc | 是否允许按 Esc 关闭面板。 | `boolean` | `false` |
 | disableScroll | 带遮罩且渲染在 document.body 中时是否禁止 body 滚动，即给 body 添加 overflow: hidden。 | `boolean` | `true` |

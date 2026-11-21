@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, type VNode } from 'vue';
+    import { computed, type ClassValue, type StyleValue, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale';
     import { IconHandle } from '@fibrae/semi-icons-vue';
@@ -20,8 +20,11 @@
             showContentTooltip: boolean | ShowTooltip;
             draggableActive: boolean;
             withHandle: boolean;
+            /** `classNames.tag` and `styles.tag` of the TagInput; a class or style on the item itself would land on the drag wrapper */
+            tagClass?: ClassValue;
+            tagStyle?: StyleValue;
         }>(),
-        { disabled: false }
+        { disabled: false, tagClass: undefined, tagStyle: undefined }
     );
 
     const emit = defineEmits<{ close: [event?: Event] }>();
@@ -45,10 +48,11 @@
         <Tag
             v-else
             :aria-label="tagLabel()"
-            :class="[`${prefix}-wrapper-tag`, `${prefix}-wrapper-tag-size-${props.size}`, { [`${prefix}-wrapper-tag-icon`]: props.draggableActive && !props.withHandle }]"
+            :class="[`${prefix}-wrapper-tag`, `${prefix}-wrapper-tag-size-${props.size}`, { [`${prefix}-wrapper-tag-icon`]: props.draggableActive && !props.withHandle }, props.tagClass]"
             :closable="!props.disabled"
             color="white"
             :size="props.size === 'small' ? 'small' : 'large'"
+            :style="props.tagStyle"
             type="light"
             visible
             @close="close"

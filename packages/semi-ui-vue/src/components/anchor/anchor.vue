@@ -17,6 +17,7 @@
 
     const props = withDefaults(defineProps<AnchorProps & /* @vue-ignore */ ElementProps<'div', keyof AnchorProps | EmitHandlers<AnchorEmits>>>(), {
         autoCollapse: () => semiDefault('Anchor', 'autoCollapse', false),
+        classNames: semiGlobalDefault('Anchor', 'classNames'),
         defaultAnchor: () => semiDefault('Anchor', 'defaultAnchor', ''),
         // Function-typed props cannot take a factory default; the global default is read in getContainer below.
         getContainer: undefined,
@@ -29,6 +30,7 @@
         scrollIntoViewOptions: semiGlobalDefault('Anchor', 'scrollIntoViewOptions'),
         showTooltip: () => semiDefault('Anchor', 'showTooltip', false),
         size: () => semiDefault('Anchor', 'size', 'default'),
+        styles: semiGlobalDefault('Anchor', 'styles'),
         targetOffset: () => semiDefault('Anchor', 'targetOffset', 0),
     });
 
@@ -66,9 +68,11 @@
             activeLink: state.value.activeLink,
             autoCollapse: props.autoCollapse,
             childMap: childMap.value,
+            classNames: props.classNames,
             position: props.position,
             showTooltip: props.showTooltip,
             size: props.size,
+            styles: props.styles,
         })),
         level: 1,
         parentHref: () => undefined,
@@ -103,10 +107,10 @@
 <template>
     <div ref="root" :aria-label="locale.locale.label" :class="[prefix, `${prefix}-size-${props.size}`]" role="navigation" :style="{ maxWidth: toCssLength(props.maxWidth), maxHeight: toCssLength(props.maxHeight) }">
         <div :class="`${prefix}-rail-wrapper`">
-            <div aria-hidden="true" :class="[`${prefix}-slide`, `${prefix}-slide-${props.railTheme}`]">
-                <span :class="[`${prefix}-slide-bar`, `${prefix}-slide-bar-${props.size}`, `${prefix}-slide-bar-${props.railTheme}`, { [`${prefix}-slide-bar-active`]: state.activeLink }]" :style="{ top: state.slideBarTop }" />
+            <div aria-hidden="true" :class="[`${prefix}-slide`, `${prefix}-slide-${props.railTheme}`, props.classNames?.rail]" :style="props.styles?.rail">
+                <span :class="[`${prefix}-slide-bar`, `${prefix}-slide-bar-${props.size}`, `${prefix}-slide-bar-${props.railTheme}`, { [`${prefix}-slide-bar-active`]: state.activeLink }, props.classNames?.indicator]" :style="[{ top: state.slideBarTop }, props.styles?.indicator]" />
             </div>
-            <div ref="linkWrapper" :class="`${prefix}-link-wrapper`" role="list">
+            <div ref="linkWrapper" :class="[`${prefix}-link-wrapper`, props.classNames?.list]" role="list" :style="props.styles?.list">
                 <slot />
             </div>
         </div>

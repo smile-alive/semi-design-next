@@ -1,4 +1,5 @@
 import type { JSX, Ref } from 'solid-js';
+import type { TransferPart } from '@fibrae/semi-foundation/components/transfer/constants';
 import type { BasicDataItem, OnSortEndProps } from '@fibrae/semi-foundation/components/transfer/foundation';
 import type { ElementProps } from '../../base/index';
 import type { SortableHandle } from '../../internal/sortable/types';
@@ -135,6 +136,8 @@ export const TRANSFER_OWNED_TREE_PROPS = ['value', 'ref', 'onChange', 'keyMaps',
 export const TRANSFER_OWNED_INPUT_PROPS = ['value', 'onChange'] as const;
 
 export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onChange' | 'onSelect' | 'onBlur' | 'ref'> {
+    classNames?: Partial<Record<TransferPart, string>>;
+    styles?: Partial<Record<TransferPart, JSX.CSSProperties | string>>;
     disabled?: boolean;
     dataSource?: DataSource;
     filter?: boolean | ((searchValue: string, item: DataItem) => boolean);

@@ -14,6 +14,8 @@
     const defaults = useDefaultProps('Calendar');
 
     let {
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         displayValue = defaults('displayValue'),
         range = defaults('range'),
         events = defaults('events', []),
@@ -56,9 +58,31 @@
 </script>
 
 {#if mode === 'day'}
-    <DayCalendar {...rest} {allDayEvents} {dateGrid} displayValue={shownValue} {event} {events} {header} {height} {markWeekend} {minEventHeight} {onClick} {scrollTop} {showCurrTime} {timeDisplay} today={today()} {width} />
+    <DayCalendar {...rest} {allDayEvents} {classNames} {dateGrid} displayValue={shownValue} {event} {events} {header} {height} {markWeekend} {minEventHeight} {onClick} {scrollTop} {showCurrTime} {styles} {timeDisplay} today={today()} {width} />
 {:else if mode === 'month'}
-    <MonthCalendar {...rest} {dateDisplay} {dateGrid} displayValue={shownValue} {event} {events} {header} {height} {markWeekend} {onClick} {onClose} {onMoreClick} today={today()} {weekStartsOn} {width} />
+    <MonthCalendar {...rest} {classNames} {dateDisplay} {dateGrid} displayValue={shownValue} {event} {events} {header} {height} {markWeekend} {onClick} {onClose} {onMoreClick} {styles} today={today()} {weekStartsOn} {width} />
 {:else}
-    <TimeGrid {...rest} {allDayEvents} {dateDisplay} {dateGrid} {event} {events} {header} {height} labelDate={mode === 'week' ? shownValue : undefined} {markWeekend} {minEventHeight} {onClick} range={mode === 'week' ? weekRange : range!} {scrollTop} {showCurrTime} {timeDisplay} today={today()} {weekStartsOn} {width} />
+    <TimeGrid
+        {...rest}
+        {allDayEvents}
+        {classNames}
+        {dateDisplay}
+        {dateGrid}
+        {event}
+        {events}
+        {header}
+        {height}
+        labelDate={mode === 'week' ? shownValue : undefined}
+        {markWeekend}
+        {minEventHeight}
+        {onClick}
+        range={mode === 'week' ? weekRange : range!}
+        {scrollTop}
+        {showCurrTime}
+        {styles}
+        {timeDisplay}
+        today={today()}
+        {weekStartsOn}
+        {width}
+    />
 {/if}

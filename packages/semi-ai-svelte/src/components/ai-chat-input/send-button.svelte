@@ -1,9 +1,10 @@
 <script lang="ts">
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { IconArrowUp, IconStop } from '@fibrae/semi-icons-svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
 
-    let { generating, canSend, onClick }: { generating: boolean; canSend: boolean; onClick: () => void } = $props();
+    let { generating, canSend, class: className, style, onClick }: { generating: boolean; canSend: boolean; class?: ClassValue; style?: string; onClick: () => void } = $props();
 
     const locale = useLocale('AIChatInput');
 
@@ -21,7 +22,9 @@
             [`${prefix}-footer-action-stop`]: generating,
             [`${prefix}-footer-action-send-disabled`]: !generating && !canSend,
         },
+        className,
     ]}
+    {style}
     type="button"
     onclick={onClick}
 >

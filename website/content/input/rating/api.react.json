@@ -12,6 +12,10 @@
                 "en-US": "Character drawn in every star, a React node such as `<IconLikeHeart />`; the star icon when not set. When it is a plain text string, that text is the unit in each star's accessible name and the group summary."
             },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`dropdown`，与组件自带的类名合并。`item` 是单颗星，`dropdown` 是设置 `tooltips` 后出现的提示弹出层。",
+                "en-US": "Class names of the inner parts, keyed by `item` and `dropdown`; merged with the built-in classes. `item` is a single star; `dropdown` is the tip popup shown when `tooltips` is set."
+            },
             "count": { "zh-CN": "星的总数。", "en-US": "Total number of stars." },
             "defaultValue": { "zh-CN": "非受控时的初始值。", "en-US": "Initial value when uncontrolled." },
             "disabled": { "zh-CN": "只读，无法进行交互，也无法获得焦点。", "en-US": "Read-only: no interaction and no focus." },
@@ -41,6 +45,10 @@
             "ref": { "zh-CN": "组件句柄，暴露 `focus()` 与 `blur()` 方法。", "en-US": "Handle of the component, exposing the `focus()` and `blur()` methods." },
             "size": { "zh-CN": "尺寸，可选 `default`、`small`，也可传入 number 自定义尺寸。", "en-US": "Size: `default` or `small`, or a number for a custom size." },
             "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "tooltips": {
                 "zh-CN": "每颗星的提示信息，数组下标与星的序号对应；空字符串或缺省的项不显示提示。",
                 "en-US": "Tooltip text for each star, matched by array index to the star position; an empty or missing item shows no tooltip."

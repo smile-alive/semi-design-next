@@ -1,10 +1,11 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
+import { cssClasses, type OptionPart, type SelectPart } from '@fibrae/semi-foundation/components/select/constants';
 import type { SelectRawValue } from '@fibrae/semi-foundation/components/select/option-foundation';
 import { getDataAttr } from '@fibrae/semi-foundation/utils';
 import { IconTick } from '@fibrae/semi-icons-solid';
 import { createToken } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import Highlight from '../highlight';
 
 export const OPTION = 'Select.Option';
@@ -21,7 +22,9 @@ export interface OptionProps<V extends SelectRawValue = SelectRawValue> {
     disabled?: boolean;
     showTick?: boolean;
     class?: string;
+    classNames?: Partial<Record<OptionPart, string>>;
     style?: JSX.CSSProperties | string;
+    styles?: Partial<Record<OptionPart, JSX.CSSProperties | string>>;
 }
 
 /**
@@ -46,14 +49,19 @@ export interface OptionViewProps {
     semiOptionId?: string;
     prefixCls?: string;
     class?: string;
+    classNames?: Partial<Record<OptionPart, string>>;
     style?: JSX.CSSProperties | string;
+    styles?: Partial<Record<OptionPart, JSX.CSSProperties | string>>;
+    /** The `item*` parts of the parent, applied before the option's own */
+    parentClassNames?: Partial<Record<SelectPart, string>>;
+    parentStyles?: Partial<Record<SelectPart, JSX.CSSProperties | string>>;
     children?: JSX.Element;
     onSelect?: (e: MouseEvent) => void;
     onMouseEnter?: (e: MouseEvent) => void;
 }
 
 export function OptionView(props: OptionViewProps) {
-    const [local, rest] = splitProps(props, ['children', 'class', 'current', 'disabled', 'empty', 'focused', 'inputValue', 'onMouseEnter', 'onSelect', 'prefixCls', 'selected', 'semiOptionId', 'showTick', 'style']);
+    const [local, rest] = splitProps(props, ['children', 'class', 'classNames', 'current', 'disabled', 'empty', 'focused', 'inputValue', 'onMouseEnter', 'onSelect', 'parentClassNames', 'parentStyles', 'prefixCls', 'selected', 'semiOptionId', 'showTick', 'style', 'styles']);
 
     const content = children(() => local.children);
 
@@ -68,6 +76,7 @@ export function OptionView(props: OptionViewProps) {
                 [`${prefixCls()}-focused`]: local.focused,
                 [`${prefixCls()}-empty`]: local.empty,
             },
+            local.parentClassNames?.item,
             local.class
         );
 
@@ -86,20 +95,30 @@ export function OptionView(props: OptionViewProps) {
         <Show
             when={!local.empty}
             fallback={
-                <div class={rowClass()} x-semi-prop="emptyContent">
+                <div class={rowClass()} style={local.style} x-semi-prop="emptyContent">
                     {content()}
                 </div>
             }
         >
             {/* keyboard selection stays on the combobox through aria-activedescendant, so the option takes no focus */}
-            <div {...getDataAttr(rest)} id={local.semiOptionId} class={rowClass()} style={local.style} aria-disabled={local.disabled ? 'true' : 'false'} aria-selected={local.selected || local.current ? 'true' : 'false'} role="option" onClick={handleClick} onMouseEnter={(e) => local.onMouseEnter?.(e)}>
+            <div
+                {...getDataAttr(rest)}
+                id={local.semiOptionId}
+                class={rowClass()}
+                style={mergeStyles(local.parentStyles?.item, local.style)}
+                aria-disabled={local.disabled ? 'true' : 'false'}
+                aria-selected={local.selected || local.current ? 'true' : 'false'}
+                role="option"
+                onClick={handleClick}
+                onMouseEnter={(e) => local.onMouseEnter?.(e)}
+            >
                 <Show when={local.showTick}>
-                    <div class={`${prefixCls()}-icon`}>
+                    <div class={clsx(`${prefixCls()}-icon`, local.parentClassNames?.itemIcon, local.classNames?.icon)} style={mergeStyles(local.parentStyles?.itemIcon, local.styles?.icon)}>
                         <IconTick />
                     </div>
                 </Show>
                 <Show when={text() !== undefined} fallback={content()}>
-                    <div class={`${prefixCls()}-text`}>
+                    <div class={clsx(`${prefixCls()}-text`, local.parentClassNames?.itemContent, local.classNames?.content)} style={mergeStyles(local.parentStyles?.itemContent, local.styles?.content)}>
                         <Show when={local.inputValue} fallback={text()}>
                             {(keyword) => <Highlight classNames={{ highlight: `${prefixCls()}-keyword` }} searchWords={[keyword()]} sourceString={text()} />}
                         </Show>

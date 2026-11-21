@@ -345,9 +345,14 @@ export default function TextArea(rawProps: TextAreaProps) {
         counter = (
             <div
                 id={counterId}
-                className={clsx(`${prefixCls}-textarea-counter`, {
-                    [`${prefixCls}-textarea-counter-exceed`]: exceeds,
-                })}
+                className={clsx(
+                    `${prefixCls}-textarea-counter`,
+                    {
+                        [`${prefixCls}-textarea-counter-exceed`]: exceeds,
+                    },
+                    classNames?.counter
+                )}
+                style={styles?.counter}
                 onClick={foundation.handleCounterClick}
             >
                 {current}
@@ -365,7 +370,8 @@ export default function TextArea(rawProps: TextAreaProps) {
                 <button
                     ref={setClearButton}
                     type="button"
-                    className={`${prefixCls}-clearbtn`}
+                    className={clsx(`${prefixCls}-clearbtn`, classNames?.clear)}
+                    style={styles?.clear}
                     aria-label={locale.clear}
                     onClick={foundation.handleClearClick}
                     // keeps focus in the textarea, so clearing fires no blur

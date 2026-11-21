@@ -29,6 +29,8 @@ function Sidebar(rawProps: SideBarProps) {
         'mode',
         'title',
         'class',
+        'classNames',
+        'styles',
         'detailContent',
         'activeKey',
         'options',
@@ -87,14 +89,16 @@ function Sidebar(rawProps: SideBarProps) {
             <Show
                 when={hasContent(customHeader())}
                 fallback={
-                    <div class={`${prefixCls}-detail-header`}>
+                    <div class={clsx(`${prefixCls}-detail-header`, local.classNames?.header)} style={local.styles?.header}>
                         <span class={cssClasses.DETAIL_HEADER_LEFT}>
-                            <Button type="tertiary" aria-label={locale().locale.close} theme="borderless" icon={<IconClose />} onClick={(e) => local.onBackWard?.(e, strings.MODE.MAIN)} />
-                            <span class={`${prefixCls}-detail-header-title`}>{local.detailContent?.name}</span>
+                            <Button type="tertiary" class={clsx(`${prefixCls}-detail-header-back`, local.classNames?.close)} style={local.styles?.close} aria-label={locale().locale.close} theme="borderless" icon={<IconClose />} onClick={(e) => local.onBackWard?.(e, strings.MODE.MAIN)} />
+                            <span class={clsx(`${prefixCls}-detail-header-title`, local.classNames?.title)} style={local.styles?.title}>
+                                {local.detailContent?.name}
+                            </span>
                         </span>
                         <span class={`${prefixCls}-detail-header-right`}>
                             <Show when={typeof local.detailContent?.content === 'string'}>
-                                <Button type="tertiary" aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={handleCopyDetailContent} />
+                                <Button type="tertiary" class={clsx(`${prefixCls}-detail-header-copy`, local.classNames?.copy)} style={local.styles?.copy} aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={handleCopyDetailContent} />
                             </Show>
                         </span>
                     </div>
@@ -136,11 +140,22 @@ function Sidebar(rawProps: SideBarProps) {
     onCleanup(() => toast.destroyAll());
 
     return (
-        <Container {...rest} class={clsx(local.class, { [`${prefixCls}-main`]: isMain(), [`${prefixCls}-detail`]: !isMain() })} title={isMain() ? local.title : null} afterVisibleChange={handleAfterVisibleChange} containerRef={(node) => (root = node)} renderHeader={isMain() ? undefined : detailHeader}>
+        <Container
+            {...rest}
+            class={clsx(local.class, { [`${prefixCls}-main`]: isMain(), [`${prefixCls}-detail`]: !isMain() })}
+            classNames={local.classNames}
+            styles={local.styles}
+            title={isMain() ? local.title : null}
+            afterVisibleChange={handleAfterVisibleChange}
+            containerRef={(node) => (root = node)}
+            renderHeader={isMain() ? undefined : detailHeader}
+        >
             <Show when={isMain()} fallback={detail()}>
                 <div class={`${prefixCls}-main-content-wrapper`}>
-                    <Options activeKey={local.activeKey} options={local.options} renderOptionIcon={local.renderOptionIcon} renderOptionItem={local.renderOptionItem} onChange={local.onActiveOptionChange} />
-                    <div class={`${prefixCls}-main-content`}>{local.renderMainContent?.(local.activeKey!)}</div>
+                    <Options activeKey={local.activeKey} classNames={local.classNames} options={local.options} renderOptionIcon={local.renderOptionIcon} renderOptionItem={local.renderOptionItem} styles={local.styles} onChange={local.onActiveOptionChange} />
+                    <div class={clsx(`${prefixCls}-main-content`, local.classNames?.mainContent)} style={local.styles?.mainContent}>
+                        {local.renderMainContent?.(local.activeKey!)}
+                    </div>
                 </div>
             </Show>
         </Container>

@@ -6,12 +6,14 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | avatarShape | Shape of the avatar in an avatar tag: square or circle. | `AvatarShape` | `"square"` |
 | avatarSrc | Avatar image URL. Setting it makes an avatar tag. | `string` | `semiGlobalDefault("Tag", "avatarSrc")` |
+| classNames | Class names of the inner parts, keyed by `prefix`, `avatar`, `content`, `suffix` and `close`; merged with the built-in classes. `avatar` lands on the root element of the avatar. | <ApiType detail={"Partial\u003cRecord\u003cTagPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Tag", "classNames")` |
 | closable | Whether the tag can be closed. | `boolean` | `false` |
 | color | Tag color: one of the 16 palette colors or white. | <ApiType detail={"\"amber\" \u007c \"blue\" \u007c \"cyan\" \u007c \"green\" \u007c \"grey\" \u007c \"indigo\" \u007c \"light-blue\" \u007c \"light-green\" \u007c \"lime\" \u007c \"orange\" \u007c \"pink\" \u007c \"purple\" \u007c \"red\" \u007c \"teal\" \u007c \"violet\" \u007c \"white\" \u007c \"yellow\""}>Type</ApiType> | `"grey"` |
 | colorful | Whether the tag is colorful. | `boolean` | `false` |
 | gradient | Whether a colorful tag uses a gradient. Requires colorful. | `boolean` | `false` |
 | shape | Tag shape: square or circle. | `TagShape` | `"square"` |
 | size | Tag size: small, default or large. | `"default" \| "large" \| "small"` | `"default"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTagPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Tag", "styles")` |
 | tabindex | tabindex of the tag. An interactive tag defaults to 0. | `number` | `semiGlobalDefault("Tag", "tabindex")` |
 | tagKey | Unique identifier of the tag, passed as the second argument of close. | `string \| number` | `semiGlobalDefault("Tag", "tagKey")` |
 | type | Style type: light, ghost or solid. | `"ghost" \| "light" \| "solid"` | `"light"` |

@@ -31,6 +31,8 @@
         type: () => semiDefault('Checkbox', 'type', 'default'),
         addonId: undefined,
         extraId: undefined,
+        classNames: semiGlobalDefault('Checkbox', 'classNames'),
+        styles: semiGlobalDefault('Checkbox', 'styles'),
         preventScroll: semiGlobalDefault('Checkbox', 'preventScroll'),
     });
 
@@ -62,6 +64,8 @@
     );
 
     const prefix = checkboxClasses.PREFIX;
+    const groupClassNames = computed(() => group?.classNames.value);
+    const groupStyles = computed(() => group?.styles.value);
     const addonId = computed(() => props.addonId || `addon-${uid}`);
     const extraId = computed(() => props.extraId || `extra-${uid}`);
 
@@ -109,8 +113,8 @@
 </script>
 
 <template>
+    <!-- v-bind comes last so the owner's class and style follow the group's item class and style -->
     <span
-        v-bind="splitControlAttrs($attrs, isNativeInputKey).root"
         :class="[
             prefix,
             {
@@ -124,7 +128,10 @@
                 [`${prefix}-cardType_checked`]: isCardType && checked && !disabled,
                 [`${prefix}-cardType_checked_disabled`]: isCardType && checked && disabled,
             },
+            groupClassNames?.item,
         ]"
+        :style="groupStyles?.item"
+        v-bind="splitControlAttrs($attrs, isNativeInputKey).root"
         @click="handleClick"
     >
         <span :class="[`${prefix}-inner`, { [`${prefix}-inner-checked`]: checked, [`${prefix}-inner-pureCardType`]: isPureCardType }]">
@@ -145,16 +152,16 @@
                 :value="props.value === undefined ? undefined : String(props.value)"
                 @change="handleInputChange"
             />
-            <span :class="`${prefix}-inner-display`">
+            <span :class="[`${prefix}-inner-display`, groupClassNames?.itemIcon, props.classNames?.icon]" :style="[groupStyles?.itemIcon, props.styles?.icon]">
                 <IconCheckboxTick v-if="checked" />
                 <IconCheckboxIndeterminate v-else-if="props.indeterminate" />
             </span>
         </span>
         <div v-if="$slots.default || $slots.extra" :class="`${prefix}-content`">
-            <span v-if="$slots.default" :id="addonId" :class="`${prefix}-addon`" x-semi-prop="children">
+            <span v-if="$slots.default" :id="addonId" :class="[`${prefix}-addon`, groupClassNames?.itemLabel, props.classNames?.label]" :style="[groupStyles?.itemLabel, props.styles?.label]" x-semi-prop="children">
                 <slot />
             </span>
-            <div v-if="$slots.extra" :id="extraId" :class="[`${prefix}-extra`, { [`${prefix}-cardType_extra_noChildren`]: isCardType && !$slots.default }]" x-semi-prop="extra">
+            <div v-if="$slots.extra" :id="extraId" :class="[`${prefix}-extra`, { [`${prefix}-cardType_extra_noChildren`]: isCardType && !$slots.default }, groupClassNames?.itemExtra, props.classNames?.extra]" :style="[groupStyles?.itemExtra, props.styles?.extra]" x-semi-prop="extra">
                 <slot name="extra" />
             </div>
         </div>

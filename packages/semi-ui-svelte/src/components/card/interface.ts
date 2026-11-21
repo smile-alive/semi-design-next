@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
-import type { CardPart } from '@fibrae/semi-foundation/components/card/constants';
+import type { CardMetaPart, CardPart } from '@fibrae/semi-foundation/components/card/constants';
 import type { SpaceProps } from '../space/interface.js';
 
 export type Shadows = 'hover' | 'always';
@@ -26,6 +26,8 @@ export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'>
 }
 
 export interface MetaProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+    classNames?: Partial<Record<CardMetaPart, ClassValue>>;
+    styles?: Partial<Record<CardMetaPart, string>>;
     title?: string | Snippet;
     avatar?: Snippet;
     description?: Snippet;

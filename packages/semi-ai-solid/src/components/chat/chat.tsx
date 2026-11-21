@@ -153,12 +153,14 @@ export default function Chat(rawProps: ChatProps) {
         (): ChatView => ({
             align: local.align,
             chatBoxRenderConfig: local.chatBoxRenderConfig,
+            classNames: local.classNames,
             customMarkDownComponents: local.customMarkDownComponents,
             escapeHtml: local.escapeHtml,
             markdownRenderProps: local.markdownRenderProps,
             mode: local.mode,
             renderDivider: local.renderDivider,
             roleConfig: local.roleConfig,
+            styles: local.styles,
         }),
         undefined,
         { equals: sameFields }
@@ -223,7 +225,15 @@ export default function Chat(rawProps: ChatProps) {
         };
         return (
             <Show when={message().role === ROLE.DIVIDER} fallback={<ChatBox message={message()} continueSend={continueSend()} isLast={isLast()} />}>
-                <Show when={view().renderDivider} keyed fallback={<Divider class={PREFIX_DIVIDER}>{locale().locale.clearContext}</Divider>}>
+                <Show
+                    when={view().renderDivider}
+                    keyed
+                    fallback={
+                        <Divider class={clsx(PREFIX_DIVIDER, view().classNames?.divider)} style={view().styles?.divider}>
+                            {locale().locale.clearContext}
+                        </Divider>
+                    }
+                >
                     {(render) => render(message())}
                 </Show>
             </Show>
@@ -235,19 +245,19 @@ export default function Chat(rawProps: ChatProps) {
     return (
         <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest)} class={clsx(prefixCls, local.class)} style={local.style} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDragStart={handleDragStart}>
             <Show when={upload().dragUpload && state().uploadAreaVisible}>
-                <div ref={(node) => (dropArea = node)} class={`${prefixCls}-dropArea`} onDragLeave={foundation.handleContainerDragLeave} onDragOver={foundation.handleContainerDragOver} onDrop={foundation.handleContainerDrop}>
+                <div ref={(node) => (dropArea = node)} class={clsx(`${prefixCls}-dropArea`, local.classNames?.dropArea)} style={local.styles?.dropArea} onDragLeave={foundation.handleContainerDragLeave} onDragOver={foundation.handleContainerDragOver} onDrop={foundation.handleContainerDrop}>
                     <span class={`${prefixCls}-dropArea-text`}>{locale().locale.dropAreaText}</span>
                 </div>
             </Show>
             <div class={`${prefixCls}-inner`}>
                 {local.topSlot}
                 <div class={`${prefixCls}-content`}>
-                    <div ref={setContainer} class={`${prefixCls}-container`} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
+                    <div ref={setContainer} class={clsx(`${prefixCls}-container`, local.classNames?.messages)} style={local.styles?.messages} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
                         <ChatContext.Provider value={context}>
                             <For each={keys()}>{renderRow}</For>
                         </ChatContext.Provider>
                         <Show when={local.hints?.length}>
-                            <Hint class={local.classNames?.hint} style={local.styles?.hint} value={local.hints ?? []} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
+                            <Hint class={local.classNames?.hint} itemClass={local.classNames?.hintItem} itemStyle={local.styles?.hintItem} style={local.styles?.hint} value={local.hints ?? []} renderHintBox={local.renderHintBox} onHintClick={foundation.handleHintClick} />
                         </Show>
                     </div>
                     {/* outside the log: a toast inside it would be announced as one more log entry */}
@@ -255,20 +265,27 @@ export default function Chat(rawProps: ChatProps) {
                 </div>
                 <Show when={state().backBottomVisible && !generating()}>
                     <span ref={handoverActionFocus} class={`${prefixCls}-action`}>
-                        <Button type="tertiary" class={`${prefixCls}-action-content ${prefixCls}-action-backBottom`} aria-label={locale().locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
+                        <Button
+                            type="tertiary"
+                            class={clsx(`${prefixCls}-action-content`, `${prefixCls}-action-backBottom`, local.classNames?.backBottom)}
+                            style={local.styles?.backBottom}
+                            aria-label={locale().locale.backToBottom}
+                            icon={<IconChevronDown size="extra-large" />}
+                            onClick={foundation.scrollToBottomWithAnimation}
+                        />
                     </span>
                 </Show>
                 <Show when={generating()}>
                     <span ref={handoverActionFocus} class={`${prefixCls}-action`}>
-                        <Button type="tertiary" class={`${prefixCls}-action-content ${prefixCls}-action-stop`} icon={<IconDisc size="extra-large" />} onClick={foundation.stopGenerate}>
+                        <Button type="tertiary" class={clsx(`${prefixCls}-action-content`, `${prefixCls}-action-stop`, local.classNames?.stop)} style={local.styles?.stop} icon={<IconDisc size="extra-large" />} onClick={foundation.stopGenerate}>
                             {locale().locale.stop}
                         </Button>
                     </span>
                 </Show>
                 <InputBox
                     ref={(handle) => (inputBox = handle)}
-                    class={local.classNames?.inputBox}
-                    style={local.styles?.inputBox}
+                    classNames={local.classNames}
+                    styles={local.styles}
                     placeholder={local.placeholder}
                     canSend={local.canSend}
                     clickUpload={upload().clickUpload}

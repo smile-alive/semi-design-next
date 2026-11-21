@@ -673,4 +673,46 @@ describe('Breadcrumb', () => {
         expect([...list.children].map((el) => (el.classList.contains('semi-breadcrumb-collapse') ? 'more' : el.querySelector('.semi-typography')?.textContent))).toEqual(row);
         expect(screen.getByText(routes[activeIndex]).closest('.semi-breadcrumb-item-wrap')).toHaveAttribute('aria-current', 'page');
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['list', 'item', 'itemLink', 'itemIcon', 'itemTitle', 'separator', 'more'] as const;
+        const selectors = { list: 'list', item: 'item-wrap', itemLink: 'item-link', itemIcon: 'item-icon', itemTitle: 'item-title', separator: 'separator', more: 'item-more' };
+        const { container } = render(
+            <Breadcrumb classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]))} maxItemCount={3}>
+                {['a', 'b', 'c', 'd', 'e'].map((name) => (
+                    <Breadcrumb.Item key={name} href={`#${name}`} icon={<IconHome />}>
+                        {name}
+                    </Breadcrumb.Item>
+                ))}
+            </Breadcrumb>
+        );
+        for (const part of parts) {
+            const el = container.querySelector(`.semi-breadcrumb-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('Breadcrumb.Item 的 classNames 在父级 item* 之后，样式后写', () => {
+        const { container } = render(
+            <Breadcrumb classNames={{ item: 'p-item', itemLink: 'p-link', itemIcon: 'p-icon', itemTitle: 'p-title', separator: 'p-sep' }} styles={{ itemLink: { order: 1, opacity: 0.5 }, separator: { order: 1 } }}>
+                <Breadcrumb.Item className="own" classNames={{ link: 'c-link', icon: 'c-icon', title: 'c-title', separator: 'c-sep' }} styles={{ link: { order: 2 }, separator: { order: 2 } }} href="#a" icon={<IconHome />}>
+                    a
+                </Breadcrumb.Item>
+                <Breadcrumb.Item href="#b">b</Breadcrumb.Item>
+            </Breadcrumb>
+        );
+        const [first, second] = getItemWraps(container);
+        expect(first.className).toMatch(/p-item own$/);
+        expect(second).toHaveClass('p-item');
+        const link = first.querySelector('.semi-breadcrumb-item');
+        expect(link.className).toMatch(/p-link c-link$/);
+        expect(link).toHaveStyle({ order: '2', opacity: '0.5' });
+        expect(first.querySelector('.semi-breadcrumb-item-icon').className).toMatch(/p-icon c-icon/);
+        expect(first.querySelector('.semi-breadcrumb-item-title').className).toMatch(/p-title c-title/);
+        const sep = first.querySelector('.semi-breadcrumb-separator');
+        expect(sep.className).toMatch(/p-sep c-sep$/);
+        expect(sep).toHaveStyle({ order: '2' });
+        expect(second.querySelector('.semi-breadcrumb-item')).toHaveStyle({ order: '1' });
+    });
 });

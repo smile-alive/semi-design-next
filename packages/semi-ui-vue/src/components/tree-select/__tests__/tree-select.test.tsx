@@ -363,6 +363,74 @@ describe('TreeSelect', () => {
         expect(getPopover()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    describe('部位', () => {
+        const prefixCls = `${BASE_CLASS_PREFIX}-tree-select`;
+        const treeCls = `${BASE_CLASS_PREFIX}-tree`;
+        const partProps = (selectors: Record<string, string>) => {
+            const parts = Object.keys(selectors);
+            return {
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+            };
+        };
+        const expectParts = (selectors: Record<string, string>) => {
+            const parts = Object.keys(selectors);
+            for (const part of parts) {
+                const el = document.querySelector(`.my-${part}`);
+                expect([part, el?.matches(selectors[part])]).toEqual([part, true]);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+
+        it('classNames 与 styles 按部位落到对应元素', async () => {
+            const selectors = {
+                prefix: `.${prefixCls}-prefix`,
+                suffix: `.${prefixCls}-suffix`,
+                content: `.${prefixCls}-selection`,
+                clear: `.${prefixCls}-clearbtn`,
+                arrow: `.${prefixCls}-arrow`,
+                dropdown: `.${prefixCls}-popover`,
+                search: `.${treeCls}-search-wrapper`,
+                list: `.${treeCls}-option-list`,
+                item: `li.${treeCls}-option`,
+                itemTitle: `.${treeCls}-option-label-text`,
+                itemSwitcher: `.${treeCls}-option-expand-icon`,
+            };
+            await renderTreeSelect({ defaultValue: 'Beijing', showClear: true, filterTreeNode: true, defaultExpandAll: true, ...partProps(selectors) }, { prefix: () => 'pre', suffix: () => 'suf' });
+            expectParts(selectors);
+        });
+
+        it('classNames.placeholder 落在未选择时的占位文本上', async () => {
+            const selectors = { placeholder: `.${prefixCls}-selection-placeholder` };
+            await renderTreeSelect({ defaultOpen: false, placeholder: 'ph', ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('classNames.empty 落在无数据时的空状态上', async () => {
+            const selectors = { empty: `ul.${treeCls}-option-empty`, list: `.${treeCls}-option-list` };
+            await renderTreeSelect({ treeData: [], ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('searchPosition 为 trigger 时 classNames.input 落在单选搜索框上', async () => {
+            const selectors = { input: `.${prefixCls}-inputTrigger` };
+            await renderTreeSelect({ defaultOpen: false, filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('多选时 classNames.input 落在 TagInput 上，classNames.tag 落在已选标签上', async () => {
+            const selectors = { input: `.${BASE_CLASS_PREFIX}-tagInput`, tag: `.${prefixCls}-selection-tag` };
+            await renderTreeSelect({ defaultOpen: false, multiple: true, defaultValue: ['Beijing'], filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) });
+            expectParts(selectors);
+        });
+
+        it('多选的已选标签组里 classNames.tag 落在标签上', async () => {
+            const selectors = { tag: `.${BASE_CLASS_PREFIX}-tag` };
+            await renderTreeSelect({ defaultOpen: false, multiple: true, defaultValue: ['Beijing'], ...partProps(selectors) });
+            expectParts(selectors);
+        });
+    });
+
     // jsdom has no layout, so only the CSS wiring of `--semi-tooltip-trigger-width` is checked: on the popover wrapper
     it('dropdownMatchSelectWidth 为 true', async () => {
         await renderTreeSelect({ style: { width: '90px' }, defaultValue: 'abc' });
@@ -3369,15 +3437,15 @@ describe('TreeSelect 行为', () => {
         expect(multipleTree).toHaveAccessibleName('Region');
     });
 
-    it('classNames.optionList 与 styles.optionList 在有数据和无数据时都落在 aria-controls 指向的元素上', async () => {
-        const { unmount } = await renderTreeSelect({ defaultOpen: false, classNames: { optionList: 'my-list' }, styles: { optionList: { height: '200px' } } });
+    it('classNames.list 与 styles.list 在有数据和无数据时都落在 aria-controls 指向的元素上', async () => {
+        const { unmount } = await renderTreeSelect({ defaultOpen: false, classNames: { list: 'my-list' }, styles: { list: { height: '200px' } } });
         await click(getTrigger());
         const tree = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(tree).toHaveAttribute('role', 'tree');
         expect(tree).toHaveClass('my-list');
         expect(tree).toHaveStyle({ height: '200px' });
         unmount();
-        await renderTreeSelect({ defaultOpen: false, treeData: [], classNames: { optionList: 'my-list' }, styles: { optionList: { height: '200px' } } });
+        await renderTreeSelect({ defaultOpen: false, treeData: [], classNames: { list: 'my-list' }, styles: { list: { height: '200px' } } });
         await click(getTrigger());
         const empty = document.getElementById(getTrigger().getAttribute('aria-controls')!);
         expect(empty).not.toHaveAttribute('role', 'tree');

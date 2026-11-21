@@ -18,6 +18,10 @@
                 "zh-CN": "类名，与组件自身的类名合并后落在 `<button>` 上。",
                 "en-US": "Class name, merged with the component's own class name on the `<button>`."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `body`（按钮内承载图标或 `children` 的容器 `.semi-floatButton-body`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `body` (the container of the icon or `children` inside the button, `.semi-floatButton-body`); merged with the built-in classes."
+            },
             "colorful": {
                 "zh-CN": "多彩按钮，同 FloatButton；未设置时为 `false`。",
                 "en-US": "Colorful button, same as FloatButton; `false` when unset."
@@ -49,6 +53,10 @@
             "style": {
                 "zh-CN": "按钮的内联样式，可用于覆盖默认的位置等样式。",
                 "en-US": "Inline style of the button, used to override its default position and other styles."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "target": {
                 "zh-CN": "返回被监听滚动元素的函数，未设置时为 window；返回 null 表示节点尚不可用。挂载后调用一次，此时父容器的 ref 已可读取；之后只在函数本身变化时重新调用。稳定的函数晚于挂载才返回元素时，需要重新挂载 BackTop。",

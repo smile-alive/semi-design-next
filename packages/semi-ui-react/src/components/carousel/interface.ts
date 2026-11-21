@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import type { strings } from '@fibrae/semi-foundation/components/carousel/constants';
+import type { CarouselPart, strings } from '@fibrae/semi-foundation/components/carousel/constants';
 import type { CarouselAutoPlay } from '@fibrae/semi-foundation/components/carousel/foundation';
 import type { ElementProps } from '../../base/index';
 
@@ -23,6 +23,7 @@ export interface CarouselProps extends ElementProps<'div', 'onChange'> {
     arrowType?: (typeof strings.ARROW_MAP)[number];
     children?: ReactNode | Array<ReactNode>;
     className?: string;
+    classNames?: Partial<Record<CarouselPart, string>>;
     defaultActiveIndex?: number;
     indicatorPosition?: (typeof strings.POSITION_MAP)[number];
     indicatorSize?: (typeof strings.SIZE)[number];
@@ -34,13 +35,15 @@ export interface CarouselProps extends ElementProps<'div', 'onChange'> {
     slideDirection?: (typeof strings.DIRECTION)[number];
     speed?: number;
     style?: React.CSSProperties;
+    styles?: Partial<Record<CarouselPart, React.CSSProperties>>;
     trigger?: (typeof strings.TRIGGER)[number];
     ref?: React.Ref<CarouselHandle>;
 }
 
 export interface CarouselIndicatorProps {
     activeIndex?: number;
-    className?: string;
+    classNames?: Partial<Record<CarouselPart, string>>;
+    styles?: Partial<Record<CarouselPart, React.CSSProperties>>;
     defaultActiveIndex?: number;
     position?: (typeof strings.POSITION_MAP)[number];
     size?: (typeof strings.SIZE)[number];
@@ -50,7 +53,6 @@ export interface CarouselIndicatorProps {
     onIndicatorChange?: (activeIndex: number) => void;
     getTabId: (index: number) => string;
     getSlideId: (index: number) => string;
-    style?: React.CSSProperties;
     trigger?: (typeof strings.TRIGGER)[number];
     ref?: React.Ref<HTMLDivElement>;
     onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
@@ -63,6 +65,8 @@ export interface CarouselArrowProps {
     prev?: () => void;
     next?: () => void;
     arrowProps?: ArrowProps;
+    classNames?: Partial<Record<CarouselPart, string>>;
+    styles?: Partial<Record<CarouselPart, React.CSSProperties>>;
 }
 
 export interface ArrowButton {

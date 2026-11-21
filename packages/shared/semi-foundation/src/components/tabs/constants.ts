@@ -1,7 +1,7 @@
 import { BASE_CLASS_PREFIX } from '../../base/index';
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type TabsPart = 'tabBar' | 'content' | 'visibleTabs';
+export type TabsPart = 'tabBar' | 'content' | 'visibleTabs' | 'item' | 'itemIcon' | 'itemClose' | 'pane' | 'extra' | 'arrow' | 'more' | 'dropdown';
 
 export const cssClasses = {
     TABS: `${BASE_CLASS_PREFIX}-tabs`,

@@ -2,9 +2,11 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property  | Description                                                                                                                                | Type                                                                                  | Default |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ------- |
-| activeKey | Keys of the expanded file panels; bind it with `bind:activeKey`.                                                                           | `string \| string[]`                                                                  | -       |
-| files     | The file entries, rendered read-only: each entry's extensions and imgUploadProps reach its preview.                                        | `FileItemData[]`                                                                      | `[]`    |
-| onChange  | Called when a panel opens or closes through its arrow, with the expanded keys.                                                             | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>        | -       |
-| onExpand  | Called when the expand button beside a panel header is clicked, with the event, its entry and file. Without it the button is not rendered. | <ApiType detail={"(event: MouseEvent, item: T, mode: string) => void"}>Type</ApiType> | -       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | Keys of the expanded file panels; bind it with `bind:activeKey`. | `string \| string[]` | - |
+| classNames | Class names of the inner parts, keyed by itemHeader and itemExpand; they apply to every file panel and merge with the built-in classes. Values take the same forms as class (string, array or object). | <ApiType detail={"Partial\u003cRecord\u003cSidebarFileContentPart, ClassValue>>"}>Type</ApiType> | - |
+| files | The file entries, rendered read-only: each entry's extensions and imgUploadProps reach its preview. | `FileItemData[]` | `[]` |
+| onChange | Called when a panel opens or closes through its arrow, with the expanded keys. | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onExpand | Called when the expand button beside a panel header is clicked, with the event, its entry and file. Without it the button is not rendered. | <ApiType detail={"(event: MouseEvent, item: T, mode: string) => void"}>Type</ApiType> | - |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cSidebarFileContentPart, string>>"}>Type</ApiType> | - |

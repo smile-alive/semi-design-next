@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 `cover`、`body`、`title`、`description`、`progress`、`indicators`、`footer`，与组件自带的类名合并；`progress` 是形如 1/3 的序号文字，`indicators` 是封面下方的圆点指示器容器，只在 modal 模式且步骤有封面时存在。popup 模式的 `body` 还包住 `footer`，modal 模式的 `footer` 在 `body` 之外。 | <ApiType detail={"Partial\u003cRecord\u003cUserGuidePart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("UserGuide", "classNames")` |
 | current | 当前步骤的索引，对应 v-model:current；不传时由组件自己保存，从 0 开始。 | `number` | `semiGlobalDefault("UserGuide", "current")` |
 | finishText | 最后一步完成按钮的文本；为空时使用语言包中的文案。 | `string` | `semiGlobalDefault("UserGuide", "finishText")` |
 | getPopupContainer | modal 模式下弹窗渲染至该 DOM 中；popup 模式下指向 body 以外的元素时不锁定 body 滚动。气泡卡片位于 top layer，不受此属性影响。 | <ApiType detail={"(() => HTMLElement)"}>Type</ApiType> | `undefined` |
@@ -16,6 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | showSkipButton | 是否显示跳过按钮，最后一步不显示。 | `boolean` | `true` |
 | spotlightPadding | 高亮区域的外扩距离，单位为像素，可被步骤的 spotlightPadding 覆盖；都未设置时为 5。 | `number` | `semiGlobalDefault("UserGuide", "spotlightPadding")` |
 | steps | 引导步骤的数据；标题、描述和封面的自定义内容使用 title、description、cover 插槽。 | `UserGuideStepItem[]` | `[]` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cUserGuidePart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("UserGuide", "styles")` |
 | theme | popup 模式的主题，可被步骤的 theme 覆盖。 | `"default" \| "primary"` | `"default"` |
 | visible | 是否显示引导，对应 v-model:visible。 | `boolean` | `false` |
 | zIndex | popup 模式下遮罩的层级，modal 模式下弹窗的层级。气泡卡片位于 top layer，始终在遮罩之上。 | `number` | `numbers.DEFAULT_Z_INDEX` |

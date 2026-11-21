@@ -7,4 +7,5 @@ export interface Parts {
     footer?: boolean;
     actions?: number;
     meta?: boolean;
+    metaAvatar?: boolean;
 }

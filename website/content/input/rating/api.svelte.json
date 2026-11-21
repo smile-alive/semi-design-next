@@ -12,6 +12,14 @@
                 "zh-CN": "每颗星中绘制的字符，字符串或 snippet；字符串同时是各星可访问名称与整组摘要的单位，snippet 则用语言包的单位。",
                 "en-US": "Character drawn in every star, a string or a snippet. A string is also the unit in each star's accessible name and the group summary; for a snippet the locale's unit is used."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`dropdown`，与组件自带的类名合并。`item` 是单颗星，`dropdown` 是设置 `tooltips` 后出现的提示弹出层。",
+                "en-US": "Class names of the inner parts, keyed by `item` and `dropdown`; merged with the built-in classes. `item` is a single star; `dropdown` is the tip popup shown when `tooltips` is set."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "count": { "zh-CN": "星的总数。", "en-US": "Total number of stars." },
             "disabled": { "zh-CN": "只读，无法进行交互，也无法获得焦点。", "en-US": "Read-only: no interaction and no focus." },
             "onBlur": { "zh-CN": "焦点离开整个评分组件时的回调。", "en-US": "Called when focus leaves the rating." },

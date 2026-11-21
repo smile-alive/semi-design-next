@@ -19,8 +19,8 @@
                 "en-US": "Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). 'auto' collapses when the tabs overflow or wrap and leaves the collapse once they fit."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `tabBar`（标签栏）、`content`（内容区域外层）、`visibleTabs`（折叠模式下整体滚动区域），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `tabBar`, `content` (the outer content area) and `visibleTabs` (the whole scrolling area in collapsible mode); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `tabBar`（标签栏）、`content`（内容区域外层）、`visibleTabs`（折叠模式下整体滚动区域）、`item`（每个标签）、`itemIcon`（标签图标）、`itemClose`（标签关闭图标）、`pane`（每个标签页的面板）、`extra`（`tabBarExtraContent` 的容器）、`arrow`（折叠模式下的翻页箭头，两端都生效）、`more`（`more` 模式的「更多」按钮）、`dropdown`（箭头与「更多」的下拉浮层），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `tabBar`, `content` (the outer content area), `visibleTabs` (the whole scrolling area in collapsible mode), `item` (each tab), `itemIcon` (the tab icon), `itemClose` (the tab close icon), `pane` (each tab panel), `extra` (the `tabBarExtraContent` container), `arrow` (the scroll arrows in collapsible mode, both ends), `more` (the \"more\" button of `more` mode) and `dropdown` (the popup of the arrows and of \"more\"); merged with the built-in classes."
             },
             "defaultActiveKey": {
                 "zh-CN": "非受控时初始选中的 itemKey。不传时取第一个启用且有 itemKey 的标签页。",

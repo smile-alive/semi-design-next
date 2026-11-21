@@ -70,6 +70,14 @@ describe('BackTop', () => {
         expect(getRoot(view.container)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const view = render(BackTop, { props: { classNames: { body: ['my-body'] }, styles: { body: { order: 1 } }, visibilityHeight: -1 } });
+        await frame();
+        const body = view.container.querySelector('.semi-backtop .semi-floatButton-body');
+        expect(body).toHaveClass('my-body');
+        expect(body).toHaveStyle({ order: '1' });
+    });
+
     it('点击发出 click 事件', async () => {
         const view = render(BackTop, { attrs: { class: 'test' }, props: { visibilityHeight: -1 } });
         await frame();

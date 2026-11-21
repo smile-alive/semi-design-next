@@ -271,6 +271,8 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
                     {...innerProps}
                     id={inputId}
                     name={name}
+                    classNames={{ input: classNames?.input, prefix: classNames?.prefix, suffix: classNames?.suffix, clear: classNames?.clear }}
+                    styles={{ input: styles?.input, prefix: styles?.prefix, suffix: styles?.suffix, clear: styles?.clear }}
                     aria-activedescendant={activeDescendant}
                     aria-autocomplete="list"
                     aria-controls={visible ? optionListId : undefined}
@@ -318,6 +320,8 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
                     current={optionIndex === focusIndex}
                     focused={optionIndex === focusIndex}
                     label={label}
+                    parentClassNames={classNames}
+                    parentStyles={styles}
                     prefixCls={cssClasses.PREFIX_OPTION}
                     semiOptionId={getOptionId(optionListId, optionIndex)}
                     showTick={false}

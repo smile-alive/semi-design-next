@@ -10,6 +10,10 @@
                 "zh-CN": "列表中的 ScrollItem。",
                 "en-US": "The ScrollItem columns."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `header`、`title`、`body`、`footer`，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `header`, `title`, `body` and `footer`; merged with the built-in classes."
+            },
             "footer": {
                 "zh-CN": "底部内容，可传任意 JSX 元素。",
                 "en-US": "Footer content; any JSX element."
@@ -17,12 +21,20 @@
             "header": {
                 "zh-CN": "头部内容，可传任意 JSX 元素。",
                 "en-US": "Header content; any JSX element."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as style objects or strings."
             }
         }
     },
     "scroll-item": {
         "source": "packages/semi-ui-solid/src/components/scroll-list/scroll-item.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `list`、`option`、`selector`（仅 wheel 模式渲染），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `list`, `option` and `selector` (wheel mode only); merged with the built-in classes."
+            },
             "cycled": {
                 "zh-CN": "是否为无限循环。wheel 模式下列表首尾相接地无限滚动；两种模式下方向键都在首尾循环。",
                 "en-US": "Whether the column cycles. In wheel mode the list scrolls without end; in both modes the arrow keys wrap around at both ends."
@@ -50,6 +62,10 @@
             "selectedIndex": {
                 "zh-CN": "选中项的索引，没有非受控模式，需配合 onSelect 更新。",
                 "en-US": "Index of the selected item. There is no uncontrolled mode; update it in onSelect."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，可传样式对象或样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as style objects or strings."
             },
             "transform": {
                 "zh-CN": "对选中项文案的变换，返回值作为文案显示；未传时显示 text，没有 text 时显示 value。数据项自带的 transform 优先。",

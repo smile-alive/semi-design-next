@@ -12,6 +12,8 @@
 
     const props = withDefaults(defineProps<CollapseProps & /* @vue-ignore */ ElementProps<'div', keyof CollapseProps | EmitHandlers<CollapseEmits>>>(), {
         activeKey: undefined,
+        classNames: semiGlobalDefault('Collapse', 'classNames'),
+        styles: semiGlobalDefault('Collapse', 'styles'),
         defaultActiveKey: () => semiDefault('Collapse', 'defaultActiveKey', ''),
         accordion: semiGlobalDefault('Collapse', 'accordion'),
         clickHeaderToExpand: () => semiDefault('Collapse', 'clickHeaderToExpand', true),
@@ -44,6 +46,8 @@
 
     provideCollapseContext({
         view: computed<CollapseView>(() => ({
+            classNames: props.classNames,
+            styles: props.styles,
             activeSet: CollapseFoundation.deriveActiveSet(props, state.value),
             clickHeaderToExpand: props.clickHeaderToExpand,
             // Resolved here, not in Collapsible, so a panel's aria-controls follows the same value as the content it points at.

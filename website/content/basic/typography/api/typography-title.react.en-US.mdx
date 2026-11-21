@@ -4,6 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `expand` (expand or collapse button) and `copy` (copy button; the wrapping span still takes `copyable.className`); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTypographyTitlePart, string>>"}>Type</ApiType> | - |
 | component | Tag name or component the root element renders as. Defaults to the `h1` to `h6` matching `heading`. | `React.ElementType` | - |
 | copyable | Whether the text can be copied; pass an object to configure it, see Copyable Config. | `CopyableConfig \| boolean` | - |
 | delete | Adds a strikethrough. | `boolean` | - |
@@ -14,6 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | mark | Adds a highlight. | `boolean` | - |
 | ref | Reference to the root element. | <ApiType detail={"React.Ref\u003cHTMLHeadingElement>"}>Type</ApiType> | - |
 | strong | Whether the text is bold. | `boolean` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTypographyTitlePart, React.CSSProperties>>"}>Type</ApiType> | - |
 | type | Text type: `primary`, `secondary`, `danger`, `warning`, `success`, `tertiary` or `quaternary`. Defaults to `primary`. | `TypographyBaseType` | - |
 | underline | Adds an underline. Link text shows it only on hover and active. | `boolean` | - |
 | weight | Font weight: `light`, `regular`, `medium`, `semibold`, `bold`, `default`, or a number. | <ApiType detail={"'bold' \u007c 'default' \u007c 'light' \u007c 'medium' \u007c 'regular' \u007c 'semibold' \u007c number"}>Type</ApiType> | - |

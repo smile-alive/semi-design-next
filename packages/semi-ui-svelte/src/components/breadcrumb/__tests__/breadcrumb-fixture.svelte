@@ -14,8 +14,8 @@
     let { store }: { store: Store } = $props();
 </script>
 
-{#snippet icon({ route, size, class: className }: BreadcrumbIconContext)}
-    {#if route.path === '/'}<IconHome class={className} {size} />{:else if route.path}<IconArticle class={className} {size} />{/if}
+{#snippet icon({ route, size, class: className, style }: BreadcrumbIconContext)}
+    {#if route.path === '/'}<IconHome class={className} {size} {style} />{:else if route.path}<IconArticle class={className} {size} {style} />{/if}
 {/snippet}
 
 {#snippet item({ route, index }: { route: { name?: string; path?: string; href?: string }; index: number })}

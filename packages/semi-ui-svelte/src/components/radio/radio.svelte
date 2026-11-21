@@ -172,6 +172,7 @@
     {...rootAttrs}
     class={[
         prefix,
+        group?.classNames?.item,
         rest.class,
         {
             [`${prefix}-disabled`]: view.disabled,
@@ -186,6 +187,7 @@
             [`${prefix}-cardRadioGroup_checked_disabled`]: view.isCardRadio && view.checked && view.disabled,
         },
     ]}
+    style={[group?.styles?.item, rest.style].filter(Boolean).join(';') || undefined}
     onclick={handleLabelClick}
 >
     <span
@@ -199,7 +201,8 @@
         ]}
     >
         <input bind:this={input} {...controlAttrs} aria-describedby={describedby} aria-labelledby={labelledby} checked={view.checked} disabled={view.disabled} name={inputName} type="radio" value={value === undefined ? undefined : String(value)} onchange={handleChange} onclick={handleClick} onkeyup={handleKeyUp} />
-        <span class={{ [`${prefix}-inner-display`]: !view.isButtonRadio }}>
+        <!-- a button radio has no icon, so the icon part has nowhere to land -->
+        <span class={[{ [`${prefix}-inner-display`]: !view.isButtonRadio }, !view.isButtonRadio && [group?.classNames?.itemIcon, classNames?.icon]]} style={view.isButtonRadio ? undefined : [group?.styles?.itemIcon, styles?.icon].filter(Boolean).join(';') || undefined}>
             {#if view.checked}
                 <IconRadio />
             {/if}
@@ -217,17 +220,18 @@
                             [`${prefix}-addon-buttonRadio-disabled`]: view.isButtonRadio && view.disabled,
                             [`${prefix}-addon-buttonRadio-${view.buttonSize}`]: view.isButtonRadio && view.buttonSize,
                         },
-                        classNames?.addon,
+                        group?.classNames?.itemLabel,
+                        classNames?.label,
                     ]}
                     id={addonDomId}
-                    style={styles?.addon}
+                    style={[group?.styles?.itemLabel, styles?.label].filter(Boolean).join(';') || undefined}
                     x-semi-prop="children"
                 >
                     {@render children()}
                 </span>
             {/if}
             {#if extra && !view.isButtonRadio}
-                <div class="{prefix}-extra" id={extraDomId} x-semi-prop="extra">{@render extra()}</div>
+                <div class={[`${prefix}-extra`, group?.classNames?.itemExtra, classNames?.extra]} id={extraDomId} style={[group?.styles?.itemExtra, styles?.extra].filter(Boolean).join(';') || undefined} x-semi-prop="extra">{@render extra()}</div>
             {/if}
         </div>
     {/if}

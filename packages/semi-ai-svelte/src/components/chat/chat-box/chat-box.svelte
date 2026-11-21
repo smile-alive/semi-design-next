@@ -14,7 +14,7 @@
     const { PREFIX_CHAT_BOX } = cssClasses;
     const { ROLE, CHAT_ALIGN } = strings;
     const role = $derived<ChatMetadata>(view.roleConfig?.[message.role ?? ''] ?? {});
-    const boxClass = $derived([PREFIX_CHAT_BOX, message.role === ROLE.USER && view.align === CHAT_ALIGN.LEFT_RIGHT && `${PREFIX_CHAT_BOX}-right`].filter(Boolean).join(' '));
+    const boxClass = $derived([PREFIX_CHAT_BOX, message.role === ROLE.USER && view.align === CHAT_ALIGN.LEFT_RIGHT && `${PREFIX_CHAT_BOX}-right`, view.classNames?.item].filter(Boolean).join(' '));
 </script>
 
 {#snippet avatarNode()}
@@ -36,7 +36,7 @@
 {#if snippets.fullChatBox}
     {@render snippets.fullChatBox({ class: boxClass, defaultNodes: { avatar: avatarNode, title: titleNode, content: contentNode, action: actionNode }, message, role })}
 {:else}
-    <div class={boxClass}>
+    <div class={boxClass} style={view.styles?.item}>
         {@render avatarNode()}
         <div class="{PREFIX_CHAT_BOX}-wrap">
             {#if !continueSend}

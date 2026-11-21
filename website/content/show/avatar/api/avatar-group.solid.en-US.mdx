@@ -5,8 +5,10 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | children | Avatars in the group. | `JSX.Element` | - |
+| classNames | Class names of the inner parts, keyed by more: the "+N" avatar shown past maxCount (also merged into the Avatar returned by renderMore); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAvatarGroupPart, string>>"}>Type</ApiType> | - |
 | maxCount | Maximum number of visible avatars; overflow is shown as `+N`. | `number` | - |
 | overlapFrom | Avatar overlap direction: `start` or `end`. | `AvatarGroupOverlapFrom` | `"start"` |
 | renderMore | Custom overflow label. It receives the remaining count and render functions for the hidden avatars, and its result replaces the default `+N`. A hidden avatar is created where its render function is called; the props passed override the avatar's own. | <ApiType detail={"(restNumber: number, restAvatars: ((props?: AvatarProps) => JSX.Element)[]) => JSX.Element"}>Type</ApiType> | - |
 | shape | Shape of the avatars in the group. | `AvatarGroupShape` | `"circle"` |
 | size | Size of the avatars in the group. | `string` | `"medium"` |
+| styles | Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too. | <ApiType detail={"Partial\u003cRecord\u003cAvatarGroupPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |

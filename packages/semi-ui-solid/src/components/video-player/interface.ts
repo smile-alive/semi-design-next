@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
+import type { VideoControl, VideoPlayerPart } from '@fibrae/semi-foundation/components/video-player/constants';
 import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 import type { ElementProps } from '../../base/index';
 import type { MediaEventKeys } from '../../utils/index';
@@ -13,10 +13,14 @@ export type VideoPlayerMarker = Marker;
 
 export type VideoPlayerTheme = 'dark' | 'light';
 
+type Style = JSX.CSSProperties | string;
+
 /** Undeclared attributes land on the root div; `ref` is the native video element */
 export interface VideoPlayerProps extends ElementProps<'div', MediaEventKeys | 'children' | 'ref' | 'style'> {
     autoPlay?: boolean;
     captionsSrc?: string;
+    /** `progressBuffered` and `progressPlayed` apply to every marker segment */
+    classNames?: Partial<Record<VideoPlayerPart, string>>;
     clickToPlay?: boolean;
     controlsList?: VideoControl[];
     crossOrigin?: '' | 'anonymous' | 'use-credentials';
@@ -47,7 +51,8 @@ export interface VideoPlayerProps extends ElementProps<'div', MediaEventKeys | '
     seekTime?: number;
     src?: string;
     /** On the root div, after the `width` and `height` declarations */
-    style?: JSX.CSSProperties | string;
+    style?: Style;
+    styles?: Partial<Record<VideoPlayerPart, Style>>;
     theme?: VideoPlayerTheme;
     /** Read once, when the player mounts */
     volume?: number;
@@ -62,4 +67,16 @@ export interface VideoProgressProps {
     step: number;
     markers?: VideoPlayerMarker[];
     bufferedValue: number;
+    classNames?: Partial<Record<VideoPlayerPart, string>>;
+    styles?: Partial<Record<VideoPlayerPart, Style>>;
+}
+
+export interface ControlsMenuProps<T> {
+    classNames?: Partial<Record<VideoPlayerPart, string>>;
+    current: T;
+    /** What the menu sets, read before the current option in the button's name */
+    label: string;
+    list: VideoPlayerOption<T>[];
+    onSelect: (option: VideoPlayerOption<T>) => void;
+    styles?: Partial<Record<VideoPlayerPart, Style>>;
 }

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { type CSSProperties, memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
+import { cssClasses, type SkeletonParagraphPart } from '@fibrae/semi-foundation/components/skeleton/constants';
 import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
 import type { ElementProps } from '../../base/index';
 
@@ -16,7 +16,9 @@ export interface BasicProps extends ElementProps<'div'> {
 }
 
 export interface ParagraphProps extends ElementProps<'ul'> {
+    classNames?: Partial<Record<SkeletonParagraphPart, string>>;
     rows?: number;
+    styles?: Partial<Record<SkeletonParagraphPart, CSSProperties>>;
     /** Attached to the root ul */
     ref?: React.Ref<HTMLUListElement>;
 }
@@ -57,11 +59,11 @@ export function Button(props: BasicProps) {
     return <Generic {...props} type={props.type ?? 'button'} />;
 }
 
-export const Paragraph = memo(function Paragraph({ className, rows = 4, ...rest }: ParagraphProps) {
+export const Paragraph = memo(function Paragraph({ className, classNames, rows = 4, styles, ...rest }: ParagraphProps) {
     return (
         <ul aria-hidden="true" {...rest} className={clsx(className, `${prefixCls}-paragraph`)}>
             {Array.from({ length: rows }, (_, i) => (
-                <li key={i} />
+                <li key={i} className={classNames?.row} style={styles?.row} />
             ))}
         </ul>
     );

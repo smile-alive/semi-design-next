@@ -22,7 +22,35 @@ function tipFormatter(v: unknown) {
 }
 
 export default function Footer(props: FooterProps) {
-    const { ref, className, min = 10, max = 500, step = 10, curPage, totalNum, ratio, zoom, disabledPrev, disabledNext, disableDownload = false, showTooltip = false, prevTip, nextTip, zoomInTip, zoomOutTip, rotateTip, downloadTip, adaptiveTip, originTip, onNext, onPrev, onDownload, renderPreviewMenu } = props;
+    const {
+        ref,
+        className,
+        classNames,
+        styles,
+        min = 10,
+        max = 500,
+        step = 10,
+        curPage,
+        totalNum,
+        ratio,
+        zoom,
+        disabledPrev,
+        disabledNext,
+        disableDownload = false,
+        showTooltip = false,
+        prevTip,
+        nextTip,
+        zoomInTip,
+        zoomOutTip,
+        rotateTip,
+        downloadTip,
+        adaptiveTip,
+        originTip,
+        onNext,
+        onPrev,
+        onDownload,
+        renderPreviewMenu,
+    } = props;
 
     const { locale } = useLocale('Image');
 
@@ -57,10 +85,15 @@ export default function Footer(props: FooterProps) {
             <button
                 key={key}
                 type="button"
-                className={clsx(`${footerPrefixCls}-button`, {
-                    [`${prefixCls}-tooltip-children-wrapper`]: showTooltip,
-                    [`${footerPrefixCls}-gap`]: gap,
-                })}
+                className={clsx(
+                    `${footerPrefixCls}-button`,
+                    {
+                        [`${prefixCls}-tooltip-children-wrapper`]: showTooltip,
+                        [`${footerPrefixCls}-gap`]: gap,
+                    },
+                    classNames?.action
+                )}
+                style={styles?.action}
                 aria-disabled={disabled || undefined}
                 aria-label={label}
                 onClick={disabled ? undefined : onClick}
@@ -81,7 +114,7 @@ export default function Footer(props: FooterProps) {
         const ratioIcon = ratio === 'adaptation' ? <IconRealSizeStroked size="large" /> : <IconWindowAdaptionStroked size="large" />;
         return [
             getButton('chevron-left', prevTip ?? locale.prevTip, <IconChevronLeft className={disabledPrev ? disabledCls : ''} size="large" />, onPrev, disabledPrev),
-            <div key="info" className={`${footerPrefixCls}-page`} aria-atomic="true" aria-live="polite">
+            <div key="info" className={clsx(`${footerPrefixCls}-page`, classNames?.page)} style={styles?.page} aria-atomic="true" aria-live="polite">
                 {curPage}/{totalNum}
             </div>,
             getButton('chevron-right', nextTip ?? locale.nextTip, <IconChevronRight className={disabledNext ? disabledCls : ''} size="large" />, onNext, disabledNext),
@@ -127,9 +160,16 @@ export default function Footer(props: FooterProps) {
     return (
         <section
             ref={ref}
-            className={clsx(footerPrefixCls, `${footerPrefixCls}-wrapper`, className, {
-                [`${footerPrefixCls}-content`]: !renderPreviewMenu,
-            })}
+            className={clsx(
+                footerPrefixCls,
+                `${footerPrefixCls}-wrapper`,
+                className,
+                {
+                    [`${footerPrefixCls}-content`]: !renderPreviewMenu,
+                },
+                classNames?.footer
+            )}
+            style={styles?.footer}
         >
             {content}
         </section>

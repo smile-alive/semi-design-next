@@ -5,6 +5,7 @@
     import { slotKind, hasSlotContent } from '../../utils/index';
     import type { ColProps } from '../grid/interface';
     import type { ValidateStatus } from '../input/interface';
+    import { useFormContext } from './context';
     import FormErrorMessage from './error-message.vue';
     import FieldGrid from './field-grid.vue';
     import type { FieldError, LabelProps } from './interface';
@@ -44,6 +45,8 @@
         error?: (props: { error: FieldError }) => VNode[];
     }>();
 
+    const form = useFormContext();
+
     const prefix = cssClasses.PREFIX;
 
     const extraShown = (position: string) => props.extraTextPosition === position && hasSlotContent(slots.extraText);
@@ -55,12 +58,13 @@
             [`${prefix}-field-extra-middle`]: props.extraTextPosition === 'middle',
             [`${prefix}-field-extra-bottom`]: props.extraTextPosition === 'bottom',
         },
+        form?.formProps.value.classNames?.extra,
     ];
 </script>
 
 <template>
     <div :class="[`${prefix}-field`, { [`${prefix}-field-${props.name}`]: props.name }, props.fieldClassName]" :style="props.fieldStyle" :x-extra-pos="props.extraTextPosition" :x-field-id="props.field" :x-label-pos="props.labelPosition">
-        <FieldGrid :labelAlign="props.labelAlign" :labelCol="props.labelCol" :labelPosition="props.labelPosition" :mainClass="`${prefix}-field-main`" :row="props.row" :wrapperCol="props.wrapperCol">
+        <FieldGrid :labelAlign="props.labelAlign" :labelCol="props.labelCol" :labelPosition="props.labelPosition" :mainClass="[`${prefix}-field-main`, form?.formProps.value.classNames?.content]" :mainStyle="form?.formProps.value.styles?.content" :row="props.row" :wrapperCol="props.wrapperCol">
             <template #label>
                 <FormLabel v-if="props.label" v-bind="props.label">
                     <template v-if="$slots.label" #default>
@@ -71,7 +75,7 @@
                     </template>
                 </FormLabel>
             </template>
-            <div v-if="extraShown('middle')" :id="props.extraTextId" :class="extraClass()" x-semi-prop="extraText">
+            <div v-if="extraShown('middle')" :id="props.extraTextId" :class="extraClass()" :style="form?.formProps.value.styles?.extra" x-semi-prop="extraText">
                 <slot name="extraText" />
             </div>
             <slot />
@@ -83,7 +87,7 @@
                     <slot :error="error" name="error" />
                 </template>
             </FormErrorMessage>
-            <div v-if="extraShown('bottom')" :id="props.extraTextId" :class="extraClass()" x-semi-prop="extraText">
+            <div v-if="extraShown('bottom')" :id="props.extraTextId" :class="extraClass()" :style="form?.formProps.value.styles?.extra" x-semi-prop="extraText">
                 <slot name="extraText" />
             </div>
         </FieldGrid>

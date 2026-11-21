@@ -27,7 +27,7 @@ export interface PopoverProps {
      * A combobox passes presentation because it points at the inner listbox itself
      */
     role?: string;
-    class?: string;
+    class?: ClassValue;
     /** On the popup; its `background-color` and `border-color` also color the arrow */
     style?: string;
     autoAdjustOverflow?: boolean;

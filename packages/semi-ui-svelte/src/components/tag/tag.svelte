@@ -16,6 +16,8 @@
     // No fallback on `visible`: a bound `undefined` would throw with one
     let {
         visible = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         tagKey = defaults('tagKey'),
         size = defaults('size', 'default'),
         color = defaults('color', 'grey'),
@@ -117,20 +119,20 @@
     onkeydown={handleKeyDown}
 >
     {#if prefixIcon}
-        <div class="{prefix}-prefix-icon" x-semi-prop="prefixIcon">{@render prefixIcon()}</div>
+        <div class={[`${prefix}-prefix-icon`, classNames?.prefix]} style={styles?.prefix} x-semi-prop="prefixIcon">{@render prefixIcon()}</div>
     {/if}
     {#if avatarSrc}
-        <Avatar alt="" shape={avatarShape} src={avatarSrc} />
+        <Avatar alt="" class={classNames?.avatar} shape={avatarShape} src={avatarSrc} style={styles?.avatar} />
     {/if}
-    <div {@attach readText} class={[`${prefix}-content`, `${prefix}-content-${isText ? 'ellipsis' : 'center'}`]}>
+    <div {@attach readText} class={[`${prefix}-content`, `${prefix}-content-${isText ? 'ellipsis' : 'center'}`, classNames?.content]} style={styles?.content}>
         {@render children?.()}
     </div>
     {#if suffixIcon}
-        <div class="{prefix}-suffix-icon" x-semi-prop="suffixIcon">{@render suffixIcon()}</div>
+        <div class={[`${prefix}-suffix-icon`, classNames?.suffix]} style={styles?.suffix} x-semi-prop="suffixIcon">{@render suffixIcon()}</div>
     {/if}
     {#if closable}
         <!-- a pointer shortcut only: keyboard users close with Backspace and Delete, and the label says Closable -->
-        <div aria-hidden="true" class="{prefix}-close" onclick={close}>
+        <div aria-hidden="true" class={[`${prefix}-close`, classNames?.close]} style={styles?.close} onclick={close}>
             <IconClose size="small" />
         </div>
     {/if}

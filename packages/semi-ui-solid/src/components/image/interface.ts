@@ -86,7 +86,7 @@ export interface PreviewProps extends ElementProps<'div', 'onChange'> {
     setDownloadName?: (src: string) => string;
 }
 
-export interface PreviewInnerProps extends Omit<PreviewProps, 'classNames' | 'styles'> {
+export interface PreviewInnerProps extends Omit<PreviewProps, 'class' | 'style'> {
     /** alt of the previewed image, for a single Image; a group passes its images' alts by context */
     alt?: string;
 }
@@ -123,6 +123,8 @@ export interface HeaderProps {
     /** id of the title section, which names the preview dialog */
     titleId?: string;
     class?: string;
+    classNames?: Partial<Record<ImagePreviewPart, string>>;
+    styles?: Partial<Record<ImagePreviewPart, Style>>;
     onClose?: (e: MouseEvent) => void;
     renderCloseIcon?: JSX.Element | (() => JSX.Element);
     ref?: (element: HTMLElement) => void;
@@ -149,6 +151,8 @@ export interface FooterProps {
     adaptiveTip?: string;
     originTip?: string;
     showTooltip?: boolean;
+    classNames?: Partial<Record<ImagePreviewPart, string>>;
+    styles?: Partial<Record<ImagePreviewPart, Style>>;
     onZoomIn?: (zoom: number) => void;
     onZoomOut?: (zoom: number) => void;
     onPrev?: () => void;
@@ -171,6 +175,8 @@ export interface PreviewImageProps {
     disableDownload?: boolean;
     crossOrigin?: 'anonymous' | 'use-credentials';
     initialZoom?: number;
+    classNames?: Partial<Record<ImagePreviewPart, string>>;
+    styles?: Partial<Record<ImagePreviewPart, Style>>;
     onZoom?: (zoom: number, reportToUser?: boolean) => void;
     onLoad?: (src: string) => void;
     onError?: (src: string) => void;

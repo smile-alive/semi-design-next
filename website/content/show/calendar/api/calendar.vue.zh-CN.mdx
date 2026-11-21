@@ -1,18 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性           | 说明                                                                           | 类型               | 默认值                                            |
-| -------------- | ------------------------------------------------------------------------------ | ------------------ | ------------------------------------------------- |
-| displayValue   | 展示日期，未传时为当前日期并在午夜更新。                                       | `Date`             | `semiGlobalDefault("Calendar", "displayValue")`   |
-| events         | 渲染的事件，格式见 Event Object。                                              | `EventObject[]`    | `[]`                                              |
-| height         | 日历高度，数字按像素处理。                                                     | `string \| number` | `600`                                             |
-| markWeekend    | 以灰色区分周末列和工作日。                                                     | `boolean`          | `false`                                           |
-| minEventHeight | 日视图、多日视图以及周视图下事件的最小高度，单位为像素。                       | `number`           | `semiGlobalDefault("Calendar", "minEventHeight")` |
-| mode           | 视图模式，可选 day、week、month、range，变化后立即切换视图。                   | `CalendarMode`     | `"week"`                                          |
-| range          | range 模式下展示的日期范围，左闭右开；range 模式必传。                         | `Date[]`           | `semiGlobalDefault("Calendar", "range")`          |
-| scrollTop      | 日、周、多日视图下展示内容的默认滚动高度。                                     | `number`           | `400`                                             |
-| showCurrTime   | 日、周、多日视图下显示当前时间的红线。                                         | `boolean`          | `true`                                            |
-| weekStartsOn   | 以周几作为每周第一天，0 代表周日，1 代表周一，以此类推；对月视图、周视图生效。 | `WeekStartsOn`     | `0`                                               |
-| width          | 日历宽度，数字按像素处理。                                                     | `string \| number` | `semiGlobalDefault("Calendar", "width")`          |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 header、headerCell、allDay、timeColumn、timeLabel、day、event、currentTimeLine、currentTimeDot、more、dropdown，值的写法同 class，与组件自带的类名合并。部位按视图出现：日视图没有 header、headerCell，月视图没有 allDay、timeColumn、timeLabel、currentTimeLine、currentTimeDot；day 在日、周、多日视图是一天的时间列，在月视图是日期格；dropdown 是点击「还有 N 项」后弹出的事件卡片。 | <ApiType detail={"Partial\u003cRecord\u003cCalendarPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Calendar", "classNames")` |
+| displayValue | 展示日期，未传时为当前日期并在午夜更新。 | `Date` | `semiGlobalDefault("Calendar", "displayValue")` |
+| events | 渲染的事件，格式见 Event Object。 | `EventObject[]` | `[]` |
+| height | 日历高度，数字按像素处理。 | `string \| number` | `600` |
+| markWeekend | 以灰色区分周末列和工作日。 | `boolean` | `false` |
+| minEventHeight | 日视图、多日视图以及周视图下事件的最小高度，单位为像素。 | `number` | `semiGlobalDefault("Calendar", "minEventHeight")` |
+| mode | 视图模式，可选 day、week、month、range，变化后立即切换视图。 | `CalendarMode` | `"week"` |
+| range | range 模式下展示的日期范围，左闭右开；range 模式必传。 | `Date[]` | `semiGlobalDefault("Calendar", "range")` |
+| scrollTop | 日、周、多日视图下展示内容的默认滚动高度。 | `number` | `400` |
+| showCurrTime | 日、周、多日视图下显示当前时间的红线。 | `boolean` | `true` |
+| styles | 内部各部位的内联样式，键同 classNames。 | <ApiType detail={"Partial\u003cRecord\u003cCalendarPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Calendar", "styles")` |
+| weekStartsOn | 以周几作为每周第一天，0 代表周日，1 代表周一，以此类推；对月视图、周视图生效。 | `WeekStartsOn` | `0` |
+| width | 日历宽度，数字按像素处理。 | `string \| number` | `semiGlobalDefault("Calendar", "width")` |
 
 **Events**
 

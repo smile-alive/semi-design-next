@@ -1,10 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性     | 说明                                                                               | 类型      | 默认值      |
-| -------- | ---------------------------------------------------------------------------------- | --------- | ----------- |
-| disabled | 是否禁用，禁用后不响应点击跳转。                                                   | `boolean` | `false`     |
-| href     | 跳转的目标，以 # 开头时按元素 id 查找，其余按 CSS 选择器查找。                     | `string`  | `"#"`       |
-| title    | 纯文本标题；未开启 showTooltip 时同时作为原生 title，提供 title 插槽时以插槽为准。 | `string`  | `undefined` |
+| 属性       | 说明                                                                                            | 类型                                                                                | 默认值      |
+| ---------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------- |
+| classNames | 链接内部各部位的类名，键为 `title`，与组件自带的类名合并，写在 Anchor 的 `itemTitle` 类名之后。 | <ApiType detail={"Partial\u003cRecord\u003c\"title\", ClassValue>>"}>Type</ApiType> | `undefined` |
+| disabled   | 是否禁用，禁用后不响应点击跳转。                                                                | `boolean`                                                                           | `false`     |
+| href       | 跳转的目标，以 # 开头时按元素 id 查找，其余按 CSS 选择器查找。                                  | `string`                                                                            | `"#"`       |
+| styles     | 链接内部各部位的内联样式，键同 `classNames`，写在 Anchor 的 `styles` 之后。                     | <ApiType detail={"Partial\u003cRecord\u003c\"title\", StyleValue>>"}>Type</ApiType> | `undefined` |
+| title      | 纯文本标题；未开启 showTooltip 时同时作为原生 title，提供 title 插槽时以插槽为准。              | `string`                                                                            | `undefined` |
 
 **Events**
 

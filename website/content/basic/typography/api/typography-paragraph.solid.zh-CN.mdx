@@ -1,16 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性      | 说明                                                                                      | 类型                        | 默认值 |
-| --------- | ----------------------------------------------------------------------------------------- | --------------------------- | ------ |
-| component | 自定义渲染元素，可以是标签名或组件，默认 p。                                              | `ValidComponent`            | -      |
-| copyable  | 是否可复制；传对象时见 Copyable Config。                                                  | `CopyableConfig \| boolean` | -      |
-| delete    | 添加删除线样式。                                                                          | `boolean`                   | -      |
-| disabled  | 禁用文本。                                                                                | `boolean`                   | -      |
-| ellipsis  | 设置自动溢出省略；传对象时见 Ellipsis Config。                                            | `Ellipsis \| boolean`       | -      |
-| link      | 是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。 | `LinkType`                  | -      |
-| mark      | 添加标记样式。                                                                            | `boolean`                   | -      |
-| size      | 文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸，默认 normal。                        | `TypographyBaseSize`        | -      |
-| spacing   | 行距，extended 为更宽松的行距，默认 normal。                                              | `TypographyBaseSpacing`     | -      |
-| strong    | 是否加粗。                                                                                | `boolean`                   | -      |
-| type      | 文本类型，默认 primary。                                                                  | `TypographyBaseType`        | -      |
-| underline | 添加下划线样式。                                                                          | `boolean`                   | -      |
+| 属性       | 说明                                                                                                                     | 类型                                                                                                                   | 默认值 |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | ------ |
+| classNames | 内部各部位的类名，键为 expand（展开或收起按钮）、copy（复制按钮，外层 span 仍用 copyable.class），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTypographyParagraphPart, string>>"}>Type</ApiType>                          | -      |
+| component  | 自定义渲染元素，可以是标签名或组件，默认 p。                                                                             | `ValidComponent`                                                                                                       | -      |
+| copyable   | 是否可复制；传对象时见 Copyable Config。                                                                                 | `CopyableConfig \| boolean`                                                                                            | -      |
+| delete     | 添加删除线样式。                                                                                                         | `boolean`                                                                                                              | -      |
+| disabled   | 禁用文本。                                                                                                               | `boolean`                                                                                                              | -      |
+| ellipsis   | 设置自动溢出省略；传对象时见 Ellipsis Config。                                                                           | `Ellipsis \| boolean`                                                                                                  | -      |
+| link       | 是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。                                | `LinkType`                                                                                                             | -      |
+| mark       | 添加标记样式。                                                                                                           | `boolean`                                                                                                              | -      |
+| size       | 文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸，默认 normal。                                                       | `TypographyBaseSize`                                                                                                   | -      |
+| spacing    | 行距，extended 为更宽松的行距，默认 normal。                                                                             | `TypographyBaseSpacing`                                                                                                | -      |
+| strong     | 是否加粗。                                                                                                               | `boolean`                                                                                                              | -      |
+| styles     | 内部各部位的内联样式，键同 classNames。                                                                                  | <ApiType detail={"Partial\u003cRecord\u003cTypographyParagraphPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | -      |
+| type       | 文本类型，默认 primary。                                                                                                 | `TypographyBaseType`                                                                                                   | -      |
+| underline  | 添加下划线样式。                                                                                                         | `boolean`                                                                                                              | -      |

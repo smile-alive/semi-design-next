@@ -1,6 +1,6 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+import { cssClasses, type ScrollListPart } from '@fibrae/semi-foundation/components/scroll-list/constants';
 import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
 import { type ElementProps, type BaseProps, useDefaultProps } from '../../base/index';
@@ -12,6 +12,8 @@ export interface ScrollListProps extends BaseProps, ElementProps<'div'> {
     footer?: React.ReactNode;
     children?: React.ReactNode;
     bodyHeight?: number | string;
+    classNames?: Partial<Record<ScrollListPart, string>>;
+    styles?: Partial<Record<ScrollListPart, React.CSSProperties>>;
     /** Attached to the root element */
     ref?: React.Ref<HTMLDivElement>;
 }
@@ -26,7 +28,9 @@ function ScrollList(rawProps: ScrollListProps) {
         footer,
         bodyHeight,
         className,
+        classNames,
         style,
+        styles,
         // set by TimePicker to name the slots after its own props
         'x-semi-header-alias': headerAlias,
         'x-semi-footer-alias': footerAlias,
@@ -38,18 +42,18 @@ function ScrollList(rawProps: ScrollListProps) {
     return (
         <div role={namedRole(rest)} {...rest} ref={ref} className={clsx(className, prefix)} style={style}>
             {hasContent(header) && (
-                <div className={`${prefix}-header`}>
-                    <div className={`${prefix}-header-title`} x-semi-prop={headerAlias || 'header'}>
+                <div className={clsx(`${prefix}-header`, classNames?.header)} style={styles?.header}>
+                    <div className={clsx(`${prefix}-header-title`, classNames?.title)} style={styles?.title} x-semi-prop={headerAlias || 'header'}>
                         {header}
                     </div>
                     <div className={`${prefix}-line`} />
                 </div>
             )}
-            <div className={`${prefix}-body`} style={{ height: bodyHeight || '' }} x-semi-prop="children">
+            <div className={clsx(`${prefix}-body`, classNames?.body)} style={{ height: bodyHeight || '', ...styles?.body }} x-semi-prop="children">
                 {children}
             </div>
             {hasContent(footer) && (
-                <div className={`${prefix}-footer`} x-semi-prop={footerAlias || 'footer'}>
+                <div className={clsx(`${prefix}-footer`, classNames?.footer)} style={styles?.footer} x-semi-prop={footerAlias || 'footer'}>
                     {footer}
                 </div>
             )}

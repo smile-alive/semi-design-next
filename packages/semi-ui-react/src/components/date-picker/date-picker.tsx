@@ -48,7 +48,7 @@ export type TriggerRenderProps = {
 };
 
 interface DatePickerCommonProps extends Omit<DatePickerFoundationProps, 'dateFnsLocale' | 'customTrigger' | 'type' | 'multiple'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus'> {
-    /** `dropdown` is the panel; `input` is the Input's root element (each of the two inputs of a range) */
+    /** `dropdown` is the panel; `input` is the Input's root element (each of the two inputs of a range); `suffix` and `clear` land on the Input's own parts for a single input */
     classNames?: Partial<Record<DatePickerPart, string>>;
     styles?: Partial<Record<DatePickerPart, React.CSSProperties>>;
     clearIcon?: React.ReactNode;
@@ -339,8 +339,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
         onChange: foundation.handleInputChange,
         onEnterPress: (input: string) => foundation.handleInputComplete(input),
         block: true,
-        inputClassName: classNames?.input,
-        inputStyle: styles?.input,
+        classNames,
+        styles,
         showClear,
         insetLabel,
         insetLabelId,
@@ -368,7 +368,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
     };
 
     // null without presets: MonthsGrid sizes the panel by whether a side column exists
-    const renderQuickControls = () => (presets?.length ? <QuickControl type={type} insetInput={insetInput} locale={locale} presetPosition={presetPosition} presets={presets} onPresetClick={foundation.handlePresetClick} /> : null);
+    const renderQuickControls = () => (presets?.length ? <QuickControl type={type} className={classNames?.presets} style={styles?.presets} insetInput={insetInput} locale={locale} presetPosition={presetPosition} presets={presets} onPresetClick={foundation.handlePresetClick} /> : null);
 
     const renderDateInput = () =>
         insetInput ? (
@@ -397,6 +397,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
         <MonthsGrid
             ref={monthGridRef}
             type={type}
+            classNames={classNames}
+            styles={styles}
             max={max}
             multiple={multiple}
             autoSwitchDate={autoSwitchDate}
@@ -460,7 +462,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         if (!isConfirmNeeded) {
             return null;
         }
-        return <Footer disabledConfirm={isRangeType(type) && !isRangeValueComplete(cachedSelectedValue)} locale={locale} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />;
+        return <Footer className={classNames?.footer} style={styles?.footer} disabledConfirm={isRangeType(type) && !isRangeValueComplete(cachedSelectedValue)} locale={locale} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />;
     };
 
     const panel = (

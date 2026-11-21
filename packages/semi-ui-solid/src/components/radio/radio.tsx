@@ -6,7 +6,7 @@ import { isAriaInvalid, joinIds } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/radio/radio.scss';
 import { IconRadio } from '@fibrae/semi-icons-solid';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { autofocus, callHandler, isNativeInputKey, omitFormInjected, splitControlAttrs, forwardFocus, hasContent, mergeRefs } from '../../utils/index';
+import { autofocus, callHandler, isNativeInputKey, omitFormInjected, splitControlAttrs, forwardFocus, hasContent, mergeRefs, mergeStyles } from '../../utils/index';
 import { useSpecialTrigger } from '../tooltip/context';
 import { type RadioMode, useRadioGroupContext } from './context';
 
@@ -58,7 +58,7 @@ const prefix = css.PREFIX;
 
 export default function Radio(rawProps: RadioProps) {
     const props = useDefaultProps('Radio', rawProps, defaultProps);
-    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'value', 'disabled', 'displayMode', 'onChange', 'onClick', 'mode', 'classNames', 'styles', 'type', 'addonId', 'extraId', 'preventScroll']);
+    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'style', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'value', 'disabled', 'displayMode', 'onChange', 'onClick', 'mode', 'classNames', 'styles', 'type', 'addonId', 'extraId', 'preventScroll']);
 
     // The root is a label, so what names, identifies and focuses the radio belongs on the native input
     const [control, rest] = splitControlAttrs(attrs, isNativeInputKey);
@@ -158,7 +158,7 @@ export default function Radio(rawProps: RadioProps) {
         <label
             {...rest}
             ref={mergeRefs(local.ref, setup)}
-            class={clsx(prefix, local.class, {
+            class={clsx(prefix, group?.classNames?.item, local.class, {
                 [`${prefix}-disabled`]: view().disabled,
                 [`${prefix}-checked`]: view().checked,
                 [`${prefix}-${local.displayMode}`]: local.displayMode,
@@ -170,6 +170,7 @@ export default function Radio(rawProps: RadioProps) {
                 [`${prefix}-cardRadioGroup_checked`]: view().isCardRadio && view().checked && !view().disabled,
                 [`${prefix}-cardRadioGroup_checked_disabled`]: view().isCardRadio && view().checked && view().disabled,
             })}
+            style={mergeStyles(group?.styles?.item, local.style)}
             onClick={handleLabelClick}
         >
             <span
@@ -193,7 +194,8 @@ export default function Radio(rawProps: RadioProps) {
                     onClick={handleClick}
                     onKeyUp={handleKeyUp}
                 />
-                <span class={clsx({ [`${prefix}-inner-display`]: !view().isButtonRadio })}>
+                {/* a button radio has no icon, so the icon part has nowhere to land */}
+                <span class={clsx({ [`${prefix}-inner-display`]: !view().isButtonRadio }, !view().isButtonRadio && [group?.classNames?.itemIcon, local.classNames?.icon])} style={view().isButtonRadio ? undefined : mergeStyles(group?.styles?.itemIcon, local.styles?.icon)}>
                     <Show when={view().checked}>
                         <IconRadio />
                     </Show>
@@ -212,16 +214,17 @@ export default function Radio(rawProps: RadioProps) {
                                     [`${prefix}-addon-buttonRadio-disabled`]: view().isButtonRadio && view().disabled,
                                     [`${prefix}-addon-buttonRadio-${view().buttonSize}`]: view().isButtonRadio && view().buttonSize,
                                 },
-                                local.classNames?.addon
+                                group?.classNames?.itemLabel,
+                                local.classNames?.label
                             )}
-                            style={local.styles?.addon}
+                            style={mergeStyles(group?.styles?.itemLabel, local.styles?.label)}
                             x-semi-prop="children"
                         >
                             {content()}
                         </span>
                     </Show>
                     <Show when={hasExtra()}>
-                        <div id={extraId()} class={`${prefix}-extra`} x-semi-prop="extra">
+                        <div id={extraId()} class={clsx(`${prefix}-extra`, group?.classNames?.itemExtra, local.classNames?.extra)} style={mergeStyles(group?.styles?.itemExtra, local.styles?.extra)} x-semi-prop="extra">
                             {extra()}
                         </div>
                     </Show>

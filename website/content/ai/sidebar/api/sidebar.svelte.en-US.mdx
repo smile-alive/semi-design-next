@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | activeKey | Key of the selected option in the main view; bind it with `bind:activeKey`. | `string` | - |
 | afterVisibleChange | Called after the show or hide animation ends, with whether it is visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by header, title, close, copy, content, options, option and mainContent; merged with the built-in classes. Values take the same forms as class (string, array or object). In detail modes header, title and close apply to the detail header, where close is the button that goes back to the main view and copy is the copy button. | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, ClassValue>>"}>Type</ApiType> | - |
 | closeOnEsc | Whether pressing Esc calls onCancel. | `boolean` | - |
 | customRender | Forwarded to the customRender snippet of the JsonViewer in the built-in code detail, for the content matched by customRenderRule. | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType> | - |
 | defaultSize | Initial width and height; applies only when resizable is true. | `{ width?: number \| string; height?: number \| string }` | - |
@@ -30,6 +31,7 @@ import ApiType from '#/components/ApiType.astro';
 | resizable | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean` | - |
 | searchButton | Forwarded to the searchButton snippet of the JsonViewer in the built-in code detail, replacing its search button. | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType> | - |
 | showClose | Whether the header shows the close button. | `boolean` | - |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cSidebarPart, string>>"}>Type</ApiType> | - |
 | title | Title, plain text or a snippet. | `Snippet \| string` | - |
 | visible | Whether it is shown; bind it with `bind:visible`. | `boolean` | - |
 

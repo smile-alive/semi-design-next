@@ -11,8 +11,8 @@
                 "en-US": "Class name of the thumbnail root element."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `img`（内部的 img 节点），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `img` (the inner img element); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `img`（图片本身）、`overlay`（加载中的占位或加载失败的兜底内容所在的覆盖层，加载成功后不渲染），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `img` (the image itself) and `overlay` (the layer holding the loading placeholder or the failure fallback; not rendered once loaded); merged with the built-in classes."
             },
             "crossOrigin": {
                 "zh-CN": "透传给原生 img 标签的 crossOrigin，可选 `anonymous` 或 `use-credentials`。设置后预览图片也使用同一值，未设置时预览图片取 `preview.crossOrigin`。",
@@ -80,8 +80,8 @@
                 "en-US": "Class name of the group root div."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `preview`（预览层，即 `role=\"dialog\"` 元素），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `preview` (the preview layer, the `role=\"dialog\"` element); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `preview`（预览层，即 `role=\"dialog\"` 元素）、`header`、`title`、`close`、`img`（预览中放大显示的图片）、`prev`、`next`、`footer`、`page`、`action`（底部工具栏里的全部操作按钮），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `preview` (the preview layer, the `role=\"dialog\"` element), `header`, `title`, `close`, `img` (the enlarged image), `prev`, `next`, `footer`, `page` and `action` (every button of the footer toolbar); merged with the built-in classes."
             },
             "closable": {
                 "zh-CN": "是否显示关闭按钮。",

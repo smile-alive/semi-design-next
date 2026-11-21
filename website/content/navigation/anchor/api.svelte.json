@@ -6,6 +6,10 @@
                 "zh-CN": "是否在滚动时动态展示下一级锚点。",
                 "en-US": "Whether the next level of links is shown dynamically while scrolling."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `rail`、`indicator`、`list`、`item`、`itemTitle`，与组件自带的类名合并。`rail` 是左侧的轨道，`indicator` 是轨道上跟随高亮链接移动的指示条，`item`、`itemTitle` 作用到每个链接；`links` 中某项自带的 `classNames`（键为 `title`）写在 `itemTitle` 之后。",
+                "en-US": "Class names of the inner parts, keyed by `rail`, `indicator`, `list`, `item` and `itemTitle`; merged with the built-in classes. `rail` is the track on the left, `indicator` is the bar on it that follows the highlighted link, and `item` and `itemTitle` apply to every link. A `links` item can carry its own `classNames` (key `title`), applied after `itemTitle`."
+            },
             "defaultAnchor": { "zh-CN": "默认高亮的锚点。", "en-US": "Link highlighted by default." },
             "getContainer": {
                 "zh-CN": "指定滚动的容器，缺省为 window。",
@@ -56,6 +60,10 @@
                 "en-US": "Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it."
             },
             "size": { "zh-CN": "锚点尺寸，可选 small、default。", "en-US": "Size of the anchor: small or default." },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，值为 CSS 文本；`links` 中某项自带的 `styles` 写在其后。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, as CSS text. The own `styles` of a `links` item come after them."
+            },
             "targetOffset": {
                 "zh-CN": "锚点滚动结束时，目标距离容器顶部的偏移量。",
                 "en-US": "Distance between the target and the top of the container when scrolling ends."

@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | checkboxGroupProps | Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label. | `FeedbackCheckboxGroupProps` | - |
 | checkboxLabel | Snippet for the label of each item in checkboxGroupProps.options, with `{ option, index }` as its argument. | <ApiType detail={"Snippet\u003c[FeedbackCheckboxSnippetProps]>"}>Type</ApiType> | - |
 | children | Feedback content for type custom. | `Snippet` | - |
-| classNames | Class names of the inner parts, keyed by mask, header and body; values take anything class takes (string, array or object) and merge with the built-in classes. Passed to the Modal or SideSheet of the current mode. | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by mask, content (the panel with role="dialog"), header, title, close, body, footer and emoji (a single emoji option when type is emoji); values take anything class takes (string, array or object) and merge with the built-in classes. Keys other than emoji are passed to the Modal or SideSheet of the current mode. | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, ClassValue>>"}>Type</ApiType> | - |
 | closable | Whether the close button in the corner is shown. | `boolean` | - |
 | closeIcon | Icon inside the close button. | `Snippet` | - |
 | closeOnEsc | Whether Esc cancels the feedback. | `boolean` | - |
@@ -53,7 +53,7 @@ import ApiType from '#/components/ApiType.astro';
 | role | Modal mode only: role of the dialog, dialog or alertdialog. | `'alertdialog' \| 'dialog'` | - |
 | size | Width preset: small is 448px, medium 684px, large 920px. In popup mode it applies only when placement is left or right. | `Size` | - |
 | style | Style string; see the note below for where it lands. | `string` | - |
-| styles | Inline styles of the inner parts, keyed like classNames; every value is a style string. Passed to the Modal or SideSheet of the current mode. | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, string>>"}>Type</ApiType> | - |
+| styles | Inline styles of the inner parts, keyed like classNames; every value is a style string. | <ApiType detail={"Partial\u003cRecord\u003cFeedbackPart, string>>"}>Type</ApiType> | - |
 | textAreaProps | Props of the multi-line input for the text and emoji types; its onChange is called as usual and does not replace the built-in handling. | `FeedbackTextAreaProps` | - |
 | title | Title, a string or a snippet, which also names the dialog. | `string \| Snippet` | - |
 | type | Type of the feedback content. For custom, the content goes in the children. | `FeedbackType` | `"emoji"` |

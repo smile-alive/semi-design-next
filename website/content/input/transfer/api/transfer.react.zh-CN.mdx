@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | className | 根元素的类名。 | `string` | - |
+| classNames | 内部各部位的类名，键为 `source`、`selected`、`filter`、`header`、`title`、`action`、`list`、`groupTitle`、`item`、`itemDragHandle`、`itemRemove`、`empty`，与组件自带的类名合并。`source`、`selected` 是左右两个面板，`item` 同时作用于两侧的选项行。 | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, string>>"}>Type</ApiType> | - |
 | dataSource | 数据源。`list` 类型为数据项数组，`groupList` 为分组数组，`treeList` 为带 `children` 的树形数据。 | `DataSource` | `[]` |
 | defaultValue | 默认已选中的 value 数组，只在创建时读取。 | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | `[]` |
 | disabled | 是否禁用整个穿梭框，包括搜索框、选项和操作按钮。 | `boolean` | - |
@@ -28,6 +29,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSourcePanel | 完全自定义左侧候选面板，每次渲染时调用，参数为 SourcePanelProps。 | <ApiType detail={"(sourcePanelProps: SourcePanelProps) => React.ReactNode"}>Type</ApiType> | - |
 | showPath | 仅 `treeList` 有效，控制右侧已选项是否显示从根节点到自身的选择路径。 | `boolean` | `false` |
 | style | 根元素的内联样式。 | `React.CSSProperties` | - |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | treeProps | 仅 `treeList` 有效，传给左侧 Tree 的属性，会覆盖默认的 `multiple`、`disableStrictly`、`leafOnly`、`filterTreeNode`、`defaultExpandAll` 与 `searchRender`（为 `false`）。`value`、`treeData`、`keyMaps`、`treeDataSimpleJson`、`onChangeWithObject`、`onChange` 与 `ref` 由 Transfer 决定，传入会被忽略。 | <ApiType detail={"Omit\u003cTreeProps, 'keyMaps' \u007c 'onChange' \u007c 'onChangeWithObject' \u007c 'ref' \u007c 'treeData' \u007c 'treeDataSimpleJson' \u007c 'value'>"}>Type</ApiType> | - |
 | type | 穿梭框类型，可选 `list`、`groupList`、`treeList`。 | `Type` | `"list"` |
 | value | 已选中的 value 数组，传入后即为受控组件，数组顺序就是右侧的显示顺序；传入 `undefined` 回到非受控。 | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | - |

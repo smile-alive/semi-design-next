@@ -6,6 +6,14 @@
                 "zh-CN": "时间轴与内容的相对位置，可选 left、right、center、alternate。",
                 "en-US": "Position of the timeline relative to the content: left, right, center or alternate."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`itemRail`、`itemIcon`、`itemContent`、`itemExtra`、`itemTime`，与组件自带的类名合并；`item` 落在每个 `li` 上，`itemRail` 是连接线，`itemIcon` 是圆点或自定义 dot 的容器；`item*` 键作用到全部 TimelineItem，且在节点自己的 classNames 之前。",
+                "en-US": "Class names of the inner parts, keyed by `item`, `itemRail`, `itemIcon`, `itemContent`, `itemExtra` and `itemTime`; merged with the built-in classes. `item` lands on every `li`, `itemRail` is the connecting line and `itemIcon` holds the dot or the custom dot; the `item*` keys apply to every TimelineItem, before the item's own classNames."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "dataSource": {
                 "zh-CN": "数据数组；非空时按数据渲染，忽略默认插槽。项的字段见下表。",
                 "en-US": "Data array. When it is not empty the items are rendered from it and the default slot is ignored. See the item fields below."
@@ -36,6 +44,14 @@
     "timeline-item": {
         "source": "packages/semi-ui-vue/src/components/timeline/timeline-item.vue",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `rail`、`icon`、`content`、`extra`、`time`，与组件自带的类名合并，在 Timeline 的 `item*` 类名之后；`rail` 是连接线，`icon` 是圆点或自定义 dot 的容器。",
+                "en-US": "Class names of the inner parts, keyed by `rail`, `icon`, `content`, `extra` and `time`; merged with the built-in classes, after the `item*` class names of the Timeline. `rail` is the connecting line and `icon` holds the dot or the custom dot."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`，后于 Timeline 的 `item*` 样式写入。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`, applied after the `item*` styles of the Timeline."
+            },
             "color": { "zh-CN": "节点的颜色。", "en-US": "Color of the dot." },
             "type": {
                 "zh-CN": "节点类型，可选 default、ongoing、success、warning、error。",

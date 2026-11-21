@@ -306,10 +306,15 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
         >
             <Show when={beforeKind()}>
                 <div
-                    class={clsx(`${prefixCls}-prepend`, {
-                        [`${prefixCls}-prepend-text`]: beforeKind() === 'text',
-                        [`${prefixCls}-prepend-icon`]: beforeKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefixCls}-prepend`,
+                        {
+                            [`${prefixCls}-prepend-text`]: beforeKind() === 'text',
+                            [`${prefixCls}-prepend-icon`]: beforeKind() === 'icon',
+                        },
+                        local.classNames?.addonBefore
+                    )}
+                    style={local.styles?.addonBefore}
                     x-semi-prop="addonBefore"
                 >
                     {addonBefore()}
@@ -318,11 +323,16 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
             <Show when={labelKind()}>
                 <div
                     id={labelA11y().labelId}
-                    class={clsx(`${prefixCls}-prefix`, {
-                        [`${prefixCls}-inset-label`]: insetLabelKind(),
-                        [`${prefixCls}-prefix-text`]: labelKind() === 'text',
-                        [`${prefixCls}-prefix-icon`]: labelKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefixCls}-prefix`,
+                        {
+                            [`${prefixCls}-inset-label`]: insetLabelKind(),
+                            [`${prefixCls}-prefix-text`]: labelKind() === 'text',
+                            [`${prefixCls}-prefix-icon`]: labelKind() === 'icon',
+                        },
+                        local.classNames?.prefix
+                    )}
+                    style={local.styles?.prefix}
                     x-semi-prop="prefix,insetLabel"
                     onClick={foundation.handleClickPrefixOrSuffix}
                     onMouseDown={preventMouseDown}
@@ -365,7 +375,7 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
                 onKeyUp={foundation.handleKeyUp}
             />
             <Show when={allowClear()}>
-                <button ref={setClearButton} type="button" class={`${prefixCls}-clearbtn`} aria-label={locale().locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={foundation.handleClearMouseDown}>
+                <button ref={setClearButton} type="button" class={clsx(`${prefixCls}-clearbtn`, local.classNames?.clear)} style={local.styles?.clear} aria-label={locale().locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={foundation.handleClearMouseDown}>
                     <Show when={clearIcon()} fallback={<IconClear />}>
                         {clearIcon()}
                     </Show>
@@ -373,11 +383,16 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
             </Show>
             <Show when={suffixKind()}>
                 <div
-                    class={clsx(`${prefixCls}-suffix`, {
-                        [`${prefixCls}-suffix-text`]: suffixKind() === 'text',
-                        [`${prefixCls}-suffix-icon`]: suffixKind() === 'icon',
-                        [`${prefixCls}-suffix-hidden`]: allowClear() && Boolean(local.hideSuffix),
-                    })}
+                    class={clsx(
+                        `${prefixCls}-suffix`,
+                        {
+                            [`${prefixCls}-suffix-text`]: suffixKind() === 'text',
+                            [`${prefixCls}-suffix-icon`]: suffixKind() === 'icon',
+                            [`${prefixCls}-suffix-hidden`]: allowClear() && Boolean(local.hideSuffix),
+                        },
+                        local.classNames?.suffix
+                    )}
+                    style={local.styles?.suffix}
                     x-semi-prop="suffix"
                     onClick={foundation.handleClickPrefixOrSuffix}
                     onMouseDown={preventMouseDown}
@@ -386,7 +401,15 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
                 </div>
             </Show>
             <Show when={local.mode === 'password' && !local.disabled}>
-                <button type="button" class={`${prefixCls}-modebtn`} aria-label={state().eyeClosed ? locale().locale.showPassword : locale().locale.hidePassword} onClick={foundation.handleClickEye} onKeyDown={stopButtonActivationKeys} onMouseDown={preventMouseDown}>
+                <button
+                    type="button"
+                    class={clsx(`${prefixCls}-modebtn`, local.classNames?.visibilityToggle)}
+                    style={local.styles?.visibilityToggle}
+                    aria-label={state().eyeClosed ? locale().locale.showPassword : locale().locale.hidePassword}
+                    onClick={foundation.handleClickEye}
+                    onKeyDown={stopButtonActivationKeys}
+                    onMouseDown={preventMouseDown}
+                >
                     <Show when={state().eyeClosed} fallback={<IconEyeOpened />}>
                         <IconEyeClosedSolid />
                     </Show>
@@ -394,10 +417,15 @@ function InputControl(all: InputInternalProps & { inGroup?: InputGroupContextVal
             </Show>
             <Show when={afterKind()}>
                 <div
-                    class={clsx(`${prefixCls}-append`, {
-                        [`${prefixCls}-append-text`]: afterKind() === 'text',
-                        [`${prefixCls}-append-icon`]: afterKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefixCls}-append`,
+                        {
+                            [`${prefixCls}-append-text`]: afterKind() === 'text',
+                            [`${prefixCls}-append-icon`]: afterKind() === 'icon',
+                        },
+                        local.classNames?.addonAfter
+                    )}
+                    style={local.styles?.addonAfter}
                     x-semi-prop="addonAfter"
                 >
                     {addonAfter()}

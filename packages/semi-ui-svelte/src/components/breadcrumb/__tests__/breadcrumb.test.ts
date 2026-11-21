@@ -345,4 +345,47 @@ describe('Svelte Breadcrumb', () => {
         expect(document.querySelector(`.${prefix}-collapse`)).toBeNull();
         expect(getSeparatorTexts()).toEqual(['|', '|', '|']);
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['list', 'item', 'itemLink', 'itemIcon', 'itemTitle', 'separator', 'more'] as const;
+        const selectors = { list: 'list', item: 'item-wrap', itemLink: 'item-link', itemIcon: 'item-icon', itemTitle: 'item-title', separator: 'separator', more: 'item-more' };
+        setup(
+            {
+                routes: [...routesOf(5)].map((name) => ({ name, path: '/', href: `#${name}` })),
+                maxItemCount: 3,
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            },
+            { icon: true }
+        );
+        for (const part of parts) {
+            const el = getElement(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('路由自己的 classNames 在父级 item* 之后，样式后写', () => {
+        setup(
+            {
+                routes: [
+                    { name: 'a', path: '/', href: '#a', classNames: { link: 'c-link', icon: 'c-icon', title: 'c-title', separator: 'c-sep' }, styles: { link: 'order: 2', separator: 'order: 2' } },
+                    { name: 'b', href: '#b' },
+                ],
+                classNames: { itemLink: 'p-link', itemIcon: 'p-icon', itemTitle: 'p-title', separator: 'p-sep' },
+                styles: { itemLink: 'order: 1; opacity: 0.5', separator: 'order: 1' },
+            },
+            { icon: true }
+        );
+        const [first, second] = getItemWraps();
+        const link = getElement(`.${prefix}-item`, first);
+        expect(link.className).toMatch(/p-link c-link$/);
+        expect(link).toHaveStyle({ order: '2', opacity: '0.5' });
+        expect(getElement(`.${prefix}-item-icon`, first).className).toMatch(/p-icon c-icon/);
+        expect(getElement(`.${prefix}-item-title`, first).className).toMatch(/p-title c-title/);
+        const sep = getElement(`.${prefix}-separator`, first);
+        expect(sep.className).toMatch(/p-sep c-sep$/);
+        expect(sep).toHaveStyle({ order: '2' });
+        expect(getElement(`.${prefix}-item`, second)).toHaveStyle({ order: '1' });
+    });
 });

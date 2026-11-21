@@ -24,6 +24,10 @@
         uploadTipProps?: ChatProps['uploadTipProps'];
         inputBoxClass?: ClassValue;
         inputBoxStyle?: StyleValue;
+        inputClass?: ClassValue;
+        inputStyle?: StyleValue;
+        sendClass?: ClassValue;
+        sendStyle?: StyleValue;
     }
 
     type Foundation = InputBoxFoundation<InputBoxProps>;
@@ -89,13 +93,15 @@
             attachment: state.value.attachment,
             placeholder: props.placeholder,
             sendHotKey: props.sendHotKey,
+            textareaClass: props.inputClass,
+            textareaStyle: props.inputStyle,
             onChange: foundation.onInputAreaChange,
             onEnterPress: foundation.onEnterPress,
             onPaste: foundation.onPaste,
             onClear: foundation.onAttachmentDelete,
         });
 
-    const sendNode = () => h(SendButton, { disabled: sendDisabled.value, onClick: foundation.onSend });
+    const sendNode = () => h(SendButton, { disabled: sendDisabled.value, class: props.sendClass, style: props.sendStyle, onClick: foundation.onSend });
 
     const slotProps = (): ChatInputAreaSlotProps => ({
         defaultNode: h(
@@ -137,10 +143,22 @@
             </InputBoxUpload>
         </template>
         <template #input>
-            <InputBoxInput ref="input" :attachment="state.attachment" :content="state.content" :placeholder="props.placeholder" :sendHotKey="props.sendHotKey" @change="foundation.onInputAreaChange" @clear="foundation.onAttachmentDelete" @enterPress="foundation.onEnterPress" @paste="foundation.onPaste" />
+            <InputBoxInput
+                ref="input"
+                :attachment="state.attachment"
+                :content="state.content"
+                :placeholder="props.placeholder"
+                :sendHotKey="props.sendHotKey"
+                :textareaClass="props.inputClass"
+                :textareaStyle="props.inputStyle"
+                @change="foundation.onInputAreaChange"
+                @clear="foundation.onAttachmentDelete"
+                @enterPress="foundation.onEnterPress"
+                @paste="foundation.onPaste"
+            />
         </template>
         <template #send>
-            <SendButton :disabled="sendDisabled" @click="foundation.onSend" />
+            <SendButton :class="props.sendClass" :disabled="sendDisabled" :style="props.sendStyle" @click="foundation.onSend" />
         </template>
     </InputBoxLayout>
 </template>

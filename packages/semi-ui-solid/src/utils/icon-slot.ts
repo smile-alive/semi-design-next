@@ -64,27 +64,26 @@ export function createIconSlot(source: () => JSX.Element, size?: Accessor<IconSi
             },
         })
     );
-    createRenderEffect((previous?: { nodes: Element[]; className?: string }) => {
+    createRenderEffect((previous?: { nodes: Element[]; tokens: string[] }) => {
         if (isServer) {
             return previous;
         }
         const nodes = resolved.toArray().filter((node): node is Element => node instanceof Element && !icons.has(node));
-        const next = className?.();
+        // classList rejects a token with whitespace, and a class list such as Tailwind utilities has several
+        const tokens = className?.()?.split(/\s+/).filter(Boolean) ?? [];
         const fitTo = size?.();
-        if (previous?.className) {
+        if (previous) {
             for (const node of previous.nodes) {
-                node.classList.remove(previous.className);
+                node.classList.remove(...previous.tokens);
             }
         }
         for (const node of nodes) {
-            if (next) {
-                node.classList.add(next);
-            }
+            node.classList.add(...tokens);
             if (fitTo) {
                 fitSize(node, fitTo);
             }
         }
-        return { nodes, className: next };
+        return { nodes, tokens };
     });
     const kind = (): SlotKind => {
         const node = resolved();

@@ -32,6 +32,8 @@
 
     // No fallback on `value`: a bound `undefined` (form reset) would throw with one
     let {
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         value = $bindable(),
         dataSource = defaults('dataSource', []),
         type = defaults('type', 'list'),
@@ -123,6 +125,7 @@
     const virtualized = $derived(Boolean(virtualize && Object.keys(virtualize).length));
     const virtualHeight = $derived(typeof virtualize?.height === 'number' ? virtualize.height : undefined);
     const showsSortable = $derived(Boolean(draggable && !disabled && Sortable));
+    const sortableListStyle = $derived(['overflow: auto', styles?.list].filter(Boolean).join(';'));
 
     // Transfer owns the Tree's value, data and handle: a caller's would fight the selection, break the flat item map or
     // replace the search handle. `class` and `style` merge with Transfer's own below.
@@ -216,7 +219,7 @@
 
 {#snippet emptyState(content: TransferProps['emptyLeft'], side: 'left' | 'right', text: string)}
     {#if content !== false}
-        <div class={[`${prefixCls}-empty`, `${prefixCls}-${side}-empty`]}>
+        <div class={[`${prefixCls}-empty`, `${prefixCls}-${side}-empty`, classNames?.empty]} style={styles?.empty}>
             {#if content}{@render content()}{:else}{text}{/if}
         </div>
     {/if}
@@ -231,7 +234,7 @@
                 {@render sourceItem({ item, index, checked: selectedItems.has(item.key), onChange: () => onSelectOrRemove(item) })}
             </div>
         {:else}
-            <Checkbox bind:checked={() => selectedItems.has(item.key), noop} class={[`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: item.disabled }]} disabled={item.disabled || disabled} onChange={() => onSelectOrRemove(item)} role="listitem">
+            <Checkbox bind:checked={() => selectedItems.has(item.key), noop} class={[`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: item.disabled }, classNames?.item]} disabled={item.disabled || disabled} onChange={() => onSelectOrRemove(item)} role="listitem" style={styles?.item}>
                 {@render itemLabel(item)}
             </Checkbox>
         {/if}
@@ -239,7 +242,7 @@
 {/snippet}
 
 {#snippet selectedRow(row: ResolvedItem, index: number, sortable: boolean)}
-    <TransferSelectedItem {disabled} {draggable} {index} item={row} {label} onRemove={() => onSelectOrRemove(row)} pathLabel={pathLabel(row)} {selectedItem} {sortable} />
+    <TransferSelectedItem {classNames} {disabled} {draggable} {index} item={row} {label} onRemove={() => onSelectOrRemove(row)} pathLabel={pathLabel(row)} {selectedItem} {sortable} {styles} />
 {/snippet}
 
 {#snippet virtualRow({ index, style }: { index: number; style: string })}
@@ -255,9 +258,9 @@
     {#if sourcePanel}
         {@render sourcePanel(sourcePanelProps)}
     {:else}
-        <section class={`${prefixCls}-left`}>
+        <section class={[`${prefixCls}-left`, classNames?.source]} style={styles?.source}>
             {#if filter !== false}
-                <search aria-label={locale().locale.filter} class={`${prefixCls}-filter`}>
+                <search aria-label={locale().locale.filter} class={[`${prefixCls}-filter`, classNames?.filter]} style={styles?.filter}>
                     <Input bind:value={() => states().inputValue, noop} {disabled} placeholder={locale().locale.placeholder} showClear {...attrs.control} {...inputProps} onChange={onInputChange}>
                         {#snippet prefix()}
                             <IconSearch />
@@ -275,10 +278,10 @@
                 {#if sourceHeader}
                     {@render sourceHeader({ allChecked, leafOnlyNum, num: showNumber, onAllClick, showButton: showAllButton })}
                 {:else}
-                    <div class={[`${prefixCls}-header`, `${prefixCls}-left-header`]}>
-                        <span class={`${prefixCls}-header-total`}>{formatLocale(locale().locale.total, { total: showNumber })}</span>
+                    <div class={[`${prefixCls}-header`, `${prefixCls}-left-header`, classNames?.header]} style={styles?.header}>
+                        <span class={[`${prefixCls}-header-total`, classNames?.title]} style={styles?.title}>{formatLocale(locale().locale.total, { total: showNumber })}</span>
                         {#if showAllButton}
-                            <Button class={`${prefixCls}-header-all`} {disabled} size="small" theme="borderless" type="tertiary" onclick={onAllClick}>
+                            <Button class={[`${prefixCls}-header-all`, classNames?.action]} {disabled} size="small" style={styles?.action} theme="borderless" type="tertiary" onclick={onAllClick}>
                                 {allChecked ? locale().locale.clearSelectAll : locale().locale.selectAll}
                             </Button>
                         {/if}
@@ -308,11 +311,11 @@
                     />
                 {:else}
                     <!-- checkboxes are disabled with the transfer, so the keyboard can only scroll the list -->
-                    <div aria-label={locale().locale.optionList} class={`${prefixCls}-left-list`} role="list" tabindex={disabled ? 0 : undefined}>
+                    <div aria-label={locale().locale.optionList} class={[`${prefixCls}-left-list`, classNames?.list]} role="list" style={styles?.list} tabindex={disabled ? 0 : undefined}>
                         {#each groups as group (group.index)}
                             {#if group.grouped}
                                 <div role="listitem">
-                                    <div class={`${prefixCls}-group-title`} id={groupTitleId(group.index)}>
+                                    <div class={[`${prefixCls}-group-title`, classNames?.groupTitle]} id={groupTitleId(group.index)} style={styles?.groupTitle}>
                                         {group.title}
                                     </div>
                                     <div aria-labelledby={groupTitleId(group.index)} role="list">
@@ -336,21 +339,31 @@
     {#if selectedPanel}
         {@render selectedPanel(selectedPanelProps)}
     {:else}
-        <section class={`${prefixCls}-right`}>
+        <section class={[`${prefixCls}-right`, classNames?.selected]} style={styles?.selected}>
             {#if selectedHeader}
                 {@render selectedHeader({ num: selectedData.length, onClear, showButton: showClearButton })}
             {:else}
-                <div class={[`${prefixCls}-header`, `${prefixCls}-right-header`]}>
-                    <span class={`${prefixCls}-header-total`}>{formatLocale(locale().locale.selected, { total: selectedData.length })}</span>
+                <div class={[`${prefixCls}-header`, `${prefixCls}-right-header`, classNames?.header]} style={styles?.header}>
+                    <span class={[`${prefixCls}-header-total`, classNames?.title]} style={styles?.title}>{formatLocale(locale().locale.selected, { total: selectedData.length })}</span>
                     {#if showClearButton}
-                        <Button class={`${prefixCls}-header-all`} {disabled} size="small" theme="borderless" type="tertiary" onclick={onClear}>{locale().locale.clear}</Button>
+                        <Button class={[`${prefixCls}-header-all`, classNames?.action]} {disabled} size="small" style={styles?.action} theme="borderless" type="tertiary" onclick={onClear}>{locale().locale.clear}</Button>
                     {/if}
                 </div>
             {/if}
             {#if selectedData.length === 0}
                 {@render emptyState(emptyRight, 'right', locale().locale.emptyRight)}
             {:else if showsSortable && Sortable}
-                <Sortable aria-label={locale().locale.selectedList} class={`${prefixCls}-right-list`} dragHandleLabel={locale().locale.dragSort} dragOverlayClass={`${prefixCls}-right-item-drag-item-move`} items={selectedKeys} {onSortEnd} prefix={`${prefixCls}-right-item`} role="list" style="overflow: auto">
+                <Sortable
+                    aria-label={locale().locale.selectedList}
+                    class={[`${prefixCls}-right-list`, classNames?.list]}
+                    dragHandleLabel={locale().locale.dragSort}
+                    dragOverlayClass={`${prefixCls}-right-item-drag-item-move`}
+                    items={selectedKeys}
+                    {onSortEnd}
+                    prefix={`${prefixCls}-right-item`}
+                    role="list"
+                    style={sortableListStyle}
+                >
                     {#snippet item({ id })}
                         <!-- the list shows a preview order while dragging, so the row is found by its key, not by the position -->
                         {@const row = selectedByKey.get(id)}
@@ -365,12 +378,13 @@
                         {#snippet children({ height, width })}
                             <VirtualList
                                 aria-label={locale().locale.selectedList}
-                                class={[`${prefixCls}-right-list`, `${prefixCls}-right-virtual-list`]}
+                                class={[`${prefixCls}-right-list`, `${prefixCls}-right-virtual-list`, classNames?.list]}
                                 {height}
                                 itemCount={selectedData.length}
                                 itemKey={(index) => selectedData[index]?.key ?? index}
                                 itemSize={virtualize?.itemSize ?? 0}
                                 role="list"
+                                style={styles?.list}
                                 tabindex={disabled ? 0 : undefined}
                                 {width}
                             >
@@ -384,12 +398,13 @@
             {:else if !draggable && virtualHeight !== undefined}
                 <VirtualList
                     aria-label={locale().locale.selectedList}
-                    class={[`${prefixCls}-right-list`, `${prefixCls}-right-virtual-list`]}
+                    class={[`${prefixCls}-right-list`, `${prefixCls}-right-virtual-list`, classNames?.list]}
                     height={virtualHeight}
                     itemCount={selectedData.length}
                     itemKey={(index) => selectedData[index]?.key ?? index}
                     itemSize={virtualize?.itemSize ?? 0}
                     role="list"
+                    style={styles?.list}
                     tabindex={disabled ? 0 : undefined}
                     width={virtualize?.width || '100%'}
                 >
@@ -399,7 +414,7 @@
                 </VirtualList>
             {:else}
                 <!-- a disabled transfer falls through to the plain list, whose drag handles are aria-disabled stand-ins -->
-                <div aria-label={locale().locale.selectedList} class={`${prefixCls}-right-list`} role="list" tabindex={disabled ? 0 : undefined}>
+                <div aria-label={locale().locale.selectedList} class={[`${prefixCls}-right-list`, classNames?.list]} role="list" style={styles?.list} tabindex={disabled ? 0 : undefined}>
                     {#each selectedData as row, index (row.key)}
                         {@render selectedRow(row, index, false)}
                     {/each}

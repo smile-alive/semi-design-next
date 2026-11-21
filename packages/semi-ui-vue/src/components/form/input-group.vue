@@ -71,6 +71,7 @@
             [`${prefix}-field-extra-middle`]: props.extraTextPosition === 'middle',
             [`${prefix}-field-extra-bottom`]: props.extraTextPosition === 'bottom',
         },
+        formProps.value.classNames?.extra,
     ];
 
     const fieldNodes = () => slotNodes(slots.default?.() ?? []).filter(([node]) => node.props?.field != null);
@@ -101,13 +102,13 @@
                     </template>
                 </FormLabel>
             </template>
-            <div v-if="extraShown('middle')" :id="extraTextId" :class="extraClass()" x-semi-prop="extraText">
+            <div v-if="extraShown('middle')" :id="extraTextId" :class="extraClass()" :style="formProps.styles?.extra" x-semi-prop="extraText">
                 <slot name="extraText" />
             </div>
             <InputGroup v-bind="innerAttrs()">
                 <component :is="node" v-for="[node, key] in fieldNodes()" :key="key" v-bind="fieldAria(node)" />
             </InputGroup>
-            <div v-if="extraShown('bottom')" :id="extraTextId" :class="extraClass()" x-semi-prop="extraText">
+            <div v-if="extraShown('bottom')" :id="extraTextId" :class="extraClass()" :style="formProps.styles?.extra" x-semi-prop="extraText">
                 <slot name="extraText" />
             </div>
             <FormErrorMessage v-if="groupError.length" :error="groupError" :errorMessageId="errorMessageId" isInInputGroup :showValidateIcon="formProps.showValidateIcon" />

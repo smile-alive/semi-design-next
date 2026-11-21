@@ -1,5 +1,6 @@
 <script lang="ts">
     import { type Component, untrack } from 'svelte';
+    import type { ClassValue } from 'svelte/elements';
     import type { ChainedCommands, Editor } from '@tiptap/core';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { type FileMenuButton, type FileMenuButtonKey, type Level, type TextRange, clearSelectionHighlight, confirmLink, getFileMenuItems, readFileMenuState, readLinkEditorOpenState, unsetLink } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
@@ -42,7 +43,7 @@
     import MenuButton from './menu-button.svelte';
 
     // FileItem mounts the bar only once its editor exists and keeps that editor for its life
-    let { editor, canUpload }: { editor: Editor; canUpload: boolean } = $props();
+    let { editor, canUpload, class: className, style }: { editor: Editor; canUpload: boolean; class?: ClassValue; style?: string } = $props();
 
     const locale = useLocale('Sidebar');
 
@@ -126,7 +127,7 @@
     });
 </script>
 
-<div class={`${prefix}-menu-bar`}>
+<div class={[`${prefix}-menu-bar`, className]} {style}>
     {#each items as item, index (index)}
         {#if item.type === 'divider'}
             <Divider layout="vertical" />

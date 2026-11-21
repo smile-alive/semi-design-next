@@ -159,7 +159,7 @@ export default function Chat(rawProps: ChatProps) {
     return (
         <div role={namedRole(rest)} {...rest} className={clsx(prefixCls, className)} style={style} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDragStart={handleDragStart}>
             {dragUpload && uploadAreaVisible && (
-                <div ref={dropAreaRef} className={`${prefixCls}-dropArea`} onDragLeave={foundation.handleContainerDragLeave} onDragOver={foundation.handleContainerDragOver} onDrop={foundation.handleContainerDrop}>
+                <div ref={dropAreaRef} className={clsx(`${prefixCls}-dropArea`, classNames?.dropArea)} style={styles?.dropArea} onDragLeave={foundation.handleContainerDragLeave} onDragOver={foundation.handleContainerDragOver} onDrop={foundation.handleContainerDrop}>
                     <span className={`${prefixCls}-dropArea-text`}>
                         <LocaleConsumer componentName="Chat">{(locale: Locale['Chat']) => locale['dropAreaText']}</LocaleConsumer>
                     </span>
@@ -169,8 +169,10 @@ export default function Chat(rawProps: ChatProps) {
                 {topSlot}
                 <div className={`${prefixCls}-content`}>
                     <ReactResizeObserver onResize={foundation.handleScrollContainerResize}>
-                        <div ref={containerRef} className={`${prefixCls}-container`} aria-busy={streaming} aria-label={locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
+                        <div ref={containerRef} className={clsx(`${prefixCls}-container`, classNames?.messages)} style={styles?.messages} aria-busy={streaming} aria-label={locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
                             <ChatContent
+                                classNames={classNames}
+                                styles={styles}
                                 align={align}
                                 chatBoxRenderConfig={chatBoxRenderConfig}
                                 chats={chats}
@@ -188,7 +190,7 @@ export default function Chat(rawProps: ChatProps) {
                                 onMessageGoodFeedback={foundation.likeMessage}
                                 onMessageReset={foundation.resetMessage}
                             />
-                            {!!hints?.length && <Hint className={classNames?.hint} style={styles?.hint} value={hints} renderHintBox={renderHintBox} onHintClick={foundation.handleHintClick} />}
+                            {!!hints?.length && <Hint className={classNames?.hint} itemClassName={classNames?.hintItem} itemStyle={styles?.hintItem} style={styles?.hint} value={hints} renderHintBox={renderHintBox} onHintClick={foundation.handleHintClick} />}
                         </div>
                     </ReactResizeObserver>
                     {/* outside the log: a toast inside it would be announced as one more log entry */}
@@ -196,20 +198,20 @@ export default function Chat(rawProps: ChatProps) {
                 </div>
                 {backBottomVisible && !generating && (
                     <span ref={handoverActionFocus} className={`${prefixCls}-action`}>
-                        <Button type="tertiary" className={`${prefixCls}-action-content ${prefixCls}-action-backBottom`} aria-label={locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
+                        <Button type="tertiary" className={clsx(`${prefixCls}-action-content`, `${prefixCls}-action-backBottom`, classNames?.backBottom)} style={styles?.backBottom} aria-label={locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
                     </span>
                 )}
                 {generating && (
                     <span ref={handoverActionFocus} className={`${prefixCls}-action`}>
-                        <Button type="tertiary" className={`${prefixCls}-action-content ${prefixCls}-action-stop`} icon={<IconDisc size="extra-large" />} onClick={foundation.stopGenerate}>
+                        <Button type="tertiary" className={clsx(`${prefixCls}-action-content`, `${prefixCls}-action-stop`, classNames?.stop)} style={styles?.stop} icon={<IconDisc size="extra-large" />} onClick={foundation.stopGenerate}>
                             <LocaleConsumer componentName="Chat">{(locale: Locale['Chat']) => locale['stop']}</LocaleConsumer>
                         </Button>
                     </span>
                 )}
                 <InputBox
                     ref={inputBox}
-                    className={classNames?.inputBox}
-                    style={styles?.inputBox}
+                    classNames={classNames}
+                    styles={styles}
                     placeholder={placeholder}
                     canSend={canSend}
                     clickUpload={clickUpload}

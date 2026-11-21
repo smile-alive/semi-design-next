@@ -11,6 +11,8 @@
     defineOptions({ name: 'MCPConfigure' });
 
     const props = withDefaults(defineProps<MCPConfigureProps & /* @vue-ignore */ ElementProps<'div', keyof MCPConfigureProps | EmitHandlers<MCPConfigureEmits>>>(), {
+        classNames: semiGlobalDefault('MCPConfigure', 'classNames'),
+        styles: semiGlobalDefault('MCPConfigure', 'styles'),
         visible: semiGlobalDefault('MCPConfigure', 'visible'),
         title: semiGlobalDefault('MCPConfigure', 'title'),
         motion: semiGlobalDefault('MCPConfigure', 'motion'),
@@ -53,10 +55,12 @@
             <slot name="header" />
         </template>
         <MCPConfigureContent
+            :classNames="props.classNames"
             :customOptions="props.customOptions"
             :filter="filter"
             :options="props.options"
             :placeholder="props.placeholder"
+            :styles="props.styles"
             @addClick="(...args) => emit('addClick', ...args)"
             @configureClick="(...args) => emit('configureClick', ...args)"
             @editClick="(...args) => emit('editClick', ...args)"

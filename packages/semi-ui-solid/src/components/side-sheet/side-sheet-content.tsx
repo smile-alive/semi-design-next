@@ -94,12 +94,12 @@ export default function SideSheetContent(props: SideSheetContentProps) {
                 <div class={`${prefixCls}-content`}>
                     <div class={clsx(`${prefixCls}-header`, local.classNames?.header)} style={local.styles?.header}>
                         <Show when={hasTitle()}>
-                            <div id={titleId} class={`${prefixCls}-title`} aria-level={2} role="heading" x-semi-prop="title">
+                            <div id={titleId} class={clsx(`${prefixCls}-title`, local.classNames?.title)} style={local.styles?.title} aria-level={2} role="heading" x-semi-prop="title">
                                 {title()}
                             </div>
                         </Show>
                         <Show when={local.closable}>
-                            <IconButton type="tertiary" class={`${prefixCls}-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={closeIcon() || <IconClose />} onClick={local.onClose} />
+                            <IconButton type="tertiary" class={clsx(`${prefixCls}-close`, local.classNames?.close)} style={local.styles?.close} aria-label={locale().locale.close} size="small" theme="borderless" icon={closeIcon() || <IconClose />} onClick={local.onClose} />
                         </Show>
                     </div>
                     <div class={clsx(`${prefixCls}-body`, local.classNames?.body)} style={local.styles?.body} x-semi-prop="children">

@@ -1,8 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description | Type | Default |
-| -------- | ----------- | ---- | ------- |
-| None     |             |      |         |
+| Property   | Description                                                                                     | Type                                                                                      | Default     |
+| ---------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------- |
+| classNames | Class names of the inner parts, keyed by `title` and `extra`; merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cFormSectionPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| styles     | Inline styles of the inner parts, keyed like `classNames`.                                      | <ApiType detail={"Partial\u003cRecord\u003cFormSectionPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

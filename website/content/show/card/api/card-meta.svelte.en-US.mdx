@@ -1,7 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property    | Description                   | Type                | Default |
-| ----------- | ----------------------------- | ------------------- | ------- |
-| avatar      | Avatar.                       | `Snippet`           | -       |
-| description | Description.                  | `Snippet`           | -       |
-| title       | Title, a string or a snippet. | `string \| Snippet` | -       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| avatar | Avatar. | `Snippet` | - |
+| classNames | Class names of the inner parts, keyed by avatar, section, title and description; values take anything class takes (string, array or object) and merge with the built-in classes. section is the text area holding the title and description. | <ApiType detail={"Partial\u003cRecord\u003cCardMetaPart, ClassValue>>"}>Type</ApiType> | - |
+| description | Description. | `Snippet` | - |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cCardMetaPart, string>>"}>Type</ApiType> | - |
+| title | Title, a string or a snippet. | `string \| Snippet` | - |

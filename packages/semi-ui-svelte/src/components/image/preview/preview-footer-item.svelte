@@ -33,13 +33,21 @@
 {#snippet button(name: FooterButtonName, props?: TooltipTriggerProps)}
     {@const data = view.buttons[name]}
     {@const Icon = iconOf(name)}
-    <button {...props} aria-disabled={data.disabled || undefined} aria-label={data.label} class={[`${footerCls}-button`, { [`${prefixCls}-tooltip-children-wrapper`]: view.showTooltip, [`${footerCls}-gap`]: name === 'ratio' || name === 'download' }]} type="button" onclick={() => !data.disabled && data.onClick()}>
+    <button
+        {...props}
+        aria-disabled={data.disabled || undefined}
+        aria-label={data.label}
+        class={[`${footerCls}-button`, { [`${prefixCls}-tooltip-children-wrapper`]: view.showTooltip, [`${footerCls}-gap`]: name === 'ratio' || name === 'download' }, view.classNames?.action]}
+        style={view.styles?.action}
+        type="button"
+        onclick={() => !data.disabled && data.onClick()}
+    >
         <Icon class={{ [`${footerCls}-disabled`]: data.disabled }} size="large" />
     </button>
 {/snippet}
 
 {#if item === 'page'}
-    <div aria-atomic="true" aria-live="polite" class="{footerCls}-page">{view.curPage}/{view.totalNum}</div>
+    <div aria-atomic="true" aria-live="polite" class={[`${footerCls}-page`, view.classNames?.page]} style={view.styles?.page}>{view.curPage}/{view.totalNum}</div>
 {:else if item === 'slider'}
     <Slider aria-label={view.zoomLabel} bind:value={() => view.zoom, () => {}} getAriaValueText={toPercentText} max={view.max} min={view.min} onChange={view.onSlide} step={view.step} tipFormatter={toPercentText} tooltipVisible={view.showTooltip ? undefined : false} />
 {:else if view.showTooltip}

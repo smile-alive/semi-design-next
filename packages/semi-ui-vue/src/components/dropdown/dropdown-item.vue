@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { useAttrs } from 'vue';
+    import { useAttrs, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
     import { IconTick } from '@fibrae/semi-icons-vue';
@@ -13,7 +13,9 @@
     const props = withDefaults(defineProps<DropdownItemProps & /* @vue-ignore */ ElementProps<'li', keyof DropdownItemProps>>(), {
         active: false,
         disabled: false,
+        classNames: undefined,
         showTick: undefined,
+        styles: undefined,
         type: undefined,
     });
 
@@ -59,15 +61,16 @@
         v-bind="passthrough($attrs)"
         :aria-checked="role() === 'menuitem' ? undefined : props.active"
         :aria-disabled="props.disabled"
-        :class="[`${prefix}-item`, { [`${prefix}-item-disabled`]: props.disabled, [`${prefix}-item-withTick`]: realShowTick(), [`${prefix}-item-${props.type}`]: props.type, [`${prefix}-item-active`]: props.active }]"
+        :class="[`${prefix}-item`, { [`${prefix}-item-disabled`]: props.disabled, [`${prefix}-item-withTick`]: realShowTick(), [`${prefix}-item-${props.type}`]: props.type, [`${prefix}-item-active`]: props.active }, ctx?.view.value.classNames?.item]"
         :role="role()"
+        :style="[ctx?.view.value.styles?.item, $attrs.style as StyleValue]"
         :tabindex="-1"
         @click="click"
         @mousedown="mousedown"
     >
         <!-- every item renders a tick (transparent when inactive), so it stays out of the item's name -->
         <IconTick v-if="realShowTick()" :style="props.active ? undefined : { color: 'transparent' }" />
-        <div v-if="hasSlotContent($slots.icon)" :class="`${prefix}-item-icon`">
+        <div v-if="hasSlotContent($slots.icon)" :class="[`${prefix}-item-icon`, ctx?.view.value.classNames?.itemIcon, props.classNames?.icon]" :style="[ctx?.view.value.styles?.itemIcon, props.styles?.icon]">
             <slot name="icon" />
         </div>
         <slot />

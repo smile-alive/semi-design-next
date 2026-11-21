@@ -9,6 +9,7 @@ interface FieldGridProps {
     label?: JSX.Element;
     children?: JSX.Element;
     mainClass?: string;
+    mainStyle?: JSX.CSSProperties | string;
     labelAlign?: string;
     labelCol?: ColProps;
     wrapperCol?: ColProps;
@@ -35,7 +36,9 @@ export default function FieldGrid(props: FieldGridProps) {
                 <div style={{ 'flex-basis': '100%' }}>{labelColumn()}</div>
             </Show>
             <Col {...props.wrapperCol}>
-                <div class={props.mainClass}>{props.children}</div>
+                <div class={props.mainClass} style={props.mainStyle}>
+                    {props.children}
+                </div>
             </Col>
         </>
     );
@@ -46,7 +49,9 @@ export default function FieldGrid(props: FieldGridProps) {
             fallback={
                 <>
                     {props.label}
-                    <div class={props.mainClass}>{props.children}</div>
+                    <div class={props.mainClass} style={props.mainStyle}>
+                        {props.children}
+                    </div>
                 </>
             }
         >

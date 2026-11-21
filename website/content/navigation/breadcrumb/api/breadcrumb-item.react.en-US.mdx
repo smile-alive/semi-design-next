@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | children | Title content. Numbers and strings are truncated with a Tooltip, and other nodes render as they are. | `ReactNode` | - |
 | className | Class name of the li that holds the item. | `string` | - |
+| classNames | Class names of the inner parts of this item, keyed by `link`, `icon`, `title` and `separator`; merged with the built-in classes, after the `item*` class names of Breadcrumb. `separator` has no effect when a custom separator is passed through the `separator` prop. | <ApiType detail={"Partial\u003cRecord\u003cBreadcrumbItemPart, string>>"}>Type</ApiType> | - |
 | href | Destination of the link, mounted on an a element. The current item does not render as a link. | `string` | - |
 | icon | Icon before the title. A Semi icon without `size` takes `small` or `default` from `compact` of Breadcrumb. | `React.ReactNode` | - |
 | noLink | Removes the hover and active styles. An item without `href` is no longer operable with the keyboard. | `boolean` | - |
@@ -13,3 +14,4 @@ import ApiType from '#/components/ApiType.astro';
 | ref | Ref of the li that holds the item. | <ApiType detail={"React.Ref\u003cHTMLLIElement>"}>Type</ApiType> | - |
 | separator | Separator after this item. It overrides `separator` of Breadcrumb and can be text or a ReactNode. | `React.ReactNode` | - |
 | style | Inline style of the li that holds the item. | `CSSProperties` | - |
+| styles | Inline styles of the inner parts of this item, keyed like `classNames`, after `styles` of Breadcrumb. | <ApiType detail={"Partial\u003cRecord\u003cBreadcrumbItemPart, React.CSSProperties>>"}>Type</ApiType> | - |

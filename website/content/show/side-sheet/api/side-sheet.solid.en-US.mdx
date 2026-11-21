@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | afterVisibleChange | Called with true after the enter animation ends, or right after showing without motion. Called with false after the leave animation ends, and once with false when unmounted while shown. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
 | canVerticalSetWidth | Whether width applies when placement is top or bottom. By default those sheets span the full width. | `boolean` | - |
-| classNames | Class names of the inner parts, keyed by `mask`, `content`, `header`, `body` and `footer`; merged with the built-in classes. `content` lands on the dialog element (`.semi-sidesheet-inner`). | <ApiType detail={"Partial\u003cRecord\u003cSideSheetPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `mask`, `content`, `header`, `title`, `close`, `body` and `footer`; merged with the built-in classes. `content` lands on the dialog element (`.semi-sidesheet-inner`). | <ApiType detail={"Partial\u003cRecord\u003cSideSheetPart, string>>"}>Type</ApiType> | - |
 | closable | Whether the close button in the top right corner is shown. | `boolean` | `true` |
 | closeIcon | Icon inside the close button. `null` or `undefined` falls back to the default icon; hide the button with `closable={false}`. | `JSX.Element` | - |
 | closeOnEsc | Whether Esc closes the sheet. | `boolean` | `false` |

@@ -22,6 +22,7 @@
         arrowProps: semiGlobalDefault('Carousel', 'arrowProps'),
         arrowType: () => semiDefault('Carousel', 'arrowType', 'always'),
         autoPlay: () => semiDefault('Carousel', 'autoPlay', true),
+        classNames: semiGlobalDefault('Carousel', 'classNames'),
         defaultActiveIndex: () => semiDefault('Carousel', 'defaultActiveIndex', numbers.DEFAULT_ACTIVE_INDEX),
         indicatorPosition: () => semiDefault('Carousel', 'indicatorPosition', 'center'),
         indicatorSize: () => semiDefault('Carousel', 'indicatorSize', 'small'),
@@ -30,6 +31,7 @@
         showIndicator: () => semiDefault('Carousel', 'showIndicator', true),
         slideDirection: () => semiDefault('Carousel', 'slideDirection', 'left'),
         speed: () => semiDefault('Carousel', 'speed', numbers.DEFAULT_SPEED),
+        styles: semiGlobalDefault('Carousel', 'styles'),
         theme: () => semiDefault('Carousel', 'theme', 'light'),
         trigger: () => semiDefault('Carousel', 'trigger', 'click'),
     });
@@ -169,11 +171,11 @@
     <div ref="root" :aria-roledescription="i18n.locale.carousel" :class="cssClasses.CAROUSEL" role="region" @focusin="foundation.handleFocusIn" @focusout="foundation.handleFocusOut" @mouseenter="foundation.handlePointerEnter" @mouseleave="foundation.handlePointerLeave">
         <template v-for="(slides, n) in [collectSlides()]" :key="n">
             <!-- announce a slide the user switched to, never one that rotation brought -->
-            <div :aria-live="state.rotating ? 'off' : 'polite'" :class="[`${content}-${props.animation}`, content, { [`${content}-reverse`]: props.slideDirection === 'left' ? state.isReverse : !state.isReverse }]" x-semi-prop="children">
+            <div :aria-live="state.rotating ? 'off' : 'polite'" :class="[`${content}-${props.animation}`, content, { [`${content}-reverse`]: props.slideDirection === 'left' ? state.isReverse : !state.isReverse }, props.classNames?.content]" :style="props.styles?.content" x-semi-prop="children">
                 <component :is="node" v-for="([node, key], index) in slides" :key="key" v-bind="slideAttrs(slides, index)" />
             </div>
             <div v-if="hasIndicator(slides.length)" :class="indicator">
-                <div :aria-label="i18n.locale.indicators" :class="[indicator, `${indicator}-${props.indicatorType}`, `${indicator}-${props.indicatorPosition}`]" role="tablist">
+                <div :aria-label="i18n.locale.indicators" :class="[indicator, `${indicator}-${props.indicatorType}`, `${indicator}-${props.indicatorPosition}`, props.classNames?.indicators]" role="tablist" :style="props.styles?.indicators">
                     <button
                         v-for="(_, i) in slides"
                         :id="tabId(i)"
@@ -181,9 +183,10 @@
                         :aria-controls="slideId(slides, i)"
                         :aria-label="formatLocale(i18n.locale.slideN, { index: i + 1 })"
                         :aria-selected="i === currentIndex(slides.length)"
-                        :class="[`${indicator}-item`, { [`${indicator}-item-active`]: i === currentIndex(slides.length), [`${indicator}-item-${props.theme}`]: props.theme, [`${indicator}-item-${props.indicatorSize}`]: props.indicatorSize }]"
+                        :class="[`${indicator}-item`, { [`${indicator}-item-active`]: i === currentIndex(slides.length), [`${indicator}-item-${props.theme}`]: props.theme, [`${indicator}-item-${props.indicatorSize}`]: props.indicatorSize }, props.classNames?.indicator]"
                         :data-index="i"
                         role="tab"
+                        :style="props.styles?.indicator"
                         :tabindex="i === currentIndex(slides.length) ? 0 : -1"
                         type="button"
                         @blur="foundation.handleIndicatorBlur"
@@ -193,13 +196,13 @@
                     />
                 </div>
             </div>
-            <div v-if="props.showArrow && slides.length > 1" :class="[arrow, `${arrow}-${props.theme}`, { [`${arrow}-hover`]: props.arrowType === 'hover' }]">
+            <div v-if="props.showArrow && slides.length > 1" :class="[arrow, `${arrow}-${props.theme}`, { [`${arrow}-hover`]: props.arrowType === 'hover' }, props.classNames?.arrows]" :style="props.styles?.arrows">
                 <!-- arrowProps goes after the built-in aria-label so that its name wins; class and onClick merge -->
-                <button :aria-label="arrowLabel($slots.leftArrow, i18n.locale.prev)" :class="[`${arrow}-prev`, `${arrow}-${props.theme}`]" type="button" v-bind="props.arrowProps?.leftArrow?.props" x-semi-prop="leftArrow" @click="foundation.prev">
+                <button :aria-label="arrowLabel($slots.leftArrow, i18n.locale.prev)" :class="[`${arrow}-prev`, `${arrow}-${props.theme}`, props.classNames?.prevArrow]" :style="props.styles?.prevArrow" type="button" v-bind="props.arrowProps?.leftArrow?.props" x-semi-prop="leftArrow" @click="foundation.prev">
                     <slot v-if="$slots.leftArrow" name="leftArrow" />
                     <IconChevronLeft v-else size="inherit" />
                 </button>
-                <button :aria-label="arrowLabel($slots.rightArrow, i18n.locale.next)" :class="[`${arrow}-next`, `${arrow}-${props.theme}`]" type="button" v-bind="props.arrowProps?.rightArrow?.props" x-semi-prop="rightArrow" @click="foundation.next">
+                <button :aria-label="arrowLabel($slots.rightArrow, i18n.locale.next)" :class="[`${arrow}-next`, `${arrow}-${props.theme}`, props.classNames?.nextArrow]" :style="props.styles?.nextArrow" type="button" v-bind="props.arrowProps?.rightArrow?.props" x-semi-prop="rightArrow" @click="foundation.next">
                     <slot v-if="$slots.rightArrow" name="rightArrow" />
                     <IconChevronRight v-else size="inherit" />
                 </button>

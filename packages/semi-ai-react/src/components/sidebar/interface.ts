@@ -1,4 +1,5 @@
 import React, { type CSSProperties, type ReactNode } from 'react';
+import type { SidebarContainerPart, SidebarPart } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import type { ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
 import type { ElementProps } from '@fibrae/semi-ui-react/base';
 import type { CodeItemProps } from './code';
@@ -13,6 +14,8 @@ export interface SideBarCollapseProps extends ElementProps<'div', 'onChange'> {
 }
 
 export interface ContainerReactProps extends ElementProps<'div', 'title'>, ContainerProps {
+    classNames?: Partial<Record<SidebarContainerPart, string>>;
+    styles?: Partial<Record<SidebarContainerPart, CSSProperties>>;
     title?: ReactNode;
     renderHeader?: () => ReactNode;
     style?: CSSProperties;
@@ -37,7 +40,9 @@ export interface OptionProps {
 
 export type DetailContent = CodeItemProps | Omit<FileItemProps, 'editable' | 'imgUploadProps' | 'onContentChange'>;
 
-export interface SideBarProps extends Omit<ContainerReactProps, 'onChange'>, Omit<OptionProps, 'onChange'> {
+export interface SideBarProps extends Omit<ContainerReactProps, 'onChange' | 'classNames' | 'styles'>, Omit<OptionProps, 'onChange'> {
+    classNames?: Partial<Record<SidebarPart, string>>;
+    styles?: Partial<Record<SidebarPart, CSSProperties>>;
     mode?: string; // main, code, file or a custom mode
     detailContent?: DetailContent;
     onActiveOptionChange?: (e: React.MouseEvent, activeKey: string) => void;

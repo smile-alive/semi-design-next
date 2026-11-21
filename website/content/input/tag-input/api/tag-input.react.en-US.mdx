@@ -9,6 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | aria-label | Accessible name of the input. It is set on the input, not on the root. | `string` | - |
 | autoFocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `false` |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `tag`, `input` and `clear`; merged with the built-in classes. `input` lands on the root element of the inner Input, not the native input; `tag` applies to the default tags only, nodes from `renderTagItem` are styled by the caller. | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Replaces the icon in the clear button; the default icon is used when omitted. | `React.ReactNode` | - |
 | defaultValue | Initial tags when uncontrolled. | `string[]` | - |
 | disabled | Whether the component is disabled. The input becomes native `disabled` and the tags become static text. | `boolean` | - |
@@ -42,6 +43,7 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size: `small`, `default` or `large`. | `Size` | `"default"` |
 | split | Custom split function that receives the raw string and `separator`, and returns the split strings. | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
 | style | Style of the root element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | suffix | Suffix of the input; text or an icon gets side spacing automatically, while a custom node gets none and can set its own. | `React.ReactNode` | - |
 | validateStatus | Validation status, which only affects styling; `error` also sets `aria-invalid` on the input. | `TagInputValidateStatus` | `"default"` |
 | value | Current tags, pair it with `onChange` for a controlled list; `undefined` means uncontrolled, `null` means controlled with no tags. | `string[] \| null` | - |

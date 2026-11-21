@@ -1,14 +1,17 @@
 import type { PropsWithChildren } from 'react';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-react';
 import { useCopied, useLocale } from '@fibrae/semi-ui-react/hooks';
 import { code } from '@fibrae/semi-ui-react/markdown-render/components/index';
+import { useCodePartContext } from '../../context';
 
 const { PREFIX_CODE } = cssClasses;
 
 function Code(props: PropsWithChildren<{ className: string }>) {
     const { locale } = useLocale('AIChatDialogue');
+    const part = useCodePartContext();
 
     const [copied, copy] = useCopied(2000);
 
@@ -20,7 +23,7 @@ function Code(props: PropsWithChildren<{ className: string }>) {
     const onCopyButtonClick = () => void copy(props.children as string);
 
     return language && copyable ? (
-        <div className={`${PREFIX_CODE}`}>
+        <div className={clsx(PREFIX_CODE, part?.className)} style={part?.style}>
             <div className={`${PREFIX_CODE}-topSlot`}>
                 <span className={`${PREFIX_CODE}-topSlot-type`}>{language}</span>
                 <span className={`${PREFIX_CODE}-topSlot-copy`}>

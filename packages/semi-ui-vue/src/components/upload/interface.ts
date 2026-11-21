@@ -1,5 +1,5 @@
 import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { strings, UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
+import type { strings, UploadFileCardPart, UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
 import type { AfterUploadResult as FoundationAfterUploadResult, BaseFileItem, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult, CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/interface';
@@ -95,7 +95,6 @@ export interface UploadFileItemSlotProps {
     picWidth?: string | number;
     picHeight?: string | number;
     validateMessage?: string;
-    class?: ClassValue;
     style?: StyleValue;
     onRemove: () => void;
     onRetry: () => void;
@@ -239,6 +238,8 @@ export interface FileCardProps {
     showTooltip?: boolean | ShowTooltip;
     picWidth?: string | number;
     picHeight?: string | number;
+    classNames?: Partial<Record<UploadFileCardPart, ClassValue>>;
+    styles?: Partial<Record<UploadFileCardPart, StyleValue>>;
     /** Wins over `file.validateMessage` */
     validateMessage?: string;
     /** Listened to as `@previewClick`; while present the card is clickable and gets a preview button */

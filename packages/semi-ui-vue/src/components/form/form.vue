@@ -17,7 +17,9 @@
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<FormProps<Values, Output> & /* @vue-ignore */ ElementProps<'form', keyof FormProps<Values, Output> | EmitHandlers<FormEmits<Values, Output>>>>(), {
+        classNames: semiGlobalDefault('Form', 'classNames'),
         layout: () => semiDefault('Form', 'layout', 'vertical'),
+        styles: semiGlobalDefault('Form', 'styles'),
         labelPosition: () => semiDefault('Form', 'labelPosition', 'top'),
         labelWidth: semiGlobalDefault('Form', 'labelWidth'),
         labelAlign: semiGlobalDefault('Form', 'labelAlign'),

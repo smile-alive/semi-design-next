@@ -3,7 +3,7 @@ import { createContext } from '@fibrae/semi-ui-solid/base';
 import type { ToastHookApi } from '@fibrae/semi-ui-solid/toast/index';
 import type { ChatProps, Message } from './interface';
 
-export type ChatView = Pick<ChatProps, 'align' | 'chatBoxRenderConfig' | 'customMarkDownComponents' | 'escapeHtml' | 'markdownRenderProps' | 'mode' | 'renderDivider' | 'roleConfig'>;
+export type ChatView = Pick<ChatProps, 'align' | 'chatBoxRenderConfig' | 'classNames' | 'customMarkDownComponents' | 'escapeHtml' | 'markdownRenderProps' | 'mode' | 'renderDivider' | 'roleConfig' | 'styles'>;
 
 export interface ChatContextValue {
     view: Accessor<ChatView>;

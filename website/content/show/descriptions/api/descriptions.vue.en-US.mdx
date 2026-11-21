@@ -1,13 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                                                               | Type                 | Default      |
-| -------- | ----------------------------------------------------------------------------------------- | -------------------- | ------------ |
-| align    | Alignment: center, justify, left or plain; ignored when row is true.                      | `DescriptionsAlign`  | `"center"`   |
-| column   | Total number of columns per row in the horizontal layout.                                 | `number`             | `3`          |
-| data     | Data to display; when empty, the Descriptions.Item elements in the default slot are used. | `DescriptionsData[]` | `[]`         |
-| layout   | Layout mode: vertical or horizontal.                                                      | `DescriptionsLayout` | `"vertical"` |
-| row      | Whether to display key and value in two rows.                                             | `boolean`            | `false`      |
-| size     | Size in two-row mode: small, medium or large.                                             | `DescriptionsSize`   | `"medium"`   |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| align | Alignment: center, justify, left or plain; ignored when row is true. | `DescriptionsAlign` | `"center"` |
+| classNames | Class names of the inner parts, keyed by itemKey and itemValue, applied to the key and value of every item; values take any class binding and merge with the built-in classes, coming before the item's own classNames. | <ApiType detail={"Partial\u003cRecord\u003cDescriptionsPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Descriptions", "classNames")` |
+| column | Total number of columns per row in the horizontal layout. | `number` | `3` |
+| data | Data to display; when empty, the Descriptions.Item elements in the default slot are used. | `DescriptionsData[]` | `[]` |
+| layout | Layout mode: vertical or horizontal. | `DescriptionsLayout` | `"vertical"` |
+| row | Whether to display key and value in two rows. | `boolean` | `false` |
+| size | Size in two-row mode: small, medium or large. | `DescriptionsSize` | `"medium"` |
+| styles | Inline styles of the inner parts, keyed like classNames; the item's own styles are applied after. | <ApiType detail={"Partial\u003cRecord\u003cDescriptionsPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Descriptions", "styles")` |
 
 **Events**
 

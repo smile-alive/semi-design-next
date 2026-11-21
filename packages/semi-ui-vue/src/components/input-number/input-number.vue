@@ -167,10 +167,12 @@
         <Input ref="input" v-bind="inputBindings()" :modelValue="state.value ?? ''" @blur="foundation.handleInputBlur" @change="foundation.handleInputChange" @focus="foundation.handleInputFocus" @keydown="foundation.handleInputKeyDown">
             <template v-if="showInnerButtons()" #suffix>
                 <StepButtons
+                    :classNames="props.classNames"
                     :disabled="Boolean(looks.disabled)"
                     :downNotAllowed="Boolean(looks.disabled) || reachesBound(state.number, props.min, -1)"
                     inner
                     :innerHover="Boolean(state.hovering && !state.focusing)"
+                    :styles="props.styles"
                     :upNotAllowed="Boolean(looks.disabled) || reachesBound(state.number, props.max, 1)"
                     @mouseDown="foundation.handleStepMouseDown"
                     @pressDown="foundation.handleDownPress"
@@ -199,10 +201,12 @@
         </Input>
         <StepButtons
             v-if="showOuterButtons()"
+            :classNames="props.classNames"
             :disabled="Boolean(looks.disabled)"
             :downNotAllowed="Boolean(looks.disabled) || reachesBound(state.number, props.min, -1)"
             :inner="false"
             :innerHover="false"
+            :styles="props.styles"
             :upNotAllowed="Boolean(looks.disabled) || reachesBound(state.number, props.max, 1)"
             @mouseDown="foundation.handleStepMouseDown"
             @pressDown="foundation.handleDownPress"

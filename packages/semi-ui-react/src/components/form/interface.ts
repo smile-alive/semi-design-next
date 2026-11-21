@@ -1,5 +1,6 @@
 import type * as React from 'react';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
+import type { FormPart } from '@fibrae/semi-foundation/components/form/constants';
 import type { BaseFormApi as FormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldValidator, FormState, AllErrors, FieldPath, FieldValidateTriggerType, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import type { CheckboxProps } from '../checkbox/index';
 import type { RadioProps } from '../radio/index';
@@ -127,6 +128,8 @@ export interface AllFormProps<Values extends Record<string, any> = any, Output =
     form?: ReturnType<typeof useForm<Values, Output>>[0];
     style?: React.CSSProperties;
     className?: string;
+    classNames?: Partial<Record<FormPart, string>>;
+    styles?: Partial<Record<FormPart, React.CSSProperties>>;
     extraTextPosition?: 'middle' | 'bottom';
     layout?: 'horizontal' | 'vertical';
     labelPosition?: 'top' | 'left' | 'inset';

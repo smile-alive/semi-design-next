@@ -89,7 +89,7 @@ const TOOL_CALL_TYPES = [MESSAGE_ITEM_TYPE.FUNCTION_CALL, MESSAGE_ITEM_TYPE.CUST
 const DIALOGUE_FILE_KINDS = ['word', 'image', 'pdf', 'excel', 'code', 'video'] as const;
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type AIChatDialoguePart = 'hint';
+export type AIChatDialoguePart = 'messages' | 'item' | 'itemCheckbox' | 'itemAvatar' | 'itemTitle' | 'itemContent' | 'itemActions' | 'reasoning' | 'references' | 'annotation' | 'file' | 'image' | 'loading' | 'code' | 'hint' | 'hintItem' | 'backBottom';
 
 export type DialogueFileKind = (typeof DIALOGUE_FILE_KINDS)[number];
 

@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 import type { HookApi } from '@fibrae/semi-foundation/base';
+import type { NotificationPart } from '@fibrae/semi-foundation/components/notification/constants';
 import type { NoticeProps as FoundationNoticeProps, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 
@@ -13,8 +14,10 @@ export type NotificationNode = string | Snippet;
 /** Options of one notification; unknown keys such as `data-*` and `dir` land on the notice element (F2) */
 export interface NoticeProps extends Omit<FoundationNoticeProps, 'title' | 'content' | 'icon' | 'className' | 'style' | 'close' | 'onClick'>, Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title' | 'content' | 'id' | 'onclick'> {
     title?: NotificationNode;
+    classNames?: Partial<Record<NotificationPart, ClassValue>>;
     content?: NotificationNode;
     icon?: NotificationNode;
+    styles?: Partial<Record<NotificationPart, string>>;
     onClick?: (event: MouseEvent) => void;
     /** Offsets of the list the notification lands in; the foundation's NoticeProps does not declare them */
     top?: ConfigProps['top'];

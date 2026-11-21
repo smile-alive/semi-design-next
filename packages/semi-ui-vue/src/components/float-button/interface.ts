@@ -1,5 +1,5 @@
-import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/components/float-button/constants';
+import type { ClassValue, HTMLAttributes, StyleValue, VNode } from 'vue';
+import type { FloatButtonGroupPart, FloatButtonPart, strings } from '@fibrae/semi-foundation/components/float-button/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { BadgeProps } from '../badge/interface';
 
@@ -17,6 +17,7 @@ export interface FloatButtonBadge extends BadgeProps {
 
 export interface FloatButtonProps {
     badge?: FloatButtonBadge;
+    classNames?: Partial<Record<FloatButtonPart, ClassValue>>;
     colorful?: boolean;
     disabled?: boolean;
     /** Renders a link instead of a button; a disabled link drops it */
@@ -24,6 +25,7 @@ export interface FloatButtonProps {
     rel?: string;
     shape?: FloatButtonShape;
     size?: FloatButtonSize;
+    styles?: Partial<Record<FloatButtonPart, StyleValue>>;
     target?: string;
 }
 
@@ -60,8 +62,10 @@ export interface FloatButtonGroupItemSlotProps {
 }
 
 export interface FloatButtonGroupProps {
+    classNames?: Partial<Record<FloatButtonGroupPart, ClassValue>>;
     disabled?: boolean;
     items: FloatButtonGroupItem[];
+    styles?: Partial<Record<FloatButtonGroupPart, StyleValue>>;
 }
 
 export interface FloatButtonGroupSlots {

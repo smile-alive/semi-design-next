@@ -11,7 +11,7 @@
     import { Collapsible } from '../collapsible/index.js';
     import { Dropdown, DropdownMenu, type DropdownProps, type DropdownTriggerProps } from '../dropdown/index.js';
     import { Tooltip } from '../tooltip/index.js';
-    import { type NavContextValue, getNavContext, setNavContext } from './context.js';
+    import { type NavContextValue, getNavContext, joinStyles, setNavContext } from './context.js';
     import type { NavClickData, NavOpenChangeData, NavWrapperArgs, SubNavProps } from './interface.js';
     import ItemShell from './item-shell.svelte';
     import WrapperOutlet from './wrapper-outlet.svelte';
@@ -78,8 +78,8 @@
             trigger: 'hover',
             ...user,
             class: [outer.isCollapsed ? `${prefix}-popover` : undefined, user?.class].filter(Boolean).join(' ') || undefined,
-            classNames: classNames?.dropdown ? { ...user?.classNames, content: [user?.classNames?.content, classNames.dropdown] } : user?.classNames,
-            style: styles?.dropdown ?? user?.style,
+            classNames: outer.classNames?.subNavDropdown || classNames?.dropdown ? { ...user?.classNames, content: [user?.classNames?.content, outer.classNames?.subNavDropdown, classNames?.dropdown] } : user?.classNames,
+            style: joinStyles(user?.style, outer.styles?.subNavDropdown, styles?.dropdown),
             onVisibleChange: (visible: boolean) => {
                 foundation.handleDropdownVisibleChange(visible);
                 user?.onVisibleChange?.(visible);
@@ -115,6 +115,7 @@
 
     // the title is a button (or a menuitem div); a disabled one stays focusable so that it can be found
     const inlineAttrs = $derived(isPopup ? {} : { 'aria-controls': isOpen ? subListId : undefined, 'aria-expanded': isOpen });
+    const titleStyle = $derived(joinStyles(outer.styles?.subNavTitle, styles?.title));
 
     setNavContext(
         Object.create(outer, {
@@ -132,9 +133,18 @@
             [`${prefix}-sub-title-selected`]: isSelected,
             [`${prefix}-sub-title-disabled`]: disabled,
         },
+        outer.classNames?.subNavTitle,
+        classNames?.title,
     ];
 
-    const iconClass = (toggle: boolean) => [`${prefix}-item-icon`, toggle ? `${prefix}-item-icon-toggle-${outer.toggleIconPosition}` : `${prefix}-item-icon-info`];
+    // the blank indent slots are not the icon, so they take no icon part
+    const iconClass = (toggle: boolean, placeholder = false): ClassValue => [
+        `${prefix}-item-icon`,
+        toggle ? `${prefix}-item-icon-toggle-${outer.toggleIconPosition}` : `${prefix}-item-icon-info`,
+        ...(placeholder ? [] : toggle ? [outer.classNames?.itemToggleIcon, classNames?.toggleIcon] : [outer.classNames?.itemIcon, classNames?.icon]),
+    ];
+
+    const iconStyle = (toggle: boolean) => (toggle ? joinStyles(outer.styles?.itemToggleIcon, styles?.toggleIcon) : joinStyles(outer.styles?.itemIcon, styles?.icon));
 
     const trackTitle: Attachment<HTMLElement> = (element) => {
         titleElement = element;
@@ -166,7 +176,7 @@
 {/snippet}
 
 {#snippet toggle()}
-    <i class={iconClass(true)} x-semi-prop="expandIcon">
+    <i class={iconClass(true)} style={iconStyle(true)} x-semi-prop="expandIcon">
         {#if customToggle}
             {@render expandIcon?.({ size: 'default', class: rotateClass })}
         {:else if DefaultToggle}
@@ -179,15 +189,15 @@
 {#snippet titleContent()}
     <span class={`${prefix}-item-inner`}>
         {#each placeholders as n (n)}
-            <i class={iconClass(false)}></i>
+            <i class={iconClass(false, true)}></i>
         {/each}
         {#if outer.toggleIconPosition === 'left'}
             {@render toggle()}
         {/if}
         {#if infoIconShown}
-            <i class={iconClass(false)} x-semi-prop="icon">{@render icon?.({ size: 'large' })}</i>
+            <i class={iconClass(false)} style={iconStyle(false)} x-semi-prop="icon">{@render icon?.({ size: 'large' })}</i>
         {/if}
-        <span class={`${prefix}-item-text`} x-semi-prop="label">{@render shownText()}</span>
+        <span class={[`${prefix}-item-text`, outer.classNames?.itemText, classNames?.text]} style={joinStyles(outer.styles?.itemText, styles?.text)} x-semi-prop="label">{@render shownText()}</span>
         {#if outer.toggleIconPosition === 'right'}
             {@render toggle()}
         {/if}
@@ -197,11 +207,11 @@
 <!-- Dropdown adds aria-haspopup and aria-expanded to a popup title, and moves focus to it with the arrow keys -->
 {#snippet titleElementSnippet({ props }: { props: TitleTriggerProps })}
     {#if menuTitle}
-        <div {...props} {...attrs.control} {@attach trackTitle} aria-disabled={disabled ?? false} class={titleClass(props.class)} role="menuitem" tabindex="-1" onclick={handleClick}>
+        <div {...props} {...attrs.control} {@attach trackTitle} aria-disabled={disabled ?? false} class={titleClass(props.class)} role="menuitem" style={titleStyle} tabindex="-1" onclick={handleClick}>
             {@render titleContent()}
         </div>
     {:else}
-        <button {...props} {...attrs.control} {...inlineAttrs} {@attach trackTitle} aria-disabled={disabled || undefined} class={titleClass(props.class)} tabindex={undefined} type="button" onclick={handleClick}>
+        <button {...props} {...attrs.control} {...inlineAttrs} {@attach trackTitle} aria-disabled={disabled || undefined} class={titleClass(props.class)} style={titleStyle} tabindex={undefined} type="button" onclick={handleClick}>
             {@render titleContent()}
         </button>
     {/if}
@@ -213,7 +223,7 @@
 
 {#snippet subList()}
     {#if !outer.isCollapsed && (outer.subNavMotion || isOpen)}
-        <ul class={[`${prefix}-sub`, { [`${prefix}-sub-open`]: isOpen, [`${prefix}-sub-popover`]: isPopup }]} id={subListId}>
+        <ul class={[`${prefix}-sub`, { [`${prefix}-sub-open`]: isOpen, [`${prefix}-sub-popover`]: isPopup }, outer.classNames?.subNavList, classNames?.list]} id={subListId} style={joinStyles(outer.styles?.subNavList, styles?.list)}>
             {@render children?.()}
         </ul>
     {/if}
@@ -239,7 +249,19 @@
 {/snippet}
 
 {#snippet itemElement()}
-    <ItemShell {...attrs.root} class={[attrs.root.class as ClassValue, { [`${prefix}-sub-wrap`]: !(outer.isInSubNav && isPopup) }]} {content} {disabled} isCollapsed={outer.isCollapsed} isInSubNav={outer.isInSubNav} isSubNav {itemKey} {level} {text} />
+    <ItemShell
+        {...attrs.root}
+        class={[outer.classNames?.subNav, attrs.root.class as ClassValue, { [`${prefix}-sub-wrap`]: !(outer.isInSubNav && isPopup) }]}
+        {content}
+        {disabled}
+        isCollapsed={outer.isCollapsed}
+        isInSubNav={outer.isInSubNav}
+        isSubNav
+        {itemKey}
+        {level}
+        style={joinStyles(outer.styles?.subNav, attrs.root.style as string | undefined)}
+        {text}
+    />
 {/snippet}
 
 <WrapperOutlet isInSubNav={outer.isInSubNav} isSubNav {itemElement} itemProps={given} />

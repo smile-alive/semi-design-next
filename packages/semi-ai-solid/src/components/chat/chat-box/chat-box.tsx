@@ -26,13 +26,25 @@ export default function ChatBox(props: ChatBoxProps) {
 
     const config = () => chat.view().chatBoxRenderConfig ?? {};
 
-    const containerCls = () => clsx(PREFIX_CHAT_BOX, { [`${PREFIX_CHAT_BOX}-right`]: props.message.role === ROLE.USER && chat.view().align === CHAT_ALIGN.LEFT_RIGHT });
+    const containerCls = () => clsx(PREFIX_CHAT_BOX, { [`${PREFIX_CHAT_BOX}-right`]: props.message.role === ROLE.USER && chat.view().align === CHAT_ALIGN.LEFT_RIGHT }, chat.view().classNames?.item);
 
-    const avatarNode = () => <ChatBoxAvatar role={role()} continueSend={props.continueSend} customRenderFunc={config().renderChatBoxAvatar} renderRoleAvatar={config().renderRoleAvatar} message={props.message} />;
+    const avatarNode = () => <ChatBoxAvatar role={role()} continueSend={props.continueSend} customRenderFunc={config().renderChatBoxAvatar} renderRoleAvatar={config().renderRoleAvatar} message={props.message} class={chat.view().classNames?.itemAvatar} style={chat.view().styles?.itemAvatar} />;
 
-    const titleNode = () => <ChatBoxTitle role={role()} customRenderFunc={config().renderChatBoxTitle} message={props.message} />;
+    const titleNode = () => <ChatBoxTitle role={role()} customRenderFunc={config().renderChatBoxTitle} message={props.message} class={chat.view().classNames?.itemTitle} style={chat.view().styles?.itemTitle} />;
 
-    const contentNode = () => <ChatBoxContent role={role()} customMarkDownComponents={chat.view().customMarkDownComponents} customRenderFunc={config().renderChatBoxContent} escapeHtml={chat.view().escapeHtml} markdownRenderProps={chat.view().markdownRenderProps} message={props.message} mode={chat.view().mode} />;
+    const contentNode = () => (
+        <ChatBoxContent
+            role={role()}
+            customMarkDownComponents={chat.view().customMarkDownComponents}
+            customRenderFunc={config().renderChatBoxContent}
+            escapeHtml={chat.view().escapeHtml}
+            markdownRenderProps={chat.view().markdownRenderProps}
+            message={props.message}
+            mode={chat.view().mode}
+            class={chat.view().classNames?.itemContent}
+            style={chat.view().styles?.itemContent}
+        />
+    );
 
     const actionNode = () => <ChatBoxAction customRenderFunc={config().renderChatBoxAction} isLast={props.isLast} message={props.message} />;
 
@@ -41,7 +53,7 @@ export default function ChatBox(props: ChatBoxProps) {
             when={config().renderFullChatBox}
             keyed
             fallback={
-                <div class={containerCls()}>
+                <div class={containerCls()} style={chat.view().styles?.item}>
                     {avatarNode()}
                     <div class={`${PREFIX_CHAT_BOX}-wrap`}>
                         <Show when={!props.continueSend}>{titleNode()}</Show>

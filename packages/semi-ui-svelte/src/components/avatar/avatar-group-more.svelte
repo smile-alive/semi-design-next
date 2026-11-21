@@ -18,6 +18,9 @@
         get itemClass() {
             return value.itemClass;
         },
+        get itemStyle() {
+            return value.itemStyle;
+        },
     });
 </script>
 

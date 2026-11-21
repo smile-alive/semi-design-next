@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
+import type { CalendarPart, strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import type { DailyEventLayout, EventObject, WeekStartsOn } from '@fibrae/semi-foundation/components/calendar/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ElementProps } from '../../base/index';
@@ -8,6 +8,8 @@ export interface CalendarProps extends ElementProps<'div', 'onClick' | 'onClose'
     displayValue?: Date;
     range?: Date[];
     header?: JSX.Element;
+    classNames?: Partial<Record<CalendarPart, string>>;
+    styles?: Partial<Record<CalendarPart, JSX.CSSProperties | string>>;
     /**
      * An event's `children` is a node or a function that returns one. A function is called for every place the event
      * shows; a node shows in one place and as a copy without event handlers in the others
@@ -37,6 +39,8 @@ export type WeekCalendarProps = DayCalendarProps;
 export type RangeCalendarProps = DayCalendarProps;
 
 export interface DayColProps {
+    classNames?: CalendarProps['classNames'];
+    styles?: CalendarProps['styles'];
     displayValue: Date;
     events: DailyEventLayout[];
     scrollHeight: number;
@@ -50,5 +54,7 @@ export interface DayColProps {
 
 export interface TimeColProps {
     class?: string;
+    classNames?: CalendarProps['classNames'];
+    styles?: CalendarProps['styles'];
     renderTimeDisplay?: CalendarProps['renderTimeDisplay'];
 }

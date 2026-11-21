@@ -70,15 +70,20 @@ function MarkdownBlock(props: { text: string; class: string; role?: string }) {
 }
 
 function ImageAttachment(props: { image: InputImage; isList: boolean; isLast: boolean }) {
-    const { imageClick } = useAIChatDialogueContext();
+    const { view, imageClick } = useAIChatDialogueContext();
     const locale = useLocale('AIChatDialogue');
 
     return (
         <Image
-            class={clsx(`${PREFIX_CONTENT}-img`, {
-                [`${PREFIX_CONTENT}-img-list`]: props.isList,
-                [`${PREFIX_CONTENT}-img-last`]: props.isLast,
-            })}
+            class={clsx(
+                `${PREFIX_CONTENT}-img`,
+                {
+                    [`${PREFIX_CONTENT}-img-list`]: props.isList,
+                    [`${PREFIX_CONTENT}-img-last`]: props.isLast,
+                },
+                view().classNames?.image
+            )}
+            style={view().styles?.image}
             alt={locale().locale.image}
             src={props.image.image_url}
             onClick={() => imageClick(props.image)}
@@ -109,7 +114,8 @@ function FileAttachment(props: { file: InputFile; isLast: boolean; isUser: boole
 
     return (
         <a
-            class={clsx(`${PREFIX_CONTENT}-file`, { [`${PREFIX_CONTENT}-file-last`]: props.isLast })}
+            class={clsx(`${PREFIX_CONTENT}-file`, { [`${PREFIX_CONTENT}-file-last`]: props.isLast }, view().classNames?.file)}
+            style={view().styles?.file}
             href={props.file.file_url}
             rel="noreferrer"
             target="_blank"
@@ -182,6 +188,8 @@ function MessagePart(props: BlockProps & { part: MessagePartItem; layout: Return
                     <Match when={TEXT_TYPES.includes(type())}>
                         <Show when={annotations().length > 0}>
                             <AnnotationWidget
+                                class={view().classNames?.annotation}
+                                style={view().styles?.annotation}
                                 annotation={annotations()}
                                 // Known limitation: the count is fixed; make it configurable when needed
                                 maxCount={15}
@@ -246,7 +254,7 @@ function ContentBlock(props: BlockProps & { item: ContentItem }) {
                         <MessageItem class={props.class} isUser={props.isUser} item={props.item as InputMessage | OutputMessage} message={props.message} />
                     </Match>
                     <Match when={type() === MESSAGE_ITEM_TYPE.REASONING}>
-                        <ReasoningWidget content={(props.item as Reasoning).content} markdownRenderProps={markdownRenderProps()} status={(props.item as Reasoning).status} summary={(props.item as Reasoning).summary} />
+                        <ReasoningWidget class={view().classNames?.reasoning} style={view().styles?.reasoning} content={(props.item as Reasoning).content} markdownRenderProps={markdownRenderProps()} status={(props.item as Reasoning).status} summary={(props.item as Reasoning).summary} />
                     </Match>
                     <Match when={type() === MESSAGE_ITEM_TYPE.FUNCTION_CALL || type() === MESSAGE_ITEM_TYPE.CUSTOM_TOOL_CALL}>
                         <ToolCallWidget item={props.item as FunctionToolCall | CustomToolCall} />
@@ -306,7 +314,7 @@ export default function DialogueContent(props: DialogueContentProps) {
 
     const defaultContent = () => (
         <>
-            <Show when={references()}>{(list) => <ReferenceWidget references={list()} />}</Show>
+            <Show when={references()}>{(list) => <ReferenceWidget class={view().classNames?.references} style={view().styles?.references} references={list()} />}</Show>
             <Show when={editing()} fallback={body()}>
                 {/* called once when editing starts: the editor keeps its own draft */}
                 <Show when={view().messageEditRender} keyed>
@@ -314,7 +322,7 @@ export default function DialogueContent(props: DialogueContentProps) {
                 </Show>
             </Show>
             <Show when={loading()}>
-                <span class={`${PREFIX_CONTENT}-loading`}>
+                <span class={clsx(`${PREFIX_CONTENT}-loading`, view().classNames?.loading)} style={view().styles?.loading}>
                     <span class={`${PREFIX_CONTENT}-loading-item`} />
                     <span class={`${PREFIX_CONTENT}-loading-item`} />
                     <span class={`${PREFIX_CONTENT}-loading-item`} />
@@ -325,7 +333,15 @@ export default function DialogueContent(props: DialogueContentProps) {
     );
 
     return (
-        <Show when={view().dialogueRenderConfig?.renderDialogueContent} keyed fallback={<div class={clsx(PREFIX_CONTENT, { [`${PREFIX_CONTENT}-editing`]: editing() })}>{defaultContent()}</div>}>
+        <Show
+            when={view().dialogueRenderConfig?.renderDialogueContent}
+            keyed
+            fallback={
+                <div class={clsx(PREFIX_CONTENT, { [`${PREFIX_CONTENT}-editing`]: editing() }, view().classNames?.itemContent)} style={view().styles?.itemContent}>
+                    {defaultContent()}
+                </div>
+            }
+        >
             {(render) =>
                 render({
                     get message() {

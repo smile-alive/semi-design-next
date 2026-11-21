@@ -1,10 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性     | 说明                                                       | 类型                   | 默认值      |
-| -------- | ---------------------------------------------------------- | ---------------------- | ----------- |
-| color    | 节点的颜色。                                               | `string`               | `undefined` |
-| position | 覆盖 Timeline 的 mode，指定该项所在的一侧。                | `TimelineItemPosition` | `undefined` |
-| type     | 节点类型，可选 default、ongoing、success、warning、error。 | `TimelineItemType`     | `"default"` |
+| 属性       | 说明                                                                                                                                                                          | 类型                                                                                       | 默认值      |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------- |
+| classNames | 内部各部位的类名，键为 `rail`、`icon`、`content`、`extra`、`time`，与组件自带的类名合并，在 Timeline 的 `item*` 类名之后；`rail` 是连接线，`icon` 是圆点或自定义 dot 的容器。 | <ApiType detail={"Partial\u003cRecord\u003cTimelineItemPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| color      | 节点的颜色。                                                                                                                                                                  | `string`                                                                                   | `undefined` |
+| position   | 覆盖 Timeline 的 mode，指定该项所在的一侧。                                                                                                                                   | `TimelineItemPosition`                                                                     | `undefined` |
+| styles     | 内部各部位的内联样式，键同 `classNames`，后于 Timeline 的 `item*` 样式写入。                                                                                                  | <ApiType detail={"Partial\u003cRecord\u003cTimelineItemPart, StyleValue>>"}>Type</ApiType> | `undefined` |
+| type       | 节点类型，可选 default、ongoing、success、warning、error。                                                                                                                    | `TimelineItemType`                                                                         | `"default"` |
 
 **Events**
 

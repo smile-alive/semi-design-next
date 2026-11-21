@@ -942,7 +942,7 @@ describe(`Tooltip`, () => {
 
 it('classNames 与 styles 按部位落到对应元素', () => {
     const { container } = render(
-        <Tooltip classNames={{ wrapper: 'my-wrapper' }} styles={{ wrapper: { order: 3 } }} content="hi">
+        <Tooltip classNames={{ wrapper: 'my-wrapper', arrow: 'my-arrow' }} styles={{ wrapper: { order: 3 }, arrow: { order: 4 } }} content="hi" motion={false} trigger="custom" visible>
             <Button>a</Button>
             <Button>b</Button>
         </Tooltip>
@@ -950,6 +950,9 @@ it('classNames 与 styles 按部位落到对应元素', () => {
     const wrapper = container.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
     expect(wrapper).toHaveClass('my-wrapper');
     expect(wrapper).toHaveStyle({ order: '3', display: 'inline-block' });
+    const arrow = document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-icon-arrow`);
+    expect(arrow).toHaveClass('my-arrow');
+    expect(arrow).toHaveStyle({ order: '4' });
 });
 
 it('trigger wrapper 的类名', () => {

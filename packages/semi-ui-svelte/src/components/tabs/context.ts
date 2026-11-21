@@ -1,8 +1,10 @@
 import { createContext } from '../../base/index.js';
-import type { TabPosition, TabSize, TabType } from './interface.js';
+import type { TabPosition, TabSize, TabsProps, TabType } from './interface.js';
 
 export interface TabsView {
     activeKey: string | null;
+    classNames?: TabsProps['classNames'];
+    styles?: TabsProps['styles'];
     /** The previously selected key, null on mount; the entering pane slides in from its side */
     prevActiveKey: string | null;
     /** A pane added and selected by the same update shows without sliding in */

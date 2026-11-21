@@ -1,8 +1,10 @@
 import { type JSX, For, Show } from 'solid-js';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageState } from '@fibrae/semi-foundation/components/image/preview-image-foundation';
 import { useFoundation } from '../../../base/index';
 import { useEventListener } from '../../../primitives/index';
+import { mergeStyles } from '../../../utils/index';
 import Spin from '../../spin';
 import type { PreviewImageProps } from '../interface';
 
@@ -46,8 +48,8 @@ export default function PreviewImage(props: Props) {
                 {(src) => (
                     <img
                         ref={(node) => (image = node)}
-                        class={`${preViewImgPrefixCls}-img`}
-                        style={imgStyle()}
+                        class={clsx(`${preViewImgPrefixCls}-img`, props.classNames?.img)}
+                        style={mergeStyles(imgStyle(), props.styles?.img)}
                         alt={props.alt ?? ''}
                         crossOrigin={props.crossOrigin}
                         src={src}

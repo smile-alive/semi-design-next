@@ -104,6 +104,8 @@
     provideNavContext({
         view: computed(() => ({
             ...derived.value,
+            classNames: props.classNames,
+            styles: props.styles,
             mode: props.mode,
             isInSubNav: false,
             selectedKeysIsControlled: props.selectedKeys !== undefined,
@@ -192,7 +194,7 @@
                 </NavHeader>
                 <component :is="node" v-for="[node, key] in parts.headers" :key="key" />
                 <div :class="[`${prefix}-list-wrapper`, props.classNames?.body]" :style="props.styles?.body">
-                    <ul :class="`${prefix}-list`">
+                    <ul :class="[`${prefix}-list`, props.classNames?.list]" :style="props.styles?.list">
                         <NavItems v-if="formatted.formattedItems.length" :items="formatted.formattedItems" :level="0" :subDropdownProps="props.subDropdownProps">
                             <template v-if="$slots.icon" #icon="p">
                                 <slot v-bind="p" name="icon" />

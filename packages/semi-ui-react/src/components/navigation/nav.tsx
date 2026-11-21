@@ -86,7 +86,30 @@ const defaultProps = {
 } satisfies Partial<NavProps>;
 
 // items configs may carry app data (e.g. `path`), so only these keys, `data-*` and `aria-*` reach the item
-const ITEM_CONFIG_KEYS = new Set<keyof NavItemProps>(['text', 'itemKey', 'icon', 'toggleIcon', 'indent', 'isCollapsed', 'isSubNav', 'link', 'linkOptions', 'disabled', 'className', 'style', 'forwardRef', 'level', 'tabIndex', 'tooltipHideDelay', 'tooltipShowDelay', 'onClick', 'onMouseEnter', 'onMouseLeave']);
+const ITEM_CONFIG_KEYS = new Set<keyof NavItemProps>([
+    'text',
+    'itemKey',
+    'icon',
+    'toggleIcon',
+    'indent',
+    'isCollapsed',
+    'isSubNav',
+    'link',
+    'linkOptions',
+    'disabled',
+    'className',
+    'style',
+    'classNames',
+    'styles',
+    'forwardRef',
+    'level',
+    'tabIndex',
+    'tooltipHideDelay',
+    'tooltipShowDelay',
+    'onClick',
+    'onMouseEnter',
+    'onMouseLeave',
+]);
 const SUB_CONFIG_KEYS = new Set<keyof SubNavProps>(['text', 'itemKey', 'icon', 'indent', 'disabled', 'className', 'style', 'level', 'classNames', 'styles', 'dropdownProps', 'subDropdownProps', 'expandIcon', 'onMouseEnter', 'onMouseLeave']);
 
 function pickConfigProps(config: Record<string, any>, allowed: ReadonlySet<string>): Record<string, any> {
@@ -292,8 +315,10 @@ function Nav(rawProps: NavProps) {
             toggleIconPosition,
             limitIndent,
             renderWrapper,
+            classNames,
+            styles,
         }),
-        [subNavCloseDelay, subNavOpenDelay, subNavMotion, tooltipShowDelay, tooltipHideDelay, openKeys, openKeysIsControlled, selectedKeys, selectedKeysIsControlled, isCollapsed, foundation, mode, onSelect, onOpenChange, onClick, locale, toggleIconPosition, limitIndent, renderWrapper]
+        [subNavCloseDelay, subNavOpenDelay, subNavMotion, tooltipShowDelay, tooltipHideDelay, openKeys, openKeysIsControlled, selectedKeys, selectedKeysIsControlled, isCollapsed, foundation, mode, onSelect, onOpenChange, onClick, locale, toggleIconPosition, limitIndent, renderWrapper, classNames, styles]
     );
 
     return (
@@ -304,7 +329,7 @@ function Nav(rawProps: NavProps) {
                     <div className={headerListOuterCls}>
                         {headers}
                         <div className={clsx(`${cssClasses.PREFIX}-list-wrapper`, classNames?.body)} style={styles?.body}>
-                            <ul className={`${cssClasses.PREFIX}-list`}>
+                            <ul className={clsx(`${cssClasses.PREFIX}-list`, classNames?.list)} style={styles?.list}>
                                 {renderItems(formattedItems, 0, expandIcon, subDropdownProps)}
                                 {children}
                             </ul>

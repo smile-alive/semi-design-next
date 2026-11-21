@@ -63,6 +63,18 @@ describe('Notification', () => {
         vi.useRealTimers();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['icon', 'title', 'content', 'close'] as const;
+        const selectors = { icon: 'icon', title: 'title', content: 'content', close: 'icon-close' };
+        await show('info', { title: 't', content: 'c', duration: 0, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) });
+        const notice = document.querySelector(`.${noticeCls}`);
+        for (const part of parts) {
+            const el = notice?.querySelector(`.${noticeCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
     it('同一同步块内的多次调用共用一个容器', async () => {
         Notification.info({ title: 'first', duration: 0 });
         Notification.info({ title: 'second', duration: 0 });

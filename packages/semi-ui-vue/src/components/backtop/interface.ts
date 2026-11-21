@@ -1,7 +1,10 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { BackTopPart } from '@fibrae/semi-foundation/components/backtop/constants';
 import type { FloatButtonProps } from '../float-button/interface';
 
 export interface BackTopProps extends Pick<FloatButtonProps, 'badge' | 'colorful' | 'shape' | 'size'> {
+    classNames?: Partial<Record<BackTopPart, ClassValue>>;
+    styles?: Partial<Record<BackTopPart, StyleValue>>;
     /** Milliseconds the scroll to the top takes; clicks repeat at most this often */
     duration?: number;
     /** The scrolled element; defaults to the window. Read on mount and whenever the function itself changes */

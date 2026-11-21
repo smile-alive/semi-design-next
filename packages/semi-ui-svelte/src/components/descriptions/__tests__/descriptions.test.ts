@@ -116,6 +116,31 @@ describe('Svelte Descriptions', () => {
         expect(key).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
+    it('Descriptions 的 classNames 与 styles 按部位落到全部条目的 key 与 value', () => {
+        const { container } = setup({
+            classNames: { itemKey: 'my-itemKey', itemValue: 'my-itemValue' },
+            styles: { itemKey: 'order: 1', itemValue: 'order: 2' },
+            data: [
+                { key: 'a', value: 'b', classNames: { key: 'my-key', value: 'my-value' }, styles: { key: 'order: 3', value: 'order: 4' } },
+                { key: 'c', value: 'd' },
+            ],
+        });
+        expect(getKeys(container)[0]).toHaveClass('my-itemKey', 'my-key');
+        expect(getKeys(container)[0]).toHaveStyle({ order: '3' });
+        expect(getValues(container)[0]).toHaveClass('my-itemValue', 'my-value');
+        expect(getValues(container)[0]).toHaveStyle({ order: '4' });
+        expect(getKeys(container)[1]).toHaveClass('my-itemKey');
+        expect(getKeys(container)[1]).toHaveStyle({ order: '1' });
+        expect(getValues(container)[1]).toHaveClass('my-itemValue');
+        expect(getValues(container)[1]).toHaveStyle({ order: '2' });
+    });
+
+    it('父级 item* 与子项自己的 classNames 都生效，父级在前', () => {
+        const { container } = setup({ classNames: { itemKey: 'p-key', itemValue: 'p-value' }, data: [{ key: 'a', value: 'b', classNames: { key: 'c-key', value: 'c-value' } }] });
+        expect(getKeys(container)[0].className).toBe(`${prefixCls}-key p-key c-key`);
+        expect(getValues(container)[0].className).toBe(`${prefixCls}-value p-value c-value`);
+    });
+
     it('水平布局按 column 分行，跳过隐藏项，并拉伸最后一项', () => {
         const { container } = setup({ layout: 'horizontal', data: dataWithHide, column: 3 });
         const rows = container.querySelectorAll('tr');

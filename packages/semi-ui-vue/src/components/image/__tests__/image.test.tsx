@@ -43,9 +43,12 @@ afterEach(() => {
 
 describe('Image', () => {
     it('classNames 与 styles 按部位落到对应元素', () => {
-        const { container } = renderImage({ styles: { img: { maxWidth: '300px' } }, classNames: { img: 'custom-img-cls' } });
+        const { container } = renderImage({ styles: { img: { maxWidth: '300px' }, overlay: { order: 2 } }, classNames: { img: 'custom-img-cls', overlay: 'custom-overlay-cls' } });
         expect(thumb(container)).toHaveClass('custom-img-cls');
         expect(thumb(container)).toHaveStyle({ maxWidth: '300px' });
+        const overlay = getElement(`.${prefixCls}-overlay`, container);
+        expect(overlay).toHaveClass('custom-overlay-cls');
+        expect(overlay).toHaveStyle({ order: '2' });
     });
 
     it('根元素与 img 结构：width、height、class、style、alt、crossOrigin', () => {

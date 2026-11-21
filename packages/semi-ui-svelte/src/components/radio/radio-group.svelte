@@ -23,6 +23,8 @@
         mode = defaults('mode', ''),
         type = defaults('type', 'default'),
         buttonSize = defaults('buttonSize', 'middle'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         onChange,
         onBlur,
         children,
@@ -93,6 +95,12 @@
         },
         get mode() {
             return mode;
+        },
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
         },
         handleChange: foundation.handleChange,
         register: (sync) => {

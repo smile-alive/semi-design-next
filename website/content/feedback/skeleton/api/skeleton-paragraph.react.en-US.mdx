@@ -2,7 +2,9 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property | Description                                                            | Type                                                                | Default |
-| -------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------- | ------- |
-| ref      | Reference to the root `ul` element of the paragraph placeholder.       | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType> | -       |
-| rows     | Number of rows in the placeholder paragraph, each rendered as an `li`. | `number`                                                            | `4`     |
+| Property   | Description                                                                                                            | Type                                                                                               | Default |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------- |
+| classNames | Class names of the inner parts, keyed by `row`; merged with the built-in classes. `row` is each `li` of the paragraph. | <ApiType detail={"Partial\u003cRecord\u003cSkeletonParagraphPart, string>>"}>Type</ApiType>        | -       |
+| ref        | Reference to the root `ul` element of the paragraph placeholder.                                                       | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType>                                | -       |
+| rows       | Number of rows in the placeholder paragraph, each rendered as an `li`.                                                 | `number`                                                                                           | `4`     |
+| styles     | Inline styles of the inner parts, keyed like `classNames`.                                                             | <ApiType detail={"Partial\u003cRecord\u003cSkeletonParagraphPart, CSSProperties>>"}>Type</ApiType> | -       |

@@ -1,6 +1,6 @@
 import { children, onMount, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
+import { cssClasses, type SwitchPart } from '@fibrae/semi-foundation/components/switch/constants';
 import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/switch/switch.scss';
@@ -11,7 +11,11 @@ import { useSpecialTrigger } from '../tooltip/context';
 
 type SwitchChangeEvent = Event & { currentTarget: HTMLInputElement; target: HTMLInputElement };
 
+type Style = JSX.CSSProperties | string;
+
 export interface SwitchProps extends ElementProps<'div', 'onChange' | 'onFocus' | 'onBlur'> {
+    classNames?: Partial<Record<SwitchPart, string>>;
+    styles?: Partial<Record<SwitchPart, Style>>;
     defaultChecked?: boolean;
     checked?: boolean;
     disabled?: boolean;
@@ -41,7 +45,7 @@ const defaultProps = {
 
 export default function Switch(rawProps: SwitchProps) {
     const props = useDefaultProps('Switch', rawProps, defaultProps);
-    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'size', 'checkedText', 'uncheckedText', 'loading', 'disabled', 'defaultChecked', 'checked', 'onChange', 'ref']);
+    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'classNames', 'styles', 'size', 'checkedText', 'uncheckedText', 'loading', 'disabled', 'defaultChecked', 'checked', 'onChange', 'ref']);
 
     // The root is a div, so what names, identifies and focuses the switch belongs on the native input
     const [control, rest] = splitControlAttrs(attrs, isNativeInputKey);
@@ -93,16 +97,16 @@ export default function Switch(rawProps: SwitchProps) {
                 [cssClasses.LOADING]: local.loading,
             })}
         >
-            <Show when={local.loading} fallback={<div class={cssClasses.KNOB} aria-hidden="true" />}>
-                <Spin class={cssClasses.LOADING_SPIN} size={local.size === 'default' ? 'middle' : local.size} />
+            <Show when={local.loading} fallback={<div class={clsx(cssClasses.KNOB, local.classNames?.indicator)} style={local.styles?.indicator} aria-hidden="true" />}>
+                <Spin class={clsx(cssClasses.LOADING_SPIN, local.classNames?.indicator)} style={local.styles?.indicator} size={local.size === 'default' ? 'middle' : local.size} />
             </Show>
             <Show when={hasContent(checkedText())}>
-                <div class={cssClasses.CHECKED_TEXT} x-semi-prop="checkedText">
+                <div class={clsx(cssClasses.CHECKED_TEXT, local.classNames?.content)} style={local.styles?.content} x-semi-prop="checkedText">
                     {checkedText()}
                 </div>
             </Show>
             <Show when={hasContent(uncheckedText())}>
-                <div class={cssClasses.UNCHECKED_TEXT} x-semi-prop="uncheckedText">
+                <div class={clsx(cssClasses.UNCHECKED_TEXT, local.classNames?.content)} style={local.styles?.content} x-semi-prop="uncheckedText">
                     {uncheckedText()}
                 </div>
             </Show>

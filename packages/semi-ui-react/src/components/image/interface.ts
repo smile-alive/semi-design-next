@@ -81,7 +81,7 @@ export interface PreviewProps extends BaseProps, ElementProps<'div', 'onChange'>
     setDownloadName?: (src: string) => string;
 }
 
-export interface PreviewInnerProps extends Omit<PreviewProps, 'classNames' | 'styles'> {
+export interface PreviewInnerProps extends Omit<PreviewProps, 'className' | 'style'> {
     /** alt of the previewed image, for a single Image; a group passes its images' alts by context */
     alt?: string;
 }
@@ -122,8 +122,9 @@ export interface HeaderProps {
     title?: ReactNode;
     /** id of the title section, which names the preview dialog */
     titleId?: string;
-    titleStyle?: React.CSSProperties;
     className?: string;
+    classNames?: Partial<Record<ImagePreviewPart, string>>;
+    styles?: Partial<Record<ImagePreviewPart, React.CSSProperties>>;
     onClose?: (e: React.MouseEvent<HTMLElement>) => void;
     renderCloseIcon?: React.ReactElement | (() => React.ReactElement);
     /** Attached to the header section */
@@ -148,6 +149,8 @@ export interface FooterProps extends SliderProps {
     adaptiveTip?: string;
     originTip?: string;
     showTooltip?: boolean;
+    classNames?: Partial<Record<ImagePreviewPart, string>>;
+    styles?: Partial<Record<ImagePreviewPart, React.CSSProperties>>;
     onZoomIn?: (zoom: number) => void;
     onZoomOut?: (zoom: number) => void;
     onPrev?: () => void;
@@ -171,6 +174,8 @@ export interface PreviewImageProps {
     disableDownload?: boolean;
     crossOrigin?: 'anonymous' | 'use-credentials';
     initialZoom?: number;
+    classNames?: Partial<Record<ImagePreviewPart, string>>;
+    styles?: Partial<Record<ImagePreviewPart, React.CSSProperties>>;
     onZoom?: (zoom: number, reportToUser?: boolean) => void;
     onLoad?: (src: string) => void;
     onError?: (src: string) => void;

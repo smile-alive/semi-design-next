@@ -1,7 +1,7 @@
 import { type Component, type JSX, Match, Show, Switch, type ValidComponent, children, createEffect, createMemo, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import { Dynamic, isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
+import { cssClasses, type TypographyTextPart } from '@fibrae/semi-foundation/components/typography/constants';
 import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
 import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import { POPUP_ID_ATTRIBUTE, warning } from '@fibrae/semi-foundation/utils';
@@ -19,6 +19,8 @@ import { TypographyElement } from './typography';
 
 export interface BaseTypographyProps extends ElementProps<'article', OmitTypographyProps | 'ref'>, TypographyCommonProps, TypographyEllipsisProps {
     icon?: TypographyIcon;
+    classNames?: Partial<Record<TypographyTextPart, string>>;
+    styles?: Partial<Record<TypographyTextPart, JSX.CSSProperties | string>>;
     size?: TypographyBaseSize;
     code?: boolean;
     spacing?: string;
@@ -132,7 +134,7 @@ function linkAttrs(link: LinkType, disabled: boolean, clickable: boolean): objec
 }
 
 function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyProps, keyof typeof defaultProps>>) {
-    const [local, attrs] = splitProps(props, ['ref', 'component', 'children', 'class', 'type', 'spacing', 'disabled', 'style', 'ellipsis', 'icon', 'size', 'link', 'headingTag', 'weight', 'tabIndex', 'copyable', 'strong', 'mark', 'underline', 'code', 'delete']);
+    const [local, attrs] = splitProps(props, ['ref', 'component', 'children', 'class', 'type', 'spacing', 'disabled', 'style', 'ellipsis', 'icon', 'classNames', 'styles', 'size', 'link', 'headingTag', 'weight', 'tabIndex', 'copyable', 'strong', 'mark', 'underline', 'code', 'delete']);
 
     // the attributes a Tooltip trigger merges instead of just passing on
     const [own, rest] = splitProps(attrs, ['aria-describedby', 'aria-expanded', 'aria-haspopup', 'aria-controls', POPUP_ID_ATTRIBUTE, 'tabindex']);
@@ -279,7 +281,7 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
 
     const iconNode = () => (
         <Show when={hasContent(iconResolved())}>
-            <span class={`${prefixCls}-icon`} x-semi-prop="icon">
+            <span class={clsx(`${prefixCls}-icon`, local.classNames?.icon)} style={local.styles?.icon} x-semi-prop="icon">
                 <Show when={iconComponent()} fallback={iconResolved()}>
                     {(component) => <Dynamic component={component()} size={realSize() === 'small' ? 'small' : 'default'} />}
                 </Show>
@@ -361,7 +363,8 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
                             onCleanup(() => (expandElement = undefined));
                         }}
                         type="button"
-                        class={`${prefixCls}-ellipsis-expand`}
+                        class={clsx(`${prefixCls}-ellipsis-expand`, local.classNames?.expand)}
+                        style={local.styles?.expand}
                         aria-expanded={button().expanded}
                         onClick={toggleOverflow}
                     >
@@ -372,6 +375,8 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
             <Show when={hasCopyable()}>
                 <Copyable
                     {...copyConfig()}
+                    buttonClass={local.classNames?.copy}
+                    buttonStyle={local.styles?.copy}
                     ref={(element) => {
                         copyElement = element;
                         onCleanup(() => (copyElement = undefined));

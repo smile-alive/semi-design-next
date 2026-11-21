@@ -6,8 +6,9 @@ import { formatTime } from '@fibrae/semi-foundation/components/video-player/util
 import { toCssLength, focusWithoutRing } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
 import { useFoundation } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 import Tooltip from '../tooltip';
-import type { AudioPlayerTheme } from './interface';
+import type { AudioPlayerProps, AudioPlayerTheme } from './interface';
 
 interface FoundationProps extends SeekBaseProps {
     onChange?: (value: number) => void;
@@ -26,6 +27,8 @@ interface AudioSliderProps {
     showTooltip?: boolean;
     theme?: AudioPlayerTheme;
     label: string;
+    classNames?: AudioPlayerProps['classNames'];
+    styles?: AudioPlayerProps['styles'];
     getValueText: (value: number) => string;
 }
 
@@ -105,32 +108,47 @@ export default function AudioSlider(rawProps: AudioSliderProps) {
             />
             <div
                 ref={(node) => (track = node)}
-                class={clsx(`${prefixCls}-slider`, `${prefixCls}-slider-${props.theme}`, {
-                    [`${prefixCls}-slider-vertical`]: props.vertical,
-                    [`${prefixCls}-slider-horizontal`]: !props.vertical,
-                })}
-                style={props.vertical ? { height: toCssLength(props.height) } : undefined}
+                class={clsx(
+                    `${prefixCls}-slider`,
+                    `${prefixCls}-slider-${props.theme}`,
+                    {
+                        [`${prefixCls}-slider-vertical`]: props.vertical,
+                        [`${prefixCls}-slider-horizontal`]: !props.vertical,
+                    },
+                    props.classNames?.sliderTrack
+                )}
+                style={mergeStyles(props.vertical ? { height: toCssLength(props.height) } : undefined, props.styles?.sliderTrack)}
             >
                 <div
-                    class={clsx(`${prefixCls}-slider-progress`, {
-                        [`${prefixCls}-slider-progress-vertical`]: props.vertical,
-                        [`${prefixCls}-slider-progress-horizontal`]: !props.vertical,
-                    })}
-                    style={{
-                        height: props.vertical ? `${percent()}%` : '100%',
-                        width: props.vertical ? '100%' : `${percent()}%`,
-                    }}
+                    class={clsx(
+                        `${prefixCls}-slider-progress`,
+                        {
+                            [`${prefixCls}-slider-progress-vertical`]: props.vertical,
+                            [`${prefixCls}-slider-progress-horizontal`]: !props.vertical,
+                        },
+                        props.classNames?.sliderProgress
+                    )}
+                    style={mergeStyles(
+                        {
+                            height: props.vertical ? `${percent()}%` : '100%',
+                            width: props.vertical ? '100%' : `${percent()}%`,
+                        },
+                        props.styles?.sliderProgress
+                    )}
                 />
                 <div
-                    class={`${prefixCls}-slider-dot`}
-                    style={{
-                        // centered on the end of the progress, as in VideoPlayer: at either end it covers the track's round cap
-                        left: props.vertical ? '50%' : `calc(${percent()}% - ${dotSize / 2}px)`,
-                        bottom: props.vertical ? `calc(${percent()}% - ${dotSize / 2}px)` : undefined,
-                        top: props.vertical ? undefined : '50%',
-                        transform: props.vertical ? 'translateX(-50%)' : 'translateY(-50%)',
-                        'pointer-events': 'none',
-                    }}
+                    class={clsx(`${prefixCls}-slider-dot`, props.classNames?.sliderThumb)}
+                    style={mergeStyles(
+                        {
+                            // centered on the end of the progress, as in VideoPlayer: at either end it covers the track's round cap
+                            left: props.vertical ? '50%' : `calc(${percent()}% - ${dotSize / 2}px)`,
+                            bottom: props.vertical ? `calc(${percent()}% - ${dotSize / 2}px)` : undefined,
+                            top: props.vertical ? undefined : '50%',
+                            transform: props.vertical ? 'translateX(-50%)' : 'translateY(-50%)',
+                            'pointer-events': 'none',
+                        },
+                        props.styles?.sliderThumb
+                    )}
                 />
             </div>
         </div>

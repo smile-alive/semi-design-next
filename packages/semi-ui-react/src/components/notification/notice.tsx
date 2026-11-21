@@ -2,7 +2,7 @@ import type React from 'react';
 import { cloneElement, useId, useLayoutEffect } from 'react';
 import clsx from 'clsx';
 import { type AutoCloseListState, isAlertType } from '@fibrae/semi-foundation/base';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+import { cssClasses, numbers, type NotificationPart } from '@fibrae/semi-foundation/components/notification/constants';
 import NotificationFoundation, { type NoticeAdapter, type NoticeProps, type NoticeState } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-react';
@@ -22,6 +22,8 @@ type Adapter = NoticeAdapter<NoticeProps>;
  */
 export interface NoticeReactProps extends NoticeProps, ElementProps<'div', 'title' | 'content' | 'style' | 'className' | 'id' | 'children' | 'dangerouslySetInnerHTML'> {
     style?: React.CSSProperties;
+    classNames?: Partial<Record<NotificationPart, string>>;
+    styles?: Partial<Record<NotificationPart, React.CSSProperties>>;
     title?: React.ReactNode;
     content?: React.ReactNode;
     icon?: React.ReactNode;
@@ -65,7 +67,7 @@ export default function Notice(rawProps: NoticeReactProps) {
     const props = useDefaultProps('Notification', rawProps, defaultProps);
 
     // options from Notification.config() and NoticeInstance ride along and must stay off the DOM
-    const { ref, duration, id, title, content, position, type, onClick, onClose, onCloseClick, showClose, close, zIndex, icon, getPopupContainer, theme, direction: directionProp, className, style, onAnimationEnd, onAnimationStart, stack, top, left, bottom, right, listState, ...rest } = props;
+    const { ref, duration, id, title, content, position, type, onClick, onClose, onCloseClick, showClose, close, zIndex, icon, getPopupContainer, theme, direction: directionProp, className, classNames, style, styles, onAnimationEnd, onAnimationStart, stack, top, left, bottom, right, listState, ...rest } = props;
 
     const { locale } = useLocale('Notification');
     const context = useConfigContext();
@@ -114,7 +116,7 @@ export default function Notice(rawProps: NoticeReactProps) {
         >
             <div>
                 {Boolean(typeIcon) && (
-                    <div className={clsx(`${prefixCls}-icon`, `${prefixCls}-${type}`)} x-semi-prop="icon">
+                    <div className={clsx(`${prefixCls}-icon`, `${prefixCls}-${type}`, classNames?.icon)} style={styles?.icon} x-semi-prop="icon">
                         {isSemiIcon(typeIcon) ? cloneElement(typeIcon, { size: typeIcon.props.size || 'large' }) : typeIcon}
                     </div>
                 )}
@@ -122,17 +124,17 @@ export default function Notice(rawProps: NoticeReactProps) {
             <div className={`${prefixCls}-inner`}>
                 <div className={`${prefixCls}-content-wrapper`}>
                     {hasTitle && (
-                        <div id={titleID} className={`${prefixCls}-title`} x-semi-prop="title">
+                        <div id={titleID} className={clsx(`${prefixCls}-title`, classNames?.title)} style={styles?.title} x-semi-prop="title">
                             {title}
                         </div>
                     )}
                     {hasBody && (
-                        <div className={`${prefixCls}-content`} x-semi-prop="content">
+                        <div className={clsx(`${prefixCls}-content`, classNames?.content)} style={styles?.content} x-semi-prop="content">
                             {content}
                         </div>
                     )}
                 </div>
-                {showClose && <Button type="tertiary" className={`${prefixCls}-icon-close`} aria-label={locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={foundation.clickClose} />}
+                {showClose && <Button type="tertiary" className={clsx(`${prefixCls}-icon-close`, classNames?.close)} style={styles?.close} aria-label={locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={foundation.clickClose} />}
             </div>
         </div>
     );

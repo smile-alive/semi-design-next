@@ -1,11 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property  | Description                                                                                                                   | Type                                  | Default |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- | ------- |
-| children  | Content of the option. It is shown when `label` is unset.                                                                     | `React.ReactNode`                     | -       |
-| className | Class name of the option.                                                                                                     | `string`                              | -       |
-| disabled  | Whether the option is disabled.                                                                                               | `boolean`                             | -       |
-| label     | Displayed text, a string, a number or a ReactNode. Rendering prefers `label`, then falls back to `children` and then `value`. | `string \| number \| React.ReactNode` | -       |
-| showTick  | Whether a check icon is shown when the option is selected. Options rendered by Select show it by default.                     | `boolean`                             | -       |
-| style     | Style of the option row.                                                                                                      | `React.CSSProperties`                 | -       |
-| value     | Value of the option. It should be unique within a Select, while `label` may repeat.                                           | `V`                                   | -       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Content of the option. It is shown when `label` is unset. | `React.ReactNode` | - |
+| className | Class name of the option. | `string` | - |
+| classNames | Class names of the inner parts of the option, keyed by `icon` (the tick icon container) and `content` (the text element, present when children is a string); appended after the `item*` class names of Select. | <ApiType detail={"Partial\u003cRecord\u003cOptionPart, string>>"}>Type</ApiType> | - |
+| disabled | Whether the option is disabled. | `boolean` | - |
+| label | Displayed text, a string, a number or a ReactNode. Rendering prefers `label`, then falls back to `children` and then `value`. | `string \| number \| React.ReactNode` | - |
+| showTick | Whether a check icon is shown when the option is selected. Options rendered by Select show it by default. | `boolean` | - |
+| style | Style of the option row. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts of the option, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cOptionPart, React.CSSProperties>>"}>Type</ApiType> | - |
+| value | Value of the option. It should be unique within a Select, while `label` may repeat. | `V` | - |

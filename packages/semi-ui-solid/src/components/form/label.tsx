@@ -1,6 +1,6 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { cssClasses, type FormLabelPart } from '@fibrae/semi-foundation/components/form/constants';
 import { toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/form/form.scss';
 import { IconHelpCircleStroked } from '@fibrae/semi-icons-solid';
@@ -8,6 +8,7 @@ import type { ElementProps } from '../../base/index';
 import { hasContent, mergeStyles } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';
+import { useFormContext } from './context';
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -25,12 +26,16 @@ export interface LabelProps extends ElementProps<'label'> {
     /** Shown in a Tooltip by a help button beside the label; the button is not part of the field's name */
     tooltip?: JSX.Element;
     optional?: boolean;
+    classNames?: Partial<Record<FormLabelPart, string>>;
+    styles?: Partial<Record<FormLabelPart, JSX.CSSProperties | string>>;
 }
 
 export default function Label(props: LabelProps) {
-    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'disabled', 'extra', 'for', 'name', 'optional', 'required', 'style', 'text', 'tooltip', 'width']);
+    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'classNames', 'disabled', 'extra', 'for', 'name', 'optional', 'required', 'style', 'styles', 'text', 'tooltip', 'width']);
 
     const locale = useLocale('Form');
+
+    const form = useFormContext()?.formProps;
 
     // each read of a JSX prop creates its nodes again, so `text` is read once
     const content = children(() => {
@@ -43,34 +48,31 @@ export default function Label(props: LabelProps) {
 
     const align = () => local.align ?? 'left';
 
-    const style = (): JSX.CSSProperties | string | undefined => {
-        if (!local.width) {
-            return local.style;
-        }
-        return mergeStyles(local.style, { width: toCssLength(local.width) });
-    };
+    const style = () => mergeStyles(form?.styles?.label, local.style, local.width && !hasContent(tooltip()) ? { width: toCssLength(local.width) } : undefined);
 
     const renderLabel = () => (
         <label
             {...rest}
             for={local.name || local.for || undefined}
-            class={clsx(local.class, `${prefixCls}-field-label`, {
+            class={clsx(form?.classNames?.label, local.class, `${prefixCls}-field-label`, {
                 [`${prefixCls}-field-label-left`]: align() === 'left',
                 [`${prefixCls}-field-label-right`]: align() === 'right',
                 [`${prefixCls}-field-label-required`]: local.required && !local.optional,
                 [`${prefixCls}-field-label-disabled`]: local.disabled,
                 [`${prefixCls}-field-label-with-extra`]: hasContent(extra()),
             })}
-            style={hasContent(tooltip()) ? local.style : style()}
+            style={style()}
         >
-            <div class={`${prefixCls}-field-label-text`} x-semi-prop="label">
+            <div class={clsx(`${prefixCls}-field-label-text`, form?.classNames?.labelText, local.classNames?.text)} style={mergeStyles(form?.styles?.labelText, local.styles?.text)} x-semi-prop="label">
                 {content()}
                 <Show when={local.optional}>
                     <span class={`${prefixCls}-field-label-optional-text`}>{locale().locale.optional}</span>
                 </Show>
             </div>
             <Show when={hasContent(extra())}>
-                <div class={`${prefixCls}-field-label-extra`}>{extra()}</div>
+                <div class={clsx(`${prefixCls}-field-label-extra`, form?.classNames?.labelExtra, local.classNames?.extra)} style={mergeStyles(form?.styles?.labelExtra, local.styles?.extra)}>
+                    {extra()}
+                </div>
             </Show>
         </label>
     );
@@ -81,7 +83,7 @@ export default function Label(props: LabelProps) {
                 {renderLabel()}
                 <Tooltip content={tooltip()}>
                     {(getTriggerProps) => (
-                        <button {...getTriggerProps()} type="button" class={`${prefixCls}-field-label-tooltip`} aria-label={locale().locale.labelTooltip}>
+                        <button {...getTriggerProps()} type="button" class={clsx(`${prefixCls}-field-label-tooltip`, form?.classNames?.labelTooltip, local.classNames?.tooltip)} style={mergeStyles(form?.styles?.labelTooltip, local.styles?.tooltip)} aria-label={locale().locale.labelTooltip}>
                             <IconHelpCircleStroked size="inherit" />
                         </button>
                     )}

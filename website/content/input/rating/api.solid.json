@@ -12,6 +12,14 @@
                 "zh-CN": "每颗星中绘制的字符，可传入 JSX 元素，如 `<IconLikeHeart />`，未设置时为星形图标。传入纯文本字符串时，该文本作为各星可访问名称与整组摘要的单位。",
                 "en-US": "Character drawn in every star, a JSX element such as `<IconLikeHeart />`; the star icon when not set. When it is a plain text string, that text is the unit in each star's accessible name and the group summary."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`dropdown`，与组件自带的类名合并。`item` 是单颗星，`dropdown` 是设置 `tooltips` 后出现的提示弹出层。",
+                "en-US": "Class names of the inner parts, keyed by `item` and `dropdown`; merged with the built-in classes. `item` is a single star; `dropdown` is the tip popup shown when `tooltips` is set."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "count": { "zh-CN": "星的总数。", "en-US": "Total number of stars." },
             "defaultValue": { "zh-CN": "非受控时的初始值。", "en-US": "Initial value when uncontrolled." },
             "disabled": {

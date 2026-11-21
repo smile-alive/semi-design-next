@@ -184,7 +184,9 @@ export default function OverflowList(rawProps: OverflowListProps) {
     if (hasContent(overflowNode)) {
         overflowNode = (
             <ReactResizeObserver onResize={([entry]) => foundation.handleOverflowResize(entry.contentRect.width)}>
-                <div className={`${prefixCls}-overflow`}>{overflowNode}</div>
+                <div className={clsx(`${prefixCls}-overflow`, classNames?.overflow)} style={styles?.overflow}>
+                    {overflowNode}
+                </div>
             </ReactResizeObserver>
         );
     }
@@ -196,7 +198,9 @@ export default function OverflowList(rawProps: OverflowListProps) {
                 {OverflowListFoundation.getVisibleItems(view, itemKey).map(({ item, index, key }) => (
                     <ReactResizeObserver key={key ?? index} onResize={([entry]) => handleItemResize(entry, key)}>
                         {/* the wrapper div gives the item width without adding up padding, margin and border */}
-                        <div className={`${prefixCls}-item`}>{visibleItemRenderer(item, index)}</div>
+                        <div className={clsx(`${prefixCls}-item`, classNames?.item)} style={styles?.item}>
+                            {visibleItemRenderer(item, index)}
+                        </div>
                     </ReactResizeObserver>
                 ))}
                 {collapseFrom === Boundary.END && overflowNode}

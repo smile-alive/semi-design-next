@@ -2,11 +2,13 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性         | 说明                                                                                                             | 类型                                                                | 默认值      |
-| ------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------- |
-| align        | header 与 main 的垂直对齐方式，可选 flex-start、flex-end、center、baseline 或 stretch，未传时为 flex-start。     | `"baseline" \| "center" \| "flex-end" \| "flex-start" \| "stretch"` | `undefined` |
-| onClick      | 点击回调，优先于 List 的 onClick；有处理函数时项渲染为原生按钮。使用方写 @click，保留为函数 prop 的原因同 List。 | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType>    | `undefined` |
-| onRightClick | 右键（上下文菜单）回调，优先于 List 的 onRightClick；只设置它时项同样渲染为原生按钮。使用方写 @rightClick。      | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType>    | `undefined` |
+| 属性         | 说明                                                                                                             | 类型                                                                                   | 默认值      |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ----------- |
+| align        | header 与 main 的垂直对齐方式，可选 flex-start、flex-end、center、baseline 或 stretch，未传时为 flex-start。     | `"baseline" \| "center" \| "flex-end" \| "flex-start" \| "stretch"`                    | `undefined` |
+| classNames   | 内部各部位的类名，键为 `header`、`main`、`extra`，与组件自带的类名合并，在 List 的 `item*` 类名之后。            | <ApiType detail={"Partial\u003cRecord\u003cListItemPart, ClassValue>>"}>Type</ApiType> | `undefined` |
+| onClick      | 点击回调，优先于 List 的 onClick；有处理函数时项渲染为原生按钮。使用方写 @click，保留为函数 prop 的原因同 List。 | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType>                       | `undefined` |
+| onRightClick | 右键（上下文菜单）回调，优先于 List 的 onRightClick；只设置它时项同样渲染为原生按钮。使用方写 @rightClick。      | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType>                       | `undefined` |
+| styles       | 内部各部位的内联样式，键同 `classNames`，后于 List 的 `item*` 样式写入。                                         | <ApiType detail={"Partial\u003cRecord\u003cListItemPart, StyleValue>>"}>Type</ApiType> | `undefined` |
 
 **Events**
 

@@ -9,4 +9,4 @@ export const strings = {
 } as const;
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type EmptyPart = 'image';
+export type EmptyPart = 'image' | 'title' | 'description' | 'footer';

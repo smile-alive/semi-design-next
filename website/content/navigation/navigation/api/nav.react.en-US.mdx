@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | children | Children of the navigation. `Nav.Item` and `Nav.Sub` render into the list, `Nav.Header` and `Nav.Footer` go to the header and the footer, and other nodes are wrapped in an `li`. | `React.ReactNode` | - |
 | className | Class name of the outermost `nav` element. | `string` | - |
-| classNames | Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `body`, `list`, `item`, `itemIcon`, `itemText`, `itemToggleIcon`, `subNav`, `subNavTitle`, `subNavList` and `subNavDropdown`; merged with the built-in classes. The `item*` keys apply to every item, and `itemIcon`, `itemText` and `itemToggleIcon` also to the title of a sub nav; the `subNav*` keys apply to every sub nav. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, string>>"}>Type</ApiType> | - |
 | defaultIsCollapsed | Whether the navigation starts collapsed. Applies only when `mode` is `vertical`. Defaults to `false`. | `boolean` | - |
 | defaultOpenKeys | `itemKey`s of the sub navigations open initially. Applies only when `mode` is `vertical` and the sidebar is expanded. When not given, the sub navigations holding the initially selected items open in vertical mode. Defaults to `[]`. | `(string \| number)[]` | - |
 | defaultSelectedKeys | `itemKey`s of the items selected initially. Defaults to `[]`. | `(string \| number)[]` | - |

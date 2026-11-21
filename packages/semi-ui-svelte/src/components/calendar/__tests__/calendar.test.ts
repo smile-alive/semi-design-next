@@ -83,6 +83,45 @@ afterEach(() => {
 });
 
 describe('Calendar', () => {
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const weekSelectors = {
+            header: '.week-header',
+            headerCell: '.week-grid-row [role="columnheader"]',
+            allDay: '.all-day',
+            timeColumn: '.time',
+            timeLabel: '.time-item',
+            day: '.grid',
+            event: '.event-day',
+            currentTimeLine: '.grid-curr-line',
+            currentTimeDot: '.grid-curr-circle',
+        };
+        const monthSelectors = { header: '.month-header', headerCell: '.month-grid-row [role="columnheader"]', day: '.month-skeleton > [role="cell"]', more: '.month-event-card-wrapper', dropdown: '.month-event-card' };
+        const parts = [...Object.keys(weekSelectors), 'more', 'dropdown'];
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`]));
+        const check = (container: ParentNode, selectors: Record<string, string>) => {
+            for (const [part, selector] of Object.entries(selectors)) {
+                const el = container.querySelector(selector.replace(/\.([\w-]+)/, `.${prefixCls}-$1`));
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+
+        mockLayout();
+        const week = await renderLaidOut({ displayValue: today, events: [event('a', new Date(2019, 7, 8, 9), new Date(2019, 7, 8, 10)), event('b', new Date(2019, 7, 8), undefined, { allDay: true })], classNames, styles });
+        check(week.container, weekSelectors);
+        // all-day events take the same part as timed ones
+        expect(allDayItems(week.container)[0]).toHaveClass('my-event');
+        expect(allDayItems(week.container)[0]).toHaveStyle({ order: String(parts.indexOf('event') + 1) });
+        week.unmount();
+
+        const month = await renderLaidOut({ displayValue: today, events: [event('a', new Date(2019, 7, 8, 9)), event('b', new Date(2019, 7, 8, 10))], mode: 'month', classNames, styles });
+        await userEvent.click(screen.getByText('还有2项'));
+        await waitFor(() => expect(card()).not.toBeNull());
+        check(document.body, monthSelectors);
+        month.unmount();
+    });
+
     it('mode 属性', () => {
         const headerDays = (container: Element) => container.querySelectorAll(`.${prefixCls}-week > .${prefixCls}-week-sticky-top .${prefixCls}-week-grid-row [role="columnheader"]`);
 

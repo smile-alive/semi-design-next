@@ -2,12 +2,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property    | Description                                                                                                                           | Type                                                                      | Default    |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------- |
-| item        | Snippet for the content of every avatar, with the parameter `{ item, index }`; it takes precedence over the item's own `children`.    | <ApiType detail={"Snippet\u003c[AvatarGroupItemContext]>"}>Type</ApiType> | -          |
-| items       | Data of the avatars in the group; each item holds the props of an Avatar, and the group's `size` and `shape` override the item's own. | `AvatarGroupItem[]`                                                       | `[]`       |
-| maxCount    | Maximum number of visible avatars; overflow is shown as +N.                                                                           | `number`                                                                  | -          |
-| more        | Snippet for a custom overflow label, with the parameter `{ restNumber, restAvatars }`: the remaining count and the hidden items.      | <ApiType detail={"Snippet\u003c[AvatarGroupMoreContext]>"}>Type</ApiType> | -          |
-| overlapFrom | Avatar overlap direction: start or end.                                                                                               | `AvatarGroupOverlapFrom`                                                  | `"start"`  |
-| shape       | Shape of the avatars in the group.                                                                                                    | `AvatarGroupShape`                                                        | `"circle"` |
-| size        | Size of the avatars in the group.                                                                                                     | `string`                                                                  | `"medium"` |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by more: the "+N" avatar shown past maxCount (also merged into the Avatar rendered by the more snippet); values take anything class takes (string, array or object) and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cAvatarGroupPart, ClassValue>>"}>Type</ApiType> | - |
+| item | Snippet for the content of every avatar, with the parameter `{ item, index }`; it takes precedence over the item's own `children`. | <ApiType detail={"Snippet\u003c[AvatarGroupItemContext]>"}>Type</ApiType> | - |
+| items | Data of the avatars in the group; each item holds the props of an Avatar, and the group's `size` and `shape` override the item's own. | `AvatarGroupItem[]` | `[]` |
+| maxCount | Maximum number of visible avatars; overflow is shown as +N. | `number` | - |
+| more | Snippet for a custom overflow label, with the parameter `{ restNumber, restAvatars }`: the remaining count and the hidden items. | <ApiType detail={"Snippet\u003c[AvatarGroupMoreContext]>"}>Type</ApiType> | - |
+| overlapFrom | Avatar overlap direction: start or end. | `AvatarGroupOverlapFrom` | `"start"` |
+| shape | Shape of the avatars in the group. | `AvatarGroupShape` | `"circle"` |
+| size | Size of the avatars in the group. | `string` | `"medium"` |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cAvatarGroupPart, string>>"}>Type</ApiType> | - |

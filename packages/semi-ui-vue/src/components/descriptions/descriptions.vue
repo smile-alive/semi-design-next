@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
     import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
     import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
-    import { type ElementProps, semiDefault } from '../../base/index';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
     import { elementType, slotNodes } from '../../utils/index';
     import { provideDescriptionsContext } from './context';
     import DescriptionsItem from './descriptions-item.vue';
@@ -13,18 +13,20 @@
 
     const props = withDefaults(defineProps<DescriptionsProps & /* @vue-ignore */ ElementProps<'div', keyof DescriptionsProps>>(), {
         align: () => semiDefault('Descriptions', 'align', 'center'),
+        classNames: semiGlobalDefault('Descriptions', 'classNames'),
         row: () => semiDefault('Descriptions', 'row', false),
         size: () => semiDefault('Descriptions', 'size', 'medium'),
         data: () => semiDefault('Descriptions', 'data', []),
         layout: () => semiDefault('Descriptions', 'layout', 'vertical'),
         column: () => semiDefault('Descriptions', 'column', 3),
+        styles: semiGlobalDefault('Descriptions', 'styles'),
     });
 
     const slots = defineSlots<DescriptionsSlots>();
 
     const prefixCls = cssClasses.PREFIX;
 
-    provideDescriptionsContext(computed(() => ({ align: props.align, layout: props.layout })));
+    provideDescriptionsContext(computed(() => ({ align: props.align, layout: props.layout, classNames: props.classNames, styles: props.styles })));
 
     // vnode props hold what the author wrote: `hidden` shorthand is '' and `span="3"` is a string
     const isTrue = (value: unknown) => value === '' || value === true;

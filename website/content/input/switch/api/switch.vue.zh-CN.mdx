@@ -1,12 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| 属性           | 说明                                                                              | 类型      | 默认值                                          |
-| -------------- | --------------------------------------------------------------------------------- | --------- | ----------------------------------------------- |
-| defaultChecked | 非受控时的初始选中状态。                                                          | `boolean` | `semiGlobalDefault("Switch", "defaultChecked")` |
-| disabled       | 是否禁用。                                                                        | `boolean` | `false`                                         |
-| loading        | 是否处于加载中；加载中 input 仍可聚焦并带 aria-disabled，切换被忽略且不发出事件。 | `boolean` | `false`                                         |
-| modelValue     | 是否选中，配合 v-model 使用；传入后由该值决定显示，只传不回写时点击仅触发通知。   | `boolean` | `undefined`                                     |
-| size           | 开关尺寸，可选 large、default 或 small。                                          | `Size`    | `"default"`                                     |
+| 属性           | 说明                                                                                                                                                | 类型                                                                                 | 默认值                                          |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| classNames     | 内部各部位的类名，键为 `indicator`、`content`，与组件自带的类名合并。`indicator` 是滑块，加载中时是加载图标；`content` 是选中或未选中时显示的文字。 | <ApiType detail={"Partial\u003cRecord\u003cSwitchPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Switch", "classNames")`     |
+| defaultChecked | 非受控时的初始选中状态。                                                                                                                            | `boolean`                                                                            | `semiGlobalDefault("Switch", "defaultChecked")` |
+| disabled       | 是否禁用。                                                                                                                                          | `boolean`                                                                            | `false`                                         |
+| loading        | 是否处于加载中；加载中 input 仍可聚焦并带 aria-disabled，切换被忽略且不发出事件。                                                                   | `boolean`                                                                            | `false`                                         |
+| modelValue     | 是否选中，配合 v-model 使用；传入后由该值决定显示，只传不回写时点击仅触发通知。                                                                     | `boolean`                                                                            | `undefined`                                     |
+| size           | 开关尺寸，可选 large、default 或 small。                                                                                                            | `Size`                                                                               | `"default"`                                     |
+| styles         | 内部各部位的内联样式，键同 `classNames`。                                                                                                           | <ApiType detail={"Partial\u003cRecord\u003cSwitchPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Switch", "styles")`         |
 
 **Events**
 

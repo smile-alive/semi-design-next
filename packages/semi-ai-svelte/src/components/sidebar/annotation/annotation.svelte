@@ -12,6 +12,8 @@
     let {
         visible = $bindable(),
         activeKey = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         title = defaults('title'),
         motion = defaults('motion'),
         resizable = defaults('resizable'),
@@ -38,6 +40,6 @@
     }
 </script>
 
-<Container {...rest} bind:this={container} bind:visible class={[cssClasses.ANNOTATION, rest.class]} {closeOnEsc} {defaultSize} {maxWidth} {minWidth} {motion} {resizable} {showClose} title={title ?? locale().locale.annotationTitle}>
-    <AnnotationContent bind:activeKey header={infoHeader} {info} {item} {onChange} {onClick} />
+<Container {...rest} bind:this={container} bind:visible class={[cssClasses.ANNOTATION, rest.class]} {classNames} {closeOnEsc} {defaultSize} {maxWidth} {minWidth} {motion} {resizable} {showClose} {styles} title={title ?? locale().locale.annotationTitle}>
+    <AnnotationContent bind:activeKey {classNames} header={infoHeader} {info} {item} {onChange} {onClick} {styles} />
 </Container>

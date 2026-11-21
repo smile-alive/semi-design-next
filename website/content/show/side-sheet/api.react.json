@@ -23,8 +23,8 @@
                 "en-US": "Class name of the root element, the outermost `.semi-sidesheet` element inside the portal."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `mask`、`content`、`header`、`body`、`footer`，与组件自带的类名合并；`content` 落在对话框元素（`.semi-sidesheet-inner`）上。",
-                "en-US": "Class names of the inner parts, keyed by `mask`, `content`, `header`, `body` and `footer`; merged with the built-in classes. `content` lands on the dialog element (`.semi-sidesheet-inner`)."
+                "zh-CN": "内部各部位的类名，键为 `mask`、`content`、`header`、`title`、`close`、`body`、`footer`，与组件自带的类名合并；`content` 落在对话框元素（`.semi-sidesheet-inner`）上。",
+                "en-US": "Class names of the inner parts, keyed by `mask`, `content`, `header`, `title`, `close`, `body` and `footer`; merged with the built-in classes. `content` lands on the dialog element (`.semi-sidesheet-inner`)."
             },
             "closable": {
                 "zh-CN": "是否显示右上角的关闭按钮。",

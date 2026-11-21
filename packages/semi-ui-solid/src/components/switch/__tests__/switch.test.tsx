@@ -145,6 +145,22 @@ describe('Switch', () => {
         expect(getSwitch()).toBeChecked();
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const [checked, setChecked] = createSignal(false);
+        const [loading, setLoading] = createSignal(false);
+        render(() => <Switch checked={checked()} loading={loading()} checkedText="ON" uncheckedText="OFF" classNames={{ indicator: 'my-indicator', content: 'my-content' }} styles={{ indicator: { order: '1' }, content: { order: '2' } }} />);
+        expect(query(`${prefixCls}-knob`)).toHaveClass('my-indicator');
+        expect(query(`${prefixCls}-knob`)).toHaveStyle({ order: '1' });
+        expect(query(`${prefixCls}-unchecked-text`)).toHaveClass('my-content');
+        expect(query(`${prefixCls}-unchecked-text`)).toHaveStyle({ order: '2' });
+        setChecked(true);
+        expect(query(`${prefixCls}-checked-text`)).toHaveClass('my-content');
+        expect(query(`${prefixCls}-checked-text`)).toHaveStyle({ order: '2' });
+        setLoading(true);
+        expect(query(`${prefixCls}-loading-spin`)).toHaveClass('my-indicator');
+        expect(query(`${prefixCls}-loading-spin`)).toHaveStyle({ order: '1' });
+    });
+
     it('loading 显示 Spin 替换滑块，并可动态移除', () => {
         const [loading, setLoading] = createSignal(true);
         render(() => <Switch loading={loading()} />);

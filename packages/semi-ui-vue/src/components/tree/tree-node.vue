@@ -123,6 +123,8 @@
 
     const labelClass = () => getTreeLabelClassMap(props.row, rowFlags());
 
+    const parts = () => context.view.value;
+
     const rowAttrs = () => {
         const { row } = props;
         const { multiple, draggable } = context.view.value;
@@ -192,10 +194,10 @@
 </script>
 
 <template>
-    <li v-if="$slots.fullLabel" v-bind="rowAttrs()" role="treeitem" :style="props.rowStyle">
+    <li v-if="$slots.fullLabel" v-bind="rowAttrs()" :class="parts().classNames?.item" role="treeitem" :style="[props.rowStyle, parts().styles?.item]">
         <slot name="fullLabel" v-bind="fullLabelProps()" />
     </li>
-    <li v-else v-bind="rowAttrs()" :class="nodeClass()" role="treeitem" :style="props.rowStyle" @click="onClick" @contextmenu="onContextmenu" @dblclick="onDblclick">
+    <li v-else v-bind="rowAttrs()" :class="[nodeClass(), parts().classNames?.item]" role="treeitem" :style="[props.rowStyle, parts().styles?.item]" @click="onClick" @contextmenu="onContextmenu" @dblclick="onDblclick">
         <span aria-hidden="true" :class="[`${prefix}-indent`, { [`${prefix}-indent-show-line`]: props.showLine }]">
             <span v-for="i in props.row.level" :key="i" :class="[`${prefix}-indent-unit`, { [`${prefix}-indent-unit-end`]: props.row.isEnd[i - 1] }]" />
         </span>
@@ -205,7 +207,7 @@
             </template>
         </NodeArrow>
         <span :class="labelClass()">
-            <div v-if="context.view.value.multiple" role="none" @click="onCheck">
+            <div v-if="context.view.value.multiple" :class="parts().classNames?.itemCheckbox" role="none" :style="parts().styles?.itemCheckbox" @click="onCheck">
                 <Checkbox aria-hidden="true" :disabled="isDisabled()" :indeterminate="Boolean(props.row.halfChecked)" :modelValue="Boolean(props.row.checked)" :tabindex="-1" />
             </div>
             <template v-for="(nodes, i) in [iconNodes()]" :key="i">
@@ -213,12 +215,12 @@
                     <component :is="node" v-for="[node, key] in nodes" :key="key" />
                 </template>
                 <template v-else-if="context.view.value.directory">
-                    <IconFile v-if="isLeaf()" :class="`${prefix}-item-icon`" />
-                    <IconFolderOpen v-else-if="props.row.expanded" :class="`${prefix}-item-icon`" />
-                    <IconFolder v-else :class="`${prefix}-item-icon`" />
+                    <IconFile v-if="isLeaf()" :class="[`${prefix}-item-icon`, parts().classNames?.itemIcon]" :style="parts().styles?.itemIcon" />
+                    <IconFolderOpen v-else-if="props.row.expanded" :class="[`${prefix}-item-icon`, parts().classNames?.itemIcon]" :style="parts().styles?.itemIcon" />
+                    <IconFolder v-else :class="[`${prefix}-item-icon`, parts().classNames?.itemIcon]" :style="parts().styles?.itemIcon" />
                 </template>
             </template>
-            <span :class="`${prefix}-label-text`">
+            <span :class="[`${prefix}-label-text`, parts().classNames?.itemTitle]" :style="parts().styles?.itemTitle">
                 <slot v-if="$slots.label" :item="props.row.data" :label="props.row.label" name="label" :searchWord="props.row.keyword" />
                 <Highlight v-else-if="highlighted()" :classNames="{ highlight: `${prefix}-highlight` }" component="span" :searchWords="[props.row.keyword]" :sourceString="String(props.row.label)" />
                 <template v-else>{{ props.row.label }}</template>

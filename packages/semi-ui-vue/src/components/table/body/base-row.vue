@@ -116,7 +116,7 @@
                 selected: Boolean(props.selected),
             }),
         };
-        const { prefixCls, virtualized, headerRowCount } = table.view.value;
+        const { prefixCls, virtualized, headerRowCount, classNames, styles } = table.view.value;
         return mergeProps(
             {
                 class: [
@@ -127,8 +127,9 @@
                         [`${prefixCls}-row-hovered`]: props.hovered || props.highlighted,
                         [`${prefixCls}-row-hidden`]: props.displayNone,
                     },
+                    classNames?.row,
                 ],
-                style: props.style,
+                style: [props.style, styles?.row],
                 // only a virtualized body leaves rows out of the DOM; its rows count after the header rows of the same table
                 'aria-rowindex': virtualized ? headerRowCount + props.index + 1 : undefined,
                 onClick: (event: PointerEvent) => handleClick(event, onClick),
@@ -148,12 +149,13 @@
     <template v-for="(row, rowIndex) in [rowAttrs()]" :key="rowIndex">
         <component :is="table.view.value.components.body.row" v-bind="row">
             <template v-for="(cell, columnIndex) in cells()" :key="columnIndex">
-                <TableCell v-if="cell.empty" :column="cell.column" />
+                <TableCell v-if="cell.empty" :column="cell.column" dataCell />
                 <TableCell
                     v-else
                     :column="cell.column"
                     :columnsToEnd="cell.columnsToEnd"
                     :component="table.view.value.components.body.cell"
+                    dataCell
                     :expandIconArgs="cell.expandIcon ? { isNested: true } : undefined"
                     :firstFixedRight="cell.firstFixedRight"
                     :fixedLeft="cell.fixedLeft"

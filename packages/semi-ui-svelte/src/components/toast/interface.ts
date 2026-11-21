@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 import type { HookApi } from '@fibrae/semi-foundation/base';
+import type { ToastPart } from '@fibrae/semi-foundation/components/toast/constants';
 import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 
 export type { ConfigProps, ConfigProps as ToastConfigProps, Directions, ToastState, ToastTheme, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
@@ -12,10 +13,13 @@ export type ToastNode = string | Snippet;
 /** Options of one toast; unknown keys such as `data-*` and `dir` land on the toast element (F2) */
 export interface ToastProps extends Omit<FoundationToastProps, 'content' | 'icon' | 'className' | 'style' | 'close'>, Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'content' | 'id'> {
     id?: string;
+    /** `icon` lands on the type icon; a custom icon is a snippet with no element of its own to take it */
+    classNames?: Partial<Record<ToastPart, ClassValue>>;
     content: ToastNode;
     /** Replaces the icon of `type`; a Semi icon in it sets its own size and class */
     icon?: ToastNode;
     motion?: boolean;
+    styles?: Partial<Record<ToastPart, string>>;
 }
 
 export type ToastOptions = Omit<ToastProps, 'type'>;

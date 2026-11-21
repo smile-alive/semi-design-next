@@ -1,5 +1,5 @@
 import React from 'react';
-import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
+import type { strings, TagPart } from '@fibrae/semi-foundation/components/tag/constants';
 import type { ElementProps } from '../../base/index';
 import type { PopoverProps } from '../popover/index';
 
@@ -26,6 +26,8 @@ export interface TagProps extends ElementProps<'div'> {
     suffixIcon?: React.ReactNode;
     style?: React.CSSProperties;
     className?: string;
+    classNames?: Partial<Record<TagPart, string>>;
+    styles?: Partial<Record<TagPart, React.CSSProperties>>;
     avatarSrc?: string;
     colorful?: boolean;
     gradient?: boolean;

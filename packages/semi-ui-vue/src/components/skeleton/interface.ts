@@ -1,4 +1,5 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { SkeletonParagraphPart } from '@fibrae/semi-foundation/components/skeleton/constants';
 
 export interface SkeletonProps {
     active?: boolean;
@@ -21,5 +22,7 @@ export interface SkeletonAvatarProps extends SkeletonBasicProps {
 }
 
 export interface SkeletonParagraphProps {
+    classNames?: Partial<Record<SkeletonParagraphPart, ClassValue>>;
     rows?: number;
+    styles?: Partial<Record<SkeletonParagraphPart, StyleValue>>;
 }

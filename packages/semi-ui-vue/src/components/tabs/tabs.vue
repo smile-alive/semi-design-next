@@ -95,6 +95,8 @@
     provideTabsContext({
         view: computed(() => ({
             activeKey: activeKey.value,
+            classNames: props.classNames,
+            styles: props.styles,
             prevActiveKey: motion.value.prevActiveKey,
             forceDisableMotion: motion.value.forceDisableMotion,
             paneKeys: entries.value.map((entry) => entry.itemKey),
@@ -124,11 +126,9 @@
         showRestInDropdown: props.showRestInDropdown,
         more: props.more,
         arrowPosition: props.arrowPosition,
-        classNames: { visibleTabs: props.classNames?.visibleTabs },
-        styles: { visibleTabs: props.styles?.visibleTabs },
+        classNames: props.classNames,
+        styles: props.styles,
         dropdownProps: props.dropdownProps,
-        class: props.classNames?.tabBar,
-        style: props.styles?.tabBar,
     });
 
     const barBindings = () => ({

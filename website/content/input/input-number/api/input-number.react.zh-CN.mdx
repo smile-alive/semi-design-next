@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | 原生 `autofocus` 属性，落在原生 `input` 上。 | `boolean` | - |
 | borderless | 无边框模式。 | `boolean` | - |
 | className | 根元素（`.semi-input-number`）的类名。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `input`（原生 input 元素），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `input`（原生 input 元素）、`prefix`（前缀与 `insetLabel`）、`suffix`、`clear`（清除按钮）、`addonBefore`、`addonAfter`、`actions`（步进按钮组）、`upButton`、`downButton`，与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cInputNumberPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 清除按钮的图标，可传 ReactNode。仅 `showClear` 为 `true` 时有效。 | `React.ReactNode` | - |
 | composition | 是否启用输入法组合模式。开启后组合输入期间不触发 `onChange`，组合结束后触发一次。 | `boolean` | - |
 | currency | 货币种类，可选值有 CNY、EUR、USD 等。设为 `true` 时使用 `defaultCurrency`，未设置时为语言包对应的货币。 | `string \| boolean` | - |

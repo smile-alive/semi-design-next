@@ -4,7 +4,7 @@
     import { type AvatarGroupMoreItem, provideAvatarGroupMoreContext } from './context';
 
     // provide() covers this component's subtree, so the more slot gets its own component scope.
-    const props = defineProps<Omit<AvatarGroupMoreItem, 'layer'>>();
+    const props = defineProps<Pick<AvatarGroupMoreItem, 'size' | 'shape' | 'itemClass' | 'itemStyle'>>();
     defineSlots<{ default?: () => VNode[] }>();
 
     const layer = usePopupLayer();

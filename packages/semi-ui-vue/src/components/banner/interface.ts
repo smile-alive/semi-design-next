@@ -1,10 +1,13 @@
-import type { VNode } from 'vue';
+import type { ClassValue, StyleValue, VNode } from 'vue';
+import type { BannerPart } from '@fibrae/semi-foundation/components/banner/constants';
 
 export type BannerType = 'info' | 'danger' | 'warning' | 'success';
 
 export interface BannerProps {
     bordered?: boolean;
+    classNames?: Partial<Record<BannerPart, ClassValue>>;
     fullMode?: boolean;
+    styles?: Partial<Record<BannerPart, StyleValue>>;
     /** Plain-text title; the `#title` slot wins when both are given. Declared so `title="x"` is not a native tooltip. */
     title?: string;
     type?: BannerType;

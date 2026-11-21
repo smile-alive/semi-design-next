@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | cancelLoading | 取消按钮是否加载中；不传时跟随 onCancel 返回的 Promise，显式传入 false 关闭该行为。 | `boolean` | `semiGlobalDefault("Modal", "cancelLoading")` |
 | cancelText | 取消按钮文字，缺省取语言包 Modal.cancel。 | `string` | `semiGlobalDefault("Modal", "cancelText")` |
 | centered | 是否垂直居中显示。 | `boolean` | `false` |
-| classNames | 内部各部位的类名，键为 mask、content、header、body、footer，值的写法同 class，与组件自带的类名合并；使用 #header 插槽时没有 header 部位。 | <ApiType detail={"Partial\u003cRecord\u003cModalPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Modal", "classNames")` |
+| classNames | 内部各部位的类名，键为 mask、content、header、title、icon、close、body、footer，值的写法同 class，与组件自带的类名合并；使用 #header 插槽时没有 header、title、icon、close 部位。 | <ApiType detail={"Partial\u003cRecord\u003cModalPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Modal", "classNames")` |
 | closable | 是否显示右上角的关闭按钮。 | `boolean` | `true` |
 | closeOnEsc | 是否允许按 Esc 取消对话框。 | `boolean` | `true` |
 | confirmLoading | 确认按钮是否加载中；不传时跟随 onOk 返回的 Promise，显式传入 false 关闭该行为。 | `boolean` | `semiGlobalDefault("Modal", "confirmLoading")` |

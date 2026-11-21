@@ -9,6 +9,8 @@ const { PREFIX_HINT } = cssClasses;
 interface HintProps {
     class?: string;
     style?: JSX.CSSProperties | string;
+    itemClass?: string;
+    itemStyle?: JSX.CSSProperties | string;
     value: string[];
     onHintClick?: (item: string) => void;
     renderHintBox?: (props: RenderHintBoxProps) => JSX.Element;
@@ -24,7 +26,7 @@ export default function Hint(props: HintProps) {
                         when={props.renderHintBox}
                         keyed
                         fallback={
-                            <button type="button" class={`${PREFIX_HINT}-item`} onClick={() => props.onHintClick?.(item())}>
+                            <button type="button" class={clsx(`${PREFIX_HINT}-item`, props.itemClass)} style={props.itemStyle} onClick={() => props.onHintClick?.(item())}>
                                 <span class={`${PREFIX_HINT}-content`}>{item()}</span>
                                 <IconArrowRight class={`${PREFIX_HINT}-icon`} />
                             </button>

@@ -30,6 +30,8 @@
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<TransferProps & /* @vue-ignore */ ElementProps<'div', keyof TransferProps | EmitHandlers<TransferEmits>>>(), {
+        classNames: semiGlobalDefault('Transfer', 'classNames'),
+        styles: semiGlobalDefault('Transfer', 'styles'),
         modelValue: undefined,
         defaultValue: () => semiDefault('Transfer', 'defaultValue', []),
         dataSource: () => semiDefault('Transfer', 'dataSource', []),
@@ -169,8 +171,8 @@
 <template>
     <div :class="[prefixCls, { [`${prefixCls}-disabled`]: props.disabled, [`${prefixCls}-custom-panel`]: $slots.sourcePanel && $slots.selectedPanel }]" :role="namedRole($attrs)" v-bind="splitAttrs($attrs).root" @focusout="foundation.handleFocusOut">
         <slot v-if="$slots.sourcePanel" name="sourcePanel" v-bind="sourcePanelProps()" />
-        <section v-else :class="`${prefixCls}-left`">
-            <SearchLandmark v-if="filter !== false" :aria-label="locale.locale.filter" :class="`${prefixCls}-filter`">
+        <section v-else :class="[`${prefixCls}-left`, props.classNames?.source]" :style="props.styles?.source">
+            <SearchLandmark v-if="filter !== false" :aria-label="locale.locale.filter" :class="[`${prefixCls}-filter`, props.classNames?.filter]" :style="props.styles?.filter">
                 <Input :disabled="props.disabled" :modelValue="state.inputValue" :placeholder="locale.locale.placeholder" showClear v-bind="{ ...splitAttrs($attrs).control, ...inputBindings }" @change="onInputChange">
                     <template #prefix>
                         <IconSearch />
@@ -179,20 +181,22 @@
             </SearchLandmark>
             <Spin v-if="props.loading" />
             <template v-else-if="view.noMatch">
-                <div v-if="showsEmpty($slots.emptySearch)" :class="[`${prefixCls}-empty`, `${prefixCls}-left-empty`]">
+                <div v-if="showsEmpty($slots.emptySearch)" :class="[`${prefixCls}-empty`, `${prefixCls}-left-empty`, props.classNames?.empty]" :style="props.styles?.empty">
                     <slot name="emptySearch">{{ locale.locale.emptySearch }}</slot>
                 </div>
             </template>
             <template v-else-if="view.data.length === 0">
-                <div v-if="showsEmpty($slots.emptyLeft)" :class="[`${prefixCls}-empty`, `${prefixCls}-left-empty`]">
+                <div v-if="showsEmpty($slots.emptyLeft)" :class="[`${prefixCls}-empty`, `${prefixCls}-left-empty`, props.classNames?.empty]" :style="props.styles?.empty">
                     <slot name="emptyLeft">{{ locale.locale.emptyLeft }}</slot>
                 </div>
             </template>
             <template v-else-if="isList || isTree">
                 <slot v-if="$slots.sourceHeader" :allChecked="view.allChecked" :leafOnlyNum="view.leafOnlyNum" name="sourceHeader" :num="view.showNumber" :onAllClick="onAllClick" :showButton="view.showAllButton" />
-                <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-left-header`]">
-                    <span :class="`${prefixCls}-header-total`">{{ formatLocale(locale.locale.total, { total: view.showNumber }) }}</span>
-                    <Button v-if="view.showAllButton" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="onAllClick">{{ view.allChecked ? locale.locale.clearSelectAll : locale.locale.selectAll }}</Button>
+                <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-left-header`, props.classNames?.header]" :style="props.styles?.header">
+                    <span :class="[`${prefixCls}-header-total`, props.classNames?.title]" :style="props.styles?.title">{{ formatLocale(locale.locale.total, { total: view.showNumber }) }}</span>
+                    <Button v-if="view.showAllButton" :class="[`${prefixCls}-header-all`, props.classNames?.action]" :disabled="props.disabled" size="small" :style="props.styles?.action" theme="borderless" type="tertiary" @click="onAllClick">{{
+                        view.allChecked ? locale.locale.clearSelectAll : locale.locale.selectAll
+                    }}</Button>
                 </div>
                 <Tree
                     v-if="isTree"
@@ -216,9 +220,9 @@
                     </template>
                 </Tree>
                 <!-- checkboxes are disabled with the transfer, so the keyboard can only scroll the list -->
-                <div v-else :aria-label="locale.locale.optionList" :class="`${prefixCls}-left-list`" role="list" :tabindex="props.disabled ? 0 : undefined">
+                <div v-else :aria-label="locale.locale.optionList" :class="[`${prefixCls}-left-list`, props.classNames?.list]" role="list" :style="props.styles?.list" :tabindex="props.disabled ? 0 : undefined">
                     <component :is="group.grouped ? 'div' : SlotFragment" v-for="group in view.groups" :key="group.index" :role="group.grouped ? 'listitem' : undefined">
-                        <div v-if="group.grouped" :id="groupTitleId(group.index)" :class="`${prefixCls}-group-title`">
+                        <div v-if="group.grouped" :id="groupTitleId(group.index)" :class="[`${prefixCls}-group-title`, props.classNames?.groupTitle]" :style="props.styles?.groupTitle">
                             {{ group.title }}
                         </div>
                         <component :is="group.grouped ? 'div' : SlotFragment" :aria-labelledby="group.grouped ? groupTitleId(group.index) : undefined" :role="group.grouped ? 'list' : undefined">
@@ -226,7 +230,15 @@
                                 <div v-if="$slots.sourceItem" role="listitem">
                                     <slot :checked="view.selectedItems.has(item.key)" :index="index" :item="item" name="sourceItem" :onChange="() => onSelectOrRemove(item)" />
                                 </div>
-                                <Checkbox v-else :class="[`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: item.disabled }]" :disabled="item.disabled || props.disabled" :modelValue="view.selectedItems.has(item.key)" role="listitem" @change="onSelectOrRemove(item)">
+                                <Checkbox
+                                    v-else
+                                    :class="[`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: item.disabled }, props.classNames?.item]"
+                                    :disabled="item.disabled || props.disabled"
+                                    :modelValue="view.selectedItems.has(item.key)"
+                                    role="listitem"
+                                    :style="props.styles?.item"
+                                    @change="onSelectOrRemove(item)"
+                                >
                                     <slot :item="item" name="label">{{ item.label }}</slot>
                                 </Checkbox>
                             </template>
@@ -239,14 +251,14 @@
             </template>
         </section>
         <slot v-if="$slots.selectedPanel" name="selectedPanel" v-bind="selectedPanelProps()" />
-        <section v-else :class="`${prefixCls}-right`">
+        <section v-else :class="[`${prefixCls}-right`, props.classNames?.selected]" :style="props.styles?.selected">
             <slot v-if="$slots.selectedHeader" name="selectedHeader" :num="selectedData.length" :onClear="foundation.handleClear" :showButton="view.showClearButton" />
-            <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-right-header`]">
-                <span :class="`${prefixCls}-header-total`">{{ formatLocale(locale.locale.selected, { total: selectedData.length }) }}</span>
-                <Button v-if="view.showClearButton" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="foundation.handleClear">{{ locale.locale.clear }}</Button>
+            <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-right-header`, props.classNames?.header]" :style="props.styles?.header">
+                <span :class="[`${prefixCls}-header-total`, props.classNames?.title]" :style="props.styles?.title">{{ formatLocale(locale.locale.selected, { total: selectedData.length }) }}</span>
+                <Button v-if="view.showClearButton" :class="[`${prefixCls}-header-all`, props.classNames?.action]" :disabled="props.disabled" size="small" :style="props.styles?.action" theme="borderless" type="tertiary" @click="foundation.handleClear">{{ locale.locale.clear }}</Button>
             </div>
             <template v-if="selectedData.length === 0">
-                <div v-if="showsEmpty($slots.emptyRight)" :class="[`${prefixCls}-empty`, `${prefixCls}-right-empty`]">
+                <div v-if="showsEmpty($slots.emptyRight)" :class="[`${prefixCls}-empty`, `${prefixCls}-right-empty`, props.classNames?.empty]" :style="props.styles?.empty">
                     <slot name="emptyRight">{{ locale.locale.emptyRight }}</slot>
                 </div>
             </template>
@@ -255,17 +267,17 @@
                 :is="Sortable"
                 v-else-if="props.draggable && !props.disabled && Sortable"
                 :aria-label="locale.locale.selectedList"
-                :class="`${prefixCls}-right-list`"
+                :class="[`${prefixCls}-right-list`, props.classNames?.list]"
                 :dragHandleLabel="locale.locale.dragSort"
                 :dragOverlayClass="`${prefixCls}-right-item-drag-item-move`"
                 :items="selectedKeys"
                 :prefix="`${prefixCls}-right-item`"
                 role="list"
-                :style="{ overflow: 'auto' }"
+                :style="[{ overflow: 'auto' }, props.styles?.list]"
                 @sortEnd="foundation.handleSortEnd"
             >
                 <template #item="{ index }">
-                    <TransferSelectedItem draggable :index="index" :item="selectedData[index]" :pathLabel="pathLabel(selectedData[index])" sortable @remove="onSelectOrRemove(selectedData[index])">
+                    <TransferSelectedItem :classNames="props.classNames" draggable :index="index" :item="selectedData[index]" :pathLabel="pathLabel(selectedData[index])" sortable :styles="props.styles" @remove="onSelectOrRemove(selectedData[index])">
                         <template v-if="$slots.selectedItem" #selectedItem="itemProps">
                             <slot name="selectedItem" v-bind="itemProps" />
                         </template>
@@ -280,18 +292,19 @@
                     <template #default="{ height, width }">
                         <VirtualList
                             :aria-label="locale.locale.selectedList"
-                            :class="[`${prefixCls}-right-list`, `${prefixCls}-right-virtual-list`]"
+                            :class="[`${prefixCls}-right-list`, `${prefixCls}-right-virtual-list`, props.classNames?.list]"
                             :height="height"
                             :itemCount="selectedData.length"
                             :itemKey="(index) => selectedData[index]?.key ?? index"
                             :itemSize="props.virtualize?.itemSize ?? 0"
                             role="list"
+                            :style="props.styles?.list"
                             :tabindex="props.disabled ? 0 : undefined"
                             :width="width"
                         >
                             <template #default="{ index, style }">
                                 <div role="presentation" :style="style">
-                                    <TransferSelectedItem :disabled="props.disabled" :draggable="false" :index="index" :item="selectedData[index]" :pathLabel="pathLabel(selectedData[index])" :sortable="false" @remove="onSelectOrRemove(selectedData[index])">
+                                    <TransferSelectedItem :classNames="props.classNames" :disabled="props.disabled" :draggable="false" :index="index" :item="selectedData[index]" :pathLabel="pathLabel(selectedData[index])" :sortable="false" :styles="props.styles" @remove="onSelectOrRemove(selectedData[index])">
                                         <template v-if="$slots.selectedItem" #selectedItem="itemProps">
                                             <slot name="selectedItem" v-bind="itemProps" />
                                         </template>
@@ -308,18 +321,19 @@
             <VirtualList
                 v-else-if="!props.draggable && virtualHeight !== undefined"
                 :aria-label="locale.locale.selectedList"
-                :class="[`${prefixCls}-right-list`, `${prefixCls}-right-virtual-list`]"
+                :class="[`${prefixCls}-right-list`, `${prefixCls}-right-virtual-list`, props.classNames?.list]"
                 :height="virtualHeight"
                 :itemCount="selectedData.length"
                 :itemKey="(index) => selectedData[index]?.key ?? index"
                 :itemSize="props.virtualize?.itemSize ?? 0"
                 role="list"
+                :style="props.styles?.list"
                 :tabindex="props.disabled ? 0 : undefined"
                 :width="props.virtualize?.width || '100%'"
             >
                 <template #default="{ index, style }">
                     <div role="presentation" :style="style">
-                        <TransferSelectedItem :disabled="props.disabled" :draggable="false" :index="index" :item="selectedData[index]" :pathLabel="pathLabel(selectedData[index])" :sortable="false" @remove="onSelectOrRemove(selectedData[index])">
+                        <TransferSelectedItem :classNames="props.classNames" :disabled="props.disabled" :draggable="false" :index="index" :item="selectedData[index]" :pathLabel="pathLabel(selectedData[index])" :sortable="false" :styles="props.styles" @remove="onSelectOrRemove(selectedData[index])">
                             <template v-if="$slots.selectedItem" #selectedItem="itemProps">
                                 <slot name="selectedItem" v-bind="itemProps" />
                             </template>
@@ -330,8 +344,8 @@
                     </div>
                 </template>
             </VirtualList>
-            <div v-else :aria-label="locale.locale.selectedList" :class="`${prefixCls}-right-list`" role="list" :tabindex="props.disabled ? 0 : undefined">
-                <TransferSelectedItem v-for="(item, index) in selectedData" :key="item.key" :disabled="props.disabled" :draggable="Boolean(props.draggable)" :index="index" :item="item" :pathLabel="pathLabel(item)" :sortable="false" @remove="onSelectOrRemove(item)">
+            <div v-else :aria-label="locale.locale.selectedList" :class="[`${prefixCls}-right-list`, props.classNames?.list]" role="list" :style="props.styles?.list" :tabindex="props.disabled ? 0 : undefined">
+                <TransferSelectedItem v-for="(item, index) in selectedData" :key="item.key" :classNames="props.classNames" :disabled="props.disabled" :draggable="Boolean(props.draggable)" :index="index" :item="item" :pathLabel="pathLabel(item)" :sortable="false" :styles="props.styles" @remove="onSelectOrRemove(item)">
                     <template v-if="$slots.selectedItem" #selectedItem="itemProps">
                         <slot name="selectedItem" v-bind="itemProps" />
                     </template>

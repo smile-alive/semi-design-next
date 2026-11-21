@@ -1,9 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property   | Description                                                                                                                 | Type             | Default                                       |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------- | --------------------------------------------- |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `item`, `itemRail`, `itemIcon`, `itemContent`, `itemExtra` and `itemTime`; merged with the built-in classes. `item` lands on every `li`, `itemRail` is the connecting line and `itemIcon` holds the dot or the custom dot; the `item*` keys apply to every TimelineItem, before the item's own classNames. | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Timeline", "classNames")` |
 | dataSource | Data array. When it is not empty the items are rendered from it and the default slot is ignored. See the item fields below. | `TimelineData[]` | `semiGlobalDefault("Timeline", "dataSource")` |
-| mode       | Position of the timeline relative to the content: left, right, center or alternate.                                         | `TimelineMode`   | `"left"`                                      |
+| mode | Position of the timeline relative to the content: left, right, center or alternate. | `TimelineMode` | `"left"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Timeline", "styles")` |
 
 **Events**
 

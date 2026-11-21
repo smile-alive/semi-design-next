@@ -14,9 +14,17 @@
                 "zh-CN": "描述内容。",
                 "en-US": "Description content."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `icon`、`title`、`description`、`close`、`extra`，与组件自带的类名合并；`extra` 是 `children` 所在的附加区域。",
+                "en-US": "Class names of the inner parts, keyed by `icon`, `title`, `description`, `close` and `extra`; merged with the built-in classes. `extra` is the area that holds `children`."
+            },
             "fullMode": {
                 "zh-CN": "是否为全屏模式。",
                 "en-US": "Whether the banner is in full mode."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
             },
             "icon": {
                 "zh-CN": "替换 type 对应的图标；传 null 时不显示图标。",

@@ -1,6 +1,6 @@
 import { type JSX, Match, Show, Switch, children, createSignal } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+import { cssClasses, strings, type UploadFileCardPart, type UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
 import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
 import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils';
@@ -13,9 +13,20 @@ import Progress from '../progress';
 import Spin from '../spin';
 import Tooltip, { type GetTriggerProps } from '../tooltip';
 import Typography from '../typography';
+import { useUploadContext } from './context';
 import type { RenderFileItemProps } from './interface';
 
 export type FileCardProps = RenderFileItemProps;
+
+const itemParts = {
+    thumbnail: 'itemThumbnail',
+    name: 'itemName',
+    progress: 'itemProgress',
+    validateMessage: 'itemValidateMessage',
+    retry: 'itemRetry',
+    replace: 'itemReplace',
+    close: 'itemClose',
+} as const satisfies Record<UploadFileCardPart, UploadPart>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -65,9 +76,15 @@ export default function FileCard(props: FileCardProps) {
     const [domAttrs] = splitControlAttrs(props, isDataOrAria);
 
     const locale = useLocale('Upload');
+    const upload = useUploadContext();
 
     // the failed url, not a flag, so a replacement url (server thumbnail for a blob url) gets its own attempt
     const [failedUrl, setFailedUrl] = createSignal<string>();
+
+    // The parent Upload's item* parts come first, the card's own parts after them
+    const partClass = (key: UploadFileCardPart) => clsx(upload?.classNames?.[itemParts[key]], props.classNames?.[key]);
+
+    const partStyle = (key: UploadFileCardPart): JSX.CSSProperties => ({ ...upload?.styles?.[itemParts[key]], ...props.styles?.[key] });
 
     const fallbackPreview = () => failedUrl() !== undefined && failedUrl() === props.url;
 
@@ -118,9 +135,10 @@ export default function FileCard(props: FileCardProps) {
                         [`${prefixCls}-picture-file-card-uploading`]: flags().showPicProgress,
                         [`${prefixCls}-picture-file-card-custom-thumbnail`]: customThumbnail() && props.picHeight && props.picWidth,
                     },
+                    upload?.classNames?.item,
                     props.class
                 )}
-                style={{ ...props.style, ...sizeStyle() }}
+                style={{ ...upload?.styles?.item, ...props.style, ...sizeStyle() }}
                 role="listitem"
                 onClick={() => props.onPreviewClick?.()}
             >
@@ -128,8 +146,8 @@ export default function FileCard(props: FileCardProps) {
                     keyed
                     when={props.renderThumbnail}
                     fallback={
-                        <Show when={!fallbackPreview()} fallback={<IconFile size="large" />}>
-                            <HydratedImage style={sizeStyle()} alt={props.name ?? ''} src={props.url} onError={onImageError} />
+                        <Show when={!fallbackPreview()} fallback={<IconFile class={partClass('thumbnail')} style={partStyle('thumbnail')} size="large" />}>
+                            <HydratedImage class={partClass('thumbnail')} style={{ ...sizeStyle(), ...partStyle('thumbnail') }} alt={props.name ?? ''} src={props.url} onError={onImageError} />
                         </Show>
                     }
                 >
@@ -137,17 +155,17 @@ export default function FileCard(props: FileCardProps) {
                 </Show>
                 {previewTrigger()}
                 <Show when={flags().showPicProgress}>
-                    <Progress type="circle" aria-label={locale().locale.uploadProgress} orbitStroke="var(--semi-color-white)" percent={props.percent} size="small" />
+                    <Progress type="circle" class={partClass('progress')} style={partStyle('progress')} aria-label={locale().locale.uploadProgress} orbitStroke="var(--semi-color-white)" percent={props.percent} size="small" />
                 </Show>
                 <Show when={flags().showRetry}>
-                    <button type="button" class={`${prefixCls}-picture-file-card-retry`} aria-label={locale().locale.retry} onClick={(e) => stopThen(e, props.onRetry)}>
+                    <button type="button" class={clsx(`${prefixCls}-picture-file-card-retry`, partClass('retry'))} style={partStyle('retry')} aria-label={locale().locale.retry} onClick={(e) => stopThen(e, props.onRetry)}>
                         <IconRefresh class={`${prefixCls}-picture-file-card-icon-retry`} />
                     </button>
                 </Show>
                 <Show when={flags().showReplace}>
                     <Tooltip content={locale().locale.replace} position="top" showArrow={false} spacing={4} trigger="hover">
                         {(getTriggerProps: GetTriggerProps) => (
-                            <button {...getTriggerProps({ type: 'button', class: `${prefixCls}-picture-file-card-replace`, 'aria-label': locale().locale.replace })} onClick={(e) => stopThen(e, props.onReplace)}>
+                            <button {...getTriggerProps({ type: 'button', class: clsx(`${prefixCls}-picture-file-card-replace`, partClass('replace')), style: partStyle('replace'), 'aria-label': locale().locale.replace })} onClick={(e) => stopThen(e, props.onReplace)}>
                                 <ReplaceSvg class={`${prefixCls}-picture-file-card-icon-replace`} />
                             </button>
                         )}
@@ -170,7 +188,7 @@ export default function FileCard(props: FileCardProps) {
                         keyed
                         when={props.renderPicClose}
                         fallback={
-                            <button type="button" class={`${prefixCls}-picture-file-card-close`} aria-label={locale().locale.remove} onClick={onRemove}>
+                            <button type="button" class={clsx(`${prefixCls}-picture-file-card-close`, partClass('close'))} style={partStyle('close')} aria-label={locale().locale.remove} onClick={onRemove}>
                                 <IconClear class={`${prefixCls}-picture-file-card-icon-close`} />
                             </button>
                         }
@@ -183,11 +201,11 @@ export default function FileCard(props: FileCardProps) {
                         <Tooltip content={tooltipContent} position="bottom" trigger="hover">
                             {(getTriggerProps: GetTriggerProps) =>
                                 icon() === 'loading' ? (
-                                    <span {...getTriggerProps({ class: `${prefixCls}-tooltip-children-wrapper ${prefixCls}-picture-file-card-icon-loading` })}>
+                                    <span {...getTriggerProps({ class: clsx(`${prefixCls}-tooltip-children-wrapper`, `${prefixCls}-picture-file-card-icon-loading`, partClass('validateMessage')), style: partStyle('validateMessage') })}>
                                         <Spin size="small" />
                                     </span>
                                 ) : (
-                                    <div {...getTriggerProps({ class: `${prefixCls}-picture-file-card-icon-error` })}>
+                                    <div {...getTriggerProps({ class: clsx(`${prefixCls}-picture-file-card-icon-error`, partClass('validateMessage')), style: partStyle('validateMessage') })}>
                                         <ErrorSvg />
                                     </div>
                                 )
@@ -212,17 +230,23 @@ export default function FileCard(props: FileCardProps) {
                         [`${prefixCls}-file-card-fail`]: flags().failed,
                         [`${prefixCls}-file-card-show-pointer`]: props.onPreviewClick !== undefined,
                     },
+                    upload?.classNames?.item,
                     props.class
                 )}
-                style={props.style}
+                style={{ ...upload?.styles?.item, ...props.style }}
                 role="listitem"
                 onClick={() => props.onPreviewClick?.()}
             >
                 {previewTrigger()}
                 <div
-                    class={clsx(`${prefixCls}-file-card-preview`, {
-                        [`${prefixCls}-file-card-preview-placeholder`]: !props.preview || Boolean(props.previewFile) || fallbackPreview(),
-                    })}
+                    class={clsx(
+                        `${prefixCls}-file-card-preview`,
+                        {
+                            [`${prefixCls}-file-card-preview-placeholder`]: !props.preview || Boolean(props.previewFile) || fallbackPreview(),
+                        },
+                        partClass('thumbnail')
+                    )}
+                    style={partStyle('thumbnail')}
                 >
                     <Show
                         keyed
@@ -238,23 +262,32 @@ export default function FileCard(props: FileCardProps) {
                 </div>
                 <div class={`${infoCls}-main`}>
                     <div class={`${infoCls}-main-text`}>
-                        <Typography.Text class={`${infoCls}-name`} ellipsis={{ showTooltip: props.showTooltip ?? true }}>
+                        <Typography.Text class={clsx(`${infoCls}-name`, partClass('name'))} style={partStyle('name')} ellipsis={{ showTooltip: props.showTooltip ?? true }}>
                             {props.name}
                         </Typography.Text>
                         <span>
                             <span class={`${infoCls}-size`}>{transSize(props.size)}</span>
                             <Show when={flags().showReplace}>
                                 <Tooltip content={locale().locale.replace} position="top" showArrow={false} trigger="hover">
-                                    {(getTriggerProps: GetTriggerProps) => <Button {...getTriggerProps({ class: `${prefixCls}-file-card-replace`, 'aria-label': locale().locale.replace })} type="tertiary" size="small" theme="borderless" icon={<DirectorySvg />} onClick={(e) => stopThen(e, props.onReplace)} />}
+                                    {(getTriggerProps: GetTriggerProps) => (
+                                        <Button
+                                            {...getTriggerProps({ class: clsx(`${prefixCls}-file-card-replace`, partClass('replace')), style: partStyle('replace'), 'aria-label': locale().locale.replace })}
+                                            type="tertiary"
+                                            size="small"
+                                            theme="borderless"
+                                            icon={<DirectorySvg />}
+                                            onClick={(e) => stopThen(e, props.onReplace)}
+                                        />
+                                    )}
                                 </Tooltip>
                             </Show>
                         </span>
                     </div>
                     <Show when={flags().showListProgress}>
-                        <Progress style={{ width: '100%' }} aria-label={locale().locale.uploadProgress} percent={props.percent} />
+                        <Progress class={partClass('progress')} style={{ width: '100%', ...partStyle('progress') }} aria-label={locale().locale.uploadProgress} percent={props.percent} />
                     </Show>
                     <div class={`${infoCls}-main-control`}>
-                        <span class={`${infoCls}-validate-message`}>
+                        <span class={clsx(`${infoCls}-validate-message`, partClass('validateMessage'))} style={partStyle('validateMessage')}>
                             <Show
                                 when={hasContent(customMessage())}
                                 fallback={
@@ -270,7 +303,7 @@ export default function FileCard(props: FileCardProps) {
                             </Show>
                         </span>
                         <Show when={flags().showRetry}>
-                            <button type="button" class={`${infoCls}-retry`} onClick={(e) => stopThen(e, props.onRetry)}>
+                            <button type="button" class={clsx(`${infoCls}-retry`, partClass('retry'))} style={partStyle('retry')} onClick={(e) => stopThen(e, props.onRetry)}>
                                 {locale().locale.retry}
                             </button>
                         </Show>
@@ -281,7 +314,7 @@ export default function FileCard(props: FileCardProps) {
                     when={props.renderFileOperation}
                     fallback={
                         <Show when={!props.disabled}>
-                            <Button type="tertiary" class={`${prefixCls}-file-card-close`} aria-label={locale().locale.remove} size="small" theme="borderless" icon={<IconClose />} onClick={onRemove} />
+                            <Button type="tertiary" class={clsx(`${prefixCls}-file-card-close`, partClass('close'))} style={partStyle('close')} aria-label={locale().locale.remove} size="small" theme="borderless" icon={<IconClose />} onClick={onRemove} />
                         </Show>
                     }
                 >

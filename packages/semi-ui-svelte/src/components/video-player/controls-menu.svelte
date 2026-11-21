@@ -3,7 +3,7 @@
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';
     import type { ControlsMenuProps } from './interface.js';
 
-    let { current, label, list, onSelect }: ControlsMenuProps<T> = $props();
+    let { classNames, current, label, list, styles, onSelect }: ControlsMenuProps<T> = $props();
 
     const controlsCls = cssClasses.PREFIX_CONTROLS;
     const currentLabel = $derived(list.find((option) => option.value === current)?.label ?? String(current));
@@ -16,7 +16,7 @@
     </button>
 {/snippet}
 
-<Dropdown child={trigger} class={`${controlsCls}-popup-menu`} position="top" selectionMode="single">
+<Dropdown child={trigger} class={`${controlsCls}-popup-menu`} classNames={{ content: classNames?.dropdown }} position="top" selectionMode="single" styles={{ content: styles?.dropdown }}>
     {#snippet content()}
         <DropdownMenu>
             {#each list as option (option.value)}

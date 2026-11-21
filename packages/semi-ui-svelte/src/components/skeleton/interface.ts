@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { SkeletonParagraphPart } from '@fibrae/semi-foundation/components/skeleton/constants';
 
 // `placeholder` is the snippet, not the input hint HTMLAttributes declares
 export interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, 'placeholder'> {
@@ -20,5 +21,7 @@ export interface SkeletonAvatarProps extends SkeletonBasicProps {
 }
 
 export interface SkeletonParagraphProps extends HTMLAttributes<HTMLUListElement> {
+    classNames?: Partial<Record<SkeletonParagraphPart, ClassValue>>;
     rows?: number;
+    styles?: Partial<Record<SkeletonParagraphPart, string>>;
 }

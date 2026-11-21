@@ -9,6 +9,11 @@
             },
             "children": { "zh-CN": "`Collapse.Panel` 面板。", "en-US": "`Collapse.Panel` panels." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `item`、`itemHeader`、`itemTitle`、`itemIcon`、`itemExtra`、`itemBody`，作用到全部面板，与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `item`, `itemHeader`, `itemTitle`, `itemIcon`, `itemExtra` and `itemBody`; applied to every panel and merged with the built-in classes."
+            },
+            "styles": { "zh-CN": "内部各部位的内联样式，键同 `classNames`。", "en-US": "Inline styles of the inner parts, keyed like `classNames`." },
             "clickHeaderToExpand": {
                 "zh-CN": "点击面板头整行展开收起；为 `false` 时只响应切换按钮和箭头。",
                 "en-US": "Clicking anywhere in the header row toggles the panel; when `false` only the toggle button and the arrow respond."
@@ -48,6 +53,14 @@
         "props": {
             "children": { "zh-CN": "面板内容。", "en-US": "Panel content." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "classNames": {
+                "zh-CN": "当前面板内部各部位的类名，键为 `header`、`title`、`icon`、`extra`、`body`，与组件自带的类名及 Collapse 的 `item*` 类名合并，面板自己的在后。",
+                "en-US": "Class names of this panel's inner parts, keyed by `header`, `title`, `icon`, `extra` and `body`; merged with the built-in classes and Collapse's `item*` classes, the panel's own last."
+            },
+            "styles": {
+                "zh-CN": "当前面板内部各部位的内联样式，键同 `classNames`，与 Collapse 的 `item*` 样式合并，面板自己的后写。",
+                "en-US": "Inline styles of this panel's inner parts, keyed like `classNames`; merged with Collapse's `item*` styles, the panel's own written last."
+            },
             "disabled": { "zh-CN": "面板是否被禁用。", "en-US": "Whether the panel is disabled." },
             "extra": {
                 "zh-CN": "面板头右侧的辅助内容，位于切换按钮之外，可以放按钮、输入框等控件。",

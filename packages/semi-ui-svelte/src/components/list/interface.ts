@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
+import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+import type { ListItemPart, ListPart } from '@fibrae/semi-foundation/components/list/constants';
 import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ColProps, RowProps } from '../grid/interface.js';
 
@@ -22,6 +23,9 @@ export interface ListProps<T> extends Omit<HTMLAttributes<HTMLDivElement>, 'oncl
     loading?: boolean;
     size?: Size;
     split?: boolean;
+    /** `item*` keys apply to every ListItem, before the item's own classNames */
+    classNames?: Partial<Record<ListPart, ClassValue>>;
+    styles?: Partial<Record<ListPart, string>>;
     onClick?: (event: MouseEvent) => void;
     onRightClick?: (event: MouseEvent) => void;
     item?: Snippet<[ListItemSnippetProps<T>]>;
@@ -33,6 +37,9 @@ export interface ListProps<T> extends Omit<HTMLAttributes<HTMLDivElement>, 'oncl
 
 export interface ListItemProps extends Omit<HTMLAttributes<HTMLLIElement>, 'onclick' | 'oncontextmenu'> {
     align?: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
+    /** Applied after the `item*` classNames of the parent List */
+    classNames?: Partial<Record<ListItemPart, ClassValue>>;
+    styles?: Partial<Record<ListItemPart, string>>;
     /** Takes precedence over the List's `onClick` */
     onClick?: (event: MouseEvent) => void;
     /** Takes precedence over the List's `onRightClick` */

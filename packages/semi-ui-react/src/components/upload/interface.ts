@@ -1,5 +1,5 @@
 import type { ReactNode, CSSProperties, MouseEvent } from 'react';
-import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
+import type { strings, UploadFileCardPart } from '@fibrae/semi-foundation/components/upload/constants';
 import type { BaseFileItem } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ModalReactProps } from '../modal';
@@ -62,7 +62,9 @@ export interface RenderFileItemProps extends FileItem {
     showRetry?: boolean;
     showReplace?: boolean;
     className?: string;
+    classNames?: Partial<Record<UploadFileCardPart, string>>;
     style?: CSSProperties;
+    styles?: Partial<Record<UploadFileCardPart, CSSProperties>>;
     disabled?: boolean;
     onPreviewClick?: () => void;
     picWidth?: string | number;

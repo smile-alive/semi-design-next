@@ -18,10 +18,12 @@
     const props = withDefaults(defineProps<BackTopProps & /* @vue-ignore */ ElementProps<'button', keyof BackTopProps | EmitHandlers<BackTopEmits> | 'type' | 'form' | 'formAction' | 'formEncType' | 'formMethod' | 'formNoValidate' | 'formTarget'>>(), {
         badge: semiGlobalDefault('BackTop', 'badge'),
         // FloatButton owns the defaults of these; a fallback here would hide its own global defaults.
+        classNames: semiGlobalDefault('BackTop', 'classNames'),
         colorful: semiGlobalDefault('BackTop', 'colorful'),
         duration: () => semiDefault('BackTop', 'duration', numbers.DEFAULT_DURATION),
         shape: semiGlobalDefault('BackTop', 'shape'),
         size: semiGlobalDefault('BackTop', 'size'),
+        styles: semiGlobalDefault('BackTop', 'styles'),
         // Function-typed props cannot take a factory default; the global default is read in `target`.
         target: undefined,
         visibilityHeight: () => semiDefault('BackTop', 'visibilityHeight', numbers.DEFAULT_VISIBILITY_HEIGHT),
@@ -65,7 +67,7 @@
 </script>
 
 <template>
-    <FloatButton v-if="state.visible" ref="button" v-bind="$attrs" :aria-label="ariaLabel()" :badge="props.badge" :class="prefix" :colorful="props.colorful" :shape="props.shape" :size="props.size" x-semi-prop="children" @click="foundation.onClick">
+    <FloatButton v-if="state.visible" ref="button" v-bind="$attrs" :aria-label="ariaLabel()" :badge="props.badge" :class="prefix" :classNames="props.classNames ?? {}" :colorful="props.colorful" :shape="props.shape" :size="props.size" :styles="props.styles ?? {}" x-semi-prop="children" @click="foundation.onClick">
         <template #icon>
             <slot v-if="hasSlotContent($slots.default)" />
             <slot v-else name="icon">

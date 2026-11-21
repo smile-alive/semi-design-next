@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `editor`, `searchTrigger`, `searchBox`, `searchInput`, `searchOptions` and `replaceInput`, merged with the built-in classes. `editor` is the element the editor mounts in; the search panel parts exist only while the panel is open. | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, string>>"}>Type</ApiType> | - |
 | height | Height. A number is taken as px; a string is used as is. | `number \| string` | `400` |
 | limitSearchButtonBounds | Whether to limit the drag range of the search button to the component container. | `boolean` | - |
 | onChange | Called with the editor's current text when the content changes. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
@@ -13,6 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSearchButton | Custom render for the search button. The first argument is the default button as a ReactNode, which can be placed in the returned content; the second is `searchControls`, holding the search state and methods. `showSearchBar` is the value at render time, and the component re-renders when it changes. | <ApiType detail={"( defaultSearchButton: React.ReactNode, searchControls: { showSearchBar: boolean; onToggleSearchBar: () => void; onSearch: (text: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => void; onPrevSearch: () => void; onNextSearch: () => void; onReplace: (text: string) => void; onReplaceAll: (text: string) => void; } ) => React.ReactNode"}>Type</ApiType> | - |
 | showSearch | Whether to show the search button. | `boolean` | `true` |
 | style | Inline style of the root element. Its properties override the width, height and position the component sets. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cJsonViewerPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | value | JSON text to show and edit; empty when omitted. The editor is re-created only when value differs from its current content, so writing the onChange value back keeps the caret, focus and undo history. | `string` | `""` |
 | width | Width. A number is taken as px; a string is used as is. | `number \| string` | `400` |
 

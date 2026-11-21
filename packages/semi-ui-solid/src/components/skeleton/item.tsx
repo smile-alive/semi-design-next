@@ -1,6 +1,6 @@
-import { Index, splitProps } from 'solid-js';
+import { Index, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
+import { cssClasses, type SkeletonParagraphPart } from '@fibrae/semi-foundation/components/skeleton/constants';
 import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
 import type { ElementProps } from '../../base/index';
 
@@ -9,7 +9,9 @@ export interface BasicProps extends ElementProps<'div'> {
 }
 
 export interface ParagraphProps extends ElementProps<'ul'> {
+    classNames?: Partial<Record<SkeletonParagraphPart, string>>;
     rows?: number;
+    styles?: Partial<Record<SkeletonParagraphPart, JSX.CSSProperties | string>>;
 }
 
 export interface AvatarProps extends BasicProps {
@@ -57,11 +59,11 @@ export function Button(props: BasicProps) {
 }
 
 export function Paragraph(props: ParagraphProps) {
-    const [local, rest] = splitProps(props, ['class', 'rows']);
+    const [local, rest] = splitProps(props, ['class', 'classNames', 'rows', 'styles']);
 
     return (
         <ul aria-hidden="true" {...rest} class={clsx(local.class, `${cssClasses.PREFIX}-paragraph`)}>
-            <Index each={Array.from({ length: local.rows ?? 4 })}>{() => <li />}</Index>
+            <Index each={Array.from({ length: local.rows ?? 4 })}>{() => <li class={local.classNames?.row} style={local.styles?.row} />}</Index>
         </ul>
     );
 }

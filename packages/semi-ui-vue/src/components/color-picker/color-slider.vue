@@ -38,17 +38,27 @@
 </script>
 
 <template>
-    <div ref="dom" :class="`${cssClasses.PREFIX}-colorSlider`" :style="{ width: `${props.width}px`, height: `${props.height}px` }" @lostpointercapture="foundation.handleLostPointerCapture" @pointerdown="foundation.handlePointerDown(toDragEvent($event))" @pointermove="foundation.handlePointerMove(toDragEvent($event))">
+    <div
+        ref="dom"
+        :class="[`${cssClasses.PREFIX}-colorSlider`, props.classNames?.hue]"
+        :style="[{ width: `${props.width}px`, height: `${props.height}px` }, props.styles?.hue]"
+        @lostpointercapture="foundation.handleLostPointerCapture"
+        @pointerdown="foundation.handlePointerDown(toDragEvent($event))"
+        @pointermove="foundation.handlePointerMove(toDragEvent($event))"
+    >
         <div
-            :class="`${cssClasses.PREFIX}-handle`"
-            :style="{
-                width: `${props.handleSize}px`,
-                height: `${props.handleSize}px`,
-                left: `${ColorSliderFoundation.getHandlePosition({ value: props.hue, max: 360, width: props.width }, props.handleSize)}px`,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                backgroundColor: hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 }),
-            }"
+            :class="[`${cssClasses.PREFIX}-handle`, props.classNames?.handle]"
+            :style="[
+                {
+                    width: `${props.handleSize}px`,
+                    height: `${props.handleSize}px`,
+                    left: `${ColorSliderFoundation.getHandlePosition({ value: props.hue, max: 360, width: props.width }, props.handleSize)}px`,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    backgroundColor: hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 }),
+                },
+                props.styles?.handle,
+            ]"
         >
             <input :aria-label="i18n.locale.hue" :class="`${cssClasses.PREFIX}-handleSlider`" :max="360" :min="0" type="range" :value="Math.round(props.hue)" @input="onInput" @keydown="foundation.handleKeyDown" />
         </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, mergeProps, useTemplateRef, type ImgHTMLAttributes, type VNode } from 'vue';
+    import { computed, mergeProps, useTemplateRef, type ClassValue, type ImgHTMLAttributes, type StyleValue, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
     import { HydratedImage } from '../../internal/index';
 
@@ -12,6 +12,10 @@
         controlAttrs: Record<string, unknown>;
         scale: number;
         hovered: boolean;
+        labelClass?: ClassValue;
+        labelStyle?: StyleValue;
+        maskClass?: ClassValue;
+        maskStyle?: StyleValue;
     }>();
 
     defineSlots<{ default?: () => VNode[]; hoverMask?: () => VNode[] }>();
@@ -51,13 +55,13 @@
     <span ref="root">
         <HydratedImage v-if="props.image" :alt="props.image.alt" v-bind="mergeProps({ ...props.image }, focusAttrs)" />
         <span v-else-if="props.text !== undefined" ref="content" :class="`${prefix}-content`" :style="{ transform: `scale(${props.scale})` }">
-            <span :aria-label="props.alt ?? props.text" :class="`${prefix}-label`" role="img" v-bind="focusAttrs">{{ props.text }}</span>
+            <span :aria-label="props.alt ?? props.text" :class="[`${prefix}-label`, props.labelClass]" role="img" :style="props.labelStyle" v-bind="focusAttrs">{{ props.text }}</span>
         </span>
         <span v-else-if="props.clickable" :aria-label="props.alt" v-bind="focusAttrs">
             <slot />
         </span>
         <slot v-else />
-        <div v-if="props.hovered && $slots.hoverMask" :class="`${prefix}-hover`">
+        <div v-if="props.hovered && $slots.hoverMask" :class="[`${prefix}-hover`, props.maskClass]" :style="props.maskStyle">
             <slot name="hoverMask" />
         </div>
     </span>

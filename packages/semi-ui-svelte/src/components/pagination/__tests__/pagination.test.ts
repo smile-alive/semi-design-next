@@ -92,6 +92,52 @@ describe('Svelte Pagination 渲染', () => {
         }
     });
 
+    it('classNames 与 styles 按部位落到对应元素', async () => {
+        const parts = ['list', 'total', 'prev', 'next', 'item', 'ellipsis', 'sizeChanger', 'sizeChangerDropdown', 'quickJumper', 'dropdown'] as const;
+        const selectors = {
+            list: `ul.${prefix}`,
+            total: `.${prefix}-total`,
+            prev: `.${prefix}-prev`,
+            next: `.${prefix}-next`,
+            item: `.${prefix}-item-active`,
+            ellipsis: `.${prefix}-item-ellipsis`,
+            sizeChanger: `.${prefix}-switch`,
+            sizeChangerDropdown: `.${prefix}-select-dropdown`,
+            quickJumper: `.${prefix}-quickjump`,
+            dropdown: `.${prefix}-rest-list`,
+        };
+        const { container } = setup({
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            currentPage: 10,
+            showQuickJumper: true,
+            showSizeChanger: true,
+            showTotal: true,
+            styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+            total: 200,
+        });
+        await click(getElement('.semi-select'));
+        await hover(screen.getAllByRole('button', { name: zh_CN.Pagination.more })[0]);
+        await waitFor(() => expect(document.querySelector(selectors.dropdown)).not.toBeNull());
+        for (const part of parts) {
+            const el = part === 'dropdown' ? document.querySelector(selectors[part])?.closest('.semi-popover') : document.querySelector(selectors[part]);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+        expect(container.querySelector(selectors.ellipsis)).toHaveClass('my-item');
+    });
+
+    it('classNames.dropdown 同样作用于 small 型的页码浮层', async () => {
+        const { container } = setup({ classNames: { dropdown: 'my-dropdown', item: 'my-item' }, hoverShowPageSelect: true, size: 'small', styles: { dropdown: 'order: 3', item: 'order: 2' }, total: 90 });
+        const counter = getCounter(container);
+        expect(counter).toHaveClass('my-item');
+        expect(counter).toHaveStyle({ order: '2' });
+        await hover(counter);
+        await waitFor(() => expect(document.querySelector(`.${prefix}-rest-list`)).not.toBeNull());
+        const dropdown = document.querySelector(`.${prefix}-rest-list`)?.closest('.semi-popover');
+        expect(dropdown).toHaveClass('my-dropdown');
+        expect(dropdown).toHaveStyle({ order: '3' });
+    });
+
     it('渲染 small 尺寸：当前页/总页数，上一页下一页翻页，没有每页条数', async () => {
         const { container, onChange } = setup({ showQuickJumper: true, showSizeChanger: true, size: 'small', total: 90 });
         const root = getElement('ul', container);

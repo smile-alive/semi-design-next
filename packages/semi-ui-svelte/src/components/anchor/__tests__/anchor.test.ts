@@ -462,4 +462,27 @@ describe('Svelte Anchor', () => {
         setup({ links: flat('a'), position: 'right', showTooltip });
         expect(showTooltip).toEqual({ opts: { content: 'x' } });
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['rail', 'indicator', 'list', 'item', 'itemTitle'] as const;
+        const selectors = { rail: 'slide', indicator: 'slide-bar', list: 'link-wrapper', item: 'link', itemTitle: 'link-title' };
+        setup({ links: flat('a'), classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])) });
+        for (const part of parts) {
+            const el = getElement(`.${prefix}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
+    });
+
+    it('链接自己的 classNames 在父级 item* 之后，样式后写', () => {
+        setup({
+            links: [{ href: '#a', title: 'a', classNames: { title: 'c-title' }, styles: { title: 'order: 2' } }, ...flat('b')],
+            classNames: { itemTitle: 'p-title' },
+            styles: { itemTitle: 'order: 1; opacity: 0.5' },
+        });
+        const [first, second] = [...document.querySelectorAll(`.${prefix}-link-title`)];
+        expect(first.className).toMatch(/p-title c-title$/);
+        expect(first).toHaveStyle({ order: '2', opacity: '0.5' });
+        expect(second).toHaveStyle({ order: '1' });
+    });
 });

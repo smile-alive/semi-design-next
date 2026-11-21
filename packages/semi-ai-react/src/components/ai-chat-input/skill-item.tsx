@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import React, { type CSSProperties, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import type { RenderSkillItemProps, Skill } from './interface';
@@ -9,16 +9,22 @@ interface SkillItemProps {
     skill?: Skill;
     renderSkillItem?: (props: RenderSkillItemProps) => ReactNode;
     isActive?: boolean;
+    partClassName?: string;
+    partStyle?: CSSProperties;
     id: string;
     onClick?: (skill: Skill) => void;
     index?: number;
     onMouseEnter?: (index: number) => void;
 }
 
-function SkillItem({ skill, onClick, isActive, renderSkillItem, onMouseEnter, index, id }: SkillItemProps) {
-    const className = clsx(`${prefixCls}-skill-item`, {
-        [`${prefixCls}-skill-item-active`]: isActive,
-    });
+function SkillItem({ skill, onClick, isActive, renderSkillItem, partClassName, partStyle, onMouseEnter, index, id }: SkillItemProps) {
+    const className = clsx(
+        `${prefixCls}-skill-item`,
+        {
+            [`${prefixCls}-skill-item-active`]: isActive,
+        },
+        partClassName
+    );
 
     const handleClick = () => onClick(skill);
 
@@ -37,7 +43,7 @@ function SkillItem({ skill, onClick, isActive, renderSkillItem, onMouseEnter, in
     }
 
     return (
-        <div id={id} className={className} aria-selected={Boolean(isActive)} role="option" onClick={handleClick} onMouseEnter={handleMouseEnter}>
+        <div id={id} className={className} style={partStyle} aria-selected={Boolean(isActive)} role="option" onClick={handleClick} onMouseEnter={handleMouseEnter}>
             {skill.icon}
             <div className={`${prefixCls}-skill-item-content`}>{skill.label}</div>
         </div>

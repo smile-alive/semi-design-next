@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
 import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf, type TreeRowFlags } from '@fibrae/semi-foundation/components/tree/shared';
 import { IconFile, IconFolder, IconFolderOpen } from '@fibrae/semi-icons-solid';
-import { hasContent } from '../../utils/index';
+import { hasContent, mergeStyles } from '../../utils/index';
 import Checkbox from '../checkbox';
 import Highlight from '../highlight';
 import { useTreeContext } from './context';
@@ -45,10 +45,15 @@ export default function TreeNode(props: TreeNodeProps) {
 
     const labelClass = () => clsx(getTreeLabelClassMap(props.row, rowFlags()));
 
+    const rowStyle = () => mergeStyles(props.style, view().styles?.item);
+
     const highlighted = () => {
         const value = label();
         return (typeof value === 'string' || typeof value === 'number') && props.row.filtered && Boolean(keyword());
     };
+
+    // a custom icon is the user's own element and takes no part class
+    const iconClass = () => clsx(`${prefix}-item-icon`, view().classNames?.itemIcon);
 
     // created by the row that inserts it, so a renderFullLabel row never reads the tree's icon
     const RowIcon = () => {
@@ -62,12 +67,12 @@ export default function TreeNode(props: TreeNodeProps) {
             <Switch
                 fallback={
                     <Show when={view().directory}>
-                        <Switch fallback={<IconFolder class={`${prefix}-item-icon`} />}>
+                        <Switch fallback={<IconFolder class={iconClass()} style={view().styles?.itemIcon} />}>
                             <Match when={isLeaf()}>
-                                <IconFile class={`${prefix}-item-icon`} />
+                                <IconFile class={iconClass()} style={view().styles?.itemIcon} />
                             </Match>
                             <Match when={props.row.expanded}>
-                                <IconFolderOpen class={`${prefix}-item-icon`} />
+                                <IconFolderOpen class={iconClass()} style={view().styles?.itemIcon} />
                             </Match>
                         </Switch>
                     </Show>
@@ -205,19 +210,19 @@ export default function TreeNode(props: TreeNodeProps) {
             keyed
             when={view().renderFullLabel}
             fallback={
-                <li {...rowAttrs()} class={nodeClass()} role="treeitem" style={props.style} onClick={onClick} onContextMenu={onContextMenu} onDblClick={onDoubleClick}>
+                <li {...rowAttrs()} class={clsx(nodeClass(), view().classNames?.item)} role="treeitem" style={rowStyle()} onClick={onClick} onContextMenu={onContextMenu} onDblClick={onDoubleClick}>
                     <span class={clsx(`${prefix}-indent`, { [`${prefix}-indent-show-line`]: props.showLine })} aria-hidden="true">
                         <Index each={Array.from({ length: props.row.level }, (_, i) => props.row.isEnd[i])}>{(end) => <span class={clsx(`${prefix}-indent-unit`, { [`${prefix}-indent-unit-end`]: end() })} />}</Index>
                     </span>
                     <NodeArrow expandIcon={props.expandIcon} row={props.row} showLine={props.showLine} onExpand={onExpand} />
                     <span class={labelClass()}>
                         <Show when={view().multiple}>
-                            <div aria-hidden="true" onClick={onCheck}>
+                            <div aria-hidden="true" class={view().classNames?.itemCheckbox} style={view().styles?.itemCheckbox} onClick={onCheck}>
                                 <Checkbox checked={Boolean(props.row.checked)} disabled={disabled()} indeterminate={Boolean(props.row.halfChecked)} tabIndex={-1} />
                             </div>
                         </Show>
                         <RowIcon />
-                        <span class={`${prefix}-label-text`}>
+                        <span class={clsx(`${prefix}-label-text`, view().classNames?.itemTitle)} style={view().styles?.itemTitle}>
                             <Switch fallback={label()}>
                                 <Match keyed when={view().renderLabel}>
                                     {(render) => <>{render(label(), data(), keyword())}</>}
@@ -232,7 +237,7 @@ export default function TreeNode(props: TreeNodeProps) {
             }
         >
             {(render) => (
-                <li {...rowAttrs()} role="treeitem" style={props.style}>
+                <li {...rowAttrs()} class={view().classNames?.item} role="treeitem" style={rowStyle()}>
                     {/* called once: the live props update the returned JSX in place */}
                     {untrack(() => render(createFullLabelProps()))}
                 </li>

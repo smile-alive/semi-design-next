@@ -1,11 +1,12 @@
 <script lang="ts">
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { IconPaperclip } from '@fibrae/semi-icons-svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import useTrigger from '@fibrae/semi-ui-svelte/tooltip/use-trigger.svelte.js';
 
     // aria-disabled, not disabled: stays focusable so the upload tip reaches the keyboard
-    let { disabled }: { disabled: boolean } = $props();
+    let { disabled, class: className, style }: { disabled: boolean; class?: ClassValue; style?: string } = $props();
 
     const locale = useLocale('AIChatInput');
 
@@ -22,6 +23,6 @@
 </script>
 
 <!-- Upload's AddArea yields its role and tabindex to a control inside it, so this button is the only Tab stop -->
-<button aria-describedby={aria?.['aria-describedby']} aria-disabled={disabled ? 'true' : undefined} aria-label={locale().locale.upload} bind:this={root} class={[`${prefix}-footer-action-button`, `${prefix}-footer-action-upload`]} type="button">
+<button aria-describedby={aria?.['aria-describedby']} aria-disabled={disabled ? 'true' : undefined} aria-label={locale().locale.upload} bind:this={root} class={[`${prefix}-footer-action-button`, `${prefix}-footer-action-upload`, className]} {style} type="button">
     <IconPaperclip />
 </button>

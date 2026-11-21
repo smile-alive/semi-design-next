@@ -2,10 +2,12 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性       | 说明                                                                                                      | 类型                                                                    | 默认值   |
-| ---------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------- |
-| content    | dataSource 每一项内容的 snippet，参数 `{ item, index }`，缺省渲染 item.content。                          | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
-| dataSource | 数据数组，按数据渲染各节点；项的字段见下表，其中 `dot` 为该节点自定义圆点的 snippet，未设置时画默认圆点。 | `TimelineData[]`                                                        | -        |
-| extra      | dataSource 每一项辅助说明的 snippet，参数 `{ item, index }`，缺省渲染 item.extra。                        | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
-| mode       | 时间轴与内容的相对位置，可选 left、right、center、alternate。                                             | `TimelineMode`                                                          | `"left"` |
-| time       | dataSource 每一项时间的 snippet，参数 `{ item, index }`，缺省渲染 item.time。                             | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 内部各部位的类名，键为 `item`、`itemRail`、`itemIcon`、`itemContent`、`itemExtra`、`itemTime`，与组件自带的类名合并；`item` 落在每个 `li` 上，`itemRail` 是连接线，`itemIcon` 是圆点或自定义 dot 的容器；`item*` 键作用到全部节点。`dataSource` 的每一项也可设置 `classNames`，键为 `rail`、`icon`、`content`、`extra`、`time`，在 `item*` 类名之后生效。 | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, ClassValue>>"}>Type</ApiType> | - |
+| content | dataSource 每一项内容的 snippet，参数 `{ item, index }`，缺省渲染 item.content。 | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | - |
+| dataSource | 数据数组，按数据渲染各节点；项的字段见下表，其中 `dot` 为该节点自定义圆点的 snippet，未设置时画默认圆点。 | `TimelineData[]` | - |
+| extra | dataSource 每一项辅助说明的 snippet，参数 `{ item, index }`，缺省渲染 item.extra。 | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | - |
+| mode | 时间轴与内容的相对位置，可选 left、right、center、alternate。 | `TimelineMode` | `"left"` |
+| styles | 内部各部位的内联样式，键同 `classNames`，值为 CSS 文本；`dataSource` 的每一项也可设置 `styles`，后于 `item*` 样式写入。 | <ApiType detail={"Partial\u003cRecord\u003cTimelinePart, string>>"}>Type</ApiType> | - |
+| time | dataSource 每一项时间的 snippet，参数 `{ item, index }`，缺省渲染 item.time。 | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | - |

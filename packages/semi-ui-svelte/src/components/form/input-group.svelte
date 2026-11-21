@@ -69,8 +69,10 @@
                 [`${prefix}-field-extra-middle`]: extraTextPosition === 'middle',
                 [`${prefix}-field-extra-bottom`]: extraTextPosition === 'bottom',
             },
+            formProps.classNames?.extra,
         ]}
         id={ids.extraText}
+        style={formProps.styles?.extra}
         x-semi-prop="extraText"
     >
         {@render extraText?.()}

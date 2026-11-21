@@ -23,7 +23,20 @@
     const defaults = useDefaultProps('JsonViewer');
 
     // No fallback on `value`: a bound `undefined` (form reset) would throw with one
-    let { value = $bindable(), width = defaults('width', 400), height = defaults('height', 400), showSearch = defaults('showSearch', true), options = defaults('options'), limitSearchButtonBounds = defaults('limitSearchButtonBounds', false), onChange, customRender, searchButton, ...rest }: JsonViewerProps = $props();
+    let {
+        value = $bindable(),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
+        width = defaults('width', 400),
+        height = defaults('height', 400),
+        showSearch = defaults('showSearch', true),
+        options = defaults('options'),
+        limitSearchButtonBounds = defaults('limitSearchButtonBounds', false),
+        onChange,
+        customRender,
+        searchButton,
+        ...rest
+    }: JsonViewerProps = $props();
 
     const locale = useLocale('JsonViewer');
 
@@ -91,6 +104,12 @@
     };
 
     setJsonViewerContext({
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
         get showSearchBar() {
             return states().showSearchBar;
         },
@@ -166,7 +185,7 @@
 </script>
 
 <div {...rest} role={namedRole(rest)} style={[sizeStyle, 'position: relative', rest.style].filter(Boolean).join('; ')}>
-    <div bind:this={editor} class={[prefix, `${prefix}-background`]} style={sizeStyle}></div>
+    <div bind:this={editor} class={[prefix, `${prefix}-background`, classNames?.editor]} style={[sizeStyle, styles?.editor].filter(Boolean).join('; ')}></div>
     {#if showSearch}
         {#if searchButton}
             {@render searchButton({ defaultButton, showSearchBar: states().showSearchBar, ...searchControls })}

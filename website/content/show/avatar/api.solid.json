@@ -18,6 +18,10 @@
                 "zh-CN": "头像内的文字或自定义内容。",
                 "en-US": "Text or custom content inside the avatar."
             },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 image、label、mask、border，与组件自带的类名合并。image 是图片，label 是文字头像的文字，mask 是悬停遮罩，border 是额外边框（开启边框动效时动画圈同样应用）。",
+                "en-US": "Class names of the inner parts, keyed by image, label, mask and border; merged with the built-in classes. image is the picture, label the text of a text avatar, mask the hover overlay and border the additional border (the animated ring too when the border motion is on)."
+            },
             "color": {
                 "zh-CN": "头像的预设背景颜色。",
                 "en-US": "Preset background color of the avatar."
@@ -58,6 +62,10 @@
                 "zh-CN": "图片头像的响应式资源集合。",
                 "en-US": "Responsive image sources."
             },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
+            },
             "topSlot": {
                 "zh-CN": "顶部标记配置，包含 `text`、`gradientStart`、`gradientEnd`、`textColor`、`class` 和 `style`；`text` 为文字，或返回自定义内容的函数（标记显示时才调用）；传入 `render` 时完全由它渲染。",
                 "en-US": "Top badge configuration: `text`, `gradientStart`, `gradientEnd`, `textColor`, `class` and `style`; `text` is text or a function returning custom content, called only when the badge shows; a `render` function replaces the whole badge."
@@ -70,6 +78,10 @@
             "children": {
                 "zh-CN": "组内的 Avatar。",
                 "en-US": "Avatars in the group."
+            },
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 more，对应超出 maxCount 后显示「+N」的头像（用 renderMore 自定义时同样合并到其 Avatar 上），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by more: the \"+N\" avatar shown past maxCount (also merged into the Avatar returned by renderMore); merged with the built-in classes."
             },
             "maxCount": {
                 "zh-CN": "显示的最大头像数，超出后显示 `+N`。",
@@ -90,6 +102,10 @@
             "size": {
                 "zh-CN": "组内头像的尺寸。",
                 "en-US": "Size of the avatars in the group."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 classNames；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",
+                "en-US": "Inline styles of the inner parts, keyed like classNames; style objects use kebab-case CSS property names, and style strings work too."
             }
         }
     }

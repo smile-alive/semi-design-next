@@ -152,7 +152,7 @@
             @error="foundation.handleError"
             @load="foundation.handleLoaded"
         />
-        <div v-if="loadStatus !== 'success'" :class="`${prefixCls}-overlay`">
+        <div v-if="loadStatus !== 'success'" :class="[`${prefixCls}-overlay`, props.classNames?.overlay]" :style="props.styles?.overlay">
             <div v-if="loadStatus === 'error'" :class="statusCls">
                 <slot name="fallback">
                     <img v-if="props.fallback" :alt="locale.locale.fallback" :src="props.fallback" style="width: 100%; height: 100%" />

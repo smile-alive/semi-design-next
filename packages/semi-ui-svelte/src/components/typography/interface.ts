@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/components/typography/constants';
+import type { strings, TypographyNumeralPart, TypographyParagraphPart, TypographyTextPart, TypographyTitlePart } from '@fibrae/semi-foundation/components/typography/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { PopoverProps } from '../popover/interface.js';
 import type { TooltipProps } from '../tooltip/interface.js';
@@ -88,6 +88,8 @@ export interface TypographyEllipsisSnippets {
 }
 
 export interface TypographyTextProps extends HTMLAttributes<HTMLSpanElement>, TypographyCommonProps, TypographyCopySnippets, TypographyEllipsisSnippets {
+    classNames?: Partial<Record<TypographyTextPart, ClassValue>>;
+    styles?: Partial<Record<TypographyTextPart, string>>;
     code?: boolean;
     ellipsis?: Ellipsis | boolean;
     size?: TypographyBaseSize;
@@ -96,18 +98,24 @@ export interface TypographyTextProps extends HTMLAttributes<HTMLSpanElement>, Ty
 }
 
 export interface TypographyTitleProps extends HTMLAttributes<HTMLHeadingElement>, TypographyCommonProps, TypographyCopySnippets, TypographyEllipsisSnippets {
+    classNames?: Partial<Record<TypographyTitlePart, ClassValue>>;
+    styles?: Partial<Record<TypographyTitlePart, string>>;
     ellipsis?: Ellipsis | boolean;
     heading?: ArrayElement<typeof strings.HEADING>;
     weight?: ArrayElement<typeof strings.WEIGHT> | number;
 }
 
 export interface TypographyParagraphProps extends HTMLAttributes<HTMLParagraphElement>, TypographyCommonProps, TypographyCopySnippets, TypographyEllipsisSnippets {
+    classNames?: Partial<Record<TypographyParagraphPart, ClassValue>>;
+    styles?: Partial<Record<TypographyParagraphPart, string>>;
     ellipsis?: Ellipsis | boolean;
     size?: TypographyBaseSize;
     spacing?: TypographyBaseSpacing;
 }
 
 export interface TypographyNumeralProps extends HTMLAttributes<HTMLSpanElement>, TypographyCommonProps, TypographyCopySnippets {
+    classNames?: Partial<Record<TypographyNumeralPart, ClassValue>>;
+    styles?: Partial<Record<TypographyNumeralPart, string>>;
     code?: boolean;
     parser?: (value: string) => string;
     precision?: number;

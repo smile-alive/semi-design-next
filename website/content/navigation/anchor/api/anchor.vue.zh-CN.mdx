@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | autoCollapse | 是否在滚动时动态展示下一级锚点。 | `boolean` | `false` |
+| classNames | 内部各部位的类名，键为 `rail`、`indicator`、`list`、`item`、`itemTitle`，与组件自带的类名合并。`rail` 是左侧的轨道，`indicator` 是轨道上跟随高亮链接移动的指示条，`item`、`itemTitle` 作用到每个链接。 | <ApiType detail={"Partial\u003cRecord\u003cAnchorPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Anchor", "classNames")` |
 | defaultAnchor | 默认高亮的锚点。 | `string` | `""` |
 | getContainer | 指定滚动的容器，缺省为 window；返回模板 ref 的值时容器出现或替换后自动换绑。 | <ApiType detail={"(() => HTMLElement \u007c Window \u007c null)"}>Type</ApiType> | `undefined` |
 | maxHeight | 组件的 max-height，超出时显示滚动条；style 中的 max-height 优先。 | `string \| number` | `strings.MAX_HEIGHT` |
@@ -16,6 +17,7 @@ import ApiType from '#/components/ApiType.astro';
 | scrollMotion | 点击锚点滚动时是否带动画。 | `boolean` | `false` |
 | showTooltip | 文字缩略时是否显示 Tooltip 及相关配置：type 为浮层组件，支持 tooltip（默认）和 popover，opts 为传给浮层组件的属性。 | `boolean \| ShowTooltip` | `false` |
 | size | 锚点尺寸，可选 small、default。 | `"default" \| "small"` | `"default"` |
+| styles | 内部各部位的内联样式，键同 `classNames`。 | <ApiType detail={"Partial\u003cRecord\u003cAnchorPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Anchor", "styles")` |
 | targetOffset | 锚点滚动结束时，目标距离容器顶部的偏移量。 | `number` | `0` |
 
 **Events**

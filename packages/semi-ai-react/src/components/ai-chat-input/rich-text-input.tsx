@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useMemo, useState } from 'react';
 import type { Content as TiptapContent } from '@tiptap/core';
 import type { EditorView } from '@tiptap/pm/view';
 import { type Editor, type Extensions, EditorContent, useEditor } from '@tiptap/react';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/editor-config';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
@@ -31,6 +32,8 @@ class PlaceholderHolder {
 
 export default function RichTextInput({
     id,
+    className,
+    style,
     controls,
     activeDescendant,
     onCreate,
@@ -48,6 +51,8 @@ export default function RichTextInput({
     showPlaceholderWhenSkillOnly,
 }: {
     id?: string;
+    className?: string;
+    style?: React.CSSProperties;
     /** The list the editor drives while its panel is open, and the option the keyboard is on */
     controls?: string;
     activeDescendant?: string;
@@ -100,5 +105,5 @@ export default function RichTextInput({
         return null;
     }
 
-    return <EditorContent ref={innerRef} className={`${prefix}-editor-content`} editor={editor} onBlur={onBlur} onFocus={onFocus} onPaste={onPasteEvent} />;
+    return <EditorContent ref={innerRef} className={clsx(`${prefix}-editor-content`, className)} style={style} editor={editor} onBlur={onBlur} onFocus={onFocus} onPaste={onPasteEvent} />;
 }

@@ -37,7 +37,7 @@ export const cssClasses = {
 } as const;
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type DatePickerPart = 'dropdown' | 'input';
+export type DatePickerPart = 'dropdown' | 'input' | 'suffix' | 'clear' | 'separator' | 'header' | 'body' | 'item' | 'presets' | 'switch' | 'footer';
 
 const formatToken = {
     FORMAT_FULL_DATE: 'yyyy-MM-dd',

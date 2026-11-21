@@ -11,6 +11,7 @@
     const defaults = useDefaultProps('Progress');
 
     let {
+        classNames = defaults('classNames'),
         direction = defaults('direction', 'horizontal'),
         indeterminate = defaults('indeterminate', false),
         motion = defaults('motion', true),
@@ -22,6 +23,7 @@
         strokeGradient = defaults('strokeGradient', false),
         strokeLinecap = defaults('strokeLinecap', 'round'),
         strokeWidth = defaults('strokeWidth', 4),
+        styles = defaults('styles'),
         type = defaults('type', 'line'),
         width = defaults('width'),
         format,
@@ -44,10 +46,14 @@
 
     // The indeterminate block is moved by a CSS animation, so no width or height is written and percent is ignored.
     const innerStyle = $derived.by(() => {
-        if (indeterminate) return `background: ${strokeColor};`;
-        return `background: ${strokeColor}; ${horizontal ? 'width' : 'height'}: ${perc}%;`;
+        if (indeterminate) return `background: ${strokeColor}; ${styles?.track ?? ''}`;
+        return `background: ${strokeColor}; ${horizontal ? 'width' : 'height'}: ${perc}%; ${styles?.track ?? ''}`;
     });
 
+    // Written after the component's own declarations so the caller's value wins; a `style:` directive would beat `styles`
+    const lineRailStyle = $derived(`${orbitStroke ? `background-color: ${orbitStroke};` : ''} ${styles?.rail ?? ''}`);
+    const circleRailStyle = $derived(`${orbitStroke ? `stroke: ${orbitStroke};` : ''} ${styles?.rail ?? ''}`);
+    const circleTrackStyle = $derived(`${strokeColor ? `stroke: ${strokeColor};` : ''} ${styles?.track ?? ''}`);
     const diameter = $derived(width || (size === 'small' ? 24 : 72));
     const geometry = $derived(calcCircleGeometry(diameter, strokeWidth, perc, indeterminate));
 
@@ -81,11 +87,11 @@
         ]}
         role="progressbar"
     >
-        <div aria-hidden="true" class={`${prefixCls}-track`} style={orbitStroke ? `background-color: ${orbitStroke};` : undefined}>
-            <div aria-hidden="true" class={[`${prefixCls}-track-inner`, { [`${prefixCls}-track-inner-indeterminate`]: indeterminate }]} style={innerStyle}></div>
+        <div aria-hidden="true" class={[`${prefixCls}-track`, classNames?.rail]} style={lineRailStyle}>
+            <div aria-hidden="true" class={[`${prefixCls}-track-inner`, classNames?.track, { [`${prefixCls}-track-inner-indeterminate`]: indeterminate }]} style={innerStyle}></div>
         </div>
         {#if showInfo && !indeterminate}
-            <div class={`${prefixCls}-line-text`}>{@render text()}</div>
+            <div class={[`${prefixCls}-line-text`, classNames?.text]} style={styles?.text}>{@render text()}</div>
         {/if}
     </div>
 {:else}
@@ -94,7 +100,7 @@
             <svg aria-hidden="true" class={`${prefixCls}-circle-ring`} height={diameter} width={diameter}>
                 <circle
                     aria-hidden="true"
-                    class={`${prefixCls}-circle-ring-track`}
+                    class={[`${prefixCls}-circle-ring-track`, classNames?.rail]}
                     cx={geometry.center}
                     cy={geometry.center}
                     fill="transparent"
@@ -103,11 +109,11 @@
                     stroke-dashoffset="0"
                     stroke-linecap={strokeLinecap}
                     stroke-width={strokeWidth}
-                    style:stroke={orbitStroke}
+                    style={circleRailStyle}
                 />
                 <circle
                     aria-hidden="true"
-                    class={[`${prefixCls}-circle-ring-inner`, { [`${prefixCls}-circle-ring-inner-indeterminate`]: indeterminate }]}
+                    class={[`${prefixCls}-circle-ring-inner`, classNames?.track, { [`${prefixCls}-circle-ring-inner-indeterminate`]: indeterminate }]}
                     cx={geometry.center}
                     cy={geometry.center}
                     fill="transparent"
@@ -116,12 +122,12 @@
                     stroke-dashoffset={geometry.strokeDashoffset}
                     stroke-linecap={strokeLinecap}
                     stroke-width={strokeWidth}
-                    style:stroke={strokeColor}
+                    style={circleTrackStyle}
                 />
             </svg>
         {/key}
         {#if showInfo && size !== 'small' && !indeterminate}
-            <span class={`${prefixCls}-circle-text`}>{@render text()}</span>
+            <span class={[`${prefixCls}-circle-text`, classNames?.text]} style={styles?.text}>{@render text()}</span>
         {/if}
     </div>
 {/if}

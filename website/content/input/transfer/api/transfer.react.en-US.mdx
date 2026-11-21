@@ -5,6 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | className | Class name of the root element. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `source`, `selected`, `filter`, `header`, `title`, `action`, `list`, `groupTitle`, `item`, `itemDragHandle`, `itemRemove` and `empty`; merged with the built-in classes. `source` and `selected` are the left and right panels, and `item` applies to the option rows on both sides. | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, string>>"}>Type</ApiType> | - |
 | dataSource | Data source: an array of items for `list`, an array of groups for `groupList`, or tree data with `children` for `treeList`. | `DataSource` | `[]` |
 | defaultValue | Values selected initially, read once when the transfer is created. | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | `[]` |
 | disabled | Whether the whole transfer is disabled, including the search box, the options and the action buttons. | `boolean` | - |
@@ -28,6 +29,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSourcePanel | Replaces the whole left panel; called on every render with SourcePanelProps. | <ApiType detail={"(sourcePanelProps: SourcePanelProps) => React.ReactNode"}>Type</ApiType> | - |
 | showPath | `treeList` only: whether the selected items on the right show their path from the root. | `boolean` | `false` |
 | style | Inline style of the root element. | `React.CSSProperties` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTransferPart, React.CSSProperties>>"}>Type</ApiType> | - |
 | treeProps | `treeList` only: props passed to the Tree on the left, overriding the defaults `multiple`, `disableStrictly`, `leafOnly`, `filterTreeNode`, `defaultExpandAll` and `searchRender` (`false`). `value`, `treeData`, `keyMaps`, `treeDataSimpleJson`, `onChangeWithObject`, `onChange` and `ref` belong to Transfer and are ignored. | <ApiType detail={"Omit\u003cTreeProps, 'keyMaps' \u007c 'onChange' \u007c 'onChangeWithObject' \u007c 'ref' \u007c 'treeData' \u007c 'treeDataSimpleJson' \u007c 'value'>"}>Type</ApiType> | - |
 | type | Transfer type: `list`, `groupList` or `treeList`. | `Type` | `"list"` |
 | value | Values of the selected items. Passing it makes the component controlled, and its order is the order on the right; `undefined` returns to uncontrolled. | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | - |

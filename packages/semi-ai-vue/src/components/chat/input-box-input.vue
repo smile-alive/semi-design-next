@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { useTemplateRef } from 'vue';
+    import { type ClassValue, type StyleValue, useTemplateRef } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import { TextArea } from '@fibrae/semi-ui-vue/input/index';
@@ -12,6 +12,8 @@
         attachment: FileItem[];
         placeholder?: string;
         sendHotKey: SendHotKey;
+        textareaClass?: ClassValue;
+        textareaStyle?: StyleValue;
     }>();
 
     const emit = defineEmits<{
@@ -37,7 +39,7 @@
             ref="textarea"
             :aria-label="i18n.locale.input"
             :autosize="AUTOSIZE"
-            :class="`${PREFIX_INPUT_BOX}-textarea`"
+            :class="[`${PREFIX_INPUT_BOX}-textarea`, props.textareaClass]"
             :disabledEnterStartNewLine="props.sendHotKey === strings.SEND_HOT_KEY.ENTER"
             :maxCount="0"
             :modelValue="props.content"
@@ -45,6 +47,7 @@
             :showClear="false"
             :showCounter="false"
             :showLineNumber="false"
+            :style="props.textareaStyle"
             @change="emit('change', $event)"
             @enterPress="(...args) => emit('enterPress', ...args)"
             @paste="emit('paste', $event)"

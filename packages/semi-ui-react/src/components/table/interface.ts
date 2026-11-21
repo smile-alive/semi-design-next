@@ -15,7 +15,7 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     children?: ReactNode;
     childrenRecordName?: string;
     className?: string;
-    /** `header` lands on every header cell, before the column's own className */
+    /** `header` lands on every header cell, before the column's own className; `row` and `cell` land on data rows and data cells only */
     classNames?: Partial<Record<TablePart, string>>;
     clickGroupedRowToExpand?: boolean;
     columns?: ColumnProps<RecordType>[];
@@ -53,7 +53,7 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     showHeader?: boolean;
     size?: Size;
     style?: React.CSSProperties;
-    /** `header` lands on every header cell, under the column's `onHeaderCell` style */
+    /** `header` lands on every header cell, under the column's `onHeaderCell` style; `row` and `cell` land on data rows and data cells only, under `onRow` and `onCell` styles */
     styles?: Partial<Record<TablePart, React.CSSProperties>>;
     title?: Title<RecordType>;
     virtualized?: Virtualized;

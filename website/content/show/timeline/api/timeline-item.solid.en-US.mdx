@@ -1,10 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
 **Props**
 
-| Property | Description                                                                | Type                                                          | Default |
-| -------- | -------------------------------------------------------------------------- | ------------------------------------------------------------- | ------- |
-| color    | Color of the dot, used as its background and overriding the color of type. | `string`                                                      | -       |
-| dot      | Custom dot content, replacing the default dot.                             | `JSX.Element`                                                 | -       |
-| extra    | Extra content, not rendered when empty.                                    | `JSX.Element`                                                 | -       |
-| position | Overrides the mode of the Timeline for this item: left or right.           | `'left' \| 'right'`                                           | -       |
-| time     | Time text, not rendered when empty.                                        | `JSX.Element`                                                 | -       |
-| type     | Dot type: default, ongoing, success, warning or error.                     | `'default' \| 'error' \| 'ongoing' \| 'success' \| 'warning'` | -       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by `rail`, `icon`, `content`, `extra` and `time`; merged with the built-in classes, after the `item*` class names of the Timeline. `rail` is the connecting line and `icon` holds the dot or the custom dot. | <ApiType detail={"Partial\u003cRecord\u003cTimelineItemPart, string>>"}>Type</ApiType> | - |
+| color | Color of the dot, used as its background and overriding the color of type. | `string` | - |
+| dot | Custom dot content, replacing the default dot. | `JSX.Element` | - |
+| extra | Extra content, not rendered when empty. | `JSX.Element` | - |
+| position | Overrides the mode of the Timeline for this item: left or right. | `'left' \| 'right'` | - |
+| styles | Inline styles of the inner parts, keyed like `classNames`, applied after the `item*` styles of the Timeline. | <ApiType detail={"Partial\u003cRecord\u003cTimelineItemPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
+| time | Time text, not rendered when empty. | `JSX.Element` | - |
+| type | Dot type: default, ongoing, success, warning or error. | `'default' \| 'error' \| 'ongoing' \| 'success' \| 'warning'` | - |

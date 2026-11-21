@@ -2,12 +2,12 @@ import { children, createEffect, createMemo, createUniqueId, Match, onMount, Sho
 import clsx from 'clsx';
 import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
 import type { CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
-import { checkboxClasses as css } from '@fibrae/semi-foundation/components/checkbox/constants';
+import { checkboxClasses as css, type CheckboxPart } from '@fibrae/semi-foundation/components/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
 import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-solid';
 import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
-import { autofocus, callHandler, isNativeInputKey, omitFormInjected, splitControlAttrs, forwardFocus, hasContent, mergeRefs } from '../../utils/index';
+import { autofocus, callHandler, isNativeInputKey, omitFormInjected, splitControlAttrs, forwardFocus, hasContent, mergeRefs, mergeStyles } from '../../utils/index';
 import { useSpecialTrigger } from '../tooltip/context';
 import type { CheckboxType } from './checkbox-group';
 import { useCheckboxGroupContext } from './context';
@@ -34,6 +34,8 @@ export interface CheckboxProps extends ElementProps<'span', 'onChange' | 'onFocu
     /** Inside a CheckboxGroup, the value this checkbox adds to the group's value */
     value?: CheckboxValue;
     extra?: JSX.Element;
+    classNames?: Partial<Record<CheckboxPart, string>>;
+    styles?: Partial<Record<CheckboxPart, JSX.CSSProperties | string>>;
     onChange?: (event: CheckboxEvent) => any;
     addonId?: string;
     extraId?: string;
@@ -62,7 +64,7 @@ const prefix = css.PREFIX;
 
 export default function Checkbox(rawProps: CheckboxProps) {
     const props = useDefaultProps('Checkbox', rawProps, defaultProps);
-    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'disabled', 'indeterminate', 'value', 'onChange', 'onClick', 'addonId', 'extraId', 'type', 'preventScroll', 'x-semi-children-alias']);
+    const [local, attrs] = splitProps(omitFormInjected(props), ['class', 'classNames', 'style', 'styles', 'children', 'extra', 'ref', 'checked', 'defaultChecked', 'disabled', 'indeterminate', 'value', 'onChange', 'onClick', 'addonId', 'extraId', 'type', 'preventScroll', 'x-semi-children-alias']);
 
     // The root is a span, so what names, identifies and focuses the checkbox belongs on the native input
     const [control, rest] = splitControlAttrs(attrs, isNativeInputKey);
@@ -160,7 +162,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
         <span
             {...rest}
             ref={mergeRefs(local.ref, setup)}
-            class={clsx(prefix, local.class, {
+            class={clsx(prefix, group?.classNames?.item, local.class, {
                 [`${prefix}-disabled`]: disabled(),
                 [`${prefix}-indeterminate`]: local.indeterminate,
                 [`${prefix}-checked`]: checked(),
@@ -171,6 +173,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
                 [`${prefix}-cardType_checked`]: isCardType() && checked() && !disabled(),
                 [`${prefix}-cardType_checked_disabled`]: isCardType() && checked() && disabled(),
             })}
+            style={mergeStyles(group?.styles?.item, local.style)}
             onClick={handleClick}
         >
             <span
@@ -193,7 +196,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
                     disabled={disabled()}
                     value={local.value === undefined ? undefined : String(local.value)}
                 />
-                <span class={`${prefix}-inner-display`}>
+                <span class={clsx(`${prefix}-inner-display`, group?.classNames?.itemIcon, local.classNames?.icon)} style={mergeStyles(group?.styles?.itemIcon, local.styles?.icon)}>
                     <Switch>
                         <Match when={checked()}>
                             <IconCheckboxTick />
@@ -207,16 +210,22 @@ export default function Checkbox(rawProps: CheckboxProps) {
             <Show when={hasChildren() || hasExtra()}>
                 <div class={`${prefix}-content`}>
                     <Show when={hasChildren()}>
-                        <span id={addonId()} class={`${prefix}-addon`} x-semi-prop={local['x-semi-children-alias'] || 'children'}>
+                        <span id={addonId()} class={clsx(`${prefix}-addon`, group?.classNames?.itemLabel, local.classNames?.label)} style={mergeStyles(group?.styles?.itemLabel, local.styles?.label)} x-semi-prop={local['x-semi-children-alias'] || 'children'}>
                             {content()}
                         </span>
                     </Show>
                     <Show when={hasExtra()}>
                         <div
                             id={extraId()}
-                            class={clsx(`${prefix}-extra`, {
-                                [`${prefix}-cardType_extra_noChildren`]: isCardType() && !hasChildren(),
-                            })}
+                            class={clsx(
+                                `${prefix}-extra`,
+                                {
+                                    [`${prefix}-cardType_extra_noChildren`]: isCardType() && !hasChildren(),
+                                },
+                                group?.classNames?.itemExtra,
+                                local.classNames?.extra
+                            )}
+                            style={mergeStyles(group?.styles?.itemExtra, local.styles?.extra)}
                             x-semi-prop="extra"
                         >
                             {extra()}

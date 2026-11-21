@@ -11,6 +11,8 @@ export interface AnchorContext {
     readonly showTooltip: NonNullable<AnchorProps['showTooltip']>;
     readonly size: NonNullable<AnchorProps['size']>;
     readonly title?: Snippet<[AnchorTitleContext]>;
+    readonly classNames?: AnchorProps['classNames'];
+    readonly styles?: AnchorProps['styles'];
     onClick: (event: AnchorClickEvent, link: string) => void;
 }
 

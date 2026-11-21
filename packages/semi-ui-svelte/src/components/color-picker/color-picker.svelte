@@ -30,6 +30,8 @@
         height = defaults('height', 280),
         usePopover = defaults('usePopover', false),
         popoverProps = defaults('popoverProps'),
+        classNames = defaults('classNames'),
+        styles = defaults('styles'),
         onChange,
         children,
         topSlot,
@@ -85,7 +87,8 @@
 
     // The popup holds inputs and sliders: it is a dialog opened by click, not a hover tooltip, so moving the pointer away
     // cannot close it mid-edit. A dialog needs a name; the caller's wins.
-    const popoverClass = $derived([`${cssClasses.PREFIX}-popover`, popoverProps?.class].filter(Boolean).join(' '));
+    const popoverClass = $derived([`${cssClasses.PREFIX}-popover`, popoverProps?.class, classNames?.dropdown]);
+    const popoverStyle = $derived([popoverProps?.style, styles?.dropdown].filter(Boolean).join('; ') || undefined);
     const popoverLabel = $derived(popoverProps?.['aria-label'] ?? (popoverProps?.['aria-labelledby'] ? undefined : locale().locale.color));
 
     /** The picker div: inside the popover when `usePopover`, so null while the popover is closed */
@@ -97,18 +100,18 @@
 {#snippet panel()}
     <div bind:this={picker} {...pickerAttrs} class={[cssClasses.PREFIX, rest.class]} role={namedRole(rest)}>
         {@render topSlot?.()}
-        <ColorChooseArea handleSize={20} {height} hsva={currentColor.hsva} onChange={foundation.handleAreaChange} {width} />
-        <ColorSlider class="colorSliderWrapper" handleSize={18} height={10} hue={currentColor.hsva.h} onChange={foundation.handleHueChange} {width} />
+        <ColorChooseArea {classNames} handleSize={20} {height} hsva={currentColor.hsva} onChange={foundation.handleAreaChange} {styles} {width} />
+        <ColorSlider class="colorSliderWrapper" {classNames} handleSize={18} height={10} hue={currentColor.hsva.h} onChange={foundation.handleHueChange} {styles} {width} />
         {#if alpha}
-            <AlphaSlider handleSize={18} height={10} hsva={currentColor.hsva} onChange={foundation.handleAlphaChange} {width} />
+            <AlphaSlider {classNames} handleSize={18} height={10} hsva={currentColor.hsva} onChange={foundation.handleAlphaChange} {styles} {width} />
         {/if}
-        <DataPart {alpha} {currentColor} {defaultFormat} {eyeDropper} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} {width} />
+        <DataPart {alpha} {classNames} {currentColor} {defaultFormat} {eyeDropper} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} {styles} {width} />
         {@render bottomSlot?.()}
     </div>
 {/snippet}
 
 {#snippet defaultTrigger({ props }: { props: TooltipTriggerProps })}
-    <button {...props} aria-label={locale().locale.color} class={`${cssClasses.PREFIX}-popover-defaultChildren`} style:background-color={currentColor.hex} type="button"></button>
+    <button {...props} aria-label={locale().locale.color} class={[`${cssClasses.PREFIX}-popover-defaultChildren`, classNames?.trigger]} style={[`background-color: ${currentColor.hex}`, styles?.trigger].filter(Boolean).join('; ')} type="button"></button>
 {/snippet}
 
 {#if usePopover}
@@ -125,6 +128,7 @@
             popoverProps?.onOpen?.();
         }}
         role={popoverProps?.role ?? 'dialog'}
+        style={popoverStyle}
         trigger={popoverProps?.trigger ?? 'click'}
     />
 {:else}

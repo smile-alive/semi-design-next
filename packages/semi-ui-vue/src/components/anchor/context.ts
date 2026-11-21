@@ -5,11 +5,13 @@ import type { AnchorClickEvent, AnchorProps } from './interface';
 export interface AnchorContextView {
     activeLink: string;
     autoCollapse: boolean;
+    classNames: AnchorProps['classNames'];
     /** The links registered below each mounted link, whatever components render them */
     childMap: Record<string, Set<string>>;
     position: AnchorProps['position'];
     showTooltip: NonNullable<AnchorProps['showTooltip']>;
     size: NonNullable<AnchorProps['size']>;
+    styles: AnchorProps['styles'];
 }
 
 export interface AnchorContext {

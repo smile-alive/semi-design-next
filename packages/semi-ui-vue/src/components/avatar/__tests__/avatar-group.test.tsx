@@ -17,6 +17,21 @@ afterEach(() => {
 });
 
 describe('AvatarGroup', () => {
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const props = { maxCount: 4, classNames: { more: 'c-more' }, styles: { more: { opacity: 0.5 } } };
+        const view = render(Group, { props });
+        const more = view.container.querySelector(`.${prefix}-item-more`);
+        expect(more).toHaveClass('c-more');
+        expect(more).toHaveStyle({ opacity: '0.5' });
+        expect(avatars(view.container)[0]).not.toHaveClass('c-more');
+        view.unmount();
+
+        const custom = render(Group, { props: { ...props, custom: true } });
+        const last = avatars(custom.container)[4];
+        expect(last).toHaveClass('c-more');
+        expect(last).toHaveStyle({ opacity: '0.5' });
+    });
+
     it('默认中号圆形，组覆盖每个头像的配置并保留 class', () => {
         const view = render(Group);
         expect(view.getAllByRole('listitem')).toHaveLength(5);

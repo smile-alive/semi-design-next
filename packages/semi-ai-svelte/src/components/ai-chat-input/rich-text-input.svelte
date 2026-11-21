@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getAllContexts, untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
+    import type { ClassValue } from 'svelte/elements';
     import { on } from 'svelte/events';
     import { Editor, type Extensions, type Content as TiptapContent } from '@tiptap/core';
     import type { EditorView } from '@tiptap/pm/view';
@@ -12,6 +13,8 @@
 
     interface RichTextInputProps {
         id: string;
+        class?: ClassValue;
+        style?: string;
         /** The list the editor drives while its panel is open, and the option the keyboard is on */
         controls?: string;
         activeDescendant?: string;
@@ -32,7 +35,7 @@
         onBlur: (event: FocusEvent) => void;
     }
 
-    let { id, controls, activeDescendant, placeholder, defaultContent, extensions, showPlaceholderWhenSkillOnly = false, onCreate, onChange, handleKeyDown, onPasteFiles, onPaste, onFocus, onBlur }: RichTextInputProps = $props();
+    let { id, class: className, style, controls, activeDescendant, placeholder, defaultContent, extensions, showPlaceholderWhenSkillOnly = false, onCreate, onChange, handleKeyDown, onPasteFiles, onPaste, onFocus, onBlur }: RichTextInputProps = $props();
 
     const locale = useLocale('AIChatInput');
 
@@ -78,4 +81,4 @@
     });
 </script>
 
-<div {@attach mountEditor} class="{cssClasses.PREFIX}-editor-content"></div>
+<div {@attach mountEditor} class={[`${cssClasses.PREFIX}-editor-content`, className]} {style}></div>

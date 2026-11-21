@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { computed, shallowRef, useAttrs, type StyleValue } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+    import { omit } from 'es-toolkit';
+    import { cssClasses, strings, type UploadFileCardPart, type UploadPart } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
     import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils';
@@ -15,6 +16,7 @@
     import Spin from '../spin';
     import Tooltip from '../tooltip';
     import { TypographyText } from '../typography';
+    import { useUploadContext } from './context';
     import type { FileCardEmits, FileCardProps, FileCardSlots, UploadFileItemSlotProps } from './interface';
 
     defineOptions({ name: 'UploadFileCard', inheritAttrs: false });
@@ -39,9 +41,20 @@
     const attrs = useAttrs();
 
     const i18n = useLocale('Upload');
+    const upload = useUploadContext();
 
     // The failed url is kept instead of a flag so a new url (e.g. a server thumbnail replacing a blob url) gets its own try
     const failedUrl = shallowRef<string>();
+
+    const itemParts = {
+        thumbnail: 'itemThumbnail',
+        name: 'itemName',
+        progress: 'itemProgress',
+        validateMessage: 'itemValidateMessage',
+        retry: 'itemRetry',
+        replace: 'itemReplace',
+        close: 'itemClose',
+    } as const satisfies Record<UploadFileCardPart, UploadPart>;
 
     const prefix = cssClasses.PREFIX;
     const info = `${prefix}-file-card-info`;
@@ -61,6 +74,18 @@
         ...(props.picHeight ? { height: toCssLength(props.picHeight) } : {}),
         ...(props.picWidth ? { width: toCssLength(props.picWidth) } : {}),
     }));
+
+    // The parent Upload's item* parts come first, the card's own parts after them. Functions, not computeds: attrs is not reactive.
+    const part = (key: UploadFileCardPart) => ({
+        class: [upload?.value.classNames?.[itemParts[key]], props.classNames?.[key]],
+        style: [upload?.value.styles?.[itemParts[key]], props.styles?.[key]],
+    });
+
+    const rootClass = () => [upload?.value.classNames?.item, attrs.class];
+
+    const rootStyle = () => [upload?.value.styles?.item, attrs.style as StyleValue];
+
+    const restAttrs = () => omit(attrs, ['class', 'style']);
 
     const onImageError = () => {
         failedUrl.value = props.file.url;
@@ -101,15 +126,17 @@
 <template>
     <div
         v-if="props.listType === strings.FILE_LIST_DEFAULT"
-        v-bind="$attrs"
+        v-bind="restAttrs()"
         :class="[
             `${prefix}-file-card`,
             {
                 [`${prefix}-file-card-fail`]: flags.failed,
                 [`${prefix}-file-card-show-pointer`]: props.onPreviewClick !== undefined,
             },
+            rootClass(),
         ]"
         role="listitem"
+        :style="rootStyle()"
         @click="props.onPreviewClick?.()"
     >
         <!-- Keyboard-only: Enter here bubbles a click to the card, which opens the preview for the mouse too -->
@@ -120,7 +147,9 @@
                 {
                     [`${prefix}-file-card-preview-placeholder`]: !props.file.preview || $slots.previewFile || fallbackPreview,
                 },
+                part('thumbnail').class,
             ]"
+            :style="part('thumbnail').style"
         >
             <slot v-if="$slots.previewFile" name="previewFile" v-bind="slotProps()" />
             <HydratedImage v-else-if="props.file.preview && !fallbackPreview" alt="" :src="props.file.url" @error="onImageError" />
@@ -128,7 +157,7 @@
         </div>
         <div :class="`${info}-main`">
             <div :class="`${info}-main-text`">
-                <TypographyText :class="`${info}-name`" :ellipsis="{ showTooltip: props.showTooltip }">
+                <TypographyText :class="[`${info}-name`, part('name').class]" :ellipsis="{ showTooltip: props.showTooltip }" :style="part('name').style">
                     {{ props.file.name }}
                     <template v-if="$slots.ellipsisTooltip" #ellipsisTooltip="scope">
                         <slot name="ellipsisTooltip" v-bind="scope" />
@@ -138,7 +167,7 @@
                     <span :class="`${info}-size`">{{ size }}</span>
                     <!-- the Button is the trigger itself, so it stays the only Tab stop -->
                     <Tooltip v-if="flags.showReplace" position="top" :showArrow="false" trigger="hover">
-                        <Button :aria-label="i18n.locale.replace" :class="`${prefix}-file-card-replace`" size="small" theme="borderless" type="tertiary" @click.stop="emit('replace')">
+                        <Button :aria-label="i18n.locale.replace" :class="[`${prefix}-file-card-replace`, part('replace').class]" size="small" :style="part('replace').style" theme="borderless" type="tertiary" @click.stop="emit('replace')">
                             <template #icon>
                                 <svg aria-hidden="true" fill="none" focusable="false" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M6 17V7.58824C6 7.26336 6.26863 7 6.6 7H10.5L12 8.76471H16.05C16.3814 8.76471 16.65 9.02806 16.65 9.35294V11.1176H7.5L6 17ZM6 17L7.44375 11.1176H18L16.8 17L6 17Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" />
@@ -149,9 +178,9 @@
                     </Tooltip>
                 </span>
             </div>
-            <Progress v-if="flags.showListProgress" :aria-label="i18n.locale.uploadProgress" :percent="props.file.percent" style="width: 100%" />
+            <Progress v-if="flags.showListProgress" :aria-label="i18n.locale.uploadProgress" :class="part('progress').class" :percent="props.file.percent" :style="[{ width: '100%' }, part('progress').style]" />
             <div :class="`${info}-main-control`">
-                <span :class="`${info}-validate-message`">
+                <span :class="[`${info}-validate-message`, part('validateMessage').class]" :style="part('validateMessage').style">
                     <slot name="validateMessage" v-bind="slotProps()">
                         <template v-if="typeof message === 'string'">
                             <Spin v-if="props.file.status === strings.FILE_STATUS_VALIDATING" :class="`${prefix}-file-card-icon-loading`" size="small" />
@@ -160,13 +189,13 @@
                         </template>
                     </slot>
                 </span>
-                <button v-if="flags.showRetry" :class="`${info}-retry`" type="button" @click.stop="emit('retry')">
+                <button v-if="flags.showRetry" :class="[`${info}-retry`, part('retry').class]" :style="part('retry').style" type="button" @click.stop="emit('retry')">
                     {{ i18n.locale.retry }}
                 </button>
             </div>
         </div>
         <slot v-if="$slots.fileOperation" name="fileOperation" v-bind="slotProps()" />
-        <Button v-else-if="!props.disabled" :aria-label="i18n.locale.remove" :class="`${prefix}-file-card-close`" size="small" theme="borderless" type="tertiary" @click.stop="emit('remove')">
+        <Button v-else-if="!props.disabled" :aria-label="i18n.locale.remove" :class="[`${prefix}-file-card-close`, part('close').class]" size="small" :style="part('close').style" theme="borderless" type="tertiary" @click.stop="emit('remove')">
             <template #icon>
                 <IconClose />
             </template>
@@ -174,7 +203,7 @@
     </div>
     <div
         v-else-if="props.listType === strings.FILE_LIST_PIC"
-        v-bind="$attrs"
+        v-bind="restAttrs()"
         :class="[
             `${prefix}-picture-file-card`,
             {
@@ -185,21 +214,22 @@
                 [`${prefix}-picture-file-card-uploading`]: flags.showPicProgress,
                 [`${prefix}-picture-file-card-custom-thumbnail`]: $slots.thumbnail && props.picHeight && props.picWidth,
             },
+            rootClass(),
         ]"
         role="listitem"
-        :style="sizeStyle"
+        :style="[rootStyle(), sizeStyle]"
         @click="props.onPreviewClick?.()"
     >
         <slot v-if="$slots.thumbnail" name="thumbnail" v-bind="slotProps()" />
-        <HydratedImage v-else-if="!fallbackPreview" :alt="props.file.name" :src="props.file.url" :style="sizeStyle" @error="onImageError" />
-        <IconFile v-else size="large" />
+        <HydratedImage v-else-if="!fallbackPreview" :alt="props.file.name" :class="part('thumbnail').class" :src="props.file.url" :style="[sizeStyle, part('thumbnail').style]" @error="onImageError" />
+        <IconFile v-else :class="part('thumbnail').class" size="large" :style="part('thumbnail').style" />
         <button v-if="props.onPreviewClick" :aria-label="i18n.locale.preview" :class="`${prefix}-preview-trigger`" type="button" />
-        <Progress v-if="flags.showPicProgress" :aria-label="i18n.locale.uploadProgress" orbitStroke="var(--semi-color-white)" :percent="props.file.percent" size="small" type="circle" />
-        <button v-if="flags.showRetry" :aria-label="i18n.locale.retry" :class="`${prefix}-picture-file-card-retry`" type="button" @click.stop="emit('retry')">
+        <Progress v-if="flags.showPicProgress" :aria-label="i18n.locale.uploadProgress" :class="part('progress').class" orbitStroke="var(--semi-color-white)" :percent="props.file.percent" size="small" :style="part('progress').style" type="circle" />
+        <button v-if="flags.showRetry" :aria-label="i18n.locale.retry" :class="[`${prefix}-picture-file-card-retry`, part('retry').class]" :style="part('retry').style" type="button" @click.stop="emit('retry')">
             <IconRefresh :class="`${prefix}-picture-file-card-icon-retry`" />
         </button>
         <Tooltip v-if="flags.showReplace" position="top" :showArrow="false" :spacing="4" trigger="hover">
-            <button :aria-label="i18n.locale.replace" :class="`${prefix}-picture-file-card-replace`" type="button" @click.stop="emit('replace')">
+            <button :aria-label="i18n.locale.replace" :class="[`${prefix}-picture-file-card-replace`, part('replace').class]" :style="part('replace').style" type="button" @click.stop="emit('replace')">
                 <svg aria-hidden="true" :class="`${prefix}-picture-file-card-icon-replace`" fill="none" focusable="false" height="28" viewBox="0 0 28 28" width="28" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="14" cy="14" fill="#16161A" fill-opacity="0.6" r="14" />
                     <path d="M9 10.25V18.25L10.25 13.25H17.875V11.75C17.875 11.4739 17.6511 11.25 17.375 11.25H14L12.75 9.75H9.5C9.22386 9.75 9 9.97386 9 10.25Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
@@ -217,16 +247,16 @@
         </template>
         <template v-if="!props.disabled">
             <slot v-if="$slots.picClose" name="picClose" v-bind="{ class: `${prefix}-picture-file-card-close`, onRemove: removeFromClose }" />
-            <button v-else :aria-label="i18n.locale.remove" :class="`${prefix}-picture-file-card-close`" type="button" @click.stop="emit('remove')">
+            <button v-else :aria-label="i18n.locale.remove" :class="[`${prefix}-picture-file-card-close`, part('close').class]" :style="part('close').style" type="button" @click.stop="emit('remove')">
                 <IconClear :class="`${prefix}-picture-file-card-icon-close`" />
             </button>
         </template>
         <template v-if="picValidateIcon()">
             <Tooltip position="bottom" trigger="hover">
-                <span v-if="props.file.status === strings.FILE_STATUS_VALIDATING" :class="[`${prefix}-tooltip-children-wrapper`, `${prefix}-picture-file-card-icon-loading`]">
+                <span v-if="props.file.status === strings.FILE_STATUS_VALIDATING" :class="[`${prefix}-tooltip-children-wrapper`, `${prefix}-picture-file-card-icon-loading`, part('validateMessage').class]" :style="part('validateMessage').style">
                     <Spin size="small" />
                 </span>
-                <div v-else :class="`${prefix}-picture-file-card-icon-error`">
+                <div v-else :class="[`${prefix}-picture-file-card-icon-error`, part('validateMessage').class]" :style="part('validateMessage').style">
                     <svg aria-hidden="true" fill="none" focusable="false" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="7.99992" cy="7.99992" fill="white" r="6.66667" />
                         <path

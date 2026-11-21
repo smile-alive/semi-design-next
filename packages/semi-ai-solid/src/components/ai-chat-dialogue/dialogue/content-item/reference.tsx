@@ -1,4 +1,4 @@
-import { For, Show } from 'solid-js';
+import { For, type JSX, Show } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses, type DialogueIconKind, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
@@ -9,6 +9,8 @@ import Image from '@fibrae/semi-ui-solid/image/index';
 
 export interface ReferenceWidgetProps {
     references: Reference[];
+    class?: string;
+    style?: JSX.CSSProperties | string;
 }
 
 const prefixCls = cssClasses.PREFIX_REFERENCES;
@@ -38,7 +40,7 @@ function ReferenceIcon(props: { name: string }) {
 
 export function ReferenceWidget(props: ReferenceWidgetProps) {
     return (
-        <div class={prefixCls}>
+        <div class={clsx(prefixCls, props.class)} style={props.style}>
             <For each={props.references}>
                 {(reference) => (
                     // Known limitation: background color and items per row are not specified by design yet

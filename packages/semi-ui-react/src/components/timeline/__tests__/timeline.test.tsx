@@ -449,4 +449,43 @@ describe('Timeline', () => {
             backgroundColor: 'rgb(255, 192, 203)',
         });
     });
+
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const selectors = { item: 'item', itemRail: 'item-tail', itemIcon: 'item-head', itemContent: 'item-content', itemExtra: 'item-content-extra', itemTime: 'item-content-time' };
+        const parts = Object.keys(selectors) as Array<keyof typeof selectors>;
+        const { container } = render(<Timeline classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))} styles={Object.fromEntries(parts.map((p, i) => [p, { order: i + 1 }]))} dataSource={dataSource.slice(0, 1)} />);
+        for (const [i, part] of parts.entries()) {
+            const el = container.querySelector(`.${prefixCls}-${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(i + 1) });
+        }
+    });
+
+    it('Timeline.Item 的 classNames 在父级 item* 之后，样式后写', () => {
+        const { container } = render(
+            <Timeline classNames={{ item: 'p-item', itemRail: 'p-rail', itemIcon: 'p-icon', itemContent: 'p-content', itemExtra: 'p-extra', itemTime: 'p-time' }} styles={{ itemIcon: { order: 1, opacity: 0.5 }, itemTime: { order: 1 } }}>
+                <Timeline.Item className="own" classNames={{ rail: 'c-rail', icon: 'c-icon', content: 'c-content', extra: 'c-extra', time: 'c-time' }} styles={{ icon: { order: 2 }, time: { order: 2 } }} color="pink" time="t" extra="e">
+                    a
+                </Timeline.Item>
+                <Timeline.Item time="t">b</Timeline.Item>
+            </Timeline>
+        );
+        const [first, second] = [...container.querySelectorAll(`.${prefixCls}-item`)];
+        expect(first.className).toMatch(/p-item own/);
+        expect(second).toHaveClass('p-item');
+        for (const [part, selector] of [
+            ['rail', 'tail'],
+            ['icon', 'head'],
+            ['content', 'content'],
+            ['extra', 'content-extra'],
+            ['time', 'content-time'],
+        ]) {
+            expect(first.querySelector(`.${prefixCls}-item-${selector}`)?.className).toMatch(new RegExp(`p-${part} c-${part}$`));
+        }
+        const icon = first.querySelector(`.${prefixCls}-item-head`);
+        expect(icon).toHaveStyle({ order: '2', opacity: '0.5', backgroundColor: 'rgb(255, 192, 203)' });
+        expect(first.querySelector(`.${prefixCls}-item-content-time`)).toHaveStyle({ order: '2' });
+        expect(second.querySelector(`.${prefixCls}-item-content-time`)).toHaveStyle({ order: '1' });
+        expect(second.querySelector(`.${prefixCls}-item-content-time`)?.className).not.toContain('c-');
+    });
 });

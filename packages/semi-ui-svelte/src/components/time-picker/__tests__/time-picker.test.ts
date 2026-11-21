@@ -488,13 +488,39 @@ describe('Svelte TimePicker 输入框', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        await setup({ open: true, props: { classNames: { dropdown: 'my-dropdown', input: 'my-input' }, styles: { dropdown: 'color: red', input: 'color: blue' } } });
+        await setup({
+            open: true,
+            footer: true,
+            props: {
+                type: 'timeRange',
+                classNames: { dropdown: 'my-dropdown', input: 'my-input', header: 'my-header', content: 'my-content', item: 'my-item', footer: 'my-footer' },
+                styles: { dropdown: 'color: red', input: 'color: blue', header: 'color: green', content: 'color: orange', item: 'color: purple', footer: 'color: pink' },
+            },
+        });
         const dropdown = getElement('.my-dropdown', document);
         expect(dropdown).toHaveClass(`${prefixCls}-panel`);
         expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         const input = getElement('.my-input');
         expect(input).toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper`);
         expect(input).toHaveStyle({ color: 'rgb(0, 0, 255)' });
+        const parts = [
+            ['header', `${scrollListCls}-header`, 'rgb(0, 128, 0)'],
+            ['content', `${scrollListCls}-body`, 'rgb(255, 165, 0)'],
+            ['footer', `${scrollListCls}-footer`, 'rgb(255, 192, 203)'],
+        ] as const;
+        for (const [key, cls, color] of parts) {
+            const elements = document.querySelectorAll(`.my-${key}`);
+            expect(elements).toHaveLength(2);
+            for (const element of elements) {
+                expect(element).toHaveClass(cls);
+                expect(element).toHaveStyle({ color });
+            }
+        }
+        const options = document.querySelectorAll('li[role=option]');
+        expect(document.querySelectorAll('.my-item')).toHaveLength(options.length);
+        for (const option of options) {
+            expect(option).toHaveStyle({ color: 'rgb(128, 0, 128)' });
+        }
     });
 
     it('onKeyDown 到达输入框', async () => {

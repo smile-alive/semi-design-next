@@ -1,7 +1,7 @@
 <script lang="ts">
     import { IconMinus, IconPlus } from '@fibrae/semi-icons-svelte';
     import Collapse from '../collapse.svelte';
-    import type { CollapseProps } from '../interface';
+    import type { CollapsePanelProps, CollapseProps } from '../interface';
     import CollapsePanel from '../panel.svelte';
 
     interface HostStore {
@@ -10,7 +10,7 @@
         accept?: boolean;
         activeKey?: CollapseProps['activeKey'];
         collapse?: Omit<CollapseProps, 'activeKey' | 'onChange' | 'children' | 'expandIcon' | 'collapseIcon'>;
-        panel?: { disabled?: boolean; extra?: string; showArrow?: boolean; class?: string; style?: string; 'data-testid'?: string };
+        panel?: { disabled?: boolean; extra?: string; showArrow?: boolean; class?: string; style?: string; classNames?: CollapsePanelProps['classNames']; styles?: CollapsePanelProps['styles']; 'data-testid'?: string };
         icons?: boolean;
         log: string[];
     }
@@ -28,7 +28,17 @@
 {#snippet body()}<p>Hi, bytedance dance dance. This is the docsite of Semi UI.</p>{/snippet}
 {#snippet extra()}{store.panel?.extra}{/snippet}
 {#snippet panels()}
-    <CollapsePanel class={store.panel?.class} data-testid={store.panel?.['data-testid']} disabled={store.panel?.disabled} extra={store.panel?.extra === undefined ? undefined : extra} itemKey="1" showArrow={store.panel?.showArrow} style={store.panel?.style}>
+    <CollapsePanel
+        class={store.panel?.class}
+        classNames={store.panel?.classNames}
+        data-testid={store.panel?.['data-testid']}
+        disabled={store.panel?.disabled}
+        extra={store.panel?.extra === undefined ? undefined : extra}
+        itemKey="1"
+        showArrow={store.panel?.showArrow}
+        style={store.panel?.style}
+        styles={store.panel?.styles}
+    >
         {#snippet header()}This is panel header 1{/snippet}
         {@render body()}
     </CollapsePanel>

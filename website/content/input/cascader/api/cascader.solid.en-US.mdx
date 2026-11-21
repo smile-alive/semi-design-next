@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | Content at the bottom of the dropdown. | `JSX.Element` | - |
 | changeOnSelect | Whether a non-leaf node can be selected in single mode. | `boolean` | `false` |
 | checkRelation | In multiple mode, how checked states relate: `related` links parents and children, `unRelated` keeps them independent. | `'related' \| 'unRelated'` | `"related"` |
-| classNames | Class names of the inner parts, keyed by `dropdown` (the dropdown menu); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `placeholder`, `input`, `tag`, `clear`, `arrow`, `dropdown`, `list`, `empty`, `item`, `itemContent` and `itemIcon`; merged with the built-in classes. `content` is the selection area in the trigger, `list` is the option list of each level, and the `item` keys apply to every option. | <ApiType detail={"Partial\u003cRecord\u003cCascaderPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Custom icon of the clear button; effective when `showClear` is true. | `JSX.Element` | - |
 | clickToSelect | In multiple mode, clicking any node selects it. Often used with `showNext="hover"`: hovering expands the submenu and clicking selects the node. | `boolean` | `false` |
 | defaultOpen | Whether the dropdown is open on mount. | `boolean` | `false` |

@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale';
 import { IconSidebar } from '@fibrae/semi-icons-react';
@@ -6,13 +7,15 @@ import Button, { type ButtonProps } from '../button';
 import Tooltip from '../tooltip';
 
 export interface CollapseButtonProps {
+    className?: string;
+    style?: React.CSSProperties;
     locale?: Locale['Navigation'];
     collapseText?(isCollapsed: boolean): React.ReactNode;
     isCollapsed?: boolean;
     onClick?(nextCollapsed: boolean): void;
 }
 
-export default function CollapseButton({ locale, collapseText, isCollapsed, onClick }: CollapseButtonProps) {
+export default function CollapseButton({ className, style, locale, collapseText, isCollapsed, onClick }: CollapseButtonProps) {
     let finalCollapseText: React.ReactNode = isCollapsed ? locale?.expandText : locale?.collapseText;
 
     const btnProps = {
@@ -28,7 +31,7 @@ export default function CollapseButton({ locale, collapseText, isCollapsed, onCl
 
     // One element tree for both states: swapping the wrapper would remount the button and drop the focus it holds
     return (
-        <div className={`${cssClasses.PREFIX}-collapse-btn`}>
+        <div className={clsx(`${cssClasses.PREFIX}-collapse-btn`, className)} style={style}>
             <Tooltip condition={isCollapsed} content={finalCollapseText} position="right">
                 <Button {...btnProps} aria-label={isCollapsed ? (typeof finalCollapseText === 'string' ? finalCollapseText : locale?.expandText) : undefined}>
                     {isCollapsed ? undefined : finalCollapseText}

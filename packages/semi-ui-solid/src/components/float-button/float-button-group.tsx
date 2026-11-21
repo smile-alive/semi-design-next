@@ -1,9 +1,9 @@
 import { Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/components/float-button/constants';
+import { cssClasses, cssClassesGroup, type FloatButtonGroupPart } from '@fibrae/semi-foundation/components/float-button/constants';
 import '@fibrae/semi-foundation/components/float-button/float-button.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
-import { callHandler } from '../../utils/index';
+import { callHandler, mergeStyles } from '../../utils/index';
 import Badge from '../badge';
 import Action from './action';
 import type { FloatButtonProps } from './interface';
@@ -11,7 +11,10 @@ import type { FloatButtonProps } from './interface';
 const prefixCls = cssClassesGroup.PREFIX;
 const buttonPrefixCls = cssClasses.PREFIX;
 
-export interface FloatButtonGroupItem extends FloatButtonProps {
+type Style = JSX.CSSProperties | string;
+
+// An item has no body element, so the button's parts do not apply
+export interface FloatButtonGroupItem extends Omit<FloatButtonProps, 'classNames' | 'styles'> {
     value?: string;
     content?: JSX.Element;
     /** Accessible name, required when the item shows only an icon */
@@ -19,8 +22,10 @@ export interface FloatButtonGroupItem extends FloatButtonProps {
 }
 
 export interface FloatButtonGroupProps extends ElementProps<'div', 'onClick' | 'children'> {
+    classNames?: Partial<Record<FloatButtonGroupPart, string>>;
     disabled?: boolean;
     items: FloatButtonGroupItem[];
+    styles?: Partial<Record<FloatButtonGroupPart, Style>>;
     /** `value` is the clicked item's, which is optional */
     onClick?: (value: string | undefined, event: MouseEvent) => void;
 }
@@ -28,12 +33,14 @@ export interface FloatButtonGroupProps extends ElementProps<'div', 'onClick' | '
 const defaultProps = {} satisfies Partial<FloatButtonGroupProps>;
 
 interface GroupItemProps extends FloatButtonGroupItem {
+    groupClassNames?: FloatButtonGroupProps['classNames'];
+    groupStyles?: FloatButtonGroupProps['styles'];
     groupDisabled?: boolean;
     onGroupClick?: FloatButtonGroupProps['onClick'];
 }
 
 function GroupItem(props: GroupItemProps) {
-    const [local, rest] = splitProps(props, ['value', 'content', 'icon', 'badge', 'shape', 'size', 'colorful', 'class', 'disabled', 'onClick', 'groupDisabled', 'onGroupClick']);
+    const [local, rest] = splitProps(props, ['value', 'content', 'icon', 'badge', 'shape', 'size', 'colorful', 'class', 'style', 'disabled', 'onClick', 'groupClassNames', 'groupStyles', 'groupDisabled', 'onGroupClick']);
 
     const disabled = () => local.groupDisabled || local.disabled;
 
@@ -47,12 +54,13 @@ function GroupItem(props: GroupItemProps) {
             {...rest}
             disabled={disabled()}
             data-value={local.value}
-            class={clsx(`${prefixCls}-item`, local.class, {
+            class={clsx(`${prefixCls}-item`, local.groupClassNames?.item, local.class, {
                 [`${buttonPrefixCls}-${local.shape}`]: local.shape,
                 [`${buttonPrefixCls}-${local.size}`]: local.size,
                 [`${buttonPrefixCls}-colorful`]: local.colorful,
                 [`${prefixCls}-item-disabled`]: disabled(),
             })}
+            style={mergeStyles(local.groupStyles?.item, local.style)}
             onClick={handleClick}
         >
             {local.icon}
@@ -69,7 +77,7 @@ function GroupItem(props: GroupItemProps) {
 
 export default function FloatButtonGroup(rawProps: FloatButtonGroupProps) {
     const props = useDefaultProps('FloatButtonGroup', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['class', 'disabled', 'items', 'onClick']);
+    const [local, rest] = splitProps(props, ['class', 'classNames', 'disabled', 'items', 'onClick', 'styles']);
 
     return (
         <div
@@ -79,7 +87,7 @@ export default function FloatButtonGroup(rawProps: FloatButtonGroupProps) {
                 [`${prefixCls}-disabled`]: local.disabled,
             })}
         >
-            <Index each={local.items}>{(item) => <GroupItem {...item()} groupDisabled={local.disabled} onGroupClick={local.onClick} />}</Index>
+            <Index each={local.items}>{(item) => <GroupItem {...item()} groupClassNames={local.classNames} groupStyles={local.styles} groupDisabled={local.disabled} onGroupClick={local.onClick} />}</Index>
         </div>
     );
 }

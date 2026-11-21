@@ -1,5 +1,5 @@
-import type { AnchorHTMLAttributes, Component, StyleValue, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/components/typography/constants';
+import type { AnchorHTMLAttributes, ClassValue, Component, StyleValue, VNode } from 'vue';
+import type { strings, TypographyNumeralPart, TypographyParagraphPart, TypographyTextPart, TypographyTitlePart } from '@fibrae/semi-foundation/components/typography/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { PopoverProps } from '../popover/interface';
 import type { TooltipProps } from '../tooltip/interface';
@@ -63,6 +63,8 @@ export interface TypographyCommonProps {
 }
 
 export interface TypographyTextProps extends TypographyCommonProps {
+    classNames?: Partial<Record<TypographyTextPart, ClassValue>>;
+    styles?: Partial<Record<TypographyTextPart, StyleValue>>;
     code?: boolean;
     ellipsis?: Ellipsis | boolean;
     size?: TypographyBaseSize;
@@ -70,18 +72,24 @@ export interface TypographyTextProps extends TypographyCommonProps {
 }
 
 export interface TypographyTitleProps extends TypographyCommonProps {
+    classNames?: Partial<Record<TypographyTitlePart, ClassValue>>;
+    styles?: Partial<Record<TypographyTitlePart, StyleValue>>;
     ellipsis?: Ellipsis | boolean;
     heading?: ArrayElement<typeof strings.HEADING>;
     weight?: ArrayElement<typeof strings.WEIGHT> | number;
 }
 
 export interface TypographyParagraphProps extends TypographyCommonProps {
+    classNames?: Partial<Record<TypographyParagraphPart, ClassValue>>;
+    styles?: Partial<Record<TypographyParagraphPart, StyleValue>>;
     ellipsis?: Ellipsis | boolean;
     size?: TypographyBaseSize;
     spacing?: TypographyBaseSpacing;
 }
 
 export interface TypographyNumeralProps extends TypographyCommonProps {
+    classNames?: Partial<Record<TypographyNumeralPart, ClassValue>>;
+    styles?: Partial<Record<TypographyNumeralPart, StyleValue>>;
     code?: boolean;
     parser?: (value: string) => string;
     precision?: number;

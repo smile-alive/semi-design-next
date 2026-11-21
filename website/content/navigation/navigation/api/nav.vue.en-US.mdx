@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| classNames | Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"body\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Nav", "classNames")` |
+| classNames | Class names of the inner parts, keyed by `body`, `list`, `item`, `itemIcon`, `itemText`, `itemToggleIcon`, `subNav`, `subNavTitle`, `subNavList` and `subNavDropdown`; merged with the built-in classes. The `item*` keys apply to every item, and `itemIcon`, `itemText` and `itemToggleIcon` also to the title of a sub nav; the `subNav*` keys apply to every sub nav. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Nav", "classNames")` |
 | defaultIsCollapsed | Whether the navigation is collapsed initially. Applies only when mode is vertical. | `boolean` | `semiGlobalDefault("Nav", "defaultIsCollapsed")` |
 | defaultOpenKeys | itemKeys of the sub navigations open initially. Applies only when mode is vertical and the sidebar is expanded. | `ItemKey[]` | `semiGlobalDefault("Nav", "defaultOpenKeys")` |
 | defaultSelectedKeys | itemKeys of the items selected initially. | `ItemKey[]` | `semiGlobalDefault("Nav", "defaultSelectedKeys")` |
@@ -16,7 +16,7 @@ import ApiType from '#/components/ApiType.astro';
 | mode | Orientation of the navigation: vertical or horizontal. | `Mode` | `"vertical"` |
 | openKeys | Controlled itemKeys of the open sub navigations. Use it with v-model:openKeys. Applies only when mode is vertical and the sidebar is expanded; null is a controlled empty value. | `ItemKey[] \| null` | `semiGlobalDefault("Nav", "openKeys")` |
 | selectedKeys | Controlled itemKeys of the selected items. Use it with v-model:selectedKeys; null is a controlled empty value. | `ItemKey[] \| null` | `semiGlobalDefault("Nav", "selectedKeys")` |
-| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003c\"body\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Nav", "styles")` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Nav", "styles")` |
 | subDropdownProps | Dropdown props for the sub navigations generated from items, used in horizontal mode or when the vertical navigation is collapsed. | `SubDropdownProps` | `semiGlobalDefault("Nav", "subDropdownProps")` |
 | subNavCloseDelay | Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or horizontal. | `number` | `numbers.DEFAULT_SUBNAV_CLOSE_DELAY` |
 | subNavMotion | Whether the sub navigation animates when it expands and collapses. | `boolean` | `true` |

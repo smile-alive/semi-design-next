@@ -24,7 +24,8 @@ export interface PopconfirmProps extends PopoverProps {
     cancelButtonProps?: ButtonProps;
     cancelType?: ButtonType;
     classNames?: Partial<Record<PopconfirmPart, string>>;
-    styles?: PopoverProps['styles'];
+    /** `arrow` is the arrow color config of Popover, the other keys are inline styles */
+    styles?: Partial<Record<Exclude<PopconfirmPart, 'arrow'>, React.CSSProperties>> & Pick<NonNullable<PopoverProps['styles']>, 'arrow'>;
     defaultVisible?: boolean;
     disabled?: boolean;
     icon?: React.ReactNode;
@@ -127,7 +128,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
 
     const defaultPosition = direction === 'rtl' ? 'bottomRight' : 'bottomLeft';
 
-    const { className, disabled, children, style, position = defaultPosition, ...attrs } = props;
+    const { className, disabled, children, style, position = defaultPosition, classNames, styles, ...attrs } = props;
 
     // without a title the content already names the dialog
     const describedBy = props['aria-describedby'] || (showTitle && showContent ? contentId : undefined);
@@ -179,36 +180,39 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
                 foundation.handleFooterMounted();
             }
         };
-        const bodyCls = clsx({
-            [`${prefixCls}-body`]: true,
-            [`${prefixCls}-body-withIcon`]: hasIcon,
-        });
+        const bodyCls = clsx(
+            {
+                [`${prefixCls}-body`]: true,
+                [`${prefixCls}-body-withIcon`]: hasIcon,
+            },
+            classNames?.body
+        );
 
         return (
             // hides in-card clicks from document click listeners whatever stopPropagation says; Tooltip uses mousedown
             <div className={popCardCls} style={style} onClick={(e) => e.nativeEvent.stopImmediatePropagation()}>
                 <div className={`${prefixCls}-inner`}>
-                    <div className={`${prefixCls}-header`}>
+                    <div className={clsx(`${prefixCls}-header`, classNames?.header)} style={styles?.header}>
                         {hasIcon && (
-                            <i className={`${prefixCls}-header-icon`} x-semi-prop="icon">
+                            <i className={clsx(`${prefixCls}-header-icon`, classNames?.icon)} style={styles?.icon} x-semi-prop="icon">
                                 {icon}
                             </i>
                         )}
                         <div className={`${prefixCls}-header-body`}>
                             {showTitle && (
-                                <div id={titleId} className={`${prefixCls}-header-title`} x-semi-prop="title">
+                                <div id={titleId} className={clsx(`${prefixCls}-header-title`, classNames?.title)} style={styles?.title} x-semi-prop="title">
                                     {title}
                                 </div>
                             )}
                         </div>
-                        {showCloseIcon && <Button type={cancelType} className={`${prefixCls}-btn-close`} aria-label={locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={handleCancel} />}
+                        {showCloseIcon && <Button type={cancelType} className={clsx(`${prefixCls}-btn-close`, classNames?.close)} style={styles?.close} aria-label={locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={handleCancel} />}
                     </div>
                     {showContent && (
-                        <div id={contentId} className={bodyCls} x-semi-prop="content">
+                        <div id={contentId} className={bodyCls} style={styles?.body} x-semi-prop="content">
                             {typeof content === 'function' ? content({ initialFocusRef }) : content}
                         </div>
                     )}
-                    <div ref={setFooter} className={`${prefixCls}-footer`}>
+                    <div ref={setFooter} className={clsx(`${prefixCls}-footer`, classNames?.footer)} style={styles?.footer}>
                         {renderControls()}
                     </div>
                 </div>
@@ -222,6 +226,8 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
             // after attrs, which carries Popconfirm's ref
             ref={popoverRef}
             className={cssClasses.POPOVER}
+            classNames={{ content: classNames?.content, arrow: classNames?.arrow }}
+            styles={{ content: styles?.content, arrow: styles?.arrow }}
             aria-describedby={describedBy}
             aria-labelledby={labelledBy}
             content={renderConfirmPopCard}

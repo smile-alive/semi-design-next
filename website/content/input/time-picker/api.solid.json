@@ -65,8 +65,8 @@
                 "en-US": "Makes the input read-only, which avoids opening the virtual keyboard on mobile devices; the clear button stays usable."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `dropdown`（弹出层的面板卡片）、`input`（输入框的根元素），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `dropdown` (the panel card of the popup) and `input` (the root element of the input); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `dropdown`（弹出层的面板卡片）、`input`（输入框的根元素）、`header`（面板顶部的标题区）、`content`（放置各列的区域）、`item`（每一列里的单个时间选项）、`footer`（面板底部区域），与组件自带的类名合并。范围模式下左右两个面板都会应用。",
+                "en-US": "Class names of the inner parts, keyed by `dropdown` (the panel card of the popup), `input` (the root element of the input), `header` (the title area at the top of the panel), `content` (the area holding the columns), `item` (each time option in a column) and `footer` (the bottom area of the panel); merged with the built-in classes. In range mode both panels apply them."
             },
             "styles": {
                 "zh-CN": "内部各部位的内联样式，键同 `classNames`；样式对象的键使用 kebab-case 的 CSS 属性名，也可以写样式字符串。",

@@ -1,4 +1,4 @@
-import { For, Show } from 'solid-js';
+import { type JSX, For, Show } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { PresetPosition, PresetsType, PresetType } from '@fibrae/semi-foundation/components/date-picker/foundation';
@@ -10,6 +10,8 @@ import Text from '../typography/text';
 const prefixCls = cssClasses.PREFIX;
 
 export interface QuickControlProps {
+    class?: string;
+    style?: JSX.CSSProperties | string;
     presets?: PresetsType;
     presetPosition?: PresetPosition;
     onPresetClick?: (preset: PresetType, e: MouseEvent) => void;
@@ -40,7 +42,7 @@ export default function QuickControl(props: QuickControlProps) {
 
     return (
         <Show when={props.presets?.length}>
-            <div class={clsx(`${prefixCls}-quick-control`, base(), { [`${prefixCls}-quick-control-${props.type}`]: props.type })} x-insetinput={props.insetInput ? 'true' : 'false'}>
+            <div class={clsx(`${prefixCls}-quick-control`, base(), { [`${prefixCls}-quick-control-${props.type}`]: props.type }, props.class)} style={props.style} x-insetinput={props.insetInput ? 'true' : 'false'}>
                 <Show when={!isPanelTopAndBottom()}>
                     <div class={`${prefixCls}-quick-control-header`}>{props.locale.presets}</div>
                 </Show>

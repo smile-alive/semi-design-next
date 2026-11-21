@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | children | `NavItem` and `SubNav`, placed after the entries generated from items. | `Snippet` | - |
-| classNames | Class names of the inner parts, keyed by `body` (the navigation item list); merged with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, ClassValue>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `body`, `list`, `item`, `itemIcon`, `itemText`, `itemToggleIcon`, `subNav`, `subNavTitle`, `subNavList` and `subNavDropdown`; merged with the built-in classes. The `item*` keys apply to every item, and `itemIcon`, `itemText` and `itemToggleIcon` also to the title of a sub nav; the `subNav*` keys apply to every sub nav. | <ApiType detail={"Partial\u003cRecord\u003cNavPart, ClassValue>>"}>Type</ApiType> | - |
 | expandIcon | Expand arrow of a sub navigation generated from items. The parameter holds item, level, size and the class to put on the icon element. | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavExpandIconArgs]>"}>Type</ApiType> | - |
 | footer | Footer area: a config object (collapseButton, class, style, and `data-*` and `aria-*` attributes), or a snippet that holds a `NavFooter`. | `NavFooterConfig \| Snippet` | - |
 | header | Header area: a config object (text, link, linkOptions, logo, class, style, and `data-*` and `aria-*` attributes), or a snippet that holds a `NavHeader`. | `NavHeaderConfig \| Snippet` | - |

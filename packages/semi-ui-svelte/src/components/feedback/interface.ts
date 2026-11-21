@@ -32,7 +32,7 @@ export interface FeedbackContentSnippetProps {
 export interface FeedbackOwnProps {
     mode?: FeedbackMode;
     type?: FeedbackType;
-    /** Forwarded to the Modal or SideSheet of the current mode. */
+    /** All keys but `emoji` are forwarded to the Modal or SideSheet of the current mode. */
     classNames?: Partial<Record<FeedbackPart, ClassValue>>;
     styles?: Partial<Record<FeedbackPart, string>>;
     /** Bindable. The cancel paths (cancel button, close button, Escape, and for a modal the mask click) write `false`; the ok button never closes. */
@@ -90,6 +90,8 @@ export interface FeedbackContentProps extends Pick<FeedbackOwnProps, 'children' 
     textAreaProps?: FeedbackTextAreaProps;
     radioGroupProps?: FeedbackRadioGroupProps;
     checkboxGroupProps?: FeedbackCheckboxGroupProps;
+    emojiClass?: ClassValue;
+    emojiStyle?: string;
     onTextChange: (value: string, event: TextAreaChangeEvent) => void;
     onReasonChange: (value: string, event: TextAreaChangeEvent) => void;
     onEmojiChange: (emoji: string) => void;

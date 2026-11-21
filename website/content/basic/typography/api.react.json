@@ -2,6 +2,14 @@
     "typography-text": {
         "source": "packages/semi-ui-react/src/components/typography/text.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `icon`（图标容器）、`expand`（展开或收起按钮）、`copy`（复制按钮，外层 span 仍用 `copyable.className`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `icon` (icon container), `expand` (expand or collapse button) and `copy` (copy button; the wrapping span still takes `copyable.className`); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "children": {
                 "zh-CN": "文本内容；`copyable` 为 `true` 时复制的就是它，`ellipsis` 只能截断纯文本。",
                 "en-US": "Text content. With `copyable` set to `true`, this is what gets copied; `ellipsis` only truncates pure text."
@@ -47,6 +55,14 @@
     "typography-title": {
         "source": "packages/semi-ui-react/src/components/typography/title.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `expand`（展开或收起按钮）、`copy`（复制按钮，外层 span 仍用 `copyable.className`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `expand` (expand or collapse button) and `copy` (copy button; the wrapping span still takes `copyable.className`); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "component": {
                 "zh-CN": "根元素渲染的标签名或组件，默认与 `heading` 对应的 `h1` 到 `h6`。",
                 "en-US": "Tag name or component the root element renders as. Defaults to the `h1` to `h6` matching `heading`."
@@ -86,6 +102,14 @@
     "typography-paragraph": {
         "source": "packages/semi-ui-react/src/components/typography/paragraph.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `expand`（展开或收起按钮）、`copy`（复制按钮，外层 span 仍用 `copyable.className`），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `expand` (expand or collapse button) and `copy` (copy button; the wrapping span still takes `copyable.className`); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "component": {
                 "zh-CN": "根元素渲染的标签名或组件，默认 `p`。",
                 "en-US": "Tag name or component the root element renders as. Defaults to `p`."
@@ -128,6 +152,14 @@
     "typography-numeral": {
         "source": "packages/semi-ui-react/src/components/typography/numeral.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `icon`（图标容器），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `icon` (icon container); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "children": {
                 "zh-CN": "需要格式化的内容，递归遍历其中的文本，包括子元素内的数字。",
                 "en-US": "Content to format. Numbers are formatted in text at any depth, including inside child elements."

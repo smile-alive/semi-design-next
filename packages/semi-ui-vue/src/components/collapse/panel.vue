@@ -40,7 +40,7 @@
 
     const iconEnabled = (has: boolean) => has && !props.disabled;
 
-    const iconClass = (has: boolean) => [`${prefixCls}-header-icon`, { [`${prefixCls}-header-iconDisabled`]: !iconEnabled(has) }];
+    const iconClass = (has: boolean) => [`${prefixCls}-header-icon`, { [`${prefixCls}-header-iconDisabled`]: !iconEnabled(has) }, ctx.view.value.classNames?.itemIcon, props.classNames?.icon];
 
     const contentMounted = (hasBody: boolean) => {
         everOpened = CollapseFoundation.isEverOpened({ hasBody, active: active.value, everOpened });
@@ -60,10 +60,16 @@
 </script>
 
 <template>
-    <div :class="[`${prefixCls}-item`, { [`${prefixCls}-item-active`]: active }]">
+    <div :class="[`${prefixCls}-item`, { [`${prefixCls}-item-active`]: active }, ctx.view.value.classNames?.item]" :style="ctx.view.value.styles?.item">
         <template v-for="(has, hasIndex) in [hasContent()]" :key="hasIndex">
-            <div v-for="(right, rightIndex) in [hasRight()]" :key="rightIndex" :class="[`${prefixCls}-header`, { [`${prefixCls}-header-disabled`]: props.disabled, [`${prefixCls}-header-iconLeft`]: iconLeft }]" @click="handleHeaderClick">
-                <span v-if="props.showArrow && iconLeft" ref="leftIcon" aria-hidden="true" :class="iconClass(has)">
+            <div
+                v-for="(right, rightIndex) in [hasRight()]"
+                :key="rightIndex"
+                :class="[`${prefixCls}-header`, { [`${prefixCls}-header-disabled`]: props.disabled, [`${prefixCls}-header-iconLeft`]: iconLeft }, ctx.view.value.classNames?.itemHeader, props.classNames?.header]"
+                :style="[ctx.view.value.styles?.itemHeader, props.styles?.header]"
+                @click="handleHeaderClick"
+            >
+                <span v-if="props.showArrow && iconLeft" ref="leftIcon" aria-hidden="true" :class="iconClass(has)" :style="[ctx.view.value.styles?.itemIcon, props.styles?.icon]">
                     <template v-if="iconEnabled(has) && active">
                         <component :is="ctx.slots.collapseIcon" v-if="ctx.slots.collapseIcon" />
                         <IconChevronUp v-else />
@@ -76,17 +82,17 @@
                 <!-- APG Accordion: the button sits in a heading. role="heading" rather than h3, since host pages often
                     style h3 without a layer and those rules would beat Semi's layered styles. Level 3 as in Radix
                     Accordion, which assumes the accordion sits under the page's h1 and a section h2. -->
-                <div aria-level="3" :class="`${prefixCls}-header-title`" role="heading">
+                <div aria-level="3" :class="[`${prefixCls}-header-title`, ctx.view.value.classNames?.itemTitle, props.classNames?.title]" role="heading" :style="[ctx.view.value.styles?.itemTitle, props.styles?.title]">
                     <button :id="headerId" ref="button" :aria-controls="contentMounted(has) ? ariaId : undefined" :aria-expanded="active" :class="`${prefixCls}-header-button`" :disabled="props.disabled" type="button">
                         <slot name="header" />
                     </button>
                 </div>
                 <!-- extra stays outside the button so it may hold its own controls -->
                 <component :is="right ? 'span' : SlotFragment" :class="right ? `${prefixCls}-header-right` : undefined">
-                    <span v-if="right">
+                    <span v-if="right" :class="[`${prefixCls}-header-extra`, ctx.view.value.classNames?.itemExtra, props.classNames?.extra]" :style="[ctx.view.value.styles?.itemExtra, props.styles?.extra]">
                         <slot name="extra" />
                     </span>
-                    <span v-if="props.showArrow && !iconLeft" ref="rightIcon" aria-hidden="true" :class="iconClass(has)">
+                    <span v-if="props.showArrow && !iconLeft" ref="rightIcon" aria-hidden="true" :class="iconClass(has)" :style="[ctx.view.value.styles?.itemIcon, props.styles?.icon]">
                         <template v-if="iconEnabled(has) && active">
                             <component :is="ctx.slots.collapseIcon" v-if="ctx.slots.collapseIcon" />
                             <IconChevronUp v-else />
@@ -99,7 +105,7 @@
                 </component>
             </div>
             <Collapsible v-if="has" :isOpen="active" :keepDOM="ctx.view.value.keepDOM" :lazyRender="ctx.view.value.lazyRender" :motion="ctx.view.value.motion" @motionEnd="emit('motionEnd')">
-                <div :id="ariaId" :aria-labelledby="headerId" :class="`${prefixCls}-content`" :inert="active ? undefined : 'true'" role="region">
+                <div :id="ariaId" :aria-labelledby="headerId" :class="[`${prefixCls}-content`, ctx.view.value.classNames?.itemBody, props.classNames?.body]" :inert="active ? undefined : 'true'" role="region" :style="[ctx.view.value.styles?.itemBody, props.styles?.body]">
                     <div :class="`${prefixCls}-content-wrapper`">
                         <slot />
                     </div>

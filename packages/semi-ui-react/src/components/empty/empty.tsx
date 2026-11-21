@@ -77,8 +77,8 @@ export default function Empty(rawProps: EmptyProps) {
                     <Typography.Title
                         // a fixed heading level would break the page outline
                         component="div"
-                        className={`${prefixCls}-title`}
-                        style={imageNode ? undefined : { fontWeight: 400 }}
+                        className={clsx(`${prefixCls}-title`, classNames?.title)}
+                        style={imageNode ? styles?.title : { fontWeight: 400, ...styles?.title }}
                         heading={imageNode ? 4 : 6}
                         x-semi-prop="title"
                     >
@@ -86,12 +86,12 @@ export default function Empty(rawProps: EmptyProps) {
                     </Typography.Title>
                 )}
                 {hasContent(description) && (
-                    <div className={`${prefixCls}-description`} x-semi-prop="description">
+                    <div className={clsx(`${prefixCls}-description`, classNames?.description)} style={styles?.description} x-semi-prop="description">
                         {description}
                     </div>
                 )}
                 {hasContent(children) && (
-                    <div className={`${prefixCls}-footer`} x-semi-prop="children">
+                    <div className={clsx(`${prefixCls}-footer`, classNames?.footer)} style={styles?.footer} x-semi-prop="children">
                         {children}
                     </div>
                 )}

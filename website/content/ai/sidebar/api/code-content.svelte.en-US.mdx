@@ -2,11 +2,13 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property     | Description                                                                                                                                | Type                                                                                  | Default |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ------- |
-| activeKey    | Keys of the expanded code panels; bind it with `bind:activeKey`.                                                                           | `string \| string[]`                                                                  | -       |
-| codes        | The code entries, each with the CodeItem props and a key identifying its panel.                                                            | `CodeItemData[]`                                                                      | `[]`    |
-| customRender | Forwarded to the customRender snippet of the JsonViewer in every JSON panel.                                                               | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType>         | -       |
-| onChange     | Called when a panel opens or closes through its arrow, with the expanded keys.                                                             | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>        | -       |
-| onExpand     | Called when the expand button beside a panel header is clicked, with the event, its entry and code. Without it the button is not rendered. | <ApiType detail={"(event: MouseEvent, item: T, mode: string) => void"}>Type</ApiType> | -       |
-| searchButton | Forwarded to the searchButton snippet of the JsonViewer in every JSON panel, replacing its search button.                                  | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType>         | -       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | Keys of the expanded code panels; bind it with `bind:activeKey`. | `string \| string[]` | - |
+| classNames | Class names of the inner parts, keyed by itemHeader and itemExpand; they apply to every code panel and merge with the built-in classes. Values take the same forms as class (string, array or object). | <ApiType detail={"Partial\u003cRecord\u003cSidebarCodeContentPart, ClassValue>>"}>Type</ApiType> | - |
+| codes | The code entries, each with the CodeItem props and a key identifying its panel. | `CodeItemData[]` | `[]` |
+| customRender | Forwarded to the customRender snippet of the JsonViewer in every JSON panel. | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType> | - |
+| onChange | Called when a panel opens or closes through its arrow, with the expanded keys. | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onExpand | Called when the expand button beside a panel header is clicked, with the event, its entry and code. Without it the button is not rendered. | <ApiType detail={"(event: MouseEvent, item: T, mode: string) => void"}>Type</ApiType> | - |
+| searchButton | Forwarded to the searchButton snippet of the JsonViewer in every JSON panel, replacing its search button. | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType> | - |
+| styles | Style strings of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cSidebarCodeContentPart, string>>"}>Type</ApiType> | - |

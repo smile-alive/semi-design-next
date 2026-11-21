@@ -1,7 +1,7 @@
 import type { ComputedRef } from 'vue';
 import type ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
 import { createContext } from '../../base/index';
-import type { ColorFormat, ColorValue } from './interface';
+import type { ColorFormat, ColorPickerClassNames, ColorPickerStyles, ColorValue } from './interface';
 
 export interface ColorPickerView {
     currentColor: ColorValue;
@@ -10,6 +10,8 @@ export interface ColorPickerView {
     defaultFormat: ColorFormat;
     width: number;
     height: number;
+    classNames?: ColorPickerClassNames;
+    styles?: ColorPickerStyles;
 }
 
 export interface ColorPickerContextValue {

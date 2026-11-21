@@ -50,7 +50,7 @@ export type MessageStatus = (typeof MESSAGE_STATUS)[keyof typeof MESSAGE_STATUS]
 export type SendHotKey = (typeof SEND_HOT_KEY)[keyof typeof SEND_HOT_KEY];
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type ChatPart = 'hint' | 'inputBox';
+export type ChatPart = 'messages' | 'dropArea' | 'item' | 'itemAvatar' | 'itemTitle' | 'itemContent' | 'itemActions' | 'divider' | 'hint' | 'hintItem' | 'backBottom' | 'stop' | 'inputBox' | 'input' | 'send';
 
 export const strings = {
     ROLE,

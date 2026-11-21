@@ -20,6 +20,8 @@
     // name and autofocus reach the inner input, which the div's attributes do not cover
     const props = withDefaults(defineProps<SwitchProps & /* @vue-ignore */ ElementProps<'div', keyof SwitchProps | EmitHandlers<SwitchEmits>> & /* @vue-ignore */ Pick<InputHTMLAttributes, 'name' | 'autofocus'>>(), {
         modelValue: undefined,
+        classNames: semiGlobalDefault('Switch', 'classNames'),
+        styles: semiGlobalDefault('Switch', 'styles'),
         defaultChecked: semiGlobalDefault('Switch', 'defaultChecked'),
         disabled: () => semiDefault('Switch', 'disabled', false),
         loading: () => semiDefault('Switch', 'loading', false),
@@ -66,12 +68,12 @@
             },
         ]"
     >
-        <Spin v-if="props.loading" :class="cssClasses.LOADING_SPIN" :size="props.size === 'default' ? 'middle' : props.size" />
-        <div v-else aria-hidden="true" :class="cssClasses.KNOB" />
-        <div v-if="$slots.checkedText && checked && props.size !== 'small'" :class="cssClasses.CHECKED_TEXT" x-semi-prop="checkedText">
+        <Spin v-if="props.loading" :class="[cssClasses.LOADING_SPIN, props.classNames?.indicator]" :size="props.size === 'default' ? 'middle' : props.size" :style="props.styles?.indicator" />
+        <div v-else aria-hidden="true" :class="[cssClasses.KNOB, props.classNames?.indicator]" :style="props.styles?.indicator" />
+        <div v-if="$slots.checkedText && checked && props.size !== 'small'" :class="[cssClasses.CHECKED_TEXT, props.classNames?.content]" :style="props.styles?.content" x-semi-prop="checkedText">
             <slot name="checkedText" />
         </div>
-        <div v-if="$slots.uncheckedText && !checked && props.size !== 'small'" :class="cssClasses.UNCHECKED_TEXT" x-semi-prop="uncheckedText">
+        <div v-if="$slots.uncheckedText && !checked && props.size !== 'small'" :class="[cssClasses.UNCHECKED_TEXT, props.classNames?.content]" :style="props.styles?.content" x-semi-prop="uncheckedText">
             <slot name="uncheckedText" />
         </div>
         <input v-autofocus="hasAutofocus($attrs)" v-bind="splitControlAttrs($attrs, isNativeInputKey).control" :aria-disabled="props.loading || undefined" :checked="checked" :class="cssClasses.NATIVE_CONTROL" :disabled="props.disabled" role="switch" type="checkbox" @change="handleChange" />

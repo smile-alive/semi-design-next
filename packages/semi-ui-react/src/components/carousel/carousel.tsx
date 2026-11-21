@@ -44,7 +44,7 @@ function getSlides(children: React.ReactNode) {
 
 export default function Carousel(rawProps: CarouselProps) {
     const props = useDefaultProps('Carousel', rawProps, defaultProps);
-    const { ref, activeIndex: activeIndexProp, animation, arrowProps, autoPlay, arrowType, children, className, defaultActiveIndex, indicatorPosition, indicatorSize, theme, indicatorType, onChange, showArrow, showIndicator, slideDirection, speed, style, trigger, ...rest } = props;
+    const { ref, activeIndex: activeIndexProp, animation, arrowProps, autoPlay, arrowType, children, className, classNames, defaultActiveIndex, indicatorPosition, indicatorSize, theme, indicatorType, onChange, showArrow, showIndicator, slideDirection, speed, style, styles, trigger, ...rest } = props;
 
     const { direction } = useConfigContext();
     const { locale } = useLocale('Carousel');
@@ -122,9 +122,15 @@ export default function Carousel(rawProps: CarouselProps) {
             }}
         >
             <div
-                className={clsx(`${cssClasses.CAROUSEL_CONTENT}-${animation}`, cssClasses.CAROUSEL_CONTENT, {
-                    [`${cssClasses.CAROUSEL_CONTENT}-reverse`]: slideDirection === 'left' ? isReverse : !isReverse,
-                })}
+                className={clsx(
+                    `${cssClasses.CAROUSEL_CONTENT}-${animation}`,
+                    cssClasses.CAROUSEL_CONTENT,
+                    {
+                        [`${cssClasses.CAROUSEL_CONTENT}-reverse`]: slideDirection === 'left' ? isReverse : !isReverse,
+                    },
+                    classNames?.content
+                )}
+                style={styles?.content}
                 // announce a slide the user switched to, never one that rotation brought
                 aria-live={rotating ? 'off' : 'polite'}
                 x-semi-prop="children"
@@ -161,6 +167,8 @@ export default function Carousel(rawProps: CarouselProps) {
                     <CarouselIndicator
                         ref={tablistRef}
                         type={indicatorType}
+                        classNames={classNames}
+                        styles={styles}
                         activeIndex={activeIndex}
                         getSlideId={getSlideId}
                         getTabId={getTabId}
@@ -175,7 +183,7 @@ export default function Carousel(rawProps: CarouselProps) {
                     />
                 </div>
             )}
-            {showArrow && total > 1 && <CarouselArrow type={arrowType} arrowProps={arrowProps} next={foundation.next} prev={foundation.prev} theme={theme} />}
+            {showArrow && total > 1 && <CarouselArrow type={arrowType} classNames={classNames} styles={styles} arrowProps={arrowProps} next={foundation.next} prev={foundation.prev} theme={theme} />}
         </div>
     );
 }

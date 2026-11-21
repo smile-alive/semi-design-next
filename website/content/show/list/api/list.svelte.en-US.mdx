@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | bordered | Whether to show a border. | `boolean` | `false` |
 | children | ListItem children, written inside the tag and rendered after the items of dataSource. | `Snippet` | - |
+| classNames | Class names of the inner parts, keyed by `header`, `footer`, `empty`, `item`, `itemHeader`, `itemMain` and `itemExtra`; merged with the built-in classes. `item` lands on every `li`; the `item*` keys apply to every ListItem, before the item's own classNames. | <ApiType detail={"Partial\u003cRecord\u003cListPart, ClassValue>>"}>Type</ApiType> | - |
 | dataSource | Data source of the list; each entry is rendered through the item snippet. | `T[]` | - |
 | emptyContent | Snippet for the content shown when there is no data; the locale's empty text by default. A list with content inside its tag (children) is never empty. | `Snippet` | - |
 | footer | Snippet for the list footer. | `Snippet` | - |
@@ -19,3 +20,4 @@ import ApiType from '#/components/ApiType.astro';
 | onRightClick | Context-menu handler for the items that have no onRightClick of their own; those items also render a native button. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
 | size | List size: small, default or large. | `Size` | `"default"` |
 | split | Whether to show dividers between items. | `boolean` | `true` |
+| styles | Inline styles of the inner parts, keyed like `classNames`; the values are CSS text. | <ApiType detail={"Partial\u003cRecord\u003cListPart, string>>"}>Type</ApiType> | - |

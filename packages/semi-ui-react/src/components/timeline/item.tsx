@@ -1,9 +1,10 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
+import { cssClasses, type TimelineItemPart } from '@fibrae/semi-foundation/components/timeline/constants';
 import '@fibrae/semi-foundation/components/timeline/timeline.scss';
 import type { ElementProps } from '../../base/index';
+import { useTimelineContext } from './context';
 
 export interface TimelineItemProps extends ElementProps<'li', 'content'> {
     color?: string;
@@ -15,6 +16,9 @@ export interface TimelineItemProps extends ElementProps<'li', 'content'> {
     position?: 'left' | 'right';
     className?: string;
     style?: React.CSSProperties;
+    /** Applied after the `item*` classNames of the parent Timeline */
+    classNames?: Partial<Record<TimelineItemPart, string>>;
+    styles?: Partial<Record<TimelineItemPart, React.CSSProperties>>;
     /** Attached to the li */
     ref?: React.Ref<HTMLLIElement>;
 }
@@ -25,12 +29,15 @@ const prefixCls = cssClasses.ITEM;
 const extraClicks = new WeakMap<Event, Element | null>();
 
 // Timeline reads position from the element to pick the item's side
-function Item({ ref, className, color, children, dot, type = 'default', time = '', extra, position, onClick, ...rest }: TimelineItemProps) {
+function Item({ ref, className, style, color, children, dot, type = 'default', time = '', extra, position, onClick, classNames, styles, ...rest }: TimelineItemProps) {
+    const { classNames: parentClassNames, styles: parentStyles } = useTimelineContext();
+
     return (
         <li
             {...rest}
             ref={ref}
-            className={clsx(prefixCls, className)}
+            className={clsx(prefixCls, parentClassNames?.item, className)}
+            style={{ ...parentStyles?.item, ...style }}
             onClick={
                 onClick &&
                 ((e) => {
@@ -42,18 +49,23 @@ function Item({ ref, className, color, children, dot, type = 'default', time = '
                 })
             }
         >
-            <div className={`${prefixCls}-tail`} aria-hidden />
+            <div className={clsx(`${prefixCls}-tail`, parentClassNames?.itemRail, classNames?.rail)} style={{ ...parentStyles?.itemRail, ...styles?.rail }} aria-hidden />
             <div
-                className={clsx(`${prefixCls}-head`, {
-                    [`${prefixCls}-head-custom`]: dot,
-                    [`${prefixCls}-head-${type}`]: type,
-                })}
-                style={color ? { backgroundColor: color } : undefined}
+                className={clsx(
+                    `${prefixCls}-head`,
+                    {
+                        [`${prefixCls}-head-custom`]: dot,
+                        [`${prefixCls}-head-${type}`]: type,
+                    },
+                    parentClassNames?.itemIcon,
+                    classNames?.icon
+                )}
+                style={{ ...(color && { backgroundColor: color }), ...parentStyles?.itemIcon, ...styles?.icon }}
                 aria-hidden
             >
                 {dot}
             </div>
-            <div className={`${prefixCls}-content`}>
+            <div className={clsx(`${prefixCls}-content`, parentClassNames?.itemContent, classNames?.content)} style={{ ...parentStyles?.itemContent, ...styles?.content }}>
                 {onClick ? (
                     // The li stays a plain list item; only a clickable item exposes its children as the keyboard
                     // target, so extra and time are not nested inside the button. The synthetic click bubbles to the
@@ -75,11 +87,15 @@ function Item({ ref, className, color, children, dot, type = 'default', time = '
                     children
                 )}
                 {(extra || extra === 0) && (
-                    <div className={`${prefixCls}-content-extra`} onClick={(e) => extraClicks.set(e.nativeEvent, e.currentTarget.closest('li'))}>
+                    <div className={clsx(`${prefixCls}-content-extra`, parentClassNames?.itemExtra, classNames?.extra)} style={{ ...parentStyles?.itemExtra, ...styles?.extra }} onClick={(e) => extraClicks.set(e.nativeEvent, e.currentTarget.closest('li'))}>
                         {extra}
                     </div>
                 )}
-                {(time || time === 0) && <div className={`${prefixCls}-content-time`}>{time}</div>}
+                {(time || time === 0) && (
+                    <div className={clsx(`${prefixCls}-content-time`, parentClassNames?.itemTime, classNames?.time)} style={{ ...parentStyles?.itemTime, ...styles?.time }}>
+                        {time}
+                    </div>
+                )}
             </div>
         </li>
     );

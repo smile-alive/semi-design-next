@@ -155,7 +155,6 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const editorId = `${prefixCls}-editor-${popupId}`;
     const skillListId = `${prefixCls}-skill-${popupId}`;
     const suggestionListId = `${prefixCls}-suggestion-${popupId}`;
-    const actionCls = `${prefixCls}-footer-action`;
 
     // a consumer spreading a signal object notifies every prop on any change, which must not redraw these nodes
     const uploadTipProps = createMemo(() => local.uploadTipProps);
@@ -204,6 +203,8 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
 
     const transformedContent = createMemo(() => AIChatInputFoundation.getTransformedContent(state().content, local.transformer));
 
+    const actionCls = () => clsx(`${prefixCls}-footer-action`, local.classNames?.actions);
+
     const openFileDialog = () => upload?.openFileDialog();
 
     const attachments = () => state().attachments ?? [];
@@ -235,11 +236,16 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const sendNode = () => (
         <button
             type="button"
-            class={clsx(`${prefixCls}-footer-action-button`, {
-                [`${prefixCls}-footer-action-send`]: !local.generating,
-                [`${prefixCls}-footer-action-stop`]: local.generating,
-                [`${prefixCls}-footer-action-send-disabled`]: !local.generating && !sendEnabled(),
-            })}
+            class={clsx(
+                `${prefixCls}-footer-action-button`,
+                {
+                    [`${prefixCls}-footer-action-send`]: !local.generating,
+                    [`${prefixCls}-footer-action-stop`]: local.generating,
+                    [`${prefixCls}-footer-action-send-disabled`]: !local.generating && !sendEnabled(),
+                },
+                local.classNames?.send
+            )}
+            style={local.styles?.send}
             // not disabled: keeps focus, and handleSend already ignores the click
             aria-disabled={!local.generating && !sendEnabled() ? 'true' : undefined}
             aria-label={local.generating ? locale().locale.stop : locale().locale.send}
@@ -259,7 +265,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         // focusable so the upload tip reaches the keyboard
         useAddAreaControl();
         return (
-            <button {...own} type="button" class={`${prefixCls}-footer-action-button ${prefixCls}-footer-action-upload`} aria-disabled={local.uploadProps?.disabled ? 'true' : undefined} aria-label={locale().locale.upload}>
+            <button {...own} type="button" class={clsx(`${prefixCls}-footer-action-button`, `${prefixCls}-footer-action-upload`, local.classNames?.upload)} style={local.styles?.upload} aria-disabled={local.uploadProps?.disabled ? 'true' : undefined} aria-label={locale().locale.upload}>
                 <IconPaperclip />
             </button>
         );
@@ -307,7 +313,12 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     );
 
     // thunks: a node the custom action area leaves out would be created uninserted, which shifts hydration keys
-    const actionAreaProps: ActionAreaProps = { menuItem: [uploadNode, sendNode], class: actionCls };
+    const actionAreaProps: ActionAreaProps = {
+        menuItem: [uploadNode, sendNode],
+        get class() {
+            return actionCls();
+        },
+    };
 
     const templateNode = () => {
         const render = renderTemplate();
@@ -323,21 +334,40 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                 </div>
             </Match>
             <Match when={state().skillVisible}>
-                <div ref={(element) => (skillPanel = element)} id={skillListId} class={`${prefixCls}-skill`} style={{ 'max-height': `${numbers.SKILL_MAX_HEIGHT}px` }} aria-labelledby={editorId} role="listbox">
+                <div ref={(element) => (skillPanel = element)} id={skillListId} class={clsx(`${prefixCls}-skill`, local.classNames?.skills)} style={{ 'max-height': `${numbers.SKILL_MAX_HEIGHT}px`, ...local.styles?.skills }} aria-labelledby={editorId} role="listbox">
                     {/* value is optional and may repeat, so rows follow the position */}
                     <Index each={local.skills}>
                         {(item, index) => (
-                            <SkillItem id={getOptionId(skillListId, index)} active={state().activeSkillIndex === index} skill={item()} renderSkillIcon={local.renderSkillIcon} renderSkillItem={local.renderSkillItem} onClick={foundation.handleSkillSelect} onMouseEnter={() => foundation.setActiveSkillIndex(index)} />
+                            <SkillItem
+                                id={getOptionId(skillListId, index)}
+                                active={state().activeSkillIndex === index}
+                                skill={item()}
+                                renderSkillIcon={local.renderSkillIcon}
+                                renderSkillItem={local.renderSkillItem}
+                                partClass={local.classNames?.skillItem}
+                                partStyle={local.styles?.skillItem}
+                                onClick={foundation.handleSkillSelect}
+                                onMouseEnter={() => foundation.setActiveSkillIndex(index)}
+                            />
                         )}
                     </Index>
                 </div>
             </Match>
             <Match when={state().suggestionVisible}>
-                <div ref={(element) => (suggestionPanel = element)} id={suggestionListId} class={`${prefixCls}-suggestion`} style={{ 'max-height': `${numbers.SUGGESTION_MAX_HEIGHT}px` }} aria-labelledby={editorId} role="listbox">
+                <div ref={(element) => (suggestionPanel = element)} id={suggestionListId} class={clsx(`${prefixCls}-suggestion`, local.classNames?.suggestions)} style={{ 'max-height': `${numbers.SUGGESTION_MAX_HEIGHT}px`, ...local.styles?.suggestions }} aria-labelledby={editorId} role="listbox">
                     {/* suggestions may repeat and carry no id, so rows follow the position */}
                     <Index each={local.suggestions}>
                         {(item, index) => (
-                            <SuggestionItem id={getOptionId(suggestionListId, index)} active={state().activeSuggestionIndex === index} suggestion={item()} renderSuggestionItem={local.renderSuggestionItem} onClick={foundation.handleSuggestionSelect} onMouseEnter={() => foundation.setActiveSuggestionIndex(index)} />
+                            <SuggestionItem
+                                id={getOptionId(suggestionListId, index)}
+                                active={state().activeSuggestionIndex === index}
+                                suggestion={item()}
+                                renderSuggestionItem={local.renderSuggestionItem}
+                                partClass={local.classNames?.suggestionItem}
+                                partStyle={local.styles?.suggestionItem}
+                                onClick={foundation.handleSuggestionSelect}
+                                onMouseEnter={() => foundation.setActiveSuggestionIndex(index)}
+                            />
                         )}
                     </Index>
                 </div>
@@ -352,7 +382,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                 when={local.renderReference}
                 keyed
                 fallback={
-                    <div class={`${prefixCls}-reference`}>
+                    <div class={clsx(`${prefixCls}-reference`, local.classNames?.reference)} style={local.styles?.reference}>
                         <IconSendMsgStroked />
                         <button type="button" class={`${prefixCls}-reference-content`} onClick={() => foundation.handleReferenceClick(item)}>
                             <Show when={item.type !== 'text'}>
@@ -389,7 +419,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         const realType = () => getAttachmentType(item());
         const signIconType = () => getContentType(realType());
         return (
-            <div class={`${prefixCls}-attachment`}>
+            <div class={clsx(`${prefixCls}-attachment`, local.classNames?.attachment)} style={local.styles?.attachment}>
                 <Show when={isImageFile(item().name, item().fileInstance?.type)} fallback={<span class={`${prefixCls}-attachment-icon ${prefixCls}-ref-icon ${prefixCls}-ref-icon-${signIconType()}`}>{getIconByType(signIconType(), 'large')}</span>}>
                     <img class={`${prefixCls}-attachment-img`} alt="" src={item().url} />
                 </Show>
@@ -448,19 +478,21 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                 <div {...(getTriggerProps(rootOwn) as JSX.HTMLAttributes<HTMLDivElement>)}>
                     <Show when={local.topSlotPosition === 'top'}>{topSlot()}</Show>
                     <Show when={local.showReference && local.references?.length}>
-                        <div class={`${prefixCls}-references`}>
+                        <div class={clsx(`${prefixCls}-references`, local.classNames?.references)} style={local.styles?.references}>
                             <For each={local.references}>{renderReference}</For>
                         </div>
                     </Show>
                     <Show when={local.topSlotPosition === 'middle'}>{topSlot()}</Show>
                     <Show when={local.showUploadFile && attachments().length}>
-                        <HorizontalScroller prefix={prefixCls}>
+                        <HorizontalScroller prefix={prefixCls} class={clsx(`${prefixCls}-attachments`, local.classNames?.attachments)} style={local.styles?.attachments}>
                             <For each={attachmentUids()}>{renderAttachment}</For>
                         </HorizontalScroller>
                     </Show>
                     <Show when={local.topSlotPosition === 'bottom'}>{topSlot()}</Show>
                     <RichTextInput
                         id={editorId}
+                        class={local.classNames?.editor}
+                        style={local.styles?.editor}
                         placeholder={local.placeholder}
                         activeDescendant={listbox()?.activeId}
                         controls={listbox()?.id}
@@ -479,8 +511,8 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                         onPasteFiles={foundation.handlePaste}
                         onPaste={(e) => local.onPaste?.(e)}
                     />
-                    <div class={clsx(`${prefixCls}-footer`, { [`${prefixCls}-footer-round`]: local.round })}>
-                        <div class={cssClasses.FOOTER_CONFIGURE}>
+                    <div class={clsx(`${prefixCls}-footer`, { [`${prefixCls}-footer-round`]: local.round }, local.classNames?.footer)} style={local.styles?.footer}>
+                        <div class={clsx(cssClasses.FOOTER_CONFIGURE, local.classNames?.configure)} style={local.styles?.configure}>
                             <Configure ref={(instance) => (configure = instance)} onChange={foundation.onConfigureChange}>
                                 <Show when={local.renderConfigureArea} keyed>
                                     {(render) => render()}
@@ -506,7 +538,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                             when={local.renderActionArea}
                             keyed
                             fallback={
-                                <div class={actionCls}>
+                                <div class={actionCls()} style={local.styles?.actions}>
                                     {uploadNode()}
                                     {sendNode()}
                                 </div>

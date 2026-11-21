@@ -38,7 +38,7 @@ export interface FeedbackProps {
     mode?: FeedbackMode;
     type?: FeedbackType;
     visible?: boolean;
-    /** Forwarded to the Modal or SideSheet of the current mode. */
+    /** All keys but `emoji` are forwarded to the Modal or SideSheet of the current mode. */
     classNames?: Partial<Record<FeedbackPart, ClassValue>>;
     styles?: Partial<Record<FeedbackPart, StyleValue>>;
     /** Plain-text title; the `#title` slot wins. Declared so `title="x"` is not a native tooltip. */
@@ -121,6 +121,8 @@ export interface FeedbackContentProps {
     textAreaProps?: FeedbackTextAreaProps;
     radioGroupProps?: FeedbackRadioGroupProps;
     checkboxGroupProps?: FeedbackCheckboxGroupProps;
+    emojiClass?: ClassValue;
+    emojiStyle?: StyleValue;
 }
 
 export interface FeedbackContentEmits {

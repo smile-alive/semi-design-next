@@ -108,7 +108,7 @@
 {/snippet}
 
 {#snippet moreButton({ props }: { props: DropdownTriggerProps })}
-    <button {...props} class={[`${prefix}-more-trigger`, `${prefix}-more-trigger-${type}`, props.class]} type="button">
+    <button {...props} class={[`${prefix}-more-trigger`, `${prefix}-more-trigger-${type}`, props.class, classNames?.more]} style={styles?.more} type="button">
         <span class="{prefix}-more-trigger-content">
             <span>{locale().locale.more}</span>
             <IconChevronDown class="{prefix}-more-trigger-content-icon" />
@@ -140,7 +140,7 @@
 
 {#snippet arrowOf(items: OverflowItem[], position: 'start' | 'end')}
     {#snippet defaultArrow()}
-        <TabBarArrow dropdownProps={dropdownProps?.[position]} {icon} {items} {list} onArrowClick={() => foundation.handleArrowClick(items, position)} {onTabClick} {position} {showRestInDropdown} {tab} />
+        <TabBarArrow {classNames} dropdownProps={dropdownProps?.[position]} {icon} {items} {list} onArrowClick={() => foundation.handleArrowClick(items, position)} {onTabClick} {position} {showRestInDropdown} {styles} {tab} />
     {/snippet}
     {#if arrow}
         {@render arrow({ items, position, onClick: () => foundation.handleArrowClick(items, position), defaultNode: defaultArrow })}
@@ -163,8 +163,9 @@
             [cssClasses.TABS_BAR_SLASH]: type === 'slash',
             [`${prefix}-collapse`]: collapsed,
         },
+        classNames?.tabBar,
     ]}
-    {style}
+    style={[style, styles?.tabBar].filter(Boolean).join('; ') || undefined}
 >
     {#if collapsed}
         <OverflowList
@@ -192,7 +193,18 @@
             {/each}
         </div>
         {#if layout.hidden.length}
-            <Dropdown child={moreTrigger ? undefined : moreButton} children={moreTrigger} clickToHide position="bottomLeft" showTick trigger="hover" {...layout.dropdownProps} class={[`${prefix}-more-dropdown-${type}`, layout.dropdownProps?.class].filter(Boolean).join(' ')} content={moreMenu} />
+            <Dropdown
+                child={moreTrigger ? undefined : moreButton}
+                children={moreTrigger}
+                clickToHide
+                position="bottomLeft"
+                showTick
+                trigger="hover"
+                {...layout.dropdownProps}
+                class={[`${prefix}-more-dropdown-${type}`, classNames?.dropdown, layout.dropdownProps?.class] as unknown as string}
+                content={moreMenu}
+                style={styles?.dropdown}
+            />
             <!-- A panel is labelled by its tab's id, and a tab in the menu is not rendered: this hidden copy of its label
                  takes the id, and aria-labelledby still reads hidden elements it points to -->
             {#each layout.hidden as entry, offset (entry.itemKey)}
@@ -207,7 +219,7 @@
         {/if}
     {/if}
     {#if extra}
-        <div class={[cssClasses.TABS_BAR_EXTRA, `${prefix}-${type}-extra`, `${prefix}-${type}-extra-${size}`]} style="float: inline-end" x-semi-prop="tabBarExtraContent">
+        <div class={[cssClasses.TABS_BAR_EXTRA, `${prefix}-${type}-extra`, `${prefix}-${type}-extra-${size}`, classNames?.extra]} style={['float: inline-end', styles?.extra].filter(Boolean).join('; ')} x-semi-prop="tabBarExtraContent">
             {@render extra()}
         </div>
     {/if}

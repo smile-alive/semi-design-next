@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | Focuses the text area on mount. | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
 | autosize | Whether the height follows the content; pass `{ minRows, maxRows }` to limit the rows. | `boolean \| AutosizeRow` | `false` |
 | borderless | Borderless mode. | `boolean` | `false` |
-| classNames | Class names of the inner parts, keyed by textarea (the native textarea element) and lineNumber (the line number area); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTextAreaPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TextArea", "classNames")` |
+| classNames | Class names of the inner parts, keyed by textarea (the native textarea element), lineNumber (the line number area), clear (the clear button) and counter (the character counter); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cTextAreaPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TextArea", "classNames")` |
 | cols | Visible width in average character widths. | `number` | `20` |
 | composition | Whether to enable IME mode; change does not fire during a composition and fires once after it ends. | `boolean` | `false` |
 | defaultValue | Initial content when the text area is uncontrolled. | `string` | `semiGlobalDefault("TextArea", "defaultValue")` |

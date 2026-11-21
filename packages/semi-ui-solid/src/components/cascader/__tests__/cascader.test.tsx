@@ -256,14 +256,50 @@ describe('Cascader', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        renderCascader({
-            classNames: { dropdown: 'test' },
-            styles: { dropdown: { color: 'red' } },
-            defaultOpen: true,
-        });
-        const dropdown = document.querySelector(`.${prefixCls}-popover`);
-        expect(dropdown).toHaveClass('test');
-        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        const selectors = {
+            prefix: 'prefix',
+            suffix: 'suffix',
+            content: 'selection',
+            placeholder: 'selection-placeholder',
+            input: 'input',
+            tag: 'selection-tag',
+            clear: 'clearbtn',
+            arrow: 'arrow',
+            dropdown: 'popover',
+            list: 'option-list',
+            empty: 'option-empty',
+            item: 'option',
+            itemContent: 'option-label',
+            itemIcon: 'option-icon',
+        };
+        const parts = Object.keys(selectors) as Array<keyof typeof selectors>;
+        const classNames = Object.fromEntries(parts.map((p) => [p, `my-${p}`]));
+        const styles = Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }]));
+        const expectParts = (names: typeof parts) => {
+            for (const part of names) {
+                const el = document.querySelector(`.${prefixCls}-${selectors[part]}`);
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        };
+        const common = { classNames, styles, defaultOpen: true };
+
+        const { unmount } = renderCascader({ ...common, filterTreeNode: true, prefix: 'p', suffix: 's' });
+        fireEvent.click(screen.getByRole('combobox'));
+        expectParts(['prefix', 'suffix', 'content', 'placeholder', 'arrow', 'dropdown', 'list', 'item', 'itemContent', 'itemIcon']);
+        unmount();
+
+        const { unmount: unmountMultiple } = renderCascader({ ...common, multiple: true, showClear: true, defaultValue: [['Asia', 'China', 'Beijing']] });
+        expectParts(['tag', 'clear']);
+        unmountMultiple();
+
+        const { unmount: unmountSearch } = renderCascader({ ...common, filterTreeNode: true, searchPosition: 'trigger' });
+        fireEvent.input(screen.getByRole('combobox'), { target: { value: '北' } });
+        expectParts(['input']);
+        unmountSearch();
+
+        renderCascader({ ...common, treeData: [] });
+        expectParts(['empty']);
     });
 
     it('defaultValue', () => {

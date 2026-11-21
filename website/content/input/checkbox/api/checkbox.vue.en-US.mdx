@@ -2,17 +2,19 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property       | Description                                                                                                             | Type            | Default                                          |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------------------------------ |
-| addonId        | Id of the addon node, which aria-labelledby points to. Generated when omitted.                                          | `string`        | `undefined`                                      |
-| defaultChecked | Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup.                        | `boolean`       | `false`                                          |
-| disabled       | Whether the checkbox is disabled.                                                                                       | `boolean`       | `semiGlobalDefault("Checkbox", "disabled")`      |
-| extraId        | Id of the extra node, which aria-describedby points to. Generated when omitted.                                         | `string`        | `undefined`                                      |
-| indeterminate  | Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value. | `boolean`       | `false`                                          |
-| modelValue     | Whether the checkbox is checked, controlled with v-model. Ignored inside a CheckboxGroup.                               | `boolean`       | `undefined`                                      |
-| preventScroll  | Whether focusing prevents the browser from scrolling the element into view; applies to the focus method.                | `boolean`       | `semiGlobalDefault("Checkbox", "preventScroll")` |
-| type           | Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies.                                 | `CheckboxType`  | `"default"`                                      |
-| value          | The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group.                | `CheckboxValue` | `undefined`                                      |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| addonId | Id of the addon node, which aria-labelledby points to. Generated when omitted. | `string` | `undefined` |
+| classNames | Class names of the inner parts, keyed by icon (the box), label (the label text) and extra (the supplementary text); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003cCheckboxPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Checkbox", "classNames")` |
+| defaultChecked | Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup. | `boolean` | `false` |
+| disabled | Whether the checkbox is disabled. | `boolean` | `semiGlobalDefault("Checkbox", "disabled")` |
+| extraId | Id of the extra node, which aria-describedby points to. Generated when omitted. | `string` | `undefined` |
+| indeterminate | Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value. | `boolean` | `false` |
+| modelValue | Whether the checkbox is checked, controlled with v-model. Ignored inside a CheckboxGroup. | `boolean` | `undefined` |
+| preventScroll | Whether focusing prevents the browser from scrolling the element into view; applies to the focus method. | `boolean` | `semiGlobalDefault("Checkbox", "preventScroll")` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003cCheckboxPart, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Checkbox", "styles")` |
+| type | Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies. | `CheckboxType` | `"default"` |
+| value | The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group. | `CheckboxValue` | `undefined` |
 
 **Events**
 

@@ -10,7 +10,7 @@
     import type { CodeContentEmits, CodeContentProps, CodeItemData, CodeItemSlots } from './interface';
     import { useHasExpandListener } from './use-expand-listener';
 
-    const props = withDefaults(defineProps<CodeContentProps & /* @vue-ignore */ ElementProps<'div', keyof CodeContentProps | EmitHandlers<CodeContentEmits>>>(), { activeKey: undefined, codes: () => [] });
+    const props = withDefaults(defineProps<CodeContentProps & /* @vue-ignore */ ElementProps<'div', keyof CodeContentProps | EmitHandlers<CodeContentEmits>>>(), { activeKey: undefined, classNames: undefined, codes: () => [], styles: undefined });
     const emit = defineEmits<CodeContentEmits>();
     defineSlots<CodeItemSlots>();
 
@@ -32,11 +32,11 @@
     <Collapse :activeKey="props.activeKey" :class="[collapseCls, `${collapseCls}-code`]" :clickHeaderToExpand="false" @change="onChange">
         <CollapsePanel v-for="code in props.codes" :key="code.key" :itemKey="code.key ?? ''">
             <template #header>
-                <CollapseHeader mode="code" :name="code.name" />
+                <CollapseHeader :class="props.classNames?.itemHeader" mode="code" :name="code.name" :style="props.styles?.itemHeader" />
             </template>
             <!-- the panel's extra sits beside the toggle button, not inside it -->
             <template v-if="hasExpandListener()" #extra>
-                <Button :aria-label="locale.locale.expand" :class="`${collapseCls}-header-expand-btn`" theme="borderless" type="tertiary" @click="emit('expand', $event, code, 'code')">
+                <Button :aria-label="locale.locale.expand" :class="[`${collapseCls}-header-expand-btn`, props.classNames?.itemExpand]" :style="props.styles?.itemExpand" theme="borderless" type="tertiary" @click="emit('expand', $event, code, 'code')">
                     <template #icon>
                         <IconFullScreenStroked />
                     </template>

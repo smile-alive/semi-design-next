@@ -1,11 +1,12 @@
 <script lang="ts">
+    import type { ClassValue } from 'svelte/elements';
     import { cssClasses, type DialogueIconKind, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/utils';
     import { IconCode, IconExcel, IconPdf, IconSendMsgStroked, IconVideo, IconWord } from '@fibrae/semi-icons-svelte';
     import Image from '@fibrae/semi-ui-svelte/image/image.svelte';
 
-    let { references }: { references: Reference[] } = $props();
+    let { references, class: className, style }: { references: Reference[]; class?: ClassValue; style?: string } = $props();
 
     const prefixCls = cssClasses.PREFIX_REFERENCES;
     const referencePrefixCls = cssClasses.PREFIX_REFERENCE;
@@ -21,7 +22,7 @@
     );
 </script>
 
-<div class={prefixCls}>
+<div class={[prefixCls, className]} {style}>
     <!-- Known limitation: background color and items per row are not specified by design yet -->
     {#each items as { reference, kind, Icon } (reference.id)}
         <div class={referencePrefixCls}>

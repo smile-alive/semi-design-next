@@ -2,12 +2,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property    | Description                                                 | Type                     | Default                                        |
-| ----------- | ----------------------------------------------------------- | ------------------------ | ---------------------------------------------- |
-| maxCount    | Maximum number of visible avatars; overflow is shown as +N. | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")` |
-| overlapFrom | Avatar overlap direction: start or end.                     | `AvatarGroupOverlapFrom` | `"start"`                                      |
-| shape       | Shape of the avatars in the group.                          | `AvatarShape`            | `"circle"`                                     |
-| size        | Size of the avatars in the group.                           | `string`                 | `"medium"`                                     |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| classNames | Class names of the inner parts, keyed by more: the "+N" avatar shown past maxCount (also merged into the Avatar in the more slot); values take any class binding and merge with the built-in classes. | <ApiType detail={"Partial\u003cRecord\u003c\"more\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("AvatarGroup", "classNames")` |
+| maxCount | Maximum number of visible avatars; overflow is shown as +N. | `number` | `semiGlobalDefault("AvatarGroup", "maxCount")` |
+| overlapFrom | Avatar overlap direction: start or end. | `AvatarGroupOverlapFrom` | `"start"` |
+| shape | Shape of the avatars in the group. | `AvatarShape` | `"circle"` |
+| size | Size of the avatars in the group. | `string` | `"medium"` |
+| styles | Inline styles of the inner parts, keyed like classNames. | <ApiType detail={"Partial\u003cRecord\u003c\"more\", StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("AvatarGroup", "styles")` |
 
 **Events**
 

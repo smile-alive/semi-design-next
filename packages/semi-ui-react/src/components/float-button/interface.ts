@@ -1,4 +1,4 @@
-import type { strings } from '@fibrae/semi-foundation/components/float-button/constants';
+import type { FloatButtonPart, strings } from '@fibrae/semi-foundation/components/float-button/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ElementProps } from '../../base/index';
 import type { BadgeProps } from '../badge';
@@ -9,6 +9,8 @@ export interface FloatButtonProps extends ElementProps<'button', 'onClick' | 'co
     colorful?: boolean;
     style?: React.CSSProperties;
     className?: string;
+    classNames?: Partial<Record<FloatButtonPart, string>>;
+    styles?: Partial<Record<FloatButtonPart, React.CSSProperties>>;
     icon?: React.ReactNode;
     onClick?: (e: React.MouseEvent) => void;
     href?: string;

@@ -18,7 +18,7 @@ const defaultProps = {
     overlapFrom: 'start',
 } satisfies Partial<AvatarGroupProps>;
 
-function renderMoreAvatar(restNumber: number, restAvatars: React.ReactNode[], renderMore: AvatarGroupProps['renderMore'], moreLabel: string, itemProps: Pick<AvatarProps, 'size' | 'shape' | 'className'>, layer?: symbol) {
+function renderMoreAvatar(restNumber: number, restAvatars: React.ReactNode[], renderMore: AvatarGroupProps['renderMore'], moreLabel: string, itemProps: Pick<AvatarProps, 'size' | 'shape' | 'className' | 'style'>, layer?: symbol) {
     if (typeof renderMore === 'function') {
         return (
             <AvatarGroupContext key="_+n" value={{ inGroup: true, layer, moreItem: itemProps }}>
@@ -45,7 +45,7 @@ function renderMoreAvatar(restNumber: number, restAvatars: React.ReactNode[], re
 }
 
 function AvatarGroup(rawProps: AvatarGroupProps) {
-    const { ref, children, maxCount, overlapFrom, size, shape, renderMore, className, ...rest } = useDefaultProps('AvatarGroup', rawProps, defaultProps);
+    const { ref, children, maxCount, overlapFrom, size, shape, renderMore, className, classNames, styles, ...rest } = useDefaultProps('AvatarGroup', rawProps, defaultProps);
 
     const { locale } = useLocale('Avatar');
     const layer = usePopupLayer();
@@ -70,7 +70,7 @@ function AvatarGroup(rawProps: AvatarGroupProps) {
             </AvatarGroupContext>
         ));
         if (hasMore) {
-            items.push(renderMoreAvatar(avatars.length - maxCount, avatars.slice(maxCount), renderMore, formatLocale(locale.more, { count: avatars.length - maxCount }), { size, shape, className: overlapClassName(maxCount) }, layer));
+            items.push(renderMoreAvatar(avatars.length - maxCount, avatars.slice(maxCount), renderMore, formatLocale(locale.more, { count: avatars.length - maxCount }), { size, shape, className: clsx(overlapClassName(maxCount), classNames?.more), style: styles?.more }, layer));
         }
         inner = items;
     }

@@ -19,6 +19,8 @@
 
     const list = useListContext();
 
+    const parentClassNames = computed(() => list?.value.classNames);
+    const parentStyles = computed(() => list?.value.styles);
     const prefixCls = cssClasses.PREFIX;
     const handleClick = computed(() => props.onClick ?? list?.value.onClick);
     const handleRightClick = computed(() => props.onRightClick ?? list?.value.onRightClick);
@@ -48,29 +50,29 @@
 </script>
 
 <template>
-    <li v-bind="attrParts().root" :class="[`${prefixCls}-item`, { [`${prefixCls}-item-clickable`]: clickable }]" v-on="liListeners()">
+    <li :class="[`${prefixCls}-item`, { [`${prefixCls}-item-clickable`]: clickable }, parentClassNames?.item]" :style="parentStyles?.item" v-bind="attrParts().root" v-on="liListeners()">
         <template v-for="view in [bodyView()]" :key="view.key">
             <button v-if="clickable" v-bind="attrParts().control" :class="`${prefixCls}-item-button`" type="button">
                 <span v-if="view.body" :class="[`${prefixCls}-item-body`, `${prefixCls}-item-body-${props.align}`]">
-                    <span v-if="view.header" :class="`${prefixCls}-item-body-header`">
+                    <span v-if="view.header" :class="[`${prefixCls}-item-body-header`, parentClassNames?.itemHeader, props.classNames?.header]" :style="[parentStyles?.itemHeader, props.styles?.header]">
                         <slot name="header" />
                     </span>
-                    <span v-if="view.main" :class="`${prefixCls}-item-body-main`">
+                    <span v-if="view.main" :class="[`${prefixCls}-item-body-main`, parentClassNames?.itemMain, props.classNames?.main]" :style="[parentStyles?.itemMain, props.styles?.main]">
                         <slot name="main" />
                     </span>
                 </span>
                 <slot v-else />
             </button>
             <div v-else-if="view.body" :class="[`${prefixCls}-item-body`, `${prefixCls}-item-body-${props.align}`]">
-                <div v-if="view.header" :class="`${prefixCls}-item-body-header`">
+                <div v-if="view.header" :class="[`${prefixCls}-item-body-header`, parentClassNames?.itemHeader, props.classNames?.header]" :style="[parentStyles?.itemHeader, props.styles?.header]">
                     <slot name="header" />
                 </div>
-                <div v-if="view.main" :class="`${prefixCls}-item-body-main`">
+                <div v-if="view.main" :class="[`${prefixCls}-item-body-main`, parentClassNames?.itemMain, props.classNames?.main]" :style="[parentStyles?.itemMain, props.styles?.main]">
                     <slot name="main" />
                 </div>
             </div>
             <slot v-if="!(clickable && !view.body)" />
-            <div v-if="view.extra" :class="`${prefixCls}-item-extra`">
+            <div v-if="view.extra" :class="[`${prefixCls}-item-extra`, parentClassNames?.itemExtra, props.classNames?.extra]" :style="[parentStyles?.itemExtra, props.styles?.extra]">
                 <slot name="extra" />
             </div>
         </template>

@@ -8,11 +8,13 @@
         selecting: boolean;
         class?: ClassValue;
         style?: string;
+        itemClass?: ClassValue;
+        itemStyle?: string;
         hintBox?: AIChatDialogueProps['hintBox'];
         onHintClick: (hint: string) => void;
     }
 
-    let { hints, selecting, class: className, style, hintBox, onHintClick }: DialogueHintProps = $props();
+    let { hints, selecting, class: className, style, itemClass, itemStyle, hintBox, onHintClick }: DialogueHintProps = $props();
 
     const { PREFIX_HINT } = cssClasses;
 
@@ -30,7 +32,7 @@
         {#if hintBox}
             {@render hintBox({ content: item, index, onHintClick: () => onHintClick(item) })}
         {:else}
-            <div class="{PREFIX_HINT}-item" role="button" tabindex="0" onclick={() => onHintClick(item)} onkeydown={(event) => onKeydown(event, item)}>
+            <div class={[`${PREFIX_HINT}-item`, itemClass]} role="button" style={itemStyle} tabindex="0" onclick={() => onHintClick(item)} onkeydown={(event) => onKeydown(event, item)}>
                 <div class="{PREFIX_HINT}-content">{item}</div>
             </div>
         {/if}

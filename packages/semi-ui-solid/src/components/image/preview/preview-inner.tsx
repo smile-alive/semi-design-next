@@ -146,8 +146,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                         setWrap(node);
                         onCleanup(() => setWrap(undefined));
                     }}
-                    class={clsx(previewPrefixCls, { [`${previewPrefixCls}-popup`]: !inBody() }, props.class)}
-                    style={props.style}
+                    class={clsx(previewPrefixCls, { [`${previewPrefixCls}-popup`]: !inBody() }, props.classNames?.preview)}
+                    style={props.styles?.preview}
                     aria-label={hasContent(title()) ? undefined : locale().locale.preview}
                     aria-labelledby={hasContent(title()) ? titleId : undefined}
                     aria-modal={inBody() ? 'true' : undefined}
@@ -161,8 +161,10 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                     // kept from zooming the page
                     onWheel={foundation.handleWheel}
                 >
-                    <Header ref={(node) => (header = node)} class={hideCls()} title={title()} closable={props.closable} titleId={titleId} renderCloseIcon={props.renderCloseIcon} renderHeader={props.renderHeader} onClose={foundation.handlePreviewClose} />
+                    <Header ref={(node) => (header = node)} class={hideCls()} classNames={props.classNames} styles={props.styles} title={title()} closable={props.closable} titleId={titleId} renderCloseIcon={props.renderCloseIcon} renderHeader={props.renderHeader} onClose={foundation.handlePreviewClose} />
                     <PreviewImage
+                        classNames={props.classNames}
+                        styles={props.styles}
                         alt={previewContext?.view().alts[currentIndex()] ?? props.alt}
                         crossOrigin={props.crossOrigin}
                         disableDownload={props.disableDownload}
@@ -179,18 +181,20 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                         onZoom={(zoom, reportToUser) => foundation.handleZoomImage(zoom, reportToUser)}
                     />
                     <Show when={showPrev()}>
-                        <button ref={(node) => (leftIcon = node)} type="button" class={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-prev`, hideCls())} aria-label={props.prevTip ?? locale().locale.prevTip} onClick={handlePrev}>
+                        <button ref={(node) => (leftIcon = node)} type="button" class={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-prev`, hideCls(), props.classNames?.prev)} style={props.styles?.prev} aria-label={props.prevTip ?? locale().locale.prevTip} onClick={handlePrev}>
                             {hasContent(leftIconSlot()) ? leftIconSlot() : <IconArrowLeft size="large" />}
                         </button>
                     </Show>
                     <Show when={showNext()}>
-                        <button ref={(node) => (rightIcon = node)} type="button" class={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-next`, hideCls())} aria-label={props.nextTip ?? locale().locale.nextTip} onClick={handleNext}>
+                        <button ref={(node) => (rightIcon = node)} type="button" class={clsx(`${previewPrefixCls}-icon`, `${previewPrefixCls}-next`, hideCls(), props.classNames?.next)} style={props.styles?.next} aria-label={props.nextTip ?? locale().locale.nextTip} onClick={handleNext}>
                             {hasContent(rightIconSlot()) ? rightIconSlot() : <IconArrowRight size="large" />}
                         </button>
                     </Show>
                     <Footer
                         ref={(node) => (footer = node)}
                         class={hideCls()}
+                        classNames={props.classNames}
+                        styles={props.styles}
                         max={toPercent(props.maxZoom)}
                         min={toPercent(props.minZoom)}
                         step={toPercent(props.zoomStep)}

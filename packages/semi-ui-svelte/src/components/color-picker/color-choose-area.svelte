@@ -9,6 +9,7 @@
     import useLocale from '../locale/use-locale.svelte.js';
     import { toDragEvent } from './drag-event.js';
     import type { ColorChooseAreaProps } from './interface.js';
+    import { joinStyle } from './join-style.js';
 
     type Foundation = ColorChooseAreaFoundation<ColorChooseAreaBaseProps>;
     type Adapter = ColorChooseAreaAdapter<ColorChooseAreaBaseProps>;
@@ -54,16 +55,13 @@
 
 <div
     bind:this={dom}
-    class={`${cssClasses.PREFIX}-colorChooseArea`}
-    style:background-color={hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 })}
-    style:cursor={states().isHandleGrabbing ? 'grabbing' : 'pointer'}
-    style:height={`${props.height}px`}
-    style:width={`${props.width}px`}
+    class={[`${cssClasses.PREFIX}-colorChooseArea`, props.classNames?.area]}
+    style={joinStyle(`background-color: ${hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 })}; cursor: ${states().isHandleGrabbing ? 'grabbing' : 'pointer'}; height: ${props.height}px; width: ${props.width}px`, props.styles?.area)}
     onlostpointercapture={foundation.handleLostPointerCapture}
     onpointerdown={(event) => foundation.handlePointerDown(toDragEvent(event))}
     onpointermove={(event) => foundation.handlePointerMove(toDragEvent(event))}
 >
-    <div class={`${cssClasses.PREFIX}-handle`} style:background-color={handleColor} style:height={`${props.handleSize}px`} style:left={`${handlePosition.x}px`} style:top={`${handlePosition.y}px`} style:width={`${props.handleSize}px`}>
+    <div class={[`${cssClasses.PREFIX}-handle`, props.classNames?.handle]} style={joinStyle(`background-color: ${handleColor}; height: ${props.handleSize}px; left: ${handlePosition.x}px; top: ${handlePosition.y}px; width: ${props.handleSize}px`, props.styles?.handle)}>
         {#each sliders as slider (slider.axis)}
             <input aria-label={slider.name} aria-valuetext={valueText} class={`${cssClasses.PREFIX}-handleSlider`} max={100} min={0} type="range" value={round(props.hsva[slider.axis])} oninput={(event) => handleInput(event, slider.axis)} onkeydown={(event) => foundation.handleKeyDown(slider.axis, event)} />
         {/each}

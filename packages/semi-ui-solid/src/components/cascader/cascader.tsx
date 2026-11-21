@@ -689,7 +689,15 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
                         when={local.displayRender as ((selected: Entity, idx: number) => JSX.Element) | undefined}
                         keyed
                         fallback={
-                            <Tag class={clsx(`${prefixcls}-selection-tag`, { [`${prefixcls}-selection-tag-disabled`]: isDisabled() })} closable={!isDisabled()} color="white" size={tagSize()} tagKey={tagProps.nodeKey} onClose={(_children, e) => removeTag(tagProps.nodeKey, e)}>
+                            <Tag
+                                class={clsx(`${prefixcls}-selection-tag`, { [`${prefixcls}-selection-tag-disabled`]: isDisabled() }, local.classNames?.tag)}
+                                closable={!isDisabled()}
+                                color="white"
+                                size={tagSize()}
+                                style={local.styles?.tag}
+                                tagKey={tagProps.nodeKey}
+                                onClose={(_children, e) => removeTag(tagProps.nodeKey, e)}
+                            >
                                 {item().data[local.displayProp] as JSX.Element}
                             </Tag>
                         }
@@ -730,7 +738,8 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
     const SearchTagInput = () => (
         <TagInput
             ref={setTagInput}
-            class={`${prefixcls}-tagInput-wrapper`}
+            class={clsx(`${prefixcls}-tagInput-wrapper`, local.classNames?.input)}
+            style={local.styles?.input}
             {...comboboxAttrs}
             aria-autocomplete="list"
             disabled={local.disabled}
@@ -761,11 +770,15 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
         <div class={clsx(`${prefixcls}-search-wrapper`, { [`${prefixcls}-search-wrapper-${local.size}`]: local.size !== 'default' })}>
             <span
                 id={selectionTextId}
-                class={clsx({
-                    [`${prefixcls}-selection-placeholder`]: !hasContent(displayText()),
-                    [`${prefixcls}-selection-text-hide`]: view.showInput && view.inputValue,
-                    [`${prefixcls}-selection-text-inactive`]: view.showInput && !view.inputValue,
-                })}
+                class={clsx(
+                    {
+                        [`${prefixcls}-selection-placeholder`]: !hasContent(displayText()),
+                        [`${prefixcls}-selection-text-hide`]: view.showInput && view.inputValue,
+                        [`${prefixcls}-selection-text-inactive`]: view.showInput && !view.inputValue,
+                    },
+                    !hasContent(displayText()) && local.classNames?.placeholder
+                )}
+                style={hasContent(displayText()) ? undefined : local.styles?.placeholder}
             >
                 <Show when={hasContent(displayText())} fallback={inputPlaceholder()}>
                     {displayText()}
@@ -774,7 +787,8 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             <Show when={view.showInput}>
                 <Input
                     inputRef={setSearchInput}
-                    class={`${prefixcls}-input`}
+                    class={clsx(`${prefixcls}-input`, local.classNames?.input)}
+                    style={local.styles?.input}
                     // the trigger draws its own clear button and adornments: global Input defaults must not add them
                     addonAfter={null}
                     addonBefore={null}
@@ -803,14 +817,21 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
                 <Show
                     when={local.multiple}
                     fallback={
-                        <span class={clsx({ [`${prefixcls}-selection-placeholder`]: !hasContent(displayText()) })}>
+                        <span class={clsx({ [`${prefixcls}-selection-placeholder`]: !hasContent(displayText()) }, !hasContent(displayText()) && local.classNames?.placeholder)} style={hasContent(displayText()) ? undefined : local.styles?.placeholder}>
                             <Show when={hasContent(displayText())} fallback={local.placeholder}>
                                 {displayText()}
                             </Show>
                         </span>
                     }
                 >
-                    <Show when={view.checkedKeys.size > 0} fallback={<span class={`${prefixcls}-selection-placeholder`}>{local.placeholder}</span>}>
+                    <Show
+                        when={view.checkedKeys.size > 0}
+                        fallback={
+                            <span class={clsx(`${prefixcls}-selection-placeholder`, local.classNames?.placeholder)} style={local.styles?.placeholder}>
+                                {local.placeholder}
+                            </span>
+                        }
+                    >
                         <MultipleTags />
                     </Show>
                 </Show>
@@ -827,39 +848,49 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             <Show when={labelKind()}>
                 <div
                     id={prefixId()}
-                    class={clsx(`${prefixcls}-prefix`, {
-                        [`${prefixcls}-inset-label`]: insetLabelKind(),
-                        [`${prefixcls}-prefix-text`]: labelKind() === 'text',
-                        [`${prefixcls}-prefix-icon`]: labelKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefixcls}-prefix`,
+                        {
+                            [`${prefixcls}-inset-label`]: insetLabelKind(),
+                            [`${prefixcls}-prefix-text`]: labelKind() === 'text',
+                            [`${prefixcls}-prefix-icon`]: labelKind() === 'icon',
+                        },
+                        local.classNames?.prefix
+                    )}
+                    style={local.styles?.prefix}
                     x-semi-prop="prefix,insetLabel"
                 >
                     {prefixKind() ? prefixNode() : insetLabelNode()}
                 </div>
             </Show>
-            <div class={clsx(`${prefixcls}-selection`, { [`${prefixcls}-selection-multiple`]: local.multiple && view.checkedKeys.size > 0 })}>
+            <div class={clsx(`${prefixcls}-selection`, { [`${prefixcls}-selection-multiple`]: local.multiple && view.checkedKeys.size > 0 }, local.classNames?.content)} style={local.styles?.content}>
                 <SelectContent />
             </div>
             <Show when={suffixKind()}>
                 <div
-                    class={clsx(`${prefixcls}-suffix`, {
-                        [`${prefixcls}-suffix-text`]: suffixKind() === 'text',
-                        [`${prefixcls}-suffix-icon`]: suffixKind() === 'icon',
-                    })}
+                    class={clsx(
+                        `${prefixcls}-suffix`,
+                        {
+                            [`${prefixcls}-suffix-text`]: suffixKind() === 'text',
+                            [`${prefixcls}-suffix-icon`]: suffixKind() === 'icon',
+                        },
+                        local.classNames?.suffix
+                    )}
+                    style={local.styles?.suffix}
                     x-semi-prop="suffix"
                 >
                     {suffixNode()}
                 </div>
             </Show>
             <Show when={clearable()}>
-                <button ref={clearHandover} type="button" class={`${prefixcls}-clearbtn`} aria-label={locale().locale.clear} onClick={handleClearClick} onKeyDown={stopButtonActivationKeys}>
+                <button ref={clearHandover} type="button" class={clsx(`${prefixcls}-clearbtn`, local.classNames?.clear)} style={local.styles?.clear} aria-label={locale().locale.clear} onClick={handleClearClick} onKeyDown={stopButtonActivationKeys}>
                     <Show when={hasContent(clearIcon())} fallback={<IconClear />}>
                         {clearIcon()}
                     </Show>
                 </button>
             </Show>
             <Show when={arrowIcon() === undefined || hasContent(arrowIcon())}>
-                <div class={`${prefixcls}-arrow`} x-semi-prop="arrowIcon">
+                <div class={clsx(`${prefixcls}-arrow`, local.classNames?.arrow)} style={local.styles?.arrow} x-semi-prop="arrowIcon">
                     <Show when={arrowIcon() !== undefined} fallback={<IconChevronDown />}>
                         {arrowIcon()}
                     </Show>
@@ -873,7 +904,9 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             {local.topSlot}
             <Item
                 id={popupId}
+                classNames={local.classNames}
                 multiple={Boolean(local.multiple)}
+                styles={local.styles}
                 activeKeys={view.activeKeys}
                 checkedKeys={view.checkedKeys}
                 data={renderData()}

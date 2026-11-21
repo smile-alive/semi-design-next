@@ -605,14 +605,23 @@ describe('TextArea', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['textarea', 'lineNumber', 'clear', 'counter'] as const;
+        const selectors = { textarea: `${prefixCls}-textarea`, lineNumber: `${prefixCls}-textarea-lineNumber`, clear: `${prefixCls}-clearbtn`, counter: `${prefixCls}-textarea-counter` };
         render(TextArea, {
-            props: { classNames: { textarea: 'my-textarea', lineNumber: 'my-nums' }, styles: { textarea: { order: 1 }, lineNumber: { order: 2 } }, defaultValue: 'a', showLineNumber: true },
+            props: {
+                classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+                styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])),
+                defaultValue: 'a',
+                showClear: true,
+                showCounter: true,
+                showLineNumber: true,
+            },
         });
-        expect(getTextArea()).toHaveClass(`${prefixCls}-textarea`, 'my-textarea');
-        expect(getTextArea()).toHaveStyle({ order: '1' });
-        const panel = document.querySelector(`.${prefixCls}-textarea-lineNumber`);
-        expect(panel).toHaveClass('my-nums');
-        expect(panel).toHaveStyle({ order: '2' });
+        for (const part of parts) {
+            const el = document.querySelector(`.${selectors[part]}`);
+            expect(el).toHaveClass(`my-${part}`);
+            expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+        }
     });
 
     it('showLineNumber 从 lineNumberStart 开始，每行一个行号，面板对辅助技术隐藏', () => {

@@ -1,8 +1,10 @@
 import type { Accessor } from 'solid-js';
 import { createContext } from '../../base/index';
-import type { TabPosition, TabType } from './interface';
+import type { TabPosition, TabsProps, TabType } from './interface';
 
 export interface TabsView {
+    classNames?: TabsProps['classNames'];
+    styles?: TabsProps['styles'];
     tabsId: string;
     /** Every pane is in the DOM, so every tab may point to its panel */
     everyPanelMounted: boolean;

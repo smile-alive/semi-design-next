@@ -1,8 +1,10 @@
 import type { ComputedRef } from 'vue';
 import { createContext } from '../../base/index';
-import type { JsonViewerSearchOptions } from './interface';
+import type { JsonViewerProps, JsonViewerSearchOptions } from './interface';
 
 export interface JsonViewerView {
+    classNames: JsonViewerProps['classNames'];
+    styles: JsonViewerProps['styles'];
     showSearchBar: boolean;
     searchOptions: JsonViewerSearchOptions;
     readOnly?: boolean;

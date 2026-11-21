@@ -5,9 +5,11 @@
     import { Button } from '../button/index.js';
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
-    import type { OverflowItem, PlainTab, TabsDropdownItemProps, TabsTabSnippetProps } from './interface.js';
+    import type { OverflowItem, PlainTab, TabBarProps, TabsDropdownItemProps, TabsTabSnippetProps } from './interface.js';
 
     interface Props {
+        classNames?: TabBarProps['classNames'];
+        styles?: TabBarProps['styles'];
         items: OverflowItem[];
         list: PlainTab[];
         position: 'start' | 'end';
@@ -19,7 +21,7 @@
         onTabClick: (itemKey: string, event: MouseEvent) => void;
     }
 
-    let { items, list, position, showRestInDropdown, dropdownProps, tab, icon, onArrowClick, onTabClick }: Props = $props();
+    let { classNames, styles, items, list, position, showRestInDropdown, dropdownProps, tab, icon, onArrowClick, onTabClick }: Props = $props();
 
     const locale = useLocale('Tabs');
 
@@ -44,17 +46,17 @@
 
 <!-- The Button is the Tab stop and the keyboard target: its Enter and Space click bubbles to this pointer wrapper -->
 {#snippet arrowBox(props?: DropdownTriggerProps)}
-    <div {...props} class={[`${prefix}-arrow-${position}`, `${prefix}-arrow`, props?.class]} role="presentation" tabindex="-1" onclick={onArrowClick}>
+    <div {...props} class={[`${prefix}-arrow-${position}`, `${prefix}-arrow`, props?.class, classNames?.arrow]} role="presentation" style={styles?.arrow} tabindex="-1" onclick={onArrowClick}>
         <Button aria-label={label} icon={arrowIcon} theme="borderless" />
     </div>
 {/snippet}
 
 {#if !items.length}
-    <div class={[`${prefix}-arrow-${position}`, `${prefix}-arrow`]} role="presentation">
+    <div class={[`${prefix}-arrow-${position}`, `${prefix}-arrow`, classNames?.arrow]} role="presentation" style={styles?.arrow}>
         <Button aria-label={label} disabled icon={arrowIcon} theme="borderless" />
     </div>
 {:else if showRestInDropdown}
-    <Dropdown clickToHide clickTriggerToHide disableFocusListener position={position === 'start' ? 'bottomLeft' : 'bottomRight'} showTick trigger="hover" {...dropdownProps} class={[`${prefix}-dropdown`, dropdownProps?.class].filter(Boolean).join(' ')}>
+    <Dropdown clickToHide clickTriggerToHide disableFocusListener position={position === 'start' ? 'bottomLeft' : 'bottomRight'} showTick trigger="hover" {...dropdownProps} class={[`${prefix}-dropdown`, classNames?.dropdown, dropdownProps?.class] as unknown as string} style={styles?.dropdown}>
         {#snippet child({ props })}
             {@render arrowBox(props)}
         {/snippet}

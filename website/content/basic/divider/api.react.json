@@ -2,6 +2,14 @@
     "divider": {
         "source": "packages/semi-ui-react/src/components/divider/divider.tsx",
         "props": {
+            "classNames": {
+                "zh-CN": "内部各部位的类名，键为 `content`（中间的文字，仅当内容全是字符串或数字时渲染），与组件自带的类名合并。",
+                "en-US": "Class names of the inner parts, keyed by `content` (the text in the middle, rendered only when the content is all strings or numbers); merged with the built-in classes."
+            },
+            "styles": {
+                "zh-CN": "内部各部位的内联样式，键同 `classNames`。",
+                "en-US": "Inline styles of the inner parts, keyed like `classNames`."
+            },
             "align": {
                 "zh-CN": "带内容时内容的对齐方式，可选 `left`、`center` 或 `right`。",
                 "en-US": "Alignment of the content when the divider has content: `left`, `center` or `right`."

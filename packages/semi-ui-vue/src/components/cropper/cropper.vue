@@ -110,7 +110,7 @@
         <div :class="cssClasses.IMG_WRAPPER">
             <HydratedImage v-bind="imgAttrs" ref="img" :alt="props.imgProps?.alt ?? ''" :class="[cssClasses.IMG, props.imgProps?.class]" :src="props.src" :style="[props.imgProps?.style, imgStyle]" @load="handleLoad($event)" />
         </div>
-        <div :class="cssClasses.MASK" @lostpointercapture="foundation.handleMaskLostPointerCapture" @pointerdown="foundation.handleMaskPointerDown" @pointermove="foundation.handleMaskPointerMove" />
+        <div :class="[cssClasses.MASK, props.classNames?.mask]" :style="props.styles?.mask" @lostpointercapture="foundation.handleMaskLostPointerCapture" @pointerdown="foundation.handleMaskPointerDown" @pointermove="foundation.handleMaskPointerMove" />
         <!-- not a widget role: the box has no single value, so it is a named group that says how to use it -->
         <div
             :aria-describedby="helpId"
@@ -131,7 +131,16 @@
                 <img alt="" :class="cssClasses.CROPPER_IMG" :draggable="false" :src="props.src" :style="viewImgStyle" />
             </div>
             <template v-if="state.loaded && props.showResizeBox">
-                <div v-for="corner in corners" :key="corner" :class="[cssClasses.CORNER, `${cssClasses.CORNER}-${corner}`]" :data-dir="corner" @lostpointercapture="foundation.handleCornerLostPointerCapture" @pointerdown="foundation.handleCornerPointerDown" @pointermove="foundation.handleCornerPointerMove" />
+                <div
+                    v-for="corner in corners"
+                    :key="corner"
+                    :class="[cssClasses.CORNER, `${cssClasses.CORNER}-${corner}`, props.classNames?.handle]"
+                    :data-dir="corner"
+                    :style="props.styles?.handle"
+                    @lostpointercapture="foundation.handleCornerLostPointerCapture"
+                    @pointerdown="foundation.handleCornerPointerDown"
+                    @pointermove="foundation.handleCornerPointerMove"
+                />
             </template>
         </div>
     </div>

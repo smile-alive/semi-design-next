@@ -191,7 +191,7 @@
             @mouseup="foundation.handleMouseUp"
             @wheel="foundation.handleWheel"
         >
-            <PreviewHeader ref="header" :closable="props.closable" :hidden="!state.controlsVisible" :index="currentIndex" :title="title" :titleId="titleId" @close="foundation.handlePreviewClose">
+            <PreviewHeader ref="header" :classNames="props.classNames" :closable="props.closable" :hidden="!state.controlsVisible" :index="currentIndex" :styles="props.styles" :title="title" :titleId="titleId" @close="foundation.handlePreviewClose">
                 <template v-if="$slots.title" #title="slotProps">
                     <slot name="title" v-bind="slotProps" />
                 </template>
@@ -201,6 +201,7 @@
             </PreviewHeader>
             <PreviewImage
                 :alt="group?.view.value.alts[currentIndex] ?? props.alt"
+                :classNames="props.classNames"
                 :crossOrigin="props.crossOrigin"
                 :disableDownload="props.disableDownload"
                 :initialZoom="props.initialZoom"
@@ -209,18 +210,19 @@
                 :ratio="ratio"
                 :rotation="state.rotation!"
                 :src="srcList[currentIndex]"
+                :styles="props.styles"
                 :zoom="state.zoom!"
                 :zoomEvent="state.zoomEvent"
                 @error="foundation.preloadSingleImage"
                 @load="foundation.onImageLoad"
                 @zoom="foundation.handleZoomImage"
             />
-            <button v-if="showPrev" ref="leftIcon" :aria-label="props.prevTip ?? locale.locale.prevTip" :class="[`${cls}-icon`, `${cls}-prev`, { [`${cls}-hide`]: !state.controlsVisible }]" type="button" @click="handlePrev">
+            <button v-if="showPrev" ref="leftIcon" :aria-label="props.prevTip ?? locale.locale.prevTip" :class="[`${cls}-icon`, `${cls}-prev`, { [`${cls}-hide`]: !state.controlsVisible }, props.classNames?.prev]" :style="props.styles?.prev" type="button" @click="handlePrev">
                 <slot :index="currentIndex" name="leftIcon">
                     <IconArrowLeft size="large" />
                 </slot>
             </button>
-            <button v-if="showNext" ref="rightIcon" :aria-label="props.nextTip ?? locale.locale.nextTip" :class="[`${cls}-icon`, `${cls}-next`, { [`${cls}-hide`]: !state.controlsVisible }]" type="button" @click="handleNext">
+            <button v-if="showNext" ref="rightIcon" :aria-label="props.nextTip ?? locale.locale.nextTip" :class="[`${cls}-icon`, `${cls}-next`, { [`${cls}-hide`]: !state.controlsVisible }, props.classNames?.next]" :style="props.styles?.next" type="button" @click="handleNext">
                 <slot :index="currentIndex" name="rightIcon">
                     <IconArrowRight size="large" />
                 </slot>
@@ -228,6 +230,7 @@
             <PreviewFooter
                 ref="footer"
                 :adaptiveTip="props.adaptiveTip"
+                :classNames="props.classNames"
                 :curPage="currentIndex + 1"
                 :disableDownload="props.disableDownload"
                 :disabledNext="!showNext"
@@ -243,6 +246,7 @@
                 :rotateTip="props.rotateTip"
                 :showTooltip="props.showTooltip"
                 :step="toPercent(props.zoomStep)"
+                :styles="props.styles"
                 :totalNum="total"
                 :zoom="toPercent(state.zoom!)"
                 :zoomInTip="props.zoomInTip"

@@ -1,5 +1,5 @@
-import type { Accessor } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/components/radio/constants';
+import type { Accessor, JSX } from 'solid-js';
+import type { RadioGroupPart, strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent, RadioContextView } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import { createContext } from '../../base/index';
 
@@ -8,6 +8,8 @@ export type RadioMode = (typeof strings.MODE)[number];
 
 export interface RadioGroupContextValue {
     view: Accessor<RadioContextView>;
+    classNames?: Partial<Record<RadioGroupPart, string>>;
+    styles?: Partial<Record<RadioGroupPart, JSX.CSSProperties | string>>;
     onChange: (event: RadioChangeEvent) => void;
     /**
      * Registers a radio's write-back of its native `checked`; returns the unregistration. The browser unchecks the

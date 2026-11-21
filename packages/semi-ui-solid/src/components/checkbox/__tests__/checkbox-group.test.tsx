@@ -372,4 +372,51 @@ describe('CheckboxGroup', () => {
         expect(document.querySelector(`.${groupCls}.other`)).not.toBeNull();
         expect(getCheckbox(options[1].label).checked).toBe(true);
     });
+
+    it('classNames 与 styles 按部位落到组内每个 Checkbox 的对应元素', () => {
+        const parts = ['item', 'itemIcon', 'itemLabel', 'itemExtra'] as const;
+        const selectors = { item: '', itemIcon: '-inner-display', itemLabel: '-addon', itemExtra: '-extra' };
+        const { container } = render(() => (
+            <CheckboxGroup
+                classNames={Object.fromEntries(parts.map((p) => [p, `my-${p}`]))}
+                styles={Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }]))}
+                options={[
+                    { label: 'A', value: 'a', extra: 'ea' },
+                    { label: 'B', value: 'b', extra: 'eb' },
+                ]}
+            />
+        ));
+        for (const part of parts) {
+            const els = container.querySelectorAll(`.${prefixCls}${selectors[part]}`);
+            expect(els).toHaveLength(2);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+    });
+
+    it('组的 item* 先于 Checkbox 自己的 classNames 与 styles，自己的后写', () => {
+        const { container } = render(() => (
+            <CheckboxGroup classNames={{ item: 'g-item', itemIcon: 'g-icon', itemLabel: 'g-label', itemExtra: 'g-extra' }} styles={{ itemIcon: { order: '1', color: 'red' } }}>
+                <Checkbox class="own" classNames={{ icon: 'c-icon', label: 'c-label', extra: 'c-extra' }} styles={{ icon: { order: '2' } }} extra="more" value="a">
+                    A
+                </Checkbox>
+            </CheckboxGroup>
+        ));
+        const classes = (selector: string) => getElement(selector, container).className.split(' ');
+        const root = classes(`.${prefixCls}`);
+        expect(root.indexOf('g-item')).toBeGreaterThan(-1);
+        expect(root.indexOf('g-item')).toBeLessThan(root.indexOf('own'));
+        for (const [selector, group, own] of [
+            ['-inner-display', 'g-icon', 'c-icon'],
+            ['-addon', 'g-label', 'c-label'],
+            ['-extra', 'g-extra', 'c-extra'],
+        ]) {
+            const list = classes(`.${prefixCls}${selector}`);
+            expect(list.indexOf(group)).toBeGreaterThan(-1);
+            expect(list.indexOf(group)).toBeLessThan(list.indexOf(own));
+        }
+        expect(getElement(`.${prefixCls}-inner-display`, container)).toHaveStyle({ order: '2', color: 'rgb(255, 0, 0)' });
+    });
 });

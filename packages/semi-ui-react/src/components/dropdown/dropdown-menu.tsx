@@ -17,7 +17,7 @@ export interface DropdownMenuProps extends BaseProps, ElementProps<'ul'> {
 }
 
 export default function DropdownMenu(props: DropdownMenuProps) {
-    const { children, className, ...rest } = props;
+    const { children, className, style, ...rest } = props;
 
     const context = useDropdownContext();
     const { direction } = useConfigContext();
@@ -35,7 +35,8 @@ export default function DropdownMenu(props: DropdownMenuProps) {
             aria-orientation="vertical"
             role="menu"
             {...rest}
-            className={clsx(`${prefixCls}-menu`, className)}
+            className={clsx(`${prefixCls}-menu`, className, context.classNames?.menu)}
+            style={{ ...context.styles?.menu, ...style }}
             onKeyDown={(e) => {
                 rest.onKeyDown?.(e);
                 foundation.onMenuKeydown(e);

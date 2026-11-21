@@ -1,6 +1,6 @@
 import { children, createMemo, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/components/divider/constants';
+import { cssClasses, type DividerPart } from '@fibrae/semi-foundation/components/divider/constants';
 import { toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/divider/divider.scss';
 import { type ElementProps, useDefaultProps } from '../../base/index';
@@ -13,13 +13,15 @@ export interface DividerProps extends ElementProps<'div'> {
     margin?: number | string;
     dashed?: boolean;
     layout?: 'horizontal' | 'vertical';
+    classNames?: Partial<Record<DividerPart, string>>;
+    styles?: Partial<Record<DividerPart, JSX.CSSProperties | string>>;
 }
 
 const defaultProps = { layout: 'horizontal', align: 'center' } satisfies Partial<DividerProps>;
 
 export default function Divider(rawProps: DividerProps) {
     const props = useDefaultProps('Divider', rawProps, defaultProps);
-    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'dashed', 'layout', 'margin', 'style']);
+    const [local, rest] = splitProps(props, ['align', 'children', 'class', 'classNames', 'dashed', 'layout', 'margin', 'style', 'styles']);
 
     // a vertical divider has no title, so its children are never created
     const content = children(() => (local.layout === 'horizontal' ? local.children : undefined));
@@ -61,7 +63,7 @@ export default function Divider(rawProps: DividerProps) {
         >
             <Show when={hasText()}>
                 <Show when={isTextOnly()} fallback={nodes()}>
-                    <span class={`${prefixCls}_inner-text`} x-semi-prop="children">
+                    <span class={clsx(`${prefixCls}_inner-text`, local.classNames?.content)} style={local.styles?.content} x-semi-prop="children">
                         {nodes()}
                     </span>
                 </Show>

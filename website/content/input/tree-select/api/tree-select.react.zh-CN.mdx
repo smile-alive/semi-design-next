@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | 是否使用无边框样式。 | `boolean` | `false` |
 | checkRelation | 多选时节点选中状态的关系，可选 `related`、`unRelated`。`unRelated` 时节点之间的选中互不影响。 | `CheckRelation` | `"related"` |
 | className | 选择框的类名，落在触发器元素上。 | `string` | - |
-| classNames | 内部各部位的类名，键为 `dropdown`（下拉面板）、`optionList`（选项列表，即 `role="tree"` 元素），与组件自带的类名合并。 | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`dropdown`、`list`、`empty`、`item`、`itemTitle`、`itemSwitcher`，与组件自带的类名合并。`content` 是触发器中间的已选内容区；`input` 是 `searchPosition="trigger"` 时触发器内的搜索框（多选时为 TagInput）；`search` 是下拉层顶部的搜索区域；`list` 是 `role="tree"` 元素；`item`、`itemTitle`、`itemSwitcher` 作用到下拉里的每个节点。 | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮的图标，`showClear` 为 true 时有效。 | `React.ReactNode` | - |
 | clickToHide | 选中后是否自动关闭下拉面板，仅在单选时生效。 | `boolean` | `true` |
 | clickTriggerToHide | 面板打开时，点击触发器后是否关闭面板。 | `boolean` | `true` |

@@ -29,6 +29,8 @@
         height: () => semiDefault('ColorPicker', 'height', 280),
         usePopover: () => semiDefault('ColorPicker', 'usePopover', false),
         popoverProps: semiGlobalDefault('ColorPicker', 'popoverProps'),
+        classNames: semiGlobalDefault('ColorPicker', 'classNames'),
+        styles: semiGlobalDefault('ColorPicker', 'styles'),
     });
 
     const emit = defineEmits<ColorPickerEmits>();
@@ -64,7 +66,8 @@
         return {
             ...popover,
             ariaLabel: popover.ariaLabel ?? (popover.ariaLabelledby ? undefined : i18n.value.locale.color),
-            class: [`${cssClasses.PREFIX}-popover`, popover.class],
+            class: [`${cssClasses.PREFIX}-popover`, popover.class, props.classNames?.dropdown],
+            style: [popover.style, props.styles?.dropdown],
             role: popover.role ?? 'dialog',
             trigger: popover.trigger ?? 'click',
         };
@@ -80,6 +83,8 @@
             defaultFormat: props.defaultFormat,
             width: props.width,
             height: props.height,
+            classNames: props.classNames,
+            styles: props.styles,
         })),
         foundation,
     });
@@ -102,7 +107,7 @@
     </ColorPickerPanel>
     <Popover v-else ref="popover" v-bind="popoverBindings" @open="ColorPickerFoundation.focusPopup(popover?.getPopup() ?? null)">
         <slot>
-            <button :aria-label="i18n.locale.color" :class="`${cssClasses.PREFIX}-popover-defaultChildren`" :style="{ backgroundColor: currentColor.hex }" type="button" />
+            <button :aria-label="i18n.locale.color" :class="[`${cssClasses.PREFIX}-popover-defaultChildren`, props.classNames?.trigger]" :style="[{ backgroundColor: currentColor.hex }, props.styles?.trigger]" type="button" />
         </slot>
         <template #content>
             <ColorPickerPanel ref="panel" v-bind="panelAttrs">

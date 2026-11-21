@@ -256,12 +256,16 @@ export default function Input(rawProps: InputProps) {
     const prefixNode = hasContent(labelNode) && (
         <div
             id={labelId}
-            className={clsx({
-                [`${prefixCls}-prefix`]: true,
-                [`${prefixCls}-inset-label`]: hasContent(insetLabel),
-                [`${prefixCls}-prefix-text`]: isText(labelNode),
-                [`${prefixCls}-prefix-icon`]: isSemiIcon(labelNode),
-            })}
+            className={clsx(
+                {
+                    [`${prefixCls}-prefix`]: true,
+                    [`${prefixCls}-inset-label`]: hasContent(insetLabel),
+                    [`${prefixCls}-prefix-text`]: isText(labelNode),
+                    [`${prefixCls}-prefix-icon`]: isSemiIcon(labelNode),
+                },
+                classNames?.prefix
+            )}
+            style={styles?.prefix}
             x-semi-prop="prefix,insetLabel"
             onClick={foundation.handleClickPrefixOrSuffix}
             onMouseDown={(e) => e.preventDefault()}
@@ -272,12 +276,16 @@ export default function Input(rawProps: InputProps) {
 
     const suffixNode = hasContent(suffix) && (
         <div
-            className={clsx({
-                [`${prefixCls}-suffix`]: true,
-                [`${prefixCls}-suffix-text`]: isText(suffix),
-                [`${prefixCls}-suffix-icon`]: isSemiIcon(suffix),
-                [`${prefixCls}-suffix-hidden`]: allowClear && Boolean(hideSuffix),
-            })}
+            className={clsx(
+                {
+                    [`${prefixCls}-suffix`]: true,
+                    [`${prefixCls}-suffix-text`]: isText(suffix),
+                    [`${prefixCls}-suffix-icon`]: isSemiIcon(suffix),
+                    [`${prefixCls}-suffix-hidden`]: allowClear && Boolean(hideSuffix),
+                },
+                classNames?.suffix
+            )}
+            style={styles?.suffix}
             x-semi-prop="suffix"
             onClick={foundation.handleClickPrefixOrSuffix}
             onMouseDown={(e) => e.preventDefault()}
@@ -288,7 +296,15 @@ export default function Input(rawProps: InputProps) {
 
     const modeNode =
         mode === 'password' && !disabled ? (
-            <button type="button" className={`${prefixCls}-modebtn`} aria-label={state.eyeClosed ? locale.showPassword : locale.hidePassword} onClick={foundation.handleClickEye} onKeyDown={stopButtonActivationKeys} onMouseDown={(e) => e.preventDefault()}>
+            <button
+                type="button"
+                className={clsx(`${prefixCls}-modebtn`, classNames?.visibilityToggle)}
+                style={styles?.visibilityToggle}
+                aria-label={state.eyeClosed ? locale.showPassword : locale.hidePassword}
+                onClick={foundation.handleClickEye}
+                onKeyDown={stopButtonActivationKeys}
+                onMouseDown={(e) => e.preventDefault()}
+            >
                 {state.eyeClosed ? <IconEyeClosedSolid /> : <IconEyeOpened />}
             </button>
         ) : null;
@@ -311,10 +327,15 @@ export default function Input(rawProps: InputProps) {
             <div ref={rootRef} className={wrapperCls} style={style} onBlur={foundation.handleBlur} onClick={foundation.handleClick} onFocus={foundation.handleFocus}>
                 {hasBefore && (
                     <div
-                        className={clsx(`${prefixCls}-prepend`, {
-                            [`${prefixCls}-prepend-text`]: isText(addonBefore),
-                            [`${prefixCls}-prepend-icon`]: isSemiIcon(addonBefore),
-                        })}
+                        className={clsx(
+                            `${prefixCls}-prepend`,
+                            {
+                                [`${prefixCls}-prepend-text`]: isText(addonBefore),
+                                [`${prefixCls}-prepend-icon`]: isSemiIcon(addonBefore),
+                            },
+                            classNames?.addonBefore
+                        )}
+                        style={styles?.addonBefore}
                         x-semi-prop="addonBefore"
                     >
                         {addonBefore}
@@ -345,7 +366,7 @@ export default function Input(rawProps: InputProps) {
                     onKeyUp={foundation.handleKeyUp}
                 />
                 {allowClear && (
-                    <button ref={setClearButton} type="button" className={`${prefixCls}-clearbtn`} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={foundation.handleClearMouseDown}>
+                    <button ref={setClearButton} type="button" className={clsx(`${prefixCls}-clearbtn`, classNames?.clear)} style={styles?.clear} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={foundation.handleClearMouseDown}>
                         {clearIcon || <IconClear />}
                     </button>
                 )}
@@ -353,10 +374,15 @@ export default function Input(rawProps: InputProps) {
                 {modeNode}
                 {hasAfter && (
                     <div
-                        className={clsx(`${prefixCls}-append`, {
-                            [`${prefixCls}-append-text`]: isText(addonAfter),
-                            [`${prefixCls}-append-icon`]: isSemiIcon(addonAfter),
-                        })}
+                        className={clsx(
+                            `${prefixCls}-append`,
+                            {
+                                [`${prefixCls}-append-text`]: isText(addonAfter),
+                                [`${prefixCls}-append-icon`]: isSemiIcon(addonAfter),
+                            },
+                            classNames?.addonAfter
+                        )}
+                        style={styles?.addonAfter}
                         x-semi-prop="addonAfter"
                     >
                         {addonAfter}

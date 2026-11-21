@@ -68,6 +68,9 @@ export default function BaseRow(props: BaseRowProps) {
 
     const cellsById = createMemo(() => new Map(cellIds().map((id, index) => [id, { column: props.columns[index], index }])));
 
+    // section and expanded rows are no records; classNames.row and styles.row skip them
+    const dataRow = () => !props.isSection && !props.expandedRow;
+
     const prefixCls = () => table.view().prefixCls;
 
     const components = () => table.view().components;
@@ -131,11 +134,12 @@ export default function BaseRow(props: BaseRowProps) {
         };
 
         return (
-            <Show when={!isExpandedColumn(column()) || expandable()} fallback={<TableCell />}>
+            <Show when={!isExpandedColumn(column()) || expandable()} fallback={<TableCell dataCell={dataRow()} />}>
                 <TableCell
                     column={column()}
                     columnsToEnd={props.columns.length - columnIndex()}
                     component={components().body.cell}
+                    dataCell={dataRow()}
                     firstFixedRight={isFirstFixedRight(props.columns, column())}
                     fixedLeft={isFixedLeft(column()) && arrayAdd(props.cellWidths, 0, columnIndex())}
                     fixedRight={isFixedRight(column()) && arrayAdd(props.cellWidths, columnIndex() + 1)}
@@ -174,10 +178,11 @@ export default function BaseRow(props: BaseRowProps) {
                               [`${prefixCls()}-row-hovered`]: props.hovered,
                               [`${prefixCls()}-row-hidden`]: props.displayNone,
                           },
+                          dataRow() && table.props.classNames?.row,
                           rowProps().class
                       )
             }
-            style={mergeStyles(props.style, rowProps().style as JSX.CSSProperties | string | undefined)}
+            style={mergeStyles(props.style, dataRow() ? table.props.styles?.row : undefined, rowProps().style as JSX.CSSProperties | string | undefined)}
             data-row-key={props.rowKey}
             onClick={handleClick}
             onContextMenu={handleContextMenu}

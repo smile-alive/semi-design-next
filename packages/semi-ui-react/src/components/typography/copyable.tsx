@@ -27,10 +27,13 @@ export interface CopyableProps extends BaseProps {
 interface CopyableInnerProps extends CopyableProps {
     /** After the copy action swapped to or from the copied tip, whose width differs: the text beside it is measured again */
     onCopiedChange?: () => void;
+    /** The `copy` part: the button, while `className` and `style` stay on the wrapping span */
+    buttonClassName?: string;
+    buttonStyle?: React.CSSProperties;
 }
 
 export default function Copyable(props: CopyableInnerProps) {
-    const { content, copyTip, duration, ref, onCopy, onCopiedChange, render, style, className } = props;
+    const { content, copyTip, duration, ref, onCopy, onCopiedChange, render, style, className, buttonClassName, buttonStyle } = props;
 
     const successTip = useUnwrappedLazy(props.successTip);
     const icon = useUnwrappedLazy(props.icon);
@@ -77,9 +80,14 @@ export default function Copyable(props: CopyableInnerProps) {
             <Tooltip condition={!copied} content={copyTip === undefined ? locale.copy : copyTip}>
                 <button
                     type="button"
-                    className={clsx(`${prefixCls}-action-btn`, {
-                        [`${prefixCls}-action-copy-icon`]: !copied && icon == null,
-                    })}
+                    className={clsx(
+                        `${prefixCls}-action-btn`,
+                        {
+                            [`${prefixCls}-action-copy-icon`]: !copied && icon == null,
+                        },
+                        buttonClassName
+                    )}
+                    style={buttonStyle}
                     aria-label={copied ? copiedName : copyName}
                     onClick={copied ? undefined : copy}
                 >

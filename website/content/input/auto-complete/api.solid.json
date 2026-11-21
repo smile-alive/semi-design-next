@@ -35,8 +35,8 @@
                 "en-US": "Whether the component is disabled."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `dropdown`（下拉列表，即 `role=\"listbox\"` 元素），与组件自带的类名合并。",
-                "en-US": "Class names of the inner parts, keyed by `dropdown` (the dropdown list, the `role=\"listbox\"` element); merged with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 `input`（原生输入框）、`prefix`、`suffix`、`clear`、`dropdown`（下拉列表，即 `role=\"listbox\"` 元素）、`item`（单个候选项），与组件自带的类名合并。`input`、`prefix`、`suffix`、`clear` 转发给内部 Input 的同名部位。",
+                "en-US": "Class names of the inner parts, keyed by `input` (the native input), `prefix`, `suffix`, `clear`, `dropdown` (the dropdown list, the `role=\"listbox\"` element) and `item` (a single option); merged with the built-in classes. `input`, `prefix`, `suffix` and `clear` are forwarded to the parts of the same names of the inner Input."
             },
             "dropdownMatchSelectWidth": {
                 "zh-CN": "下拉面板的最小宽度是否等于输入框宽度。",

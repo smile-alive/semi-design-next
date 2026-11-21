@@ -19,12 +19,14 @@
     let {
         activeIndex = defaults('activeIndex'),
         autoCollapse = defaults('autoCollapse', true),
+        classNames = defaults('classNames'),
         compact = defaults('compact', true),
         maxItemCount = defaults('maxItemCount', 4),
         moreType = defaults('moreType', 'default'),
         routes = defaults('routes', []),
         separator = defaults('separator', '/'),
         showTooltip = defaults('showTooltip', DEFAULT_TOOLTIP),
+        styles = defaults('styles'),
         onClick,
         item,
         icon,
@@ -103,6 +105,12 @@
         get icon() {
             return icon;
         },
+        get classNames() {
+            return classNames;
+        },
+        get styles() {
+            return styles;
+        },
         onClick: (info, event) => onClick?.(info as BreadcrumbRoute, event),
     });
 
@@ -124,14 +132,14 @@
 {/snippet}
 
 <nav {...rest} aria-label={rest['aria-label'] ?? locale().locale.label} bind:this={root} class={[`${prefix}-wrapper`, compact ? `${prefix}-wrapper-compact` : `${prefix}-wrapper-loose`, rest.class]}>
-    <ol bind:this={list} class={`${prefix}-list`}>
+    <ol bind:this={list} class={[`${prefix}-list`, classNames?.list]} style={styles?.list}>
         {#each before as entry (entry.key)}
             <BreadcrumbItem {...itemProps(entry)} />
         {/each}
         {#if collapsed}
             <li bind:this={moreArea} class={`${prefix}-collapse`}>
                 <span class={`${prefix}-item-wrap`}>
-                    <span aria-label={locale().locale.expand} class={`${prefix}-item ${prefix}-item-more`} role="button" tabindex="0" onclick={foundation.handleExpand} onkeydown={foundation.handleExpandKeyDown}>
+                    <span aria-label={locale().locale.expand} class={[`${prefix}-item ${prefix}-item-more`, classNames?.more]} role="button" style={styles?.more} tabindex="0" onclick={foundation.handleExpand} onkeydown={foundation.handleExpandKeyDown}>
                         {#if more}
                             {@render more({ restItems: hidden.map(({ route, index }) => ({ route, index })) })}
                         {:else if moreType === 'default'}
@@ -153,7 +161,7 @@
                             </Popover>
                         {/if}
                     </span>
-                    <span class={`${prefix}-separator`} x-semi-prop="separator">{@render separatorContent()}</span>
+                    <span class={[`${prefix}-separator`, classNames?.separator]} style={styles?.separator} x-semi-prop="separator">{@render separatorContent()}</span>
                 </span>
             </li>
         {/if}

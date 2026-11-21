@@ -143,6 +143,37 @@ describe('Svelte ImagePreview', () => {
         expect(getPreview()?.parentElement).toHaveStyle({ zIndex: '2000' });
     });
 
+    it('classNames 与 styles 按部位落到对应元素', () => {
+        const parts = ['preview', 'header', 'title', 'close', 'img', 'prev', 'next', 'footer', 'page', 'action'] as const;
+        const selectors = {
+            preview: previewCls,
+            header: `${previewCls}-header`,
+            title: `${previewCls}-header-title`,
+            close: `${previewCls}-header-close`,
+            img: `${previewCls}-image-img`,
+            prev: `${previewCls}-prev`,
+            next: `${previewCls}-next`,
+            footer: `${previewCls}-footer`,
+            page: `${previewCls}-footer-page`,
+            action: `${previewCls}-footer-button`,
+        };
+        renderPreview({
+            infinite: true,
+            previewTitle: 't',
+            classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
+            styles: Object.fromEntries(parts.map((p) => [p, `order: ${parts.indexOf(p) + 1}`])),
+        });
+        for (const part of parts) {
+            const els = document.querySelectorAll(`.${selectors[part]}`);
+            expect(els.length).toBeGreaterThan(0);
+            for (const el of els) {
+                expect(el).toHaveClass(`my-${part}`);
+                expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
+            }
+        }
+        expect(document.querySelectorAll(`.${previewCls}-footer-button`).length).toBeGreaterThan(1);
+    });
+
     it('非受控：点击分组中的图片在对应索引处打开，点击遮罩关闭，两个回调各调用一次', async () => {
         const onVisibleChange = vi.fn<(visible: boolean) => void>();
         const onChange = vi.fn<(index: number) => void>();

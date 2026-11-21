@@ -6,6 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | avatarShape | Shape of the avatar in an avatar tag: `square` or `circle`. | `AvatarShape` | `"square"` |
 | avatarSrc | Avatar image URL. Setting it makes an avatar tag. | `string` | - |
+| classNames | Class names of the inner parts, keyed by `prefix`, `avatar`, `content`, `suffix` and `close`; merged with the built-in classes. `avatar` lands on the root element of the avatar. | <ApiType detail={"Partial\u003cRecord\u003cTagPart, string>>"}>Type</ApiType> | - |
 | closable | Whether the tag can be closed. | `boolean` | `false` |
 | color | Tag color: one of the 16 palette colors or `white`. | `TagColor` | `"grey"` |
 | colorful | Whether the tag is colorful. | `boolean` | `false` |
@@ -14,6 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | prefixIcon | Icon before the content, as a JSX element. | `JSX.Element` | - |
 | shape | Tag shape: `square` or `circle`. | `TagShape` | `"square"` |
 | size | Tag size: `default`, `small` or `large`. | `TagSize` | `"default"` |
+| styles | Inline styles of the inner parts, keyed like `classNames`. | <ApiType detail={"Partial\u003cRecord\u003cTagPart, JSX.CSSProperties \u007c string>>"}>Type</ApiType> | - |
 | suffixIcon | Icon after the content, as a JSX element. | `JSX.Element` | - |
 | tagKey | Unique identifier of the tag, passed as the third argument of `onClose`. | `string \| number` | - |
 | type | Style type: `light`, `ghost` or `solid`. | `TagType` | `"light"` |
