@@ -146,7 +146,9 @@ Props 类型等于原 Semi 的声明加上属性落点元素的原生属性（`E
 内部元素的样式只经 `classNames`、`styles` 两个属性设置，键为部位名，不再提供 `xxxClassName`、`xxxCls`、`xxxStyle` 这类单独属性（与 Ant Design v6、Mantine 一致，便于配合 Tailwind 工具类）。根元素仍用 `className`（Vue、Solid、Svelte 为 `class`）与 `style`。
 
 - 部位名清单写在 foundation 该组件的 `constants.ts`（`type CardPart = ...`），四个框架共用；部位名沿用原属性的前缀，弹出层统一叫 `dropdown`。
-- 值类型：React、Solid 的类名为 `string`，Vue、Svelte 为 `ClassValue`；样式沿用各框架的 style 类型（Svelte 为字符串）。Vue 的 props 会被 `ref()` 深度解包时（如 Dropdown 的菜单项），改用一层的 `string | false | null | undefined | Record<string, unknown> | unknown[]` 与 `string | false | null | undefined | CSSProperties | any[]`（保证 `ClassValue`、`StyleValue` 可直接传入），避免 TS2589。Popover、Popconfirm 的 `styles.arrow` 是例外，仍是箭头颜色配置（`borderColor`、`backgroundColor`、`borderOpacity`）。
+- 同名部位跨组件同义（与 Ant Design、Mantine、Chakra 一致）：`dropdown` 落在弹出内容的根元素，选项列表另用 `list`；`input` 只指原生 `<input>`，输入框外层另起名字，没有原生 input 的组件不提供 `input`。
+- 图标由调用方传入、DOM 里没有包裹元素的组件（如 Button）不提供 `icon` 部位，不为部位新增包裹层；调用方直接给图标节点写类名。
+- 值类型：React、Solid 的类名为 `string`，Vue、Svelte 为 `ClassValue`；样式沿用各框架的 style 类型（Svelte 为字符串）。Vue 的 props 会被 `ref()` 深度解包时（如 Dropdown 的菜单项），类名改用一层的 `string | false | null | undefined | Record<string, unknown> | unknown[]`，样式改用经 interface 递归的等价类型（ref() 不会展开 interface），避免 TS2589，`ClassValue`、`StyleValue` 仍可直接传入。Popover、Popconfirm 的 `styles.arrow` 是例外，仍是箭头颜色配置（`borderColor`、`backgroundColor`、`borderOpacity`）。
 - 部位类名追加在组件自带类名之后；部位样式写在部位元素上，与组件自身的内联样式合并时，使用方的值后写。
 - 全局默认值里的 `classNames`、`styles` 与其他属性一样整体替换，不逐键合并；复合组件向内部组件转发时只传它映射的键。
 - Form 字段的 `fieldClassName`、`fieldStyle` 保持原样：字段本身的 `classNames` 属于被包装的控件。

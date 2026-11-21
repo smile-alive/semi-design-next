@@ -173,7 +173,7 @@
             autofocus={props.autofocus}
             bind:value={() => rangeParts.start, () => {}}
             borderless={props.borderless}
-            class={props.classNames?.input}
+            classNames={{ input: props.classNames?.input }}
             disabled={props.disabled}
             onChange={(next, event) => props.onChange?.(rangeValue(next, rangeParts.end), event)}
             onEnterPress={(event) => foundation.handleRangeInputEnterPress(event, rangeValue(rangeParts.start, rangeParts.end))}
@@ -182,7 +182,7 @@
             readOnly={props.inputReadOnly}
             showClear={false}
             size={inputSize}
-            style={props.styles?.input}
+            styles={{ input: props.styles?.input }}
         />
     </div>
     <span class={[`${prefix}-range-input-separator`, { [`${prefix}-range-input-separator-active`]: (rangeParts.start || rangeParts.end) && !props.disabled }, props.classNames?.separator]} style={props.styles?.separator} onclick={(event) => focusRange(event, 'rangeStart')}>
@@ -209,7 +209,7 @@
             {...rangeAttrs}
             bind:value={() => rangeParts.end, () => {}}
             borderless={props.borderless}
-            class={props.classNames?.input}
+            classNames={{ input: props.classNames?.input }}
             disabled={props.disabled}
             onChange={(next, event) => props.onChange?.(rangeValue(rangeParts.start, next), event)}
             onEnterPress={(event) => foundation.handleRangeInputEnterPress(event, rangeValue(rangeParts.start, rangeParts.end))}
@@ -219,7 +219,7 @@
             readOnly={props.inputReadOnly}
             showClear={false}
             size={inputSize}
-            style={props.styles?.input}
+            styles={{ input: props.styles?.input }}
         />
     </div>
     {#if allowRangeClear}
@@ -251,8 +251,8 @@
         autofocus={props.autofocus}
         bind:value={() => text, () => {}}
         borderless={props.borderless}
-        class={[inputClass, props.classNames?.input]}
-        classNames={{ suffix: props.classNames?.suffix, clear: props.classNames?.clear }}
+        class={inputClass}
+        classNames={{ input: props.classNames?.input, suffix: props.classNames?.suffix, clear: props.classNames?.clear }}
         clearIcon={props.clearIcon}
         disabled={props.disabled}
         hideSuffix={props.showClear}
@@ -272,8 +272,7 @@
         showClear={props.showClear}
         showClearIgnoreDisabled={props.showClearIgnoreDisabled}
         size={props.size}
-        style={props.styles?.input}
-        styles={{ suffix: props.styles?.suffix, clear: props.styles?.clear }}
+        styles={{ input: props.styles?.input, suffix: props.styles?.suffix, clear: props.styles?.clear }}
         suffix={calendarIcon}
         validateStatus={props.validateStatus}
     />

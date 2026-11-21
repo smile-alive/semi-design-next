@@ -78,8 +78,8 @@
                 "en-US": "id of the insetLabel, referenced through aria-labelledby."
             },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 dropdown（弹出层的面板卡片）、input（输入框的根元素）、header（面板顶部的标题区）、content（放置各列的区域）、item（每一列里的单个时间选项）、footer（面板底部区域），值的写法同 class，与组件自带的类名合并。范围模式下左右两个面板都会应用。",
-                "en-US": "Class names of the inner parts, keyed by dropdown (the panel card of the popup), input (the root element of the input), header (the title area at the top of the panel), content (the area holding the columns), item (each time option in a column) and footer (the bottom area of the panel); in range mode both panels apply them. Values take any class binding and merge with the built-in classes."
+                "zh-CN": "内部各部位的类名，键为 dropdown（弹出层的面板卡片）、input（原生输入框）、header（面板顶部的标题区）、content（放置各列的区域）、item（每一列里的单个时间选项）、footer（面板底部区域），值的写法同 class，与组件自带的类名合并。范围模式下左右两个面板都会应用。",
+                "en-US": "Class names of the inner parts, keyed by dropdown (the panel card of the popup), input (the native input), header (the title area at the top of the panel), content (the area holding the columns), item (each time option in a column) and footer (the bottom area of the panel); in range mode both panels apply them. Values take any class binding and merge with the built-in classes."
             },
             "styles": { "zh-CN": "内部各部位的内联样式，键同 classNames。", "en-US": "Inline styles of the inner parts, keyed like classNames." },
             "autofocus": {

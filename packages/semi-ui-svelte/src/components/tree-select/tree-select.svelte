@@ -372,7 +372,7 @@
     // own; the text is exposed as the description
     const triggerSearchProps = $derived<TreeSelectSearchSnippetProps>({
         ...(comboboxAttrs as Partial<TreeSelectSearchSnippetProps>),
-        class: [`${cls}-inputTrigger`, classNames?.input],
+        class: `${cls}-inputTrigger`,
         value: view.inputValue,
         placeholder: '',
         showClear: false,
@@ -615,7 +615,7 @@
     {:else if withIcon}
         <Input {...props} prefix={searchIcon} />
     {:else}
-        <Input {...props} style={styles?.input} />
+        <Input {...props} classNames={{ input: classNames?.input }} styles={{ input: styles?.input }} />
     {/if}
 {/snippet}
 
@@ -693,7 +693,7 @@
                 addOnBlur={false}
                 aria-autocomplete="list"
                 autofocus={searchAutoFocus}
-                class={classNames?.input}
+                classNames={{ input: classNames?.input }}
                 {disabled}
                 draggable={false}
                 expandRestTagsOnClick={false}
@@ -706,7 +706,7 @@
                 showClear={false}
                 {showRestTagsPopover}
                 {size}
-                style={styles?.input}
+                styles={{ input: styles?.input }}
                 tag={tagInputTag}
             />
         {:else if triggerSearch}

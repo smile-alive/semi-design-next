@@ -345,8 +345,8 @@ export default function TimePicker(rawProps: TimePickerProps) {
             {...rest}
             // APG combobox: the input opens the panel of lists and carries its state
             role="combobox"
-            class={local.classNames?.input}
-            style={local.styles?.input}
+            classNames={{ input: local.classNames?.input }}
+            styles={{ input: local.styles?.input }}
             aria-controls={open() ? panelId : undefined}
             aria-expanded={open()}
             aria-haspopup="dialog"

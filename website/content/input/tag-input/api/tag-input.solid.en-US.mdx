@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | allowDuplicates | Whether the same tag can be added more than once. | `boolean` | `true` |
 | aria-label | Accessible name of the input. It is set on the input, not on the root. | `string` | - |
 | autofocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `false` |
-| classNames | Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `tag`, `input` and `clear`; merged with the built-in classes. `input` lands on the root element of the inner Input, not the native input; `tag` applies to the default tags only, nodes from `renderTagItem` are styled by the caller. | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, string>>"}>Type</ApiType> | - |
+| classNames | Class names of the inner parts, keyed by `prefix`, `suffix`, `content`, `tag`, `input` and `clear`; merged with the built-in classes. `input` lands on the inner native input; `tag` applies to the default tags only, nodes from `renderTagItem` are styled by the caller. | <ApiType detail={"Partial\u003cRecord\u003cTagInputPart, string>>"}>Type</ApiType> | - |
 | clearIcon | Replaces the icon in the clear button; empty content keeps the default icon. | `JSX.Element` | - |
 | defaultValue | Initial tags when uncontrolled. | `string[]` | - |
 | disabled | Whether the component is disabled. | `boolean` | - |

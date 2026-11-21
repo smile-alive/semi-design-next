@@ -195,8 +195,8 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         ref={rangeInputStartRef}
-                        className={classNames?.input}
-                        style={styles?.input}
+                        classNames={{ input: classNames?.input }}
+                        styles={{ input: styles?.input }}
                         autoFocus={autofocus}
                         disabled={disabled}
                         placeholder={rangeStartPlaceholder}
@@ -234,8 +234,8 @@ export default function DateInput(rawProps: DateInputProps) {
                     <Input
                         {...comboboxProps}
                         ref={rangeInputEndRef}
-                        className={classNames?.input}
-                        style={styles?.input}
+                        classNames={{ input: classNames?.input }}
+                        styles={{ input: styles?.input }}
                         disabled={disabled}
                         placeholder={rangeEndPlaceholder}
                         readOnly={inputReadOnly}
@@ -304,10 +304,9 @@ export default function DateInput(rawProps: DateInputProps) {
             <InternalInput
                 {...rest}
                 ref={inputRef}
-                className={clsx(inputCls, classNames?.input)}
-                classNames={{ suffix: classNames?.suffix, clear: classNames?.clear }}
-                style={styles?.input}
-                styles={{ suffix: styles?.suffix, clear: styles?.clear }}
+                className={inputCls}
+                classNames={{ input: classNames?.input, suffix: classNames?.suffix, clear: classNames?.clear }}
+                styles={{ input: styles?.input, suffix: styles?.suffix, clear: styles?.clear }}
                 autoFocus={autofocus}
                 disabled={disabled}
                 placeholder={type === 'monthRange' && Array.isArray(placeholder) ? placeholder[0] + rangeSeparator + placeholder[1] : (placeholder as string)}

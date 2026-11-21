@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | autofocus | Whether to focus the first input on mount. Turn it on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it. | `boolean` | `false` |
-| classNames | Class names of the inner parts, keyed by `input`; merged with the built-in classes. `input` lands on the root element of every cell, not the native input. | <ApiType detail={"Partial\u003cRecord\u003c\"input\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("PinCode", "classNames")` |
+| classNames | Class names of the inner parts, keyed by `input`; merged with the built-in classes. `input` lands on the native input of every cell. | <ApiType detail={"Partial\u003cRecord\u003c\"input\", ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("PinCode", "classNames")` |
 | count | Number of digits. | `number` | `6` |
 | defaultValue | Initial content when uncontrolled. | `string` | `semiGlobalDefault("PinCode", "defaultValue")` |
 | disabled | Whether the input is disabled. | `boolean` | `semiGlobalDefault("PinCode", "disabled")` |

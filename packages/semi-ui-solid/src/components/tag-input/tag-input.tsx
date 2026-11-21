@@ -515,8 +515,9 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                     inputRef={(node) => (input = node)}
                     id={local.id}
                     name={local.name}
-                    class={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${local.size}`, local.classNames?.input)}
-                    style={local.styles?.input}
+                    class={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${local.size}`)}
+                    classNames={{ input: local.classNames?.input }}
+                    styles={{ input: local.styles?.input }}
                     aria-activedescendant={local['aria-activedescendant']}
                     aria-autocomplete={local['aria-autocomplete']}
                     aria-controls={local['aria-controls']}

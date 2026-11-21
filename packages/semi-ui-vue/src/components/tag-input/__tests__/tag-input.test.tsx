@@ -91,7 +91,7 @@ describe('TagInput', () => {
             { prefix: () => 'p', suffix: () => 's' }
         );
         for (const part of parts) {
-            const el = document.querySelector(`.${tagInputCls}-${selectors[part]}`);
+            const el = document.querySelector(part === 'input' ? `.${tagInputCls}-${selectors[part]} input` : `.${tagInputCls}-${selectors[part]}`);
             expect(el).toHaveClass(`my-${part}`);
             expect(el).toHaveStyle({ order: String(parts.indexOf(part) + 1) });
         }

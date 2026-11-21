@@ -49,7 +49,7 @@
             ]"
         />
         <InputGroup :class="`${cssClasses.PREFIX}-inputGroup`" size="small">
-            <Input :aria-label="i18n.locale.color" :class="[`${cssClasses.PREFIX}-colorPickerInput`, props.classNames?.input]" :modelValue="state.inputValue" :showClear="false" :style="props.styles?.input" @change="foundation.handleInputValueChange" />
+            <Input :aria-label="i18n.locale.color" :class="`${cssClasses.PREFIX}-colorPickerInput`" :classNames="{ input: props.classNames?.input }" :modelValue="state.inputValue" :showClear="false" :styles="{ input: props.styles?.input }" @change="foundation.handleInputValueChange" />
             <InputNumber v-if="props.alpha" :aria-label="i18n.locale.alpha" :class="`${cssClasses.PREFIX}-colorPickerInputNumber`" hideButtons :max="100" :min="0" :modelValue="Math.round(props.currentColor.rgba.a * 100)" :showClear="false" @numberChange="foundation.handleAlphaInputChange">
                 <template #suffix>
                     <span :class="`${cssClasses.PREFIX}-inputNumberSuffix`">%</span>

@@ -265,8 +265,10 @@
         // the trigger draws its own clear button: a global Input default must not add one
         showClear: false,
         ...omit(props.inputProps ?? {}, ['ref']),
-        class: [`${prefix}-input`, props.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, props.inputProps?.class, props.classNames?.input],
-        style: [props.multiple ? { width: state.value.inputValue ? `${state.value.inputValue.length * 16}px` : '2px' } : props.inputProps?.style, props.styles?.input],
+        class: [`${prefix}-input`, props.multiple ? `${prefix}-input-multiple` : `${prefix}-input-single`, props.inputProps?.class],
+        style: props.multiple ? { width: state.value.inputValue ? `${state.value.inputValue.length * 16}px` : '2px' } : props.inputProps?.style,
+        classNames: { ...props.inputProps?.classNames, input: [props.inputProps?.classNames?.input, props.classNames?.input] },
+        styles: { ...props.inputProps?.styles, input: [props.inputProps?.styles?.input, props.styles?.input] },
     });
 
     // a search field over the trigger's list, not a second combobox (React Aria Autocomplete pattern)

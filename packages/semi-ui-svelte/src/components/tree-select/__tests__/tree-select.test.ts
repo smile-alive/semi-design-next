@@ -151,14 +151,14 @@ describe('Svelte TreeSelect 渲染', () => {
         });
 
         it('searchPosition 为 trigger 时 classNames.input 落在单选搜索框上', async () => {
-            const selectors = { input: `.${prefixCls}-inputTrigger` };
+            const selectors = { input: `.${prefixCls}-inputTrigger input` };
             setup({ defaultOpen: false, filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) });
             await settle();
             expectParts(selectors);
         });
 
         it('多选时 classNames.input 落在 TagInput 上，classNames.tag 落在已选标签上', async () => {
-            const selectors = { input: `.${BASE_CLASS_PREFIX}-tagInput`, tag: `.${prefixCls}-selection-tag` };
+            const selectors = { input: `.${BASE_CLASS_PREFIX}-tagInput-wrapper-input input`, tag: `.${prefixCls}-selection-tag` };
             setup({ defaultOpen: false, multiple: true, filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) }, { value: ['Beijing'] });
             await settle();
             expectParts(selectors);

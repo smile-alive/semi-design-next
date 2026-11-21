@@ -51,8 +51,9 @@ export default function DataPart(props: DataPartProps) {
             />
             <InputGroup className={`${cssClasses.PREFIX}-inputGroup`} size="small">
                 <Input
-                    className={clsx(`${cssClasses.PREFIX}-colorPickerInput`, classNames?.input)}
-                    style={styles?.input}
+                    className={`${cssClasses.PREFIX}-colorPickerInput`}
+                    classNames={{ input: classNames?.input }}
+                    styles={{ input: styles?.input }}
                     aria-label={locale.color}
                     value={state.inputValue}
                     // the inputs share one compact group: the adornments and showClear are set so global Input and

@@ -377,7 +377,8 @@
             aria-invalid={ariaInvalid}
             aria-label={ariaLabel}
             aria-labelledby={ariaLabelledby}
-            class={[`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`, classNames?.input]}
+            class={[`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`]}
+            classNames={{ input: classNames?.input }}
             {disabled}
             onChange={foundation.handleInputChange}
             onCompositionEnd={foundation.handleInputCompositionEnd}
@@ -387,7 +388,7 @@
             {preventScroll}
             showClear={false}
             {size}
-            style={styles?.input}
+            styles={{ input: styles?.input }}
         />
     </div>
     {#if showClear}

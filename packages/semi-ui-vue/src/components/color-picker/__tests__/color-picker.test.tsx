@@ -235,7 +235,7 @@ describe('ColorPicker 审计修复', () => {
         await userEvent.click(screen.getByRole('button', { name: text.color }));
         await screen.findByRole('dialog');
         for (const part of parts) {
-            const els = document.querySelectorAll(`.${prefixCls}-${selectors[part]}`);
+            const els = document.querySelectorAll(part === 'input' ? `.${prefixCls}-${selectors[part]} input` : `.${prefixCls}-${selectors[part]}`);
             expect(els).toHaveLength(part === 'handle' ? 3 : 1);
             for (const el of els) {
                 expect(el).toHaveClass(`my-${part}`);

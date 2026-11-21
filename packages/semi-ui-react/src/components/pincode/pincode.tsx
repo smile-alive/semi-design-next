@@ -128,8 +128,8 @@ export default function PinCode(rawProps: PinCodeProps) {
                         inputsRef.current[index] = handle;
                     }}
                     id={index === 0 ? id : undefined}
-                    className={classNames?.input}
-                    style={styles?.input}
+                    classNames={{ input: classNames?.input }}
+                    styles={{ input: styles?.input }}
                     aria-describedby={ariaDescribedby}
                     aria-errormessage={ariaErrormessage}
                     aria-invalid={ariaInvalid}

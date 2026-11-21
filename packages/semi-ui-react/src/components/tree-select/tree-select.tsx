@@ -467,13 +467,10 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     };
 
     const renderInput = () => {
-        const inputcls = clsx(
-            {
-                [`${prefixTree}-input`]: isDropdownPositionSearch,
-                [`${prefixcls}-inputTrigger`]: !isDropdownPositionSearch,
-            },
-            !isDropdownPositionSearch && classNames?.input
-        );
+        const inputcls = clsx({
+            [`${prefixTree}-input`]: isDropdownPositionSearch,
+            [`${prefixcls}-inputTrigger`]: !isDropdownPositionSearch,
+        });
         const baseInputProps = {
             value: inputValue,
             className: inputcls,
@@ -531,7 +528,21 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     })
                 ) : (
                     // global Input defaults must not add a clear button or adornments; realInputProps sets the dropdown's own
-                    <Input ref={setInputRef} {...inputA11yProps} style={isDropdownPositionSearch ? undefined : styles?.input} placeholder={inputPlaceholder} addonAfter={null} addonBefore={null} insetLabel={null} showClear={false} prefix={null} suffix={null} {...baseInputProps} {...realInputProps} />
+                    <Input
+                        ref={setInputRef}
+                        {...inputA11yProps}
+                        classNames={{ input: isDropdownPositionSearch ? undefined : classNames?.input }}
+                        styles={{ input: isDropdownPositionSearch ? undefined : styles?.input }}
+                        placeholder={inputPlaceholder}
+                        addonAfter={null}
+                        addonBefore={null}
+                        insetLabel={null}
+                        showClear={false}
+                        prefix={null}
+                        suffix={null}
+                        {...baseInputProps}
+                        {...realInputProps}
+                    />
                 )}
             </div>
         );
@@ -762,8 +773,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         <TagInput
             ref={tagInputRef}
             {...comboboxProps}
-            className={classNames?.input}
-            style={styles?.input}
+            classNames={{ input: classNames?.input }}
+            styles={{ input: styles?.input }}
             aria-autocomplete="list"
             autoFocus={isTriggerPositionSearch ? searchAutoFocus : undefined}
             disabled={disabled}

@@ -412,14 +412,14 @@ describe('TreeSelect', () => {
             expectParts(selectors);
         });
 
-        it('searchPosition 为 trigger 时 classNames.input 落在单选搜索框上', async () => {
-            const selectors = { input: `.${prefixCls}-inputTrigger` };
+        it('searchPosition 为 trigger 时 classNames.input 落在单选搜索框的原生 input 上', async () => {
+            const selectors = { input: `.${prefixCls}-inputTrigger input` };
             await renderTreeSelect({ defaultOpen: false, filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) });
             expectParts(selectors);
         });
 
-        it('多选时 classNames.input 落在 TagInput 上，classNames.tag 落在已选标签上', async () => {
-            const selectors = { input: `.${BASE_CLASS_PREFIX}-tagInput`, tag: `.${prefixCls}-selection-tag` };
+        it('多选时 classNames.input 落在 TagInput 的原生 input 上，classNames.tag 落在已选标签上', async () => {
+            const selectors = { input: `.${BASE_CLASS_PREFIX}-tagInput input`, tag: `.${prefixCls}-selection-tag` };
             await renderTreeSelect({ defaultOpen: false, multiple: true, defaultValue: ['Beijing'], filterTreeNode: true, searchPosition: 'trigger', ...partProps(selectors) });
             expectParts(selectors);
         });

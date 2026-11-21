@@ -45,8 +45,9 @@ export default function DataPart(props: DataPartProps) {
             <div class={clsx(`${cssClasses.PREFIX}-colorDemoBlock`, props.classNames?.preview)} style={mergeStyles({ 'min-width': '20px', 'min-height': '20px', 'background-color': demoColor() }, props.styles?.preview)} />
             <InputGroup class={`${cssClasses.PREFIX}-inputGroup`} size="small">
                 <Input
-                    class={clsx(`${cssClasses.PREFIX}-colorPickerInput`, props.classNames?.input)}
-                    style={props.styles?.input}
+                    class={`${cssClasses.PREFIX}-colorPickerInput`}
+                    classNames={{ input: props.classNames?.input }}
+                    styles={{ input: props.styles?.input }}
                     aria-label={locale().locale.color}
                     value={state().inputValue}
                     // the inputs share one compact group: the adornments and showClear are set so global Input and

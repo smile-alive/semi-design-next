@@ -332,7 +332,7 @@ describe('Svelte Select 搜索与新建', () => {
         expectPart(`.${prefixCls}-prefix`, 'prefix');
         expectPart(`.${prefixCls}-suffix`, 'suffix');
         expectPart(`.${prefixCls}-selection`, 'content');
-        expectPart(`.${prefixCls}-input`, 'input');
+        expectPart(`.${prefixCls}-input input`, 'input');
         expectPart('.semi-tag', 'tag');
         expectPart(`.${prefixCls}-clear`, 'clear');
         expectPart(`.${prefixCls}-arrow`, 'arrow');

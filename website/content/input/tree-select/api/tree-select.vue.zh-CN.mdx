@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | 无边框模式。 | `boolean` | `false` |
 | changeWithObject | 布尔属性而不是事件：设为 true 时，modelValue 与 change 的载荷由 value 变为节点对象；受控时 modelValue 与 defaultValue 也要传对象，且必须含 value。 | `boolean` | `false` |
 | checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `"related"` |
-| classNames | 内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、item、itemTitle、itemSwitcher，值的写法同 class，与组件自带的类名合并。content 是触发器中间的已选内容区；input 是 searchPosition="trigger" 时触发器内的搜索框（多选时为 TagInput）；search 是下拉层顶部的搜索区域；list 是 role="tree" 的元素；item、itemTitle、itemSwitcher 作用到下拉里的每个节点。 | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "classNames")` |
+| classNames | 内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、item、itemTitle、itemSwitcher，值的写法同 class，与组件自带的类名合并。content 是触发器中间的已选内容区；input 是 searchPosition="trigger" 时触发器内搜索框的原生输入框（多选时为 TagInput 的原生输入框）；search 是下拉层顶部的搜索区域；list 是 role="tree" 的元素；item、itemTitle、itemSwitcher 作用到下拉里的每个节点。 | <ApiType detail={"Partial\u003cRecord\u003cTreeSelectPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "classNames")` |
 | clickToHide | 单选时选中节点后是否关闭下拉面板。 | `boolean` | `true` |
 | clickTriggerToHide | 下拉面板打开时，点击选择框是否关闭面板。 | `boolean` | `true` |
 | defaultExpandAll | 初始化时展开所有节点。之后 treeData 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `false` |

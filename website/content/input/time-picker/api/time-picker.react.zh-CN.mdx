@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoFocus | 挂载后将焦点交给输入框，透传给输入框的 `autoFocus`。 | `boolean` | - |
 | borderless | 无边框模式。 | `boolean` | `false` |
 | className | 根元素的类名。 | `string` | `""` |
-| classNames | 内部各部位的类名，键为 `dropdown`（弹出层的面板卡片）、`input`（输入框的根元素）、`header`（面板顶部的标题区）、`content`（放置各列的区域）、`item`（每一列里的单个时间选项）、`footer`（面板底部区域），与组件自带的类名合并。范围模式下左右两个面板都会应用。 | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `dropdown`（弹出层的面板卡片）、`input`（原生输入框）、`header`（面板顶部的标题区）、`content`（放置各列的区域）、`item`（每一列里的单个时间选项）、`footer`（面板底部区域），与组件自带的类名合并。范围模式下左右两个面板都会应用。 | <ApiType detail={"Partial\u003cRecord\u003cTimePickerPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除图标，`showClear` 为 `true` 时有效。 | `React.ReactNode` | - |
 | defaultOpen | 非受控时面板是否默认打开。 | `boolean` | - |
 | defaultValue | 非受控时的初始时间，形态同 `value`；`type` 为 `timeRange` 时为数组。 | `BaseValueType \| BaseValueType[]` | - |

@@ -368,7 +368,7 @@ describe('Svelte AutoComplete 打开与选择', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        const parts = ['input', 'prefix', 'suffix', 'clear', 'dropdown', 'item'] as const;
+        const parts = ['input', 'prefix', 'suffix', 'clear', 'dropdown', 'list', 'item'] as const;
         setup(
             {
                 classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
@@ -384,7 +384,7 @@ describe('Svelte AutoComplete 打开与选择', () => {
         // the clear button only shows while the input wrapper is hovered or focused
         await fireEvent.mouseOver(getElement('.semi-input-wrapper'));
         await settle();
-        const selectors = { input: 'input', prefix: '.semi-input-prefix', suffix: '.semi-input-suffix', clear: '.semi-input-clearbtn', dropdown: `.${optionCls}-list`, item: `.${optionCls}` };
+        const selectors = { input: 'input', prefix: '.semi-input-prefix', suffix: '.semi-input-suffix', clear: '.semi-input-clearbtn', dropdown: `.${optionCls}-list-wrapper`, list: `.${optionCls}-list`, item: `.${optionCls}` };
         for (const part of parts) {
             const el = document.querySelector(selectors[part]);
             expect(el).toHaveClass(`my-${part}`);
@@ -392,11 +392,15 @@ describe('Svelte AutoComplete 打开与选择', () => {
         }
     });
 
-    it('maxHeight 数字按 px、字符串原样，与 styles.dropdown 合并且 styles.dropdown 优先', async () => {
-        const first = setup({ defaultOpen: true, maxHeight: 400, classNames: { dropdown: 'ddc' }, styles: { dropdown: 'color: red' } });
+    it('maxHeight 数字按 px、字符串原样，与 styles.list 合并且 styles.list 优先', async () => {
+        const first = setup({ defaultOpen: true, maxHeight: 400, classNames: { dropdown: 'ddc', list: 'lc' }, styles: { dropdown: 'color: red', list: 'color: blue' } });
         await settle();
-        expect(getList()).toHaveClass('ddc');
-        expect(getList()).toHaveStyle({ maxHeight: '400px', color: 'rgb(255, 0, 0)' });
+        const dropdown = document.querySelector<HTMLElement>(`.${optionCls}-list-wrapper`);
+        expect(dropdown).toHaveClass('ddc');
+        expect(dropdown).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+        expect(dropdown).toContainElement(getList());
+        expect(getList()).toHaveClass('lc');
+        expect(getList()).toHaveStyle({ maxHeight: '400px', color: 'rgb(0, 0, 255)' });
         first.unmount();
 
         const second = setup({ defaultOpen: true, maxHeight: '50vh' });
@@ -404,7 +408,7 @@ describe('Svelte AutoComplete 打开与选择', () => {
         expect(getList()?.style.maxHeight).toBe('50vh');
         second.unmount();
 
-        setup({ defaultOpen: true, maxHeight: 100, styles: { dropdown: 'max-height: 10px' } });
+        setup({ defaultOpen: true, maxHeight: 100, styles: { list: 'max-height: 10px' } });
         await settle();
         expect(getList()?.style.maxHeight).toBe('10px');
     });

@@ -566,8 +566,9 @@ export default function TagInput(rawProps: TagInputProps) {
                         ref={setInput}
                         id={id}
                         name={name}
-                        className={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`, classNames?.input)}
-                        style={styles?.input}
+                        className={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`)}
+                        classNames={{ input: classNames?.input }}
+                        styles={{ input: styles?.input }}
                         aria-activedescendant={ariaActivedescendant}
                         aria-autocomplete={ariaAutocomplete}
                         aria-controls={ariaControls}

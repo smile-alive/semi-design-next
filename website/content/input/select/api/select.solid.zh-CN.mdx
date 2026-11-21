@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | 挂载后是否自动聚焦。 | `boolean` | - |
 | borderless | 是否使用无边框样式。 | `boolean` | `false` |
 | children | 选项，直接子元素必须是 `Select.Option` 或 `Select.OptGroup`。`optionList` 非空时优先于 children；分组只能用 `Select.OptGroup` 声明。 | `JSX.Element` | - |
-| classNames | 内部各部位的类名，键为 `prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`dropdown`、`list`、`empty`、`groupLabel`、`item`、`itemIcon`、`itemContent`，与组件自带的类名合并。`content` 是触发器中间的已选内容区，`input` 是触发器内搜索框的根元素（与 Input 的 `input` 不同，后者是原生输入框），`search` 是 `searchPosition="dropdown"` 时下拉层顶部的搜索区域，`dropdown` 是弹出层最外层，`list` 是选项列表。`item`、`itemIcon`、`itemContent` 作用到全部选项，先于 `Select.Option` 自己的 `classNames` 生效，对 `renderOptionItem`、`renderCreateItem` 自定义渲染的选项不生效。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, string>>"}>Type</ApiType> | - |
+| classNames | 内部各部位的类名，键为 `prefix`、`suffix`、`content`、`placeholder`、`input`、`search`、`tag`、`clear`、`arrow`、`dropdown`、`list`、`empty`、`groupLabel`、`item`、`itemIcon`、`itemContent`，与组件自带的类名合并。`content` 是触发器中间的已选内容区，`input` 是触发器内搜索框的原生输入框，`search` 是 `searchPosition="dropdown"` 时下拉层顶部的搜索区域，`dropdown` 是弹出层最外层，`list` 是选项列表。`item`、`itemIcon`、`itemContent` 作用到全部选项，先于 `Select.Option` 自己的 `classNames` 生效，对 `renderOptionItem`、`renderCreateItem` 自定义渲染的选项不生效。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, string>>"}>Type</ApiType> | - |
 | clearIcon | 自定义清除按钮的图标，showClear 为 true 时有效。 | `JSX.Element` | - |
 | clickToHide | 下拉列表已展开时，点击选择框是否收起它。 | `boolean` | - |
 | defaultActiveFirstOption | 没有选中值时，打开下拉列表是否默认高亮第一个未禁用的选项（按 Enter 可直接选中）。已有选中值时总是高亮第一个已选的选项。 | `boolean` | `true` |

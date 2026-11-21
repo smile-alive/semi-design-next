@@ -397,8 +397,8 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
                                 {...rest}
                                 id={id}
                                 type={type}
-                                className={classNames?.input}
-                                style={styles?.input}
+                                classNames={{ input: classNames?.input }}
+                                styles={{ input: styles?.input }}
                                 aria-controls={open ? panelId : undefined}
                                 aria-describedby={ariaDescribedby}
                                 aria-errormessage={ariaErrormessage}

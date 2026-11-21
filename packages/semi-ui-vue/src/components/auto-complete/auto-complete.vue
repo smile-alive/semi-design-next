@@ -281,36 +281,38 @@
             </Input>
         </div>
         <template #content>
-            <div :id="listId" ref="listbox" v-bind="nameAttrs()" :class="[`${prefix}-option-list`, props.classNames?.dropdown]" role="listbox" :style="[{ maxHeight: toCssLength(props.maxHeight) }, props.styles?.dropdown]" @mousedown.prevent>
-                <div v-if="props.loading" :class="`${prefix}-loading-wrapper`">
-                    <Spin />
+            <div :class="[`${prefix}-option-list-wrapper`, props.classNames?.dropdown]" :style="props.styles?.dropdown">
+                <div :id="listId" ref="listbox" v-bind="nameAttrs()" :class="[`${prefix}-option-list`, props.classNames?.list]" role="listbox" :style="[{ maxHeight: toCssLength(props.maxHeight) }, props.styles?.list]" @mousedown.prevent>
+                    <div v-if="props.loading" :class="`${prefix}-loading-wrapper`">
+                        <Spin />
+                    </div>
+                    <slot v-else-if="state.options.length === 0" name="emptyContent" />
+                    <template v-else>
+                        <!-- item fields that share a name with the row's own props stay out: only class, style and data-* go along -->
+                        <SelectOption
+                            v-for="(option, index) in visibleOptions"
+                            :key="option.key ?? `${option.label}${option.value}${index}`"
+                            v-bind="{
+                                ...getDataAttr(option),
+                                class: option.class,
+                                style: option.style,
+                            }"
+                            :current="index === state.focusIndex"
+                            :disabled="option.disabled"
+                            :focused="index === state.focusIndex"
+                            :label="option.label ?? option.value"
+                            :parentClassNames="props.classNames"
+                            :parentStyles="props.styles"
+                            :semiOptionId="optionId(index)"
+                            :showTick="false"
+                            :value="option.value"
+                            @mouseenter="foundation.handleOptionMouseEnter(index)"
+                            @select="foundation.handleSelect(option, index)"
+                        >
+                            <slot :index="index" :item="option._source as T" name="item">{{ option.label ?? option.value }}</slot>
+                        </SelectOption>
+                    </template>
                 </div>
-                <slot v-else-if="state.options.length === 0" name="emptyContent" />
-                <template v-else>
-                    <!-- item fields that share a name with the row's own props stay out: only class, style and data-* go along -->
-                    <SelectOption
-                        v-for="(option, index) in visibleOptions"
-                        :key="option.key ?? `${option.label}${option.value}${index}`"
-                        v-bind="{
-                            ...getDataAttr(option),
-                            class: option.class,
-                            style: option.style,
-                        }"
-                        :current="index === state.focusIndex"
-                        :disabled="option.disabled"
-                        :focused="index === state.focusIndex"
-                        :label="option.label ?? option.value"
-                        :parentClassNames="props.classNames"
-                        :parentStyles="props.styles"
-                        :semiOptionId="optionId(index)"
-                        :showTick="false"
-                        :value="option.value"
-                        @mouseenter="foundation.handleOptionMouseEnter(index)"
-                        @select="foundation.handleSelect(option, index)"
-                    >
-                        <slot :index="index" :item="option._source as T" name="item">{{ option.label ?? option.value }}</slot>
-                    </SelectOption>
-                </template>
             </div>
         </template>
     </Popover>

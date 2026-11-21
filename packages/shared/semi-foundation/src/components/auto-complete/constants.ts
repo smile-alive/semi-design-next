@@ -6,4 +6,4 @@ export const cssClasses = {
 };
 
 /** Keys of `classNames` and `styles`; the root element takes `className` and `style` */
-export type AutoCompletePart = 'input' | 'prefix' | 'suffix' | 'clear' | 'dropdown' | 'item';
+export type AutoCompletePart = 'input' | 'prefix' | 'suffix' | 'clear' | 'dropdown' | 'list' | 'item';

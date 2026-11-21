@@ -46,7 +46,7 @@
 <div class={`${cssClasses.PREFIX}-dataPart`} style:width={`${props.width}px`}>
     <div class={[`${cssClasses.PREFIX}-colorDemoBlock`, props.classNames?.preview]} style={joinStyle(`background-color: rgba(${props.currentColor.rgba.r},${props.currentColor.rgba.g},${props.currentColor.rgba.b},${props.currentColor.rgba.a}); min-height: 20px; min-width: 20px`, props.styles?.preview)}></div>
     <InputGroup class={`${cssClasses.PREFIX}-inputGroup`} size="small">
-        <Input aria-label={locale().locale.color} bind:value={() => states().inputValue, () => {}} class={[`${cssClasses.PREFIX}-colorPickerInput`, props.classNames?.input]} onChange={foundation.handleInputValueChange} showClear={false} style={props.styles?.input} />
+        <Input aria-label={locale().locale.color} bind:value={() => states().inputValue, () => {}} class={`${cssClasses.PREFIX}-colorPickerInput`} classNames={{ input: props.classNames?.input }} onChange={foundation.handleInputValueChange} showClear={false} styles={{ input: props.styles?.input }} />
         {#if props.alpha}
             <InputNumber aria-label={locale().locale.alpha} bind:value={() => Math.round(props.currentColor.rgba.a * 100), () => {}} class={`${cssClasses.PREFIX}-colorPickerInputNumber`} hideButtons max={100} min={0} onNumberChange={foundation.handleAlphaInputChange} showClear={false} suffix={percentSuffix} />
         {/if}

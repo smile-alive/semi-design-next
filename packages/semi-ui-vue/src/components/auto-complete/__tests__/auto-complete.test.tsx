@@ -121,7 +121,7 @@ describe('AutoComplete', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
-        const parts = ['input', 'prefix', 'suffix', 'clear', 'dropdown', 'item'] as const;
+        const parts = ['input', 'prefix', 'suffix', 'clear', 'dropdown', 'list', 'item'] as const;
         await renderAc(
             {
                 classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
@@ -136,7 +136,7 @@ describe('AutoComplete', () => {
         // the clear button only shows while the input wrapper is hovered or focused
         await fireEvent.mouseOver(getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`));
         await settle();
-        const selectors = { input: 'input', prefix: `.${BASE_CLASS_PREFIX}-input-prefix`, suffix: `.${BASE_CLASS_PREFIX}-input-suffix`, clear: `.${BASE_CLASS_PREFIX}-input-clearbtn`, dropdown: `.${optionCls}-list`, item: `.${optionCls}` };
+        const selectors = { input: 'input', prefix: `.${BASE_CLASS_PREFIX}-input-prefix`, suffix: `.${BASE_CLASS_PREFIX}-input-suffix`, clear: `.${BASE_CLASS_PREFIX}-input-clearbtn`, dropdown: `.${optionCls}-list-wrapper`, list: `.${optionCls}-list`, item: `.${optionCls}` };
         for (const part of parts) {
             const el = document.querySelector(selectors[part]);
             expect(el).toHaveClass(`my-${part}`);
@@ -1427,12 +1427,12 @@ describe('AutoComplete Vue 写法', () => {
         expect(getFocusedOption()).toBe(getOptions()[2]);
     });
 
-    it('maxHeight 字符串原样使用；styles.dropdown 与 maxHeight 合并且后者优先', async () => {
-        await renderAc({ data: stringData, defaultOpen: true, maxHeight: '50vh', styles: { dropdown: { color: 'red' } } });
+    it('maxHeight 字符串原样使用；styles.list 与 maxHeight 合并且后者优先', async () => {
+        await renderAc({ data: stringData, defaultOpen: true, maxHeight: '50vh', styles: { list: { color: 'red' } } });
         expect(getList()?.style.maxHeight).toBe('50vh');
         expect(getList()).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         document.body.innerHTML = '';
-        await renderAc({ data: stringData, defaultOpen: true, maxHeight: 100, styles: { dropdown: { maxHeight: '10px' } } });
+        await renderAc({ data: stringData, defaultOpen: true, maxHeight: 100, styles: { list: { maxHeight: '10px' } } });
         expect(getList()?.style.maxHeight).toBe('10px');
     });
 

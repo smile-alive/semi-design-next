@@ -319,7 +319,7 @@
                         aria-haspopup="dialog"
                         {autofocus}
                         {borderless}
-                        class={classNames?.input}
+                        classNames={{ input: classNames?.input }}
                         {clearIcon}
                         {disabled}
                         {focusOnOpen}
@@ -336,7 +336,7 @@
                         role="combobox"
                         showClear={disabled ? false : showClear}
                         {size}
-                        style={styles?.input}
+                        styles={{ input: styles?.input }}
                         {validateStatus}
                         value={states().inputValue}
                     />

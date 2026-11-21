@@ -12,8 +12,8 @@
             },
             "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when uncontrolled." },
             "classNames": {
-                "zh-CN": "内部各部位的类名，键为 `input`，与组件自带的类名合并。`input` 作用到每个输入格的根元素，不是原生 input。",
-                "en-US": "Class names of the inner parts, keyed by `input`; merged with the built-in classes. `input` lands on the root element of every cell, not the native input."
+                "zh-CN": "内部各部位的类名，键为 `input`，与组件自带的类名合并。`input` 作用到每个输入格的原生输入框。",
+                "en-US": "Class names of the inner parts, keyed by `input`; merged with the built-in classes. `input` lands on the native input of every cell."
             },
             "count": { "zh-CN": "验证码位数。", "en-US": "Number of digits." },
             "format": {

@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus | 挂载后是否自动聚焦。 | `boolean` | `false` |
 | borderless | 是否使用无边框样式。 | `boolean` | `false` |
 | changeWithObject | 布尔属性而不是事件：设为 true 时，change、update:modelValue 与 modelValue、defaultValue 使用选项对象，对象须含 value 与 label。 | `WithObject` | `undefined` |
-| classNames | 内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、groupLabel、item、itemIcon、itemContent，值的写法同 class，与组件自带的类名合并。content 是触发器中间的已选内容区，input 是触发器内搜索框的根元素（与 Input 的 input 不同，后者是原生输入框），search 是 searchPosition="dropdown" 时下拉层顶部的搜索区域，dropdown 是弹出层最外层，list 是选项列表。item、itemIcon、itemContent 作用到全部选项，先于 SelectOption 自己的 classNames 生效，对 optionItem、createItem 插槽渲染的选项不生效。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Select", "classNames")` |
+| classNames | 内部各部位的类名，键为 prefix、suffix、content、placeholder、input、search、tag、clear、arrow、dropdown、list、empty、groupLabel、item、itemIcon、itemContent，值的写法同 class，与组件自带的类名合并。content 是触发器中间的已选内容区，input 是触发器内搜索框的原生输入框，search 是 searchPosition="dropdown" 时下拉层顶部的搜索区域，dropdown 是弹出层最外层，list 是选项列表。item、itemIcon、itemContent 作用到全部选项，先于 SelectOption 自己的 classNames 生效，对 optionItem、createItem 插槽渲染的选项不生效。 | <ApiType detail={"Partial\u003cRecord\u003cSelectPart, ClassValue>>"}>Type</ApiType> | `semiGlobalDefault("Select", "classNames")` |
 | clickToHide | 下拉列表已展开时，点击选择框是否收起它。 | `boolean` | `false` |
 | defaultActiveFirstOption | 没有选中值时，打开下拉列表是否默认高亮第一个未禁用的选项（按 Enter 可直接选中）。已有选中值时总是高亮第一个已选的选项。 | `boolean` | `true` |
 | defaultOpen | 是否默认展开下拉列表。 | `boolean` | `false` |

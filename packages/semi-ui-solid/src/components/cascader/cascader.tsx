@@ -738,8 +738,9 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
     const SearchTagInput = () => (
         <TagInput
             ref={setTagInput}
-            class={clsx(`${prefixcls}-tagInput-wrapper`, local.classNames?.input)}
-            style={local.styles?.input}
+            class={`${prefixcls}-tagInput-wrapper`}
+            classNames={{ input: local.classNames?.input }}
+            styles={{ input: local.styles?.input }}
             {...comboboxAttrs}
             aria-autocomplete="list"
             disabled={local.disabled}
@@ -787,8 +788,9 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             <Show when={view.showInput}>
                 <Input
                     inputRef={setSearchInput}
-                    class={clsx(`${prefixcls}-input`, local.classNames?.input)}
-                    style={local.styles?.input}
+                    class={`${prefixcls}-input`}
+                    classNames={{ input: local.classNames?.input }}
+                    styles={{ input: local.styles?.input }}
                     // the trigger draws its own clear button and adornments: global Input defaults must not add them
                     addonAfter={null}
                     addonBefore={null}

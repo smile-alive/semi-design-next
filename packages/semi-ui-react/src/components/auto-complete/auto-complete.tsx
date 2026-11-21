@@ -334,23 +334,25 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
     }
 
     const optionList = (
-        <div
-            ref={optionContainerEl}
-            id={optionListId}
-            className={clsx(`${prefixCls}-option-list`, classNames?.dropdown)}
-            style={{ maxHeight, ...styles?.dropdown }}
-            // the combobox's name source, never the input itself: accname would read its typed value
-            {...nameProps}
-            role="listbox"
-            onMouseDown={(e) => e.preventDefault()}
-        >
-            {!loading ? (
-                optionsNode
-            ) : (
-                <div className={`${prefixCls}-loading-wrapper`}>
-                    <Spin />
-                </div>
-            )}
+        <div className={clsx(`${prefixCls}-option-list-wrapper`, classNames?.dropdown)} style={styles?.dropdown}>
+            <div
+                ref={optionContainerEl}
+                id={optionListId}
+                className={clsx(`${prefixCls}-option-list`, classNames?.list)}
+                style={{ maxHeight, ...styles?.list }}
+                // the combobox's name source, never the input itself: accname would read its typed value
+                {...nameProps}
+                role="listbox"
+                onMouseDown={(e) => e.preventDefault()}
+            >
+                {!loading ? (
+                    optionsNode
+                ) : (
+                    <div className={`${prefixCls}-loading-wrapper`}>
+                        <Spin />
+                    </div>
+                )}
+            </div>
         </div>
     );
 

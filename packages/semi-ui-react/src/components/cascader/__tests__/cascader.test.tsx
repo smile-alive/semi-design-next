@@ -278,7 +278,7 @@ describe('Cascader', () => {
             suffix: 'suffix',
             content: 'selection',
             placeholder: 'selection-placeholder',
-            input: 'input',
+            input: 'input input',
             tag: 'selection-tag',
             clear: 'clearbtn',
             arrow: 'arrow',

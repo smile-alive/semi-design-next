@@ -89,7 +89,7 @@ describe('AutoComplete', () => {
     });
 
     it('classNames 与 styles 按部位落到对应元素', () => {
-        const parts = ['input', 'prefix', 'suffix', 'clear', 'dropdown', 'item'] as const;
+        const parts = ['input', 'prefix', 'suffix', 'clear', 'dropdown', 'list', 'item'] as const;
         renderAc({
             classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])),
             styles: Object.fromEntries(parts.map((p) => [p, { order: String(parts.indexOf(p) + 1) }])),
@@ -103,7 +103,7 @@ describe('AutoComplete', () => {
         });
         // the clear button only shows while the input wrapper is hovered or focused
         fireEvent.mouseOver(getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`));
-        const selectors = { input: 'input', prefix: `.${BASE_CLASS_PREFIX}-input-prefix`, suffix: `.${BASE_CLASS_PREFIX}-input-suffix`, clear: `.${BASE_CLASS_PREFIX}-input-clearbtn`, dropdown: `.${optionCls}-list`, item: `.${optionCls}` };
+        const selectors = { input: 'input', prefix: `.${BASE_CLASS_PREFIX}-input-prefix`, suffix: `.${BASE_CLASS_PREFIX}-input-suffix`, clear: `.${BASE_CLASS_PREFIX}-input-clearbtn`, dropdown: `.${optionCls}-list-wrapper`, list: `.${optionCls}-list`, item: `.${optionCls}` };
         for (const part of parts) {
             const el = document.querySelector(selectors[part]);
             expect(el).toHaveClass(`my-${part}`);
@@ -111,8 +111,8 @@ describe('AutoComplete', () => {
         }
     });
 
-    it('字符串 styles.dropdown 与 maxHeight 合并', () => {
-        renderAc({ styles: { dropdown: 'color: red' }, maxHeight: 120, defaultOpen: true, ...commonProps });
+    it('字符串 styles.list 与 maxHeight 合并', () => {
+        renderAc({ styles: { list: 'color: red' }, maxHeight: 120, defaultOpen: true, ...commonProps });
         expect(getList()).toHaveStyle({ color: 'rgb(255, 0, 0)', maxHeight: '120px' });
     });
 

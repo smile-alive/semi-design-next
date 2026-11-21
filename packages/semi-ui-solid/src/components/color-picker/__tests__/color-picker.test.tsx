@@ -181,7 +181,7 @@ describe('ColorPicker 审计修复', () => {
 
     it('classNames 与 styles 按部位落到对应元素', async () => {
         const parts = ['area', 'hue', 'alpha', 'handle', 'preview', 'input', 'format', 'trigger', 'dropdown'] as const;
-        const selectors = { area: 'colorChooseArea', hue: 'colorSlider', alpha: 'alphaSlider', handle: 'handle, .semi-colorPicker-alphaHandle', preview: 'colorDemoBlock', input: 'colorPickerInput', format: 'formatSelect', trigger: 'popover-defaultChildren', dropdown: 'popover' };
+        const selectors = { area: 'colorChooseArea', hue: 'colorSlider', alpha: 'alphaSlider', handle: 'handle, .semi-colorPicker-alphaHandle', preview: 'colorDemoBlock', input: 'colorPickerInput input', format: 'formatSelect', trigger: 'popover-defaultChildren', dropdown: 'popover' };
         renderColorPicker({ usePopover: true, classNames: Object.fromEntries(parts.map((p) => [p, `my-${p}`])), styles: Object.fromEntries(parts.map((p) => [p, { order: parts.indexOf(p) + 1 }])) });
         await userEvent.click(screen.getByRole('button', { name: zh_CN.ColorPicker.color }));
         await screen.findByRole('dialog');

@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | alpha | Whether to enable transparency selection. | `boolean` | `true` |
 | bottomSlot | Snippet that renders extra elements at the bottom. | `Snippet` | - |
 | children | Snippet used as the trigger when usePopover is on, a swatch of the current color by default; not rendered without usePopover. | `Snippet` | - |
-| classNames | Class names of the inner parts, keyed by `area` (saturation and brightness area), `hue` (hue slider), `alpha` (alpha slider), `handle` (the round handle shared by all three), `preview` (color preview block), `input` (color value input), `format` (format select), `trigger` (default trigger button) and `dropdown` (the popup with `usePopover`); values take anything class takes (string, array or object) and merge with the built-in classes. | `ColorPickerClassNames` | - |
+| classNames | Class names of the inner parts, keyed by `area` (saturation and brightness area), `hue` (hue slider), `alpha` (alpha slider), `handle` (the round handle shared by all three), `preview` (color preview block), `input` (the native input of the color value), `format` (format select), `trigger` (default trigger button) and `dropdown` (the popup with `usePopover`); values take anything class takes (string, array or object) and merge with the built-in classes. | `ColorPickerClassNames` | - |
 | defaultFormat | Color format used by default for manual input: `rgba`, `hex` or `hsva`. | `ColorFormat` | `"hex"` |
 | eyeDropper | Whether to enable the eyedropper color picker. | `boolean` | `true` |
 | height | Height in pixels; 280 when not set. | `number` | `280` |
