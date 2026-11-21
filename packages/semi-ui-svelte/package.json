@@ -121,7 +121,8 @@
         "./src/tokens.ts"
     ],
     "scripts": {
-        "build": "node ../../scripts/svelte-package.ts --bundles ui"
+        "build": "node ../../scripts/svelte-package.ts --bundles ui",
+        "check": "svelte-check --tsconfig tsconfig.lib.json --fail-on-warnings"
     },
     "dependencies": {
         "@dnd-kit/dom": "catalog:",

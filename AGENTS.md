@@ -90,10 +90,10 @@
 
 ## 验证
 
-每条 shell 命令前先设置 PATH。Homebrew 的 Node 会遮住 mise 的 Node，全局 `pnpm` shim 也会让 `test:packed` 失败：
+每条 shell 命令前先设置下面的环境变量。PATH：Homebrew 的 Node 会遮住 mise 的 Node，全局 `pnpm` shim 也会让 `test:packed` 失败。两个 `VITEST_CHROMIUM_GC_*`：让浏览器测试每跑完一个文件就回收 Chromium 内存，避免长跑中途报 `Browser connection was closed`（见 [pitfalls](.agents/references/pitfalls.md#测试环境)）：
 
 ```bash
-export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH"
+export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH" VITEST_CHROMIUM_GC_FORCE=1 VITEST_CHROMIUM_GC_DISK_THRESHOLD_GB=1000000
 ```
 
 | 范围 | 命令 |

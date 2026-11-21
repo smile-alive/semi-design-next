@@ -52,7 +52,8 @@
     ],
     "scripts": {
         "build:icon": "node scripts/build-icon.ts",
-        "build": "node ../../scripts/svelte-package.ts"
+        "build": "node ../../scripts/svelte-package.ts",
+        "check": "svelte-check --tsconfig tsconfig.lib.json --fail-on-warnings"
     },
     "dependencies": {
         "@fibrae/semi-icons-core": "workspace:*"

@@ -48,7 +48,8 @@
         "*.svelte"
     ],
     "scripts": {
-        "build": "node ../../scripts/svelte-package.ts --bundles ai"
+        "build": "node ../../scripts/svelte-package.ts --bundles ai",
+        "check": "svelte-check --tsconfig tsconfig.lib.json --fail-on-warnings"
     },
     "dependencies": {
         "@fibrae/semi-ai-foundation": "workspace:*",

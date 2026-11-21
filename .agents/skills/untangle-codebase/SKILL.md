@@ -1,6 +1,6 @@
 ---
 name: untangle-codebase
-description: 在一次性重构中整理整个代码库，使在其中工作的代理在每次改动时需要阅读更少的内容，减少「静默破坏」，并更快地定位和修复问题。
+description: 用一次彻底的重构整理整个代码库：让代理每次改动要读的代码更少，更少在不知不觉中改坏东西，出了问题也能更快找到根因并修好。
 disable-model-invocation: true
 argument-hint: '[可选：聚焦的区域或关注点]'
 ---
