@@ -38,9 +38,10 @@
 - **临时复现用例要放进包的 `__tests__/`。** vitest 的 include 只收 `packages/` 下的 `__tests__`（`vitest/framework.ts` 的 `filesOfKind`），放在 `tmp/` 下不会被收集。用完用 `trash` 删除。
 - **测试通过但 `typecheck` 报 adapter 方法或导出不存在。** vitest 经 `vite.semi.ts` 的 `semiSourceAliases` 把 Semi 包都映射到 `src`，改完 foundation 不用构建就能跑测试；类型检查读的是 foundation 的 `dist`。foundation 有改动时先 `pnpm build` 再 `pnpm typecheck`，见 [AGENTS.md](../../AGENTS.md#验证)「类型」一行。
 - **`node scripts/typecheck.ts` 直接跑会报 `spawn tsc ENOENT`。** 脚本按名字启动 `tsc`，依赖 `node_modules/.bin` 在 `PATH` 里。用 `pnpm typecheck` 或 `pnpm exec node scripts/typecheck.ts`。
-- **带覆盖率的长跑里浏览器项目报 `Browser connection was closed`。** Chromium 不回收已跑完文件的 iframe 文档，插桩后累积几十个文件就会断开页面的 WebSocket，断点随机，该项目剩余文件不再执行。`test:coverage` 用 `VITEST_CHROMIUM_GC_FORCE=1` 与 `VITEST_CHROMIUM_GC_DISK_THRESHOLD_GB` 让 vitest 在每个文件后回收（默认只在 Linux 磁盘不足时回收）；vitest 修复 [#11702](https://github.com/vitest-dev/vitest/issues/11702) 后可删。
+- **浏览器项目长跑中途报 `Browser connection was closed`（`VITEST_BROWSER_CONNECTION_CLOSED`）。** Chromium 要等到一次完整 GC 才释放已跑完文件的 iframe 文档和模块 `304` 响应的共享内存，累积几十个文件后断开页面的 WebSocket，断点随机，该项目剩余文件不再执行；覆盖率插桩时更快出现。`VITEST_CHROMIUM_GC_FORCE=1` 加上调大的 `VITEST_CHROMIUM_GC_DISK_THRESHOLD_GB` 让 vitest 每个文件后回收一次（默认只在 Linux 且临时目录剩余不足 4 GB 时回收）。vitest 在读配置之前就读取这两个变量，写在 vitest 配置里不生效，所以放在 `test:browser`、`test:ssr`、`test:coverage` 脚本和 AGENTS.md 的环境变量里。vitest 5.1.1 不再返回 `304`（[#12024](https://github.com/vitest-dev/vitest/issues/12024)），vite-plus 跟进后复核能否删除；[#11702](https://github.com/vitest-dev/vitest/issues/11702) 修复后可删。
 
 ## 构建与体积
 
+- **根脚本里不用 pnpm 的递归运行（`pnpm --filter`、`pnpm -r`）。** pnpm 每次都改写 `node_modules/.pnpm-task-run-state-v1`，`vp run --cache` 的自动输入追踪把它当成输入，该脚本永远不命中缓存；改用 `vp run <包>#<脚本>` 或 `vp run --filter`。同理，lint 的 glob 要用取反模式（如 `'!tmp/**'`）排除目录，配置里的 ignore 在展开 glob 之后才过滤，目录已被读过。
 - **模块顶层的高阶组件调用要标 `/* @__PURE__ */`。** 没有标注时打包器不敢摇掉，单独导入一个 Form 字段会带上全部字段。`semi-ui-react/src/components/form/field.tsx` 里每个 `withField(...)`、`withTopLabelField(...)`、`Object.assign(...)` 都带标注，`pnpm size` 守着这件事。
 - **别从组件的静态属性取子组件。** `Select.Option` 这样的访问会把整个父组件拖进依赖图。包内部直接导入子组件文件（`import Option from '../select/option'`）。

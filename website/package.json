@@ -18,7 +18,7 @@
         "gen:solid-api": "node scripts/gen-solid-api.ts",
         "gen:svelte-api": "node scripts/gen-svelte-api.ts",
         "gen:vue-api": "node scripts/gen-vue-api.ts",
-        "gen:api:check": "pnpm run \"/^gen:(react|solid|svelte|vue)-api$/\" --check"
+        "gen:api:check": "pnpm run --no-bail \"/^gen:(react|solid|svelte|vue)-api$/\" --check"
     },
     "dependencies": {
         "@astrojs/markdown-remark": "^7.3.9",
